@@ -1,0 +1,1 @@
+export { StaticGltfMesh } from './StaticGltfMesh';

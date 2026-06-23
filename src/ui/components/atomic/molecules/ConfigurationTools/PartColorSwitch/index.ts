@@ -1,0 +1,1 @@
+export { PartColorSwitch } from './PartColorSwitch';

@@ -1,0 +1,1 @@
+export { ConfiguratorSlugHydration } from './ConfiguratorSlugHydration';

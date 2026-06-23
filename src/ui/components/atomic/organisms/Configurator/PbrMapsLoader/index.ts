@@ -1,0 +1,1 @@
+export { PbrMapsLoader } from './PbrMapsLoader';

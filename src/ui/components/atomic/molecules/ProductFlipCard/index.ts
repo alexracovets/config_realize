@@ -1,0 +1,1 @@
+export { ProductFlipCard } from './ProductFlipCard';

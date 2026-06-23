@@ -1,0 +1,1 @@
+export { DefaultBrandLogoPlaceholder } from './DefaultBrandLogoPlaceholder';

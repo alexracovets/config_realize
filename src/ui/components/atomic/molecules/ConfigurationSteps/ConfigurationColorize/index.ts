@@ -1,0 +1,1 @@
+export { ConfigurationColorize } from './ConfigurationColorize';

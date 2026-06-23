@@ -1,0 +1,1 @@
+export { DESIGN_THUMB_WIDTH } from './DESIGN_THUMB_WIDTH';

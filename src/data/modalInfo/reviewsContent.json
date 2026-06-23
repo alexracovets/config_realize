@@ -1,0 +1,15 @@
+{
+  "sections": [
+    {
+      "id": "trustpilot",
+      "heading": "RECENSIONI TRUSTPILOT",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": ["Ecco cosa dicono di noi"]
+        }
+      ]
+    }
+  ]
+}

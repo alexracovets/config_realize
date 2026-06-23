@@ -1,0 +1,1 @@
+export { ConfiguratorProductDescription } from './ConfiguratorProductDescription';

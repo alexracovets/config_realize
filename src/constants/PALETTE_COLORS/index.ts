@@ -1,0 +1,1 @@
+export { PALETTE_COLORS } from './PALETTE_COLORS';

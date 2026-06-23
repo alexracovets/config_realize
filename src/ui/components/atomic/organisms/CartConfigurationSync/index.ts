@@ -1,0 +1,1 @@
+export { CartConfigurationSync } from './CartConfigurationSync';

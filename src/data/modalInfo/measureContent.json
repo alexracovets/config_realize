@@ -1,0 +1,150 @@
+{
+  "title": "Info Prodoo",
+  "sections": [
+    {
+      "id": "how-order",
+      "heading": "MODELLO DI MAGLIA FEDERER",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Slim fit, struttura con cuciture laterali girocollo. Tessuti tecnico sportivo. 100% Poliestere costine.",
+            "Tutti i nostri prodotti hanno certificazione OEKO-TEX® un sistema di certificazione e controllo indipendente a livello mondiale per le materie prime, i semilavorati e i prodotti finiti del settore tessile e della pelle. Il suo scopo principale è garantire che i prodotti siano sicuri per la salute umana e privi di sostanze potenzialmente tossiche o nocive"
+          ]
+        },
+        {
+          "type": "text",
+          "content": ["Guida alle taglie"]
+        },
+        {
+          "type": "text",
+          "content": [
+            "Ti consigliamo di prendere le misure direttamente sul tuo corpo con un metro da sarta o di appoggiare la maglia che indossi su un piano regolare e confrontarle con la nostra tabella. Per una vestibilità più precisa, misura anche un capo simile che ti sta bene e confrontalo con le nostre misure.",
+            "La differenza di taglia varia di 1,5 cm - 2 cm quindi consigliamo nel dubbio tra due taglie di prendere sempre quella più grande. Un nostro modello alto 185 cm per 90 kg indossa una XXL"
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/png/measure/crewneck_shirt.png",
+          "alt": "Guida alle misure maglia"
+        },
+        {
+          "type": "table",
+          "variant": "size_chart",
+          "columns": [
+            {
+              "id": "label",
+              "accessorKey": "label",
+              "header": "Misure in cm"
+            },
+            {
+              "id": "5xs",
+              "accessorKey": "5xs",
+              "header": "5XS",
+              "subHeader": "4-5 anni"
+            },
+            {
+              "id": "4xs",
+              "accessorKey": "4xs",
+              "header": "4XS",
+              "subHeader": "6 anni"
+            },
+            {
+              "id": "3xs",
+              "accessorKey": "3xs",
+              "header": "3XS",
+              "subHeader": "8 anni"
+            },
+            {
+              "id": "xxs",
+              "accessorKey": "xxs",
+              "header": "XXS",
+              "subHeader": "10 anni"
+            },
+            {
+              "id": "xs",
+              "accessorKey": "xs",
+              "header": "XS",
+              "subHeader": "12 anni"
+            },
+            {
+              "id": "s",
+              "accessorKey": "s",
+              "header": "S"
+            },
+            {
+              "id": "m",
+              "accessorKey": "m",
+              "header": "M"
+            },
+            {
+              "id": "l",
+              "accessorKey": "l",
+              "header": "L"
+            },
+            {
+              "id": "xl",
+              "accessorKey": "xl",
+              "header": "XL"
+            },
+            {
+              "id": "xxl",
+              "accessorKey": "xxl",
+              "header": "XXL"
+            },
+            {
+              "id": "3xl",
+              "accessorKey": "3xl",
+              "header": "3XL"
+            },
+            {
+              "id": "4xl",
+              "accessorKey": "4xl",
+              "header": "4XL"
+            }
+          ],
+          "data": [
+            {
+              "label": "ALTEZZA",
+              "5xs": 55,
+              "4xs": 58,
+              "3xs": 61,
+              "xxs": 63,
+              "xs": 66,
+              "s": 70,
+              "m": 71.5,
+              "l": 73,
+              "xl": 74,
+              "xxl": 75,
+              "3xl": 77.5,
+              "4xl": 79
+            },
+            {
+              "label": "TORACE",
+              "5xs": 37,
+              "4xs": 39.5,
+              "3xs": 41.5,
+              "xxs": 43.5,
+              "xs": 45.5,
+              "s": 47.5,
+              "m": 51.5,
+              "l": 53.5,
+              "xl": 55.5,
+              "xxl": 57.5,
+              "3xl": 59.5,
+              "4xl": 62
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "content": [
+            "<b>I valori sono espressi in centimetri (cm).</b>",
+            "Le misure possono variare di 1-1,5 cm essendo tessuti elasticizzati. Se si è indecisi tra due taglie scegliere sempre quella più grande."
+          ]
+        }
+      ]
+    }
+  ]
+}

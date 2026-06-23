@@ -1,0 +1,107 @@
+{
+  "title": "Domande frequenti",
+  "sections": [
+    {
+      "id": "before-order",
+      "heading": "PRIMA DI CREARE IL TUO COMPLETO",
+      "parts": [
+        {
+          "type": "list",
+          "items": [
+            "Carica loghi in alta qualità - loghi leggibili e alta definizione (provvediamo noi a migliorarli nel caso siano leggermente pixellati o con sfondo dietro), situazione opposta se sono illeggibili verrai ricontattato dal nostro team per ovviare al problema.",
+            "Controlla attentamente taglie e nomi.",
+            "Verifica di possedere i diritti per utilizzare i loghi caricati.",
+            "Tutte le personalizzazioni vengono prodotte appositamente per te.",
+            "<u>Nessun costo nascosto</u> dopo la configurazione.",
+            "Tutti i costi di stampa sono inclusi, puoi aggiungere nomi, loghi, testi il prezzo rimane lo stesso.",
+            "Sui prodotti personalizzati non c'è possibilità di reso.",
+            "Acquisto minimo 5pz per articolo.",
+            "Integrazioni completini anche dopo un anno o due senza problemi."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "how-order",
+      "heading": "COME FUNZIONA L'ORDINE",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Crea il tuo design, personalizza colore, design, sfumatura, nome, testo, numero e logo - tutto come vuoi tuOgni dettaglio è nelle tue mani.",
+            "Una volta formata la divisa vai su \"Completa Config.\" e aggiungi qualora vuoi il nome, numero e taglia delle quantità richiesteInserisci i tuoi dati e completa l'ordine."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guidelines",
+      "heading": "CONTRO LE LINEE GUIDA DI REALIZE SPORT",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "È assolutamente vietato inserire loghi e marchi <strong>protetti da copyright</strong> Caricando un logo dichiari di possedere i diritti necessari per il suo utilizzo e la sua riproduzione <strong>Il logo Realize® deve essere sempre visibili e a contrasto</strong>, ci riserviamo di cambiare il colore dei nostri loghi se necessario come indicato anche nel configuratore SENZA PREAVVISO."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delivery-time",
+      "heading": "QUANTO TEMPO CI VUOLE PER AVER I PRODOTTI?",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Una volta confermato e raggiunto il carrello per la procedura di pagamento, la produzione e la consegna delle tue divise personalizzate è prevista entro 19-21 giorni lavorativi.",
+            "Durante periodi di alta stagione le tempistiche potrebbero allungarsi di qualche giorno come nei periodi di bassa stagione o \"normali\" possiamo anticipare la consegna.",
+            "Riceverai il tracking appena il pacco sarà affidato al corriere."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sizes",
+      "heading": "TAGLIE DISPONIBILI?",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Le taglie disponibili sono dalla 5XS (4-5 anni) fino alla taglia adulto 4XLLa tabella taglia la trovate al secondo blocco in alto.",
+            "Se siete ancora indecisi e non volete sbagliare, contattateci tramite whatsapp o a info@realizesport.com per richiedere i campioniIl costo dei campioni è gratuito, viene pagato soltanto la spedizione di andata e ritorno che si aggira intorno ai 15€."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "custom-kit",
+      "heading": "VUOI UN KIT PERSONALIZZATO SECONDO LA TUA IDEA O UNA BOZZA CREATA DA ZERO DAI NOSTRI GRAFICI?",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "In questo caso basta inviarci il modulo qui FORM compilarlo in appena due minuti e riceverai la tua bozza grafica direttamente su whatsapp senza impegno e gratuitamente."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quote",
+      "heading": "VUOI UN PREVENTIVO AD HOC PER LA TUA SOCIETÀ SPORTIVA?",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Compila il FORM o contattaci sull'iconcina di whatsapp, un nostro operatore ti risponderà nel più breve tempo possibile elencandoti gli oltre 100 prodotti in catalogo personalizzabili e non."
+          ]
+        }
+      ]
+    }
+  ]
+}

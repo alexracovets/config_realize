@@ -1,0 +1,1 @@
+export { HeaderConfiguration } from './HeaderConfiguration';

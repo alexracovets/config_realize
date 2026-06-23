@@ -1,0 +1,1 @@
+export { CheckoutConfigurationTable } from './CheckoutConfigurationTable';

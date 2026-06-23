@@ -1,0 +1,80 @@
+{
+  "sections": [
+    {
+      "id": "delivery",
+      "heading": "CONSEGNA",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": ["Per i tuoi kit che siano 5 pezzi oppure >100 pz ci riserviamo <b>19-21 giorni lavorativi per produzione e consegna.</b>"]
+        },
+        {
+          "type": "text",
+          "content": [
+            "Durante periodi di alta stagione le tempistiche potrebbero allungarsi di qualche giorno come nei periodi di bassa stagione o \"normali\" possiamo anticipare la consegna."
+          ]
+        },
+        {
+          "type": "text",
+          "content": ["Riceverai il tracking appena il pacco sarà affidato al corriere."]
+        },
+        {
+          "type": "text",
+          "content": [
+            "Una volta superato il controllo qualità affideremo al nostro corriere GLS il tuo pacco e verrà consegnato il tutto al tuo indirizzo in 24h-72h."
+          ]
+        },
+        {
+          "type": "text",
+          "content": ["Quando il tuo ordine verrà spedito riceverai:"]
+        },
+        {
+          "type": "list",
+          "icon": "dash",
+          "punctuate": true,
+          "items": ["email di conferma spedizione", "numero di tracking", "link per monitorare il pacco"]
+        },
+        {
+          "type": "text",
+          "content": ["Potrai seguire la consegna direttamente sul sito del corriere."]
+        },
+        {
+          "type": "text",
+          "content": ["<b>Poiché ogni articolo viene realizzato su misura e personalizzato:</b>"]
+        },
+        {
+          "type": "list",
+          "icon": "dash",
+          "punctuate": true,
+          "items": [
+            "le modifiche possono essere richieste solo prima dell'avvio della produzione",
+            "una volta iniziata la lavorazione non sarà più possibile modificare nomi, numeri, taglie o grafiche",
+            "l'annullamento dell'ordine non può essere possibile dopo l'avvio della produzione"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quality-guarantee",
+      "heading": "GARANZIA DI QUALITÀ",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": ["Prima della spedizione ogni ordine viene controllato dal nostro team per verificare:"]
+        },
+        {
+          "type": "list",
+          "icon": "dash",
+          "punctuate": true,
+          "items": ["correttezza della produzione", "qualità della stampa", "conformità delle personalizzazioni", "integrità degli articoli"]
+        },
+        {
+          "type": "text",
+          "content": ["Questo ci consente di garantire il miglior risultato possibile prima della consegna."]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+export { FooterConfiguration } from './FooterConfiguration';

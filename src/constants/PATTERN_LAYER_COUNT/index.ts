@@ -1,0 +1,1 @@
+export { PATTERN_LAYER_COUNT } from './PATTERN_LAYER_COUNT';

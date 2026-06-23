@@ -1,0 +1,1 @@
+export { garmentLogoMapFragment } from './garmentLogoShaders';

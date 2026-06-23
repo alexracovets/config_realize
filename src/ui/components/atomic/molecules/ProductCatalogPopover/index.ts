@@ -1,0 +1,1 @@
+export { ProductCatalogPopover } from './ProductCatalogPopover';

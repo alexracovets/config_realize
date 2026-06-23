@@ -1,0 +1,1 @@
+export { AtomRichText } from './AtomRichText';

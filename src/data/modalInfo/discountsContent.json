@@ -1,0 +1,129 @@
+{
+  "sections": [
+    {
+      "id": "discount-table",
+      "heading": "TABELLA SCONTI QUANTITÀ",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "table",
+          "variant": "discounts",
+          "rowIcon": "doubleArrow",
+          "columns": [
+            {
+              "id": "quantity",
+              "accessorKey": "quantity",
+              "header": "Quantità Totale"
+            },
+            {
+              "id": "discount",
+              "accessorKey": "discount",
+              "header": "Sconto applicato"
+            }
+          ],
+          "data": [
+            {
+              "quantity": "1-25 Articoli",
+              "discount": "Nessun Sconto"
+            },
+            {
+              "quantity": "26-50 Articoli",
+              "discount": "3%"
+            },
+            {
+              "quantity": "51-80 Articoli",
+              "discount": "5%"
+            },
+            {
+              "quantity": "81-109 Articoli",
+              "discount": "7%"
+            },
+            {
+              "quantity": "110>",
+              "discount": "9%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "how-calculated",
+      "heading": "COME VIENE CALCOLATO LO SCONTO?",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": ["Lo sconto viene applicato sul totale degli articoli personalizzati inseriti nello stesso ordine."]
+        },
+        {
+          "type": "text",
+          "content": ["<b>Esempio</b>"]
+        },
+        {
+          "type": "list",
+          "icon": "dot",
+          "compact": true,
+          "punctuate": true,
+          "items": [
+            "15 maglie personalizzate",
+            "15 pantaloncini personalizzati",
+            "Totale articoli: 30",
+            "Sconto applicato 3%",
+            "Non servono codici promozionali.",
+            "Una volta raggiunta la soglia prevista:"
+          ]
+        },
+        {
+          "type": "text",
+          "content": [
+            "il prezzo viene aggiornato automaticamente, il risparmio viene mostrato nel riepilogo ordine e lo sconto viene mantenuto fino al checkout."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "included",
+      "heading": "PERSONALIZZAZIONI INCLUSE",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": ["I nostri prezzi comprendono già:"]
+        },
+        {
+          "type": "list",
+          "icon": "dash",
+          "punctuate": true,
+          "items": ["nomi giocatori", "numeri", "loghi squadra", "sponsor", "colori personalizzati", "design creato tramite configuratore"]
+        },
+        {
+          "type": "text",
+          "content": ["Non sono previsti costi aggiuntivi per ogni singola personalizzazione standard."]
+        }
+      ]
+    },
+    {
+      "id": "reorders",
+      "heading": "RIORDINI FUTURI",
+      "headingClassName": "italic uppercase",
+      "parts": [
+        {
+          "type": "text",
+          "content": [
+            "Hai bisogno di completare la squadra in un secondo momento? Nessun problema. Il design del tuo completo può essere salvato per consentirti di effettuare riordini successivi mantenendo:"
+          ]
+        },
+        {
+          "type": "list",
+          "icon": "dash",
+          "punctuate": true,
+          "items": ["stessa grafica", "stessi colori", "stessi loghi", "stessa identità della squadra"]
+        },
+        {
+          "type": "text",
+          "content": ["Potrai semplicemente aggiungere nuovi giocatori o nuove taglie."]
+        }
+      ]
+    }
+  ]
+}

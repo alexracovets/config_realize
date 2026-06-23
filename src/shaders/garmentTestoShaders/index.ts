@@ -1,0 +1,1 @@
+export { garmentTestoMapFragment } from './garmentTestoShaders';

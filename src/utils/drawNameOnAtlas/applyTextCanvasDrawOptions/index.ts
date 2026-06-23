@@ -1,0 +1,1 @@
+export { applyTextCanvasDrawOptions } from './applyTextCanvasDrawOptions';

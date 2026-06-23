@@ -1,0 +1,1 @@
+export { GarmentLogoTextureLayer } from './GarmentLogoTextureLayer';

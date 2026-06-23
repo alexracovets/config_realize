@@ -1,0 +1,15 @@
+export type {
+  garmentBusinessType,
+  garmentConfigType,
+  garmentPartConfigType,
+  logoPositionConfigType,
+  modelIdType,
+  partGradientConfigType,
+  patternConfigType,
+  printAtlasConfigType,
+  styleConfigType,
+  textDefaultsConfigType,
+  textPositionConfigType,
+  uvBoundsType,
+  uvPointType,
+} from './garment';

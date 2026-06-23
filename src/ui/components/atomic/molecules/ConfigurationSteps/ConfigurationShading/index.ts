@@ -1,0 +1,1 @@
+export { ConfigurationShading } from './ConfigurationShading';

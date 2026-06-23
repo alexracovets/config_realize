@@ -1,0 +1,1 @@
+export { ConfigurationTesto } from './ConfigurationTesto';

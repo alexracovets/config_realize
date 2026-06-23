@@ -1,0 +1,1 @@
+export { ConfiguratorProductDescriptionSkeleton } from './ConfiguratorProductDescriptionSkeleton';

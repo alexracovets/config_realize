@@ -1,0 +1,1 @@
+export { ColorTabControl } from './ColorTabControl';

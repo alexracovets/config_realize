@@ -1,0 +1,3 @@
+const PATTERN_LAYER_COUNT = 2;
+
+export { PATTERN_LAYER_COUNT };
