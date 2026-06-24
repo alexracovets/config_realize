@@ -1,0 +1,1 @@
+export { ConfiguratorRouteShell } from './ConfiguratorRouteShell';

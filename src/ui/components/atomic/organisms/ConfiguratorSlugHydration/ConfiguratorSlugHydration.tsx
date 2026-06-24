@@ -1,15 +1,12 @@
 'use client';
 
-import { useConfiguratorProductHydration } from '@hooks';
 import type { configuratorSlugHydrationPropsType } from '@types';
-import { resolveConfiguratorProductBySlug } from '@utils';
 
-const ConfiguratorSlugHydration = ({ slug }: configuratorSlugHydrationPropsType) => {
-  const product = resolveConfiguratorProductBySlug(slug);
+import { ConfiguratorRouteShell } from '../ConfiguratorRouteShell';
 
-  useConfiguratorProductHydration(slug, product);
-
-  return null;
+/** @deprecated Layout uses `ConfiguratorRouteShell` directly. */
+const ConfiguratorSlugHydration = ({ slug, product }: configuratorSlugHydrationPropsType) => {
+  return <ConfiguratorRouteShell slug={slug} product={product} />;
 };
 
 export { ConfiguratorSlugHydration };

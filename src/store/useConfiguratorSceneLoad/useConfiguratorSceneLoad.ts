@@ -11,6 +11,7 @@ type SceneTransitionOptions = {
 };
 
 interface ConfiguratorSceneLoadState {
+  isRouteHydrated: boolean;
   isInitialSceneLoading: boolean;
   isSceneTransitionLoading: boolean;
   transitionAffectsConfigurationPanel: boolean;
@@ -18,6 +19,7 @@ interface ConfiguratorSceneLoadState {
   loaderVisibleUntil: number;
   transitionSession: number;
   transitionVisibleUntil: number;
+  markRouteHydrated: () => void;
   beginInitialSceneLoad: () => void;
   markInitialSceneLoaded: () => void;
   beginSceneTransitionLoad: (options?: SceneTransitionOptions) => void;
@@ -79,6 +81,7 @@ const beginLoader = (
 };
 
 const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) => ({
+  isRouteHydrated: false,
   isInitialSceneLoading: true,
   isSceneTransitionLoading: false,
   transitionAffectsConfigurationPanel: false,
@@ -86,9 +89,11 @@ const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) =
   loaderVisibleUntil: 0,
   transitionSession: 0,
   transitionVisibleUntil: 0,
+  markRouteHydrated: () => set({ isRouteHydrated: true }),
   beginInitialSceneLoad: () => {
     const { patch } = beginLoader('initial', get, (loaderSession, loaderVisibleUntil) => ({
       isInitialSceneLoading: true,
+      isRouteHydrated: false,
       loaderSession,
       loaderVisibleUntil,
     }));

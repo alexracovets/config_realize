@@ -2,8 +2,15 @@
 
 import { LangSwitcher, Search, UserBar } from '@molecules';
 import { Box, Container, Flex, Grid, Logo } from '@atoms';
+import { useEmbedded } from '@providers';
 
 const Header = () => {
+  const { embedded } = useEmbedded();
+
+  if (embedded) {
+    return null;
+  }
+
   return (
     <Box variant="header" asChild>
       <header>

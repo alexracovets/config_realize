@@ -10,10 +10,26 @@ const getCatalogProductEntry = (collection: productCollectionIdType, slug: strin
 const getCatalogProductEntryBySlug = (slug: string): catalogProductEntryType | undefined =>
   CATALOG_PRODUCT_ENTRIES.find((entry) => entry.slug === slug);
 
+const getCatalogProductEntryByModelId = (modelId: string): catalogProductEntryType | undefined =>
+  CATALOG_PRODUCT_ENTRIES.find((entry) => entry.modelId === modelId);
+
 const resolveConfiguratorProductBySlug = (slug: string): configuratorProductHydrationType | null => {
-  const entry = getCatalogProductEntryBySlug(slug);
+  const entry = getCatalogProductEntryBySlug(slug) ?? getCatalogProductEntryByModelId(slug);
 
   if (!entry?.modelId || !hasModel(entry.modelId)) {
+    if (hasModel(slug)) {
+      const business = deriveLocalBusiness(slug);
+
+      return {
+        modelId: slug,
+        business: {
+          ...business,
+          handle: slug,
+          name: business.name,
+        },
+      };
+    }
+
     return null;
   }
 

@@ -20,6 +20,7 @@ import {
 import { inheritCartItemConfiguration } from "./inheritCartItemConfiguration";
 import { createCartItem, createDefaultCartItem } from "./mapCartItems";
 import { persistCartItemSnapshot } from "./persistCartItemSnapshot";
+import { areGarmentPrintStoresSynced } from "./areGarmentPrintStoresSynced";
 import { useConfiguratorProduct } from "../useConfiguratorProduct";
 
 interface ConfigurationCartState {
@@ -118,6 +119,12 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
         items: items.map((item) => (item.id === activeItemId ? { ...item, slug, business } : item)),
       });
       useConfiguratorProduct.getState().initFromLoader(modelId, business);
+
+      const product = getModel(modelId);
+      if (product && !areGarmentPrintStoresSynced(product.path)) {
+        activateCartItem(get, activeItemId);
+      }
+
       return;
     }
 

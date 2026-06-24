@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { Geist } from 'next/font/google';
 
 import '@styles';
 
 import { anton, bebasNeue, blackOpsOne, inter, oswald, russoOne } from '@fonts';
+import { EmbeddedProvider } from '@providers';
 import type { childrenType } from '@types';
 
 import { cn } from '@utils';
@@ -26,7 +28,11 @@ const RootLayout = ({ children }: childrenType) => {
         blackOpsOne.variable,
       )}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <Suspense fallback={null}>
+          <EmbeddedProvider>{children}</EmbeddedProvider>
+        </Suspense>
+      </body>
     </html>
   );
 };

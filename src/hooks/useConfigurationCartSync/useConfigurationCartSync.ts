@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react';
 
-import { activateCartItem, areGarmentPrintStoresSynced, useConfigurationCart, useConfiguratorProduct } from '@store';
+import { activateCartItem, areGarmentPrintStoresSynced, useConfigurationCart, useConfiguratorProduct, useGarmentDesign } from '@store';
 
 const useConfigurationCartSync = () => {
   const initializedRef = useRef(false);
@@ -13,14 +13,24 @@ const useConfigurationCartSync = () => {
       activateCartItem(() => useConfigurationCart.getState(), activeItemId);
     };
 
+    const { product } = useConfiguratorProduct.getState();
+    const isGarmentStoresEmpty = useGarmentDesign.getState().productPath == null;
+
     if (!initializedRef.current) {
       initializedRef.current = true;
-      syncActiveCartItem();
+
+      // Route shell stamps the product during render; skip default-model activation on first paint.
+      if (isGarmentStoresEmpty) {
+        return;
+      }
+
+      if (!areGarmentPrintStoresSynced(product.path)) {
+        syncActiveCartItem();
+      }
+
       return;
     }
 
-    // After HMR the zustand store may reset while this ref survives.
-    const { product } = useConfiguratorProduct.getState();
     if (!areGarmentPrintStoresSynced(product.path)) {
       syncActiveCartItem();
     }
