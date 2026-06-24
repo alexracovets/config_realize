@@ -6,8 +6,10 @@ interface designPatternPartType {
   previewSrc: string;
 }
 
-type designPatternItemType = Pick<patternConfigType, 'name'> & {
+type designPatternItemType = Pick<patternConfigType, 'name' | 'designId'> & {
   key: string;
+  /** Step DESIGN grid preview — `/svg/design/design_XX.svg`. */
+  cardPreviewSrc: string;
   parts: designPatternPartType[];
 };
 

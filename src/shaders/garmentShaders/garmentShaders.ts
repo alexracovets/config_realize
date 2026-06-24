@@ -2,6 +2,7 @@ const garmentVertexUvPars = /* glsl */ `
 #include <uv_pars_vertex>
 varying vec2 vRawUv1;
 varying vec2 vPrintUv;
+varying vec2 vPbrUv;
 `;
 
 const garmentVertexUv = /* glsl */ `
@@ -12,12 +13,18 @@ vPrintUv = uv;
 #else
   vRawUv1 = uv;
 #endif
+#ifdef USE_PBR_UV0
+  vPbrUv = uv;
+#else
+  vPbrUv = vRawUv1;
+#endif
 `;
 
 const garmentFragmentUvPars = /* glsl */ `
 #include <uv_pars_fragment>
 varying vec2 vRawUv1;
 varying vec2 vPrintUv;
+varying vec2 vPbrUv;
 #ifdef USE_GRADIENT
 uniform vec4 uPartUvBounds;
 uniform float uGradientEnabled;
@@ -357,7 +364,7 @@ vec4 garmentGizmoButtons( vec2 worldUv, vec2 anchor, float scale, vec2 halfPx, f
 
 const garmentNormalFragment = /* glsl */ `
 #ifdef USE_NORMALMAP_TANGENTSPACE
-  vec3 mapN = texture2D( normalMap, vRawUv1 ).xyz * 2.0 - 1.0;
+  vec3 mapN = texture2D( normalMap, vPbrUv ).xyz * 2.0 - 1.0;
   mapN.xy *= normalScale;
   normal = normalize( tbn * mapN );
 
@@ -384,7 +391,7 @@ float roughnessFactor = roughness;
   roughnessFactor *= mix( 0.14, 0.82, fabricR );
 #endif
 #ifdef USE_AOMAP
-  float bakeRough = texture2D( aoMap, vRawUv1 ).g;
+  float bakeRough = texture2D( aoMap, vPbrUv ).g;
   roughnessFactor *= mix( 0.62, 1.0, bakeRough );
 #endif
 `;

@@ -2,6 +2,18 @@
 
 import type { garmentConfigType, nameInstanceType, nameLimitsType, namePositionType, textDefaultsConfigType } from '@types';
 
+import { resolvePrintLocalUvToAtlas } from '@utils';
+
+const resolveNamePart = (product: garmentConfigType, partId: string) => {
+  const part = product.parts.find((item) => item.id === partId);
+
+  if (!part) {
+    throw new Error(`Product "${product.path}" has no part "${partId}" for a name position.`);
+  }
+
+  return part;
+};
+
 const resolveNameDefaults = (product: garmentConfigType): textDefaultsConfigType => {
   if (!product.nameDefaults) {
     throw new Error(`Product "${product.path}" defines namePositions but is missing nameDefaults.`);
@@ -26,7 +38,7 @@ const mapProductNamePositions = (product: garmentConfigType): namePositionType[]
     key: `name-pos-${index}`,
     label: position.label,
     partId: position.partId,
-    uv: position.uv,
+    uv: resolvePrintLocalUvToAtlas(resolveNamePart(product, position.partId), position.uv),
     rotation: position.rotation,
     fontSize: position.fontSize,
     showFrame: position.show_frame ?? true,

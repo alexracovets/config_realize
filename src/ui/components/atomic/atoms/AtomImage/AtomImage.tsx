@@ -28,6 +28,7 @@ const AtomImage = ({
   alt,
   variant = 'default',
   priority = false,
+  fit = 'contain',
   loading,
   className,
   width,
@@ -41,7 +42,7 @@ const AtomImage = ({
   const resolvedLoading = loading ?? (priority ? 'eager' : 'lazy');
 
   const imageStyle: CSSProperties = useFill
-    ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }
+    ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit }
     : (style ?? {});
 
   const imageElement = (
@@ -52,7 +53,7 @@ const AtomImage = ({
       height={hasDimensions ? height : undefined}
       loading={resolvedLoading}
       fetchPriority={priority ? 'high' : undefined}
-      className={cn(useFill && 'object-contain', !useFill && className)}
+      className={cn(useFill && (fit === 'cover' ? 'object-cover' : 'object-contain'), !useFill && className)}
       style={imageStyle}
       {...(props as ImgHTMLAttributes<HTMLImageElement>)}
     />

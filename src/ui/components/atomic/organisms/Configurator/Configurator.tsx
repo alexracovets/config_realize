@@ -45,7 +45,7 @@ const Configurator = () => {
       }}
     >
       <CanvasControl />
-      <Environment preset="studio" environmentIntensity={0.2} />
+      <Environment preset="studio" environmentIntensity={.5} />
       <Suspense fallback={null}>
         <Model />
       </Suspense>

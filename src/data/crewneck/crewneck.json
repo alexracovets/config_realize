@@ -11,16 +11,26 @@
       "minimum_count": 6,
       "path": "/models/crewneck/crewneck/",
       "modelFile": "crewneck.gltf",
-      "printAtlas": { "width": 4096, "height": 2149 },
+      "printAtlas": {
+        "width": 4096,
+        "height": 2149
+      },
       "gizmoRotation": 0,
       "parts": [
         {
           "name": "Davanti",
           "label": "Davanti",
           "id": "front_crewneck",
-          "meshNames": ["crewneck_front"],
+          "meshNames": [
+            "crewneck_front"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0.5028, "maxX": 0.9979, "minY": 0.0872, "maxY": 0.8119 },
+          "uvBounds": {
+            "minX": 0.5028,
+            "maxX": 0.9979,
+            "minY": 0.0872,
+            "maxY": 0.8119
+          },
           "printRotation": 180,
           "gradient": {
             "reversed": false,
@@ -34,9 +44,16 @@
           "name": "Retro",
           "label": "Retro",
           "id": "back_crewneck",
-          "meshNames": ["crewneck_back"],
+          "meshNames": [
+            "crewneck_back"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0.0038, "maxX": 0.4985, "minY": 0.0013, "maxY": 0.7299 },
+          "uvBounds": {
+            "minX": 0.0038,
+            "maxX": 0.4985,
+            "minY": 0.0013,
+            "maxY": 0.7299
+          },
           "printRotation": 0,
           "gradient": {
             "reversed": true,
@@ -50,9 +67,16 @@
           "name": "Manica 1",
           "label": "Manica 1",
           "id": "sleeve_left_crewneck",
-          "meshNames": ["crewneck_sleeve_left"],
+          "meshNames": [
+            "crewneck_sleeve_left"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0.0026, "maxX": 0.2625, "minY": 0.7191, "maxY": 0.9967 },
+          "uvBounds": {
+            "minX": 0.0026,
+            "maxX": 0.2625,
+            "minY": 0.7191,
+            "maxY": 0.9967
+          },
           "printRotation": -90,
           "gradient": {
             "reversed": false,
@@ -66,9 +90,16 @@
           "name": "Manica 2",
           "label": "Manica 2",
           "id": "sleeve_right_crewneck",
-          "meshNames": ["crewneck_sleeve_right"],
+          "meshNames": [
+            "crewneck_sleeve_right"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0.3125, "maxX": 0.5711, "minY": 0.7182, "maxY": 0.998 },
+          "uvBounds": {
+            "minX": 0.3125,
+            "maxX": 0.5711,
+            "minY": 0.7182,
+            "maxY": 0.998
+          },
           "printRotation": 270,
           "gradient": {
             "reversed": true,
@@ -82,7 +113,9 @@
           "name": "Collar",
           "label": "Collar",
           "id": "collar_crewneck",
-          "meshNames": ["crewneck_collar"],
+          "meshNames": [
+            "crewneck_collar"
+          ],
           "renderOrder": 1,
           "colorOnly": true
         }
@@ -93,7 +126,9 @@
         "fabricNormal": "cotton_jersey_nor_gl.jpg",
         "fabricRoughness": "cotton_jersey_rough.jpg"
       },
-      "preserveGltfMeshes": ["crewneck_inside"],
+      "preserveGltfMeshes": [
+        "crewneck_inside"
+      ],
       "patterns": [
         {
           "name": "Design 1",
@@ -134,12 +169,12 @@
           "name": "Design 4",
           "parts": [
             {
-              "path_name": "crewneck_design_4_color_1.webp",
-              "id": 6
-            },
-            {
               "path_name": "crewneck_design_4_color_2.webp",
               "id": 7
+            },
+            {
+              "path_name": "crewneck_design_4_color_1.webp",
+              "id": 6
             }
           ]
         },
@@ -259,7 +294,10 @@
         {
           "label": "Top Back",
           "partId": "back_crewneck",
-          "uv": { "x": 0.41, "y": 0.36 },
+          "uv": {
+            "x": 0.41,
+            "y": 0.36
+          },
           "rotation": 0,
           "fontSize": 200,
           "show_frame": true,
@@ -268,7 +306,10 @@
         {
           "label": "Bottom Back",
           "partId": "back_crewneck",
-          "uv": { "x": 0.13, "y": 0.35 },
+          "uv": {
+            "x": 0.13,
+            "y": 0.35
+          },
           "rotation": 0,
           "fontSize": 200,
           "show_frame": true,
@@ -279,7 +320,10 @@
         {
           "label": "Front Center",
           "partId": "front_crewneck",
-          "uv": { "x": 0.3, "y": 0.5 },
+          "uv": {
+            "x": 0.3,
+            "y": 0.5
+          },
           "rotation": 0,
           "fontSize": 180,
           "show_frame": true,
@@ -288,7 +332,10 @@
         {
           "label": "Front Right",
           "partId": "front_crewneck",
-          "uv": { "x": 0.26, "y": 0.29 },
+          "uv": {
+            "x": 0.26,
+            "y": 0.29
+          },
           "rotation": 0,
           "fontSize": 180,
           "show_frame": true,
@@ -297,7 +344,10 @@
         {
           "label": "Back",
           "partId": "back_crewneck",
-          "uv": { "x": 0.573, "y": 0.5 },
+          "uv": {
+            "x": 0.573,
+            "y": 0.5
+          },
           "rotation": 0,
           "fontSize": 580,
           "show_frame": true,
@@ -327,7 +377,10 @@
         {
           "label": "Front Center",
           "partId": "front_crewneck",
-          "uv": { "x": 0.71, "y": 0.45 },
+          "uv": {
+            "x": 0.71,
+            "y": 0.45
+          },
           "rotation": 0,
           "fontSize": 180,
           "show_frame": true,
@@ -370,28 +423,50 @@
       "minimum_count": 6,
       "path": "/models/crewneck/mans_shorts/",
       "modelFile": "mans_shorts.gltf",
-      "printAtlas": { "width": 4096, "height": 2149 },
+      "printAtlas": {
+        "width": 4096,
+        "height": 2149
+      },
       "gizmoRotation": -90,
-      "hiddenSteps": ["name"],
+      "hiddenSteps": [
+        "name"
+      ],
       "parts": [
         {
           "name": "Davanti",
           "label": "Left",
           "id": "left_shorts",
-          "meshNames": ["mans_shorts_left"],
+          "meshNames": [
+            "mans_shorts_left"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0.5, "maxX": 1, "minY": 0, "maxY": 1 }
+          "uvBounds": {
+            "minX": 0.5,
+            "maxX": 1,
+            "minY": 0,
+            "maxY": 1
+          }
         },
         {
           "name": "Retro",
           "label": "Right",
           "id": "right_shorts",
-          "meshNames": ["mans_shorts_right"],
+          "meshNames": [
+            "mans_shorts_right"
+          ],
           "renderOrder": 1,
-          "uvBounds": { "minX": 0, "maxX": 0.5, "minY": 0, "maxY": 1 }
+          "uvBounds": {
+            "minX": 0,
+            "maxX": 0.5,
+            "minY": 0,
+            "maxY": 1
+          }
         }
       ],
-      "preserveGltfMeshes": ["mans_shorts_inside", "mans_shorts_laces"],
+      "preserveGltfMeshes": [
+        "mans_shorts_inside",
+        "mans_shorts_laces"
+      ],
       "patterns": [],
       "default_pattern": [
         {
@@ -435,7 +510,10 @@
         {
           "label": "Right Bottom",
           "partId": "right_shorts",
-          "uv": { "x": 0.767, "y": 0.73 },
+          "uv": {
+            "x": 0.767,
+            "y": 0.73
+          },
           "rotation": -90,
           "fontSize": 220,
           "show_frame": true,
@@ -444,7 +522,10 @@
         {
           "label": "Right Top",
           "partId": "right_shorts",
-          "uv": { "x": 0.767, "y": 0.57 },
+          "uv": {
+            "x": 0.767,
+            "y": 0.57
+          },
           "rotation": -90,
           "fontSize": 220,
           "show_frame": true,
@@ -453,7 +534,10 @@
         {
           "label": "Right Center",
           "partId": "right_shorts",
-          "uv": { "x": 0.647, "y": 0.659 },
+          "uv": {
+            "x": 0.647,
+            "y": 0.659
+          },
           "rotation": -90,
           "fontSize": 220,
           "show_frame": true,
@@ -462,7 +546,10 @@
         {
           "label": "Left Center",
           "partId": "left_shorts",
-          "uv": { "x": 0.339, "y": 0.596 },
+          "uv": {
+            "x": 0.339,
+            "y": 0.596
+          },
           "rotation": -90,
           "fontSize": 220,
           "show_frame": true,
@@ -492,7 +579,10 @@
         {
           "label": "Left Leg",
           "partId": "left_shorts",
-          "uv": { "x": 0.734, "y": 0.529 },
+          "uv": {
+            "x": 0.734,
+            "y": 0.529
+          },
           "rotation": 0,
           "fontSize": 200,
           "show_frame": true,
@@ -501,7 +591,10 @@
         {
           "label": "Right Leg",
           "partId": "right_shorts",
-          "uv": { "x": 0.26, "y": 0.541 },
+          "uv": {
+            "x": 0.26,
+            "y": 0.541
+          },
           "rotation": 180,
           "fontSize": 200,
           "show_frame": true,

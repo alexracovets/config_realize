@@ -3,46 +3,57 @@
 import { useCallback, useState } from 'react';
 
 import { AtomImage, Button, Flex, Grid, SvgIcon } from '@atoms';
+import { useTintedDesignSvgSrc } from '@hooks';
 import { ColorControl } from '../../ConfigurationTools/ColorControl';
 import { ColorTabControl } from '../../ConfigurationTools/ColorTabControl';
 import { PatternLayerColorControl } from '../../ConfigurationTools/PatternLayerColorControl';
 import { RangeControl } from '../../ConfigurationTools/RangeControl';
 import { PALETTE_COLORS } from '@constants';
 import { useConfiguratorProduct, useGarmentDesign } from '@store';
-import type { designPatternPartType } from '@types';
+import type { designPatternItemType } from '@types';
 import { PatternPreviewSkeleton } from '@skeletons';
 import { cn } from '@utils';
 
 const DEFAULT_PART_COLOR = PALETTE_COLORS[1];
 
-const getPatternPreviewKey = (parts: designPatternPartType[]) => parts.map((part) => `${part.key}:${part.previewSrc}`).join('|');
-
-const PatternPreviewContent = ({ parts, eager }: { parts: designPatternPartType[]; eager?: boolean }) => {
-  const [loadedCount, setLoadedCount] = useState(0);
-  const isLoaded = loadedCount >= parts.length;
+const DesignCardPreview = ({
+  src,
+  layerColors,
+  eager,
+}: {
+  src: string;
+  layerColors?: string[];
+  eager?: boolean;
+}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const displaySrc = useTintedDesignSvgSrc(src, layerColors);
 
   return (
-    <div className="relative h-full w-full">
+    <div key={displaySrc} className="relative h-full w-full">
       {!isLoaded && <PatternPreviewSkeleton />}
-      {parts.map((part, index) => (
-        <AtomImage
-          key={part.key}
-          src={part.previewSrc}
-          alt=""
-          loading={eager ? 'eager' : 'lazy'}
-          fetchPriority={eager ? 'high' : 'low'}
-          className={cn(index > 0 && 'absolute inset-0', !isLoaded && 'opacity-0')}
-          draggable={false}
-          onLoad={() => setLoadedCount((count) => count + 1)}
-        />
-      ))}
+      <AtomImage
+        src={displaySrc}
+        alt=""
+        fit="cover"
+        loading={eager ? 'eager' : 'lazy'}
+        fetchPriority={eager ? 'high' : 'low'}
+        className={cn(!isLoaded && 'opacity-0')}
+        draggable={false}
+        onLoad={() => setIsLoaded(true)}
+      />
     </div>
   );
 };
 
-const PatternPreview = ({ parts, eager }: { parts: designPatternPartType[]; eager?: boolean }) => (
-  <PatternPreviewContent key={getPatternPreviewKey(parts)} parts={parts} eager={eager} />
-);
+const resolvePatternLayerColors = (
+  pattern: designPatternItemType,
+  activePattern: designPatternItemType | null,
+  getPartColor: (partKey: string) => string,
+): string[] | undefined => {
+  if (activePattern?.key !== pattern.key) return undefined;
+
+  return pattern.parts.map((part) => getPartColor(part.key));
+};
 
 const ConfigurationDesign = () => {
   const product = useConfiguratorProduct((state) => state.product);
@@ -75,7 +86,11 @@ const ConfigurationDesign = () => {
             onClick={() => setActivePattern(pattern)}
             style={{ contentVisibility: 'auto', contain: 'layout paint style' }}
           >
-            <PatternPreview parts={pattern.parts} eager={index < 2} />
+            <DesignCardPreview
+              src={pattern.cardPreviewSrc}
+              layerColors={resolvePatternLayerColors(pattern, activePattern, getPartColor)}
+              eager={index < 2}
+            />
           </Button>
         ))}
       </Grid>

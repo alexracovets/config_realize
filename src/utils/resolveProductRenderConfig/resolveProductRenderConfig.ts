@@ -30,6 +30,16 @@ const clampUvToPartBounds = (uv: uvPointType, bounds: uvBoundsType = FULL_UV_BOU
   y: Math.min(bounds.maxY, Math.max(bounds.minY, uv.y)),
 });
 
+/** Print placement UV in JSON is 0..1 inside the part; shaders expect atlas coordinates. */
+const resolvePrintLocalUvToAtlas = (part: garmentPartConfigType, localUv: uvPointType): uvPointType => {
+  const bounds = resolvePartUvBounds(part);
+
+  return {
+    x: bounds.minX + localUv.x * (bounds.maxX - bounds.minX),
+    y: bounds.minY + localUv.y * (bounds.maxY - bounds.minY),
+  };
+};
+
 const repairPrintInstancePlacement = <T extends { partId: string; uv: uvPointType }>(instance: T, parts: garmentPartConfigType[]): T => {
   const assignedPart = parts.find((part) => part.id === instance.partId);
   const assignedBounds = assignedPart ? resolvePartUvBounds(assignedPart) : FULL_UV_BOUNDS;
@@ -56,5 +66,6 @@ export {
   resolvePartTextureSize,
   resolvePartUvBounds,
   resolvePrintAtlasSize,
+  resolvePrintLocalUvToAtlas,
   resolveProductGizmoRotation,
 };

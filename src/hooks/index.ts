@@ -26,3 +26,4 @@ export { useGizmoIconAtlas } from './useGizmoIconAtlas';
 export { useLogoFileHandler } from './useLogoFileHandler';
 export { useProductStepsConfiguration } from './useProductStepsConfiguration';
 export { useStepLogo } from './useStepLogo';
+export { useTintedDesignSvgSrc } from './useTintedDesignSvgSrc';

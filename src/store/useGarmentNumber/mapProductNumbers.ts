@@ -2,7 +2,7 @@
 
 import type { garmentConfigType, numberInstanceType, numberLimitsType, numberPositionType, textDefaultsConfigType, uvPointType } from '@types';
 
-import { resolvePartUvBounds } from '@utils';
+import { resolvePrintLocalUvToAtlas } from '@utils';
 
 const NUMBER_MAX_LENGTH = 2;
 const NUMBER_DEFAULT_LINE_HEIGHT = 1.5;
@@ -18,15 +18,8 @@ const resolveNumberPart = (product: garmentConfigType, partId: string) => {
 };
 
 // numberPositions UV is 0..1 inside the part; shader expects print-atlas coordinates.
-const resolveNumberLocalUvToAtlas = (product: garmentConfigType, partId: string, localUv: uvPointType): uvPointType => {
-  const part = resolveNumberPart(product, partId);
-  const bounds = resolvePartUvBounds(part);
-
-  return {
-    x: bounds.minX + localUv.x * (bounds.maxX - bounds.minX),
-    y: bounds.minY + localUv.y * (bounds.maxY - bounds.minY),
-  };
-};
+const resolveNumberLocalUvToAtlas = (product: garmentConfigType, partId: string, localUv: uvPointType): uvPointType =>
+  resolvePrintLocalUvToAtlas(resolveNumberPart(product, partId), localUv);
 
 const resolveNumberDefaults = (product: garmentConfigType): textDefaultsConfigType => {
   if (!product.numberDefaults) {

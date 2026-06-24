@@ -33,7 +33,7 @@ const buttonVariants = cva(
         secondary: '',
         ghost: '',
         select_part: cn(
-          'w-full h-[80px] rounded-[8px] border-[2px] border-gray-200 shadow-sm',
+          'w-full h-[80px] rounded-[8px] border-[2px] border-gray-200 shadow-sm overflow-hidden',
           'data-[active=true]:border-active hover:border-active data-[active=true]:shadow-md hover:shadow-md',
           'transition-all duration-200 ease-in',
         ),

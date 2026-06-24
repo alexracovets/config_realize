@@ -6,7 +6,7 @@ import { create } from 'zustand';
 
 import { PALETTE_COLORS } from '../../constants/PALETTE_COLORS/PALETTE_COLORS';
 
-import { resolveDesignThumbSrc } from '@utils';
+import { resolveDesignCardPreviewSrc, resolveDesignThumbSrc } from '@utils';
 
 const DEFAULT_COLOR = PALETTE_COLORS[1];
 const DEFAULT_OPACITY = 1;
@@ -34,6 +34,8 @@ const mapProductDesigns = (product: garmentConfigType): designPatternItemType[] 
   product.patterns.map((pattern, patternIndex) => ({
     key: `pattern-${patternIndex}`,
     name: pattern.name,
+    designId: pattern.designId,
+    cardPreviewSrc: resolveDesignCardPreviewSrc(pattern.name, pattern.designId),
     parts: pattern.parts.map((part, partIndex) => {
       const src = `${product.path}designs/${part.path_name}`;
       return {
@@ -51,6 +53,8 @@ const mapDefaultPattern = (product: garmentConfigType): designPatternItemType | 
   return {
     key: 'default-pattern',
     name: pattern.name,
+    designId: pattern.designId,
+    cardPreviewSrc: '',
     parts: pattern.parts.map((part, partIndex) => {
       const src = `${product.path}designs/${part.path_name}`;
       return {

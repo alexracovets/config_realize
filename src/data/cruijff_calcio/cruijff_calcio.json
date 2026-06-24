@@ -1,8 +1,14 @@
 {
   "id": "cruijff_calcio",
   "path": "/models/cruijff_calcio/",
-  "printAtlas": { "width": 4096, "height": 2149 },
-  "preserveGltfMeshes": ["model_inside", "model_laces"],
+  "printAtlas": {
+    "width": 4096,
+    "height": 2149
+  },
+  "preserveGltfMeshes": [
+    "model_inside",
+    "model_laces"
+  ],
   "pbrTextures": {
     "bakeNormal": "bake_normal.jpg",
     "bakeAoRoughness": "bake_ao_roughness.jpg",
@@ -14,7 +20,9 @@
       "name": "Davanti",
       "label": "Davanti",
       "id": "cruijff_calcio_front",
-      "meshNames": ["model_left"],
+      "meshNames": [
+        "model_left"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5128,
@@ -35,7 +43,9 @@
       "name": "Retro",
       "label": "Retro",
       "id": "cruijff_calcio_back",
-      "meshNames": ["model_right"],
+      "meshNames": [
+        "model_right"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.001,
@@ -56,49 +66,127 @@
   "patterns": [
     {
       "name": "Design 1",
-      "parts": [{ "path_name": "design_1_color_1.webp" }, { "path_name": "design_1_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_1_color_1.webp"
+        },
+        {
+          "path_name": "design_1_color_2.webp"
+        }
+      ],
+      "designId": "design_01"
     },
     {
       "name": "Design 2",
-      "parts": [{ "path_name": "design_2_color_1.webp" }, { "path_name": "design_2_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_2_color_1.webp"
+        },
+        {
+          "path_name": "design_2_color_2.webp"
+        }
+      ],
+      "designId": "design_02"
     },
     {
       "name": "Design 3",
-      "parts": [{ "path_name": "design_3_color_1.webp" }, { "path_name": "design_3_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_3_color_1.webp"
+        },
+        {
+          "path_name": "design_3_color_2.webp"
+        }
+      ],
+      "designId": "design_03"
     },
     {
       "name": "Design 4",
-      "parts": [{ "path_name": "design_4_color_1.webp" }, { "path_name": "design_4_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_4_color_2.webp"
+        },
+        {
+          "path_name": "design_4_color_1.webp"
+        }
+      ],
+      "designId": "design_04"
     },
     {
       "name": "Design 5",
-      "parts": [{ "path_name": "design_5_color_1.webp" }, { "path_name": "design_5_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_5_color_1.webp"
+        },
+        {
+          "path_name": "design_5_color_2.webp"
+        }
+      ],
+      "designId": "design_05"
     },
     {
       "name": "Design 6",
-      "parts": [{ "path_name": "design_6.webp" }]
+      "parts": [
+        {
+          "path_name": "design_6.webp"
+        }
+      ],
+      "designId": "design_06"
     },
     {
       "name": "Design 7",
-      "parts": [{ "path_name": "design_7_color_1.webp" }, { "path_name": "design_7_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_7_color_1.webp"
+        },
+        {
+          "path_name": "design_7_color_2.webp"
+        }
+      ],
+      "designId": "design_07"
     },
     {
       "name": "Design 8",
-      "parts": [{ "path_name": "design_8_color_1.webp" }, { "path_name": "design_8_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_8_color_1.webp"
+        },
+        {
+          "path_name": "design_8_color_2.webp"
+        }
+      ],
+      "designId": "design_08"
     },
     {
       "name": "Design 9",
-      "parts": [{ "path_name": "design_9_color_1.webp" }, { "path_name": "design_9_color_2.webp" }]
+      "parts": [
+        {
+          "path_name": "design_9_color_1.webp"
+        },
+        {
+          "path_name": "design_9_color_2.webp"
+        }
+      ],
+      "designId": "design_09"
     },
     {
       "name": "Design 10",
-      "parts": [{ "path_name": "design_10.webp" }]
+      "parts": [
+        {
+          "path_name": "design_10.webp"
+        }
+      ],
+      "designId": "design_10"
     }
   ],
   "default_pattern": [
     {
       "name": "Logos",
-      "parts": [{ "path_name": "logos.webp" }]
+      "parts": [
+        {
+          "path_name": "logos.webp"
+        }
+      ]
     }
   ],
   "nameDefaults": {
@@ -127,7 +215,7 @@
     "lineHeightMax": 2,
     "line_height_show": false
   },
-  "textDefaults": {
+  "testoDefaults": {
     "text": "TEAM",
     "font": "Oswald",
     "textColor": "#000000",
@@ -150,7 +238,10 @@
     {
       "label": "Back",
       "partId": "cruijff_calcio_back",
-      "uv": { "x": 0.41, "y": 0.36 },
+      "uv": {
+        "x": 0.41,
+        "y": 0.36
+      },
       "rotation": 0,
       "fontSize": 200,
       "show_frame": true,
@@ -161,7 +252,10 @@
     {
       "label": "Front",
       "partId": "cruijff_calcio_front",
-      "uv": { "x": 0.3, "y": 0.5 },
+      "uv": {
+        "x": 0.3,
+        "y": 0.5
+      },
       "rotation": 0,
       "fontSize": 180,
       "show_frame": true,
@@ -170,18 +264,24 @@
     {
       "label": "Back",
       "partId": "cruijff_calcio_back",
-      "uv": { "x": 0.573, "y": 0.5 },
+      "uv": {
+        "x": 0.573,
+        "y": 0.5
+      },
       "rotation": 0,
       "fontSize": 580,
       "show_frame": true,
       "show_gizmo": false
     }
   ],
-  "textPositions": [
+  "testoPositions": [
     {
       "label": "Front",
       "partId": "cruijff_calcio_front",
-      "uv": { "x": 0.71, "y": 0.45 },
+      "uv": {
+        "x": 0.71,
+        "y": 0.45
+      },
       "rotation": 0,
       "fontSize": 180,
       "show_frame": true,

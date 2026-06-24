@@ -86,9 +86,18 @@ export {
   resolvePartTextureSize,
   resolvePartUvBounds,
   resolvePrintAtlasSize,
+  resolvePrintLocalUvToAtlas,
   resolveProductGizmoRotation,
 } from './resolveProductRenderConfig/resolveProductRenderConfig';
 export { resolveDesignThumbSrc } from './resolveDesignThumbSrc/resolveDesignThumbSrc';
+export {
+  normalizeDesignId,
+  parseDesignIdFromPatternName,
+  resolveDesignCardPreviewSrc,
+  resolvePatternDesignId,
+} from './resolveDesignCardPreviewSrc';
+export { applyDesignSvgLayerColors, designSvgTextToDataUrl } from './applyDesignSvgLayerColors';
+export { loadDesignSvgText } from './loadDesignSvgText';
 export { resolveProductFlipCardSrc } from './resolveProductFlipCardSrc/resolveProductFlipCardSrc';
 export type { productFlipCardSideType } from './resolveProductFlipCardSrc/resolveProductFlipCardSrc';
 export { resolveProductCatalogPreviewSrc } from './resolveProductCatalogPreviewSrc/resolveProductCatalogPreviewSrc';

@@ -1,5 +1,7 @@
 import type { garmentBusinessType, garmentConfigType, modelIdType } from '@types';
 
+import baggioData from '../../data/baggio_calcio/baggio_calcio.json';
+import bernardiData from '../../data/bernardi_calcio/bernardi_calcio.json';
 import cruijffData from '../../data/cruijff_calcio/cruijff_calcio.json';
 import federerData from '../../data/federer_calcio/federer_calcio.json';
 
@@ -10,6 +12,8 @@ import federerData from '../../data/federer_calcio/federer_calcio.json';
  */
 const MODELS: Record<modelIdType, garmentConfigType> = {
   // WIP geometry JSON — schema is still being finalized (e.g. testoPositions), so cast through unknown.
+  baggio_calcio: baggioData as unknown as garmentConfigType,
+  bernardi_calcio: bernardiData as unknown as garmentConfigType,
   federer_calcio: federerData as unknown as garmentConfigType,
   cruijff_calcio: cruijffData as unknown as garmentConfigType,
 };

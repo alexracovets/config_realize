@@ -2,6 +2,18 @@
 
 import type { garmentConfigType, testoInstanceType, testoLimitsType, testoPositionType, textDefaultsConfigType } from '@types';
 
+import { resolvePrintLocalUvToAtlas } from '@utils';
+
+const resolveTestoPart = (product: garmentConfigType, partId: string) => {
+  const part = product.parts.find((item) => item.id === partId);
+
+  if (!part) {
+    throw new Error(`Product "${product.path}" has no part "${partId}" for a testo position.`);
+  }
+
+  return part;
+};
+
 const TESTO_DEFAULT_LINE_HEIGHT = 1.5;
 const TESTO_DEFAULT_LETTER_SPACING = 0;
 
@@ -37,7 +49,7 @@ const mapProductTestoPositions = (product: garmentConfigType): testoPositionType
     key: `testo-pos-${index}`,
     label: position.label,
     partId: position.partId,
-    uv: position.uv,
+    uv: resolvePrintLocalUvToAtlas(resolveTestoPart(product, position.partId), position.uv),
     rotation: position.rotation,
     fontSize: position.fontSize,
     lineHeight: position.line_height,

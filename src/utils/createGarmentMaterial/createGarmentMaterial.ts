@@ -29,7 +29,7 @@ import { getEmptyPrintTexture } from '../garmentPrint/emptyPrintTexture';
 
 import { applyGarmentPrintBase, applyPbrMaps } from './applyPbrMaps';
 
-const GARMENT_SHADER_VERSION = 'garment-pbr-print-v79-pattern-mask-alpha';
+const GARMENT_SHADER_VERSION = 'garment-pbr-print-v85-bake-normal-decode';
 
 type GarmentGradientState = {
   color2: string;
@@ -49,10 +49,14 @@ const configureGarmentShader = (material: MeshStandardMaterial) => {
   material.userData.uPartUvBounds = material.userData.uPartUvBounds ?? new Vector4(0, 0, 1, 1);
 
   material.onBeforeCompile = (shader) => {
+    const pbrUvChannel = (material.userData.pbrUvChannel as 0 | 1 | undefined) ?? 1;
     const printState = material.userData.garmentPrintState as garmentPrintStateType | undefined;
     const gradient = material.userData.garmentGradient as GarmentGradientState | undefined;
 
     shader.defines = { ...shader.defines, USE_UV1: '', USE_GRADIENT: '', USE_PRINT: '' };
+    if (pbrUvChannel === 0) {
+      shader.defines.USE_PBR_UV0 = '';
+    }
     shader.uniforms.uPartUvBounds = { value: material.userData.uPartUvBounds };
     material.userData.uPartUvBoundsUniform = shader.uniforms.uPartUvBounds;
     shader.uniforms.uGradientEnabled = { value: gradient?.enabled ? 1 : 0 };
@@ -311,13 +315,18 @@ const configureGarmentShader = (material: MeshStandardMaterial) => {
   material.customProgramCacheKey = () => GARMENT_SHADER_VERSION;
 };
 
-const createGarmentMaterial = (pbrMaps: pbrMapsType | null, source: MeshStandardMaterial | null | undefined): MeshStandardMaterial => {
+const createGarmentMaterial = (
+  pbrMaps: pbrMapsType | null,
+  source: MeshStandardMaterial | null | undefined,
+  pbrUvChannel: 0 | 1 = 1,
+): MeshStandardMaterial => {
   const material = source ? source.clone() : new MeshStandardMaterial({ color: 0xffffff });
 
   if (pbrMaps) {
-    applyPbrMaps(material, pbrMaps);
+    applyPbrMaps(material, pbrMaps, pbrUvChannel);
   } else {
     applyGarmentPrintBase(material);
+    material.userData.pbrUvChannel = pbrUvChannel;
   }
 
   material.userData.garmentShaderMode = 'bootstrap';

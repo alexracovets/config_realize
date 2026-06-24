@@ -1,8 +1,15 @@
 {
   "id": "federer_calcio",
   "path": "/models/federer_calcio/",
-  "printAtlas": { "width": 4096, "height": 2149 },
-  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
+  "printAtlas": {
+    "width": 4096,
+    "height": 2149
+  },
+  "preserveGltfMeshes": [
+    "model_inside",
+    "model_label",
+    "model_sweatband"
+  ],
   "pbrTextures": {
     "bakeNormal": "bake_normal.jpg",
     "bakeAoRoughness": "bake_ao_roughness.jpg",
@@ -14,7 +21,9 @@
       "name": "Davanti",
       "label": "Davanti",
       "id": "federer_calcio_front",
-      "meshNames": ["model_front"],
+      "meshNames": [
+        "model_front"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5028,
@@ -35,7 +44,9 @@
       "name": "Retro",
       "label": "Retro",
       "id": "federer_calcio_back",
-      "meshNames": ["model_back"],
+      "meshNames": [
+        "model_back"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0038,
@@ -56,7 +67,9 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "federer_calcio_sleeve_left",
-      "meshNames": ["model_sleeve_left"],
+      "meshNames": [
+        "model_sleeve_left"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0026,
@@ -77,7 +90,9 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "federer_calcio_sleeve_right",
-      "meshNames": ["model_sleeve_right"],
+      "meshNames": [
+        "model_sleeve_right"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3125,
@@ -98,7 +113,9 @@
       "name": "Collar",
       "label": "Collar",
       "id": "federer_calcio_collar",
-      "meshNames": ["model_collar"],
+      "meshNames": [
+        "model_collar"
+      ],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -110,7 +127,8 @@
         {
           "path_name": "design_1.webp"
         }
-      ]
+      ],
+      "designId": "design_01"
     },
     {
       "name": "Design 2",
@@ -121,7 +139,8 @@
         {
           "path_name": "design_2_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_02"
     },
     {
       "name": "Design 3",
@@ -132,18 +151,20 @@
         {
           "path_name": "design_3_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_03"
     },
     {
       "name": "Design 4",
       "parts": [
         {
-          "path_name": "design_4_color_1.webp"
+          "path_name": "design_4_color_2.webp"
         },
         {
-          "path_name": "design_4_color_2.webp"
+          "path_name": "design_4_color_1.webp"
         }
-      ]
+      ],
+      "designId": "design_04"
     },
     {
       "name": "Design 5",
@@ -154,7 +175,8 @@
         {
           "path_name": "design_5_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_05"
     },
     {
       "name": "Design 6",
@@ -165,7 +187,8 @@
         {
           "path_name": "design_6_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_06"
     },
     {
       "name": "Design 7",
@@ -173,7 +196,8 @@
         {
           "path_name": "design_7.webp"
         }
-      ]
+      ],
+      "designId": "design_07"
     },
     {
       "name": "Design 8",
@@ -184,7 +208,8 @@
         {
           "path_name": "design_8_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_08"
     },
     {
       "name": "Design 9",
@@ -195,7 +220,8 @@
         {
           "path_name": "design_9_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_09"
     },
     {
       "name": "Design 10",
@@ -206,7 +232,8 @@
         {
           "path_name": "design_10_color_2.webp"
         }
-      ]
+      ],
+      "designId": "design_10"
     }
   ],
   "default_pattern": [
@@ -245,7 +272,7 @@
     "lineHeightMax": 2,
     "line_height_show": false
   },
-  "textDefaults": {
+  "testoDefaults": {
     "text": "TEAM",
     "font": "Oswald",
     "textColor": "#000000",
@@ -268,7 +295,10 @@
     {
       "label": "Top Back",
       "partId": "federer_calcio_back",
-      "uv": { "x": 0.41, "y": 0.36 },
+      "uv": {
+        "x": 0.821,
+        "y": 0.492
+      },
       "rotation": 0,
       "fontSize": 200,
       "show_frame": true,
@@ -277,7 +307,10 @@
     {
       "label": "Bottom Back",
       "partId": "federer_calcio_back",
-      "uv": { "x": 0.13, "y": 0.35 },
+      "uv": {
+        "x": 0.255,
+        "y": 0.479
+      },
       "rotation": 0,
       "fontSize": 200,
       "show_frame": true,
@@ -288,7 +321,10 @@
     {
       "label": "Front Center",
       "partId": "federer_calcio_front",
-      "uv": { "x": 0.3, "y": 0.5 },
+      "uv": {
+        "x": 0.3,
+        "y": 0.5
+      },
       "rotation": 0,
       "fontSize": 180,
       "show_frame": true,
@@ -297,7 +333,10 @@
     {
       "label": "Front Right",
       "partId": "federer_calcio_front",
-      "uv": { "x": 0.26, "y": 0.29 },
+      "uv": {
+        "x": 0.26,
+        "y": 0.29
+      },
       "rotation": 0,
       "fontSize": 180,
       "show_frame": true,
@@ -306,18 +345,24 @@
     {
       "label": "Back",
       "partId": "federer_calcio_back",
-      "uv": { "x": 0.573, "y": 0.5 },
+      "uv": {
+        "x": 0.573,
+        "y": 0.5
+      },
       "rotation": 0,
       "fontSize": 580,
       "show_frame": true,
       "show_gizmo": false
     }
   ],
-  "textPositions": [
+  "testoPositions": [
     {
       "label": "Front Center",
       "partId": "federer_calcio_front",
-      "uv": { "x": 0.71, "y": 0.45 },
+      "uv": {
+        "x": 0.419,
+        "y": 0.501
+      },
       "rotation": 0,
       "fontSize": 180,
       "show_frame": true,
@@ -327,8 +372,8 @@
       "label": "Bottom Back",
       "partId": "federer_calcio_back",
       "uv": {
-        "x": 0.125,
-        "y": 0.35
+        "x": 0.245,
+        "y": 0.479
       },
       "rotation": 0,
       "fontSize": 180,
@@ -339,8 +384,8 @@
       "label": "Top Back",
       "partId": "federer_calcio_back",
       "uv": {
-        "x": 0.44,
-        "y": 0.35
+        "x": 0.882,
+        "y": 0.479
       },
       "rotation": 0,
       "fontSize": 60,

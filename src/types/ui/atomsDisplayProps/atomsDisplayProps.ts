@@ -31,6 +31,7 @@ type atomImagePropsType = childrenType &
     alt: string;
     variant?: atomImageVariantType;
     priority?: boolean;
+    fit?: 'contain' | 'cover';
     className?: string;
     width?: number;
     height?: number;

@@ -28,7 +28,7 @@ const PRODUCT_COLLECTIONS: productCollectionType[] = [
 ];
 
 const CATALOG_PRODUCT_ENTRIES: catalogProductEntryType[] = [
-  { collection: 'first', slug: 'baggio', name: 'Baggio', configurable: false },
+  { collection: 'first', slug: 'baggio', name: 'Baggio', modelId: 'baggio_calcio', configurable: true },
   {
     collection: 'first',
     slug: 'cruijff',
@@ -37,7 +37,7 @@ const CATALOG_PRODUCT_ENTRIES: catalogProductEntryType[] = [
     configurable: true,
   },
   { collection: 'first', slug: 'federer', name: 'Federer', configurable: false },
-  { collection: 'first', slug: 'bernardi', name: 'Bernardi', configurable: false },
+  { collection: 'first', slug: 'bernardi', name: 'Bernardi', modelId: 'bernardi_calcio', configurable: true },
 
   {
     collection: 'second',

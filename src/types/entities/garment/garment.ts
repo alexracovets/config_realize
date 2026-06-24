@@ -44,6 +44,7 @@ interface patternPartConfigType {
 
 interface patternConfigType {
   name: string;
+  designId?: string;
   parts: patternPartConfigType[];
 }
 
@@ -107,6 +108,9 @@ interface garmentPbrTexturesConfigType {
   fabricRoughness: string;
 }
 
+/** UV channel for baked PBR maps (normal/AO). Default 1; use 0 when print and bake share TEXCOORD_0. */
+type garmentPbrUvChannelType = 0 | 1;
+
 interface garmentStaticMeshConfigType {
   meshNames: string[];
   renderOrder?: number;
@@ -127,6 +131,8 @@ interface garmentConfigType {
   path: string;
   modelFile?: string;
   pbrTextures?: garmentPbrTexturesConfigType;
+  /** UV channel for baked PBR (default 1). Baggio uses 0 after TEXCOORD swap in GLTF. */
+  pbrUvChannel?: garmentPbrUvChannelType;
   parts: garmentPartConfigType[];
   staticMeshes?: garmentStaticMeshConfigType[];
   preserveGltfMeshes?: string[];
