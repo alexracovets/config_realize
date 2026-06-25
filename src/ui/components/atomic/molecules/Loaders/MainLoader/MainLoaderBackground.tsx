@@ -36,8 +36,10 @@ const MainLoaderBackground = () => {
 
     if (!path) return;
 
+    const stopSvgFallback = startSvgWaveAnimation(path);
+
     if (!supportsOffscreenCanvas() || !host) {
-      return startSvgWaveAnimation(path);
+      return stopSvgFallback;
     }
 
     const svg = path.parentElement;
@@ -68,6 +70,7 @@ const MainLoaderBackground = () => {
 
     const onWorkerMessage = (event: MessageEvent<{ type: string }>) => {
       if (event.data.type !== 'ready') return;
+      stopSvgFallback();
       canvas.classList.remove('hidden');
       svg?.classList.add('hidden');
     };
@@ -96,6 +99,7 @@ const MainLoaderBackground = () => {
     );
 
     return () => {
+      stopSvgFallback();
       resizeObserver.disconnect();
       worker.removeEventListener('message', onWorkerMessage);
       worker.postMessage({ type: 'stop' });

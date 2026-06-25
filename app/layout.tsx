@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Geist } from 'next/font/google';
 
 import '@styles';
@@ -29,9 +28,7 @@ const RootLayout = ({ children }: childrenType) => {
       )}
     >
       <body className="min-h-full">
-        <Suspense fallback={null}>
-          <EmbeddedProvider>{children}</EmbeddedProvider>
-        </Suspense>
+        <EmbeddedProvider>{children}</EmbeddedProvider>
       </body>
     </html>
   );

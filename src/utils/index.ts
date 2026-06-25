@@ -109,6 +109,7 @@ export { CHECKOUT_SUMMARY_ICON_MAP } from './checkoutSummaryIcons';
 export { priceFormat } from './priceFormat';
 export { resolveModelUrl } from './resolveModelUrl';
 export { hasPrintableGarmentParts } from './productPbr';export { suppressThreeClockDeprecation } from './suppressThreeClockDeprecation';
+export { preloadGarmentAppearance } from './preloadGarmentAppearance';
 export { preloadGarmentProduct, preloadGarmentProductAssets } from './preloadGarmentProduct';
 export { isAcceptedLogoFile, LogoFileError, logoFileToDisplayUrl, preloadLogoDisplayUrl, warmupGhostscriptWorker, yieldToMain } from './logoFile';
 export { withListPunctuation } from './modalInfo';

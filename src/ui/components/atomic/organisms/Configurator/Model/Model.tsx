@@ -6,14 +6,14 @@ import { GarmentModel } from '@features/garment-scene';
 
 import { GarmentLogoTextureLayer } from '../GarmentLogoTextureLayer';
 import { GarmentNameTextureLayer } from '../GarmentNameTextureLayer';
-import { GarmentTextureLayer } from '../GarmentTextureLayer';
+import { GarmentAppearanceLayer } from '../GarmentAppearanceLayer';
 import { PrintGizmoLayer } from '../PrintGizmoLayer';
 
 const Model = () => {
   return (
     <Center>
       <GarmentModel>
-        <GarmentTextureLayer />
+        <GarmentAppearanceLayer />
         <GarmentNameTextureLayer />
         <GarmentLogoTextureLayer />
         <PrintGizmoLayer />

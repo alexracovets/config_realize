@@ -10,13 +10,14 @@ import { resolveModelUrl } from '@utils';
 
 import { GarmentMeshes } from './GarmentMeshes';
 import { GltfSceneProvider } from './GltfSceneProvider';
-import type { garmentGltfSceneType } from './garmentGltfSceneType';
+import { enrichGltfScene } from './indexGltfSceneNodes';
 import { resolveGltfPbrMaps } from './resolveGltfPbrMaps';
 
 const GarmentModel = ({ children }: { children?: ReactNode }) => {
   const product = useConfiguratorProduct((state) => state.product);
   const modelUrl = resolveModelUrl(product);
-  const gltf = useGLTF(modelUrl) as garmentGltfSceneType;
+  const loadedGltf = useGLTF(modelUrl);
+  const gltf = useMemo(() => enrichGltfScene(loadedGltf), [loadedGltf]);
 
   const pbrMaps = useMemo(
     () => resolveGltfPbrMaps(gltf, product.pbrUvChannel ?? 1, modelUrl),

@@ -1,1 +1,0 @@
-export { GarmentTextureLayer } from './GarmentTextureLayer';

@@ -1,1 +1,3 @@
-export { isConfiguratorStepAvailable, resolveAvailableConfiguratorStepNumbers, resolveProductStepsConfiguration } from './resolveProductStepsConfiguration';
+export { isConfiguratorStepAvailable } from './isConfiguratorStepAvailable';
+export { resolveAvailableConfiguratorStepNumbers } from './resolveAvailableConfiguratorStepNumbers';
+export { resolveProductStepsConfiguration } from './resolveProductStepsConfiguration';

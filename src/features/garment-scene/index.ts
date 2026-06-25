@@ -11,6 +11,7 @@ import { resolveGltfPbrMaps } from './resolveGltfPbrMaps';
 import { extractGltfPbrMaps } from './extractGltfPbrMaps';
 import { resolvePreserveMeshes } from './resolvePreserveMeshes';
 
+export { enrichGltfScene } from './indexGltfSceneNodes';
 export type { garmentGltfSceneType } from './garmentGltfSceneType';
 export {
   extractGltfPbrMaps,

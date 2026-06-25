@@ -2,7 +2,6 @@ import type { garmentConfigType } from '@types';
 import type { MeshStandardMaterial } from 'three';
 
 import { upgradeGarmentMaterialShader } from '../createGarmentMaterial/createGarmentMaterial';
-import { yieldToMain } from '../logoFile/preloadLogoDisplayUrl/preloadLogoDisplayUrl';
 
 type ScheduleGarmentShaderUpgradeOptions = {
   parts: garmentConfigType['parts'];
@@ -19,27 +18,20 @@ const scheduleGarmentShaderUpgrade = ({ parts, getMaterials, invalidate, onCompl
     return () => {};
   }
 
-  let index = 0;
   let cancelled = false;
 
-  const step = async () => {
-    while (index < materialQueue.length && !cancelled) {
-      upgradeGarmentMaterialShader(materialQueue[index]!);
-      index += 1;
-      invalidate();
+  const run = () => {
+    if (cancelled) return;
 
-      if (index < materialQueue.length) {
-        await yieldToMain();
-      }
+    for (const material of materialQueue) {
+      upgradeGarmentMaterialShader(material);
     }
 
-    if (!cancelled) {
-      invalidate();
-      onComplete();
-    }
+    invalidate();
+    onComplete();
   };
 
-  void step();
+  requestAnimationFrame(run);
 
   return () => {
     cancelled = true;

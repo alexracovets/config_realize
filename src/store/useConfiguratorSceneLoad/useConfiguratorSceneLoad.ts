@@ -93,7 +93,6 @@ const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) =
   beginInitialSceneLoad: () => {
     const { patch } = beginLoader('initial', get, (loaderSession, loaderVisibleUntil) => ({
       isInitialSceneLoading: true,
-      isRouteHydrated: false,
       loaderSession,
       loaderVisibleUntil,
     }));
@@ -114,6 +113,8 @@ const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) =
     );
   },
   beginSceneTransitionLoad: (options) => {
+    if (get().isInitialSceneLoading) return;
+
     const affectsConfigurationPanel = options?.affectsConfigurationPanel ?? false;
     const { patch } = beginLoader('transition', get, (transitionSession, transitionVisibleUntil) => ({
       isSceneTransitionLoading: true,

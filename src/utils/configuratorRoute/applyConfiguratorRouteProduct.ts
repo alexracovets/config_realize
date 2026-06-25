@@ -2,6 +2,7 @@ import type { configuratorProductHydrationType } from '@types';
 import { useConfigurationCart, useConfiguratorSceneLoad } from '@store';
 
 import { DEFAULT_MODEL_ID, deriveLocalBusiness, hasModel } from '../garmentCatalog/garmentCatalog';
+import { preloadGarmentAppearance } from '../preloadGarmentAppearance/preloadGarmentAppearance';
 import { preloadGarmentProduct } from '../preloadGarmentProduct/preloadGarmentProduct';
 import { preloadGarmentScene } from '@features/garment-scene';
 
@@ -25,6 +26,7 @@ const applyConfiguratorRouteProduct = (slug: string, product: configuratorProduc
   useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
   useConfigurationCart.getState().setActiveItemProduct({ slug, modelId, business });
   preloadGarmentProduct(modelId);
+  preloadGarmentAppearance(modelId);
   preloadGarmentScene();
   useConfiguratorSceneLoad.getState().markRouteHydrated();
 };

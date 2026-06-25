@@ -16,7 +16,7 @@ export { useControlledState } from './useControlledState';
 export { useSlidingIndicator } from './useSlidingIndicator';
 export { useGarmentLogoTextures } from './useGarmentLogoTextures';
 export { useGarmentNameTextures } from './useGarmentNameTextures';
-export { useGarmentTextures } from './useGarmentTextures';
+export { useGarmentAppearance, useGarmentTextures } from './useGarmentAppearance';
 export { useShowConfigurationSkeleton } from './useShowConfigurationSkeleton';
 export { useGizmoButtonHover } from './useGizmoButtonHover';
 export { useGizmoSelection } from './useGizmoSelection';
