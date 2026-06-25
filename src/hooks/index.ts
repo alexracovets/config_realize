@@ -14,7 +14,6 @@ export { useCartPreviewCapture } from './useCartPreviewCapture';
 export { useConfigurationPositionPicker } from './useConfigurationPositionPicker';
 export { useControlledState } from './useControlledState';
 export { useSlidingIndicator } from './useSlidingIndicator';
-export { useAsyncGarmentPbrMaps, useGarmentPbrMaps } from './useGarmentPbrMaps';
 export { useGarmentLogoTextures } from './useGarmentLogoTextures';
 export { useGarmentNameTextures } from './useGarmentNameTextures';
 export { useGarmentTextures } from './useGarmentTextures';

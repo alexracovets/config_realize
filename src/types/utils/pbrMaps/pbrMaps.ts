@@ -1,8 +1,8 @@
 import type { Texture } from 'three';
 
-import type { garmentPbrTexturesConfigType } from '../../entities/garment/garment';
+type pbrMapsType = {
+  bakeNormal: Texture;
+  bakeAoRoughness: Texture;
+};
 
-type pbrTexturePathsType = Record<keyof garmentPbrTexturesConfigType, string>;
-type pbrMapsType = Record<keyof garmentPbrTexturesConfigType, Texture>;
-
-export type { pbrMapsType, pbrTexturePathsType };
+export type { pbrMapsType };

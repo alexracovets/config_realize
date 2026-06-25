@@ -109,7 +109,6 @@ export type {
 } from "./moleculesProps";
 export type {
   garmentPartMeshPropsType,
-  pbrMapsLoaderPropsType,
   preserveGltfMeshPropsType,
   printGizmoInstancePropsType,
   staticGltfMeshPropsType,

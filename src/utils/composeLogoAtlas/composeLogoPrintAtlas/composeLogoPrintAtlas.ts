@@ -1,5 +1,5 @@
 import type { logoInstanceType } from '@types';
-import { LOGO_ATLAS_REF_HEIGHT, LOGO_ATLAS_REF_WIDTH, LOGO_MARK_REF_WIDTH, LOGO_VERTICAL_REF_HEIGHT } from '@constants';
+import { LOGO_ATLAS_REF_HEIGHT, LOGO_ATLAS_REF_WIDTH, LOGO_MARK_REF_WIDTH } from '@constants';
 import { loadCachedImage } from '../../loadCachedImage/loadCachedImage';
 
 interface ComposeLogoPrintAtlasInput {
@@ -9,19 +9,11 @@ interface ComposeLogoPrintAtlasInput {
   atlasHeight: number;
 }
 
-const isBackLogoPart = (instance: logoInstanceType) =>
-  instance.partId.includes('back') || instance.positionKey.toLowerCase().includes('back') || instance.label.toLowerCase().includes('back');
-
-const resolveLogoDrawSize = (instance: logoInstanceType, naturalWidth: number, naturalHeight: number, atlasWidth: number, atlasHeight: number) => {
+const resolveLogoDrawSize = (instance: logoInstanceType, naturalWidth: number, naturalHeight: number, atlasWidth: number, _atlasHeight: number) => {
   const aspect = naturalWidth / naturalHeight || 1;
   const scale = instance.scale;
-
-  if (isBackLogoPart(instance)) {
-    const baseHeight = Math.round((LOGO_VERTICAL_REF_HEIGHT / LOGO_ATLAS_REF_HEIGHT) * atlasHeight) * scale;
-    return { width: baseHeight * aspect, height: baseHeight };
-  }
-
   const baseWidth = Math.round((LOGO_MARK_REF_WIDTH / LOGO_ATLAS_REF_WIDTH) * atlasWidth) * scale;
+
   return { width: baseWidth, height: baseWidth / aspect };
 };
 

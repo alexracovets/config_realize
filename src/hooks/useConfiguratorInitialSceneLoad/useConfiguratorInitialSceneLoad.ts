@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 
 import { useConfiguratorSceneLoad } from '@store';
-import { preloadConfiguratorScene } from '../../ui/components/atomic/organisms/Configurator/preloadConfiguratorScene';
+import { preloadGarmentScene } from '@features/garment-scene';
 
 const useConfiguratorInitialSceneLoad = () => {
   useEffect(() => {
     useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
-    preloadConfiguratorScene();
+    preloadGarmentScene();
   }, []);
 };
 

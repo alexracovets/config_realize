@@ -13,6 +13,10 @@
     "validate": "pnpm format:check && pnpm lint && pnpm verify:design-assets",
     "verify:design-assets": "node scripts/verify-design-assets.mjs",
     "convert:design-assets": "node scripts/convert-design-assets.mjs",
+    "optimize:model": "node scripts/optimize-gltf-model.mjs",
+    "optimize:models": "node scripts/optimize-gltf-model.mjs --all",
+    "optimize:federer": "node scripts/optimize-gltf-model.mjs federer_calcio",
+    "optimize:calcio": "node scripts/optimize-gltf-model.mjs federer_calcio baggio_calcio bernardi_calcio cruijff_calcio",
     "generate:design-thumbnails": "node scripts/generate-design-thumbnails.mjs",
     "postinstall": "pnpm copy:logo-assets",
     "copy:logo-assets": "node scripts/copy-logo-assets.mjs"
@@ -48,6 +52,9 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.4.0",
+    "@gltf-transform/extensions": "^4.4.0",
+    "@gltf-transform/functions": "^4.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

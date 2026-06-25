@@ -101,20 +101,20 @@ interface logoPositionConfigType {
   show_gizmo?: boolean;
 }
 
-interface garmentPbrTexturesConfigType {
-  bakeNormal: string;
-  bakeAoRoughness: string;
-  fabricNormal: string;
-  fabricRoughness: string;
-}
-
-/** UV channel for baked PBR maps (normal/AO). Default 1; use 0 when print and bake share TEXCOORD_0. */
-type garmentPbrUvChannelType = 0 | 1;
-
 interface garmentStaticMeshConfigType {
   meshNames: string[];
   renderOrder?: number;
 }
+
+interface preserveGltfMeshEntryConfigType {
+  meshName: string;
+  renderOrder?: number;
+}
+
+type preserveGltfMeshConfigType = string | preserveGltfMeshEntryConfigType;
+
+/** UV channel for baked PBR maps (normal/AO). Default 1; use 0 when print and bake share TEXCOORD_0. */
+type garmentPbrUvChannelType = 0 | 1;
 
 interface garmentConfigType {
   /** Geometry id — matches the data folder name and the Shopify `custom.id` metafield. */
@@ -130,12 +130,11 @@ interface garmentConfigType {
   minimum_count?: number;
   path: string;
   modelFile?: string;
-  pbrTextures?: garmentPbrTexturesConfigType;
   /** UV channel for baked PBR (default 1). Baggio uses 0 after TEXCOORD swap in GLTF. */
   pbrUvChannel?: garmentPbrUvChannelType;
   parts: garmentPartConfigType[];
   staticMeshes?: garmentStaticMeshConfigType[];
-  preserveGltfMeshes?: string[];
+  preserveGltfMeshes?: preserveGltfMeshConfigType[];
   printAtlas?: printAtlasConfigType;
   partTextureSize?: number;
   gizmoRotation?: number;
@@ -176,12 +175,14 @@ interface garmentBusinessType {
 export type {
   garmentBusinessType,
   garmentConfigType,
-  garmentPbrTexturesConfigType,
+  garmentPbrUvChannelType,
   garmentPartConfigType,
   logoPositionConfigType,
   modelIdType,
   partGradientConfigType,
   patternConfigType,
+  preserveGltfMeshConfigType,
+  preserveGltfMeshEntryConfigType,
   printAtlasConfigType,
   styleConfigType,
   textDefaultsConfigType,

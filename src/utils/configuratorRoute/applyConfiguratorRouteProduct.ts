@@ -3,7 +3,7 @@ import { useConfigurationCart, useConfiguratorSceneLoad } from '@store';
 
 import { DEFAULT_MODEL_ID, deriveLocalBusiness, hasModel } from '../garmentCatalog/garmentCatalog';
 import { preloadGarmentProduct } from '../preloadGarmentProduct/preloadGarmentProduct';
-import { preloadConfiguratorScene } from '../../ui/components/atomic/organisms/Configurator/preloadConfiguratorScene';
+import { preloadGarmentScene } from '@features/garment-scene';
 
 const resolveRouteModel = (slug: string, product: configuratorProductHydrationType | null) => {
   const slugModelId = hasModel(slug) ? slug : null;
@@ -25,7 +25,7 @@ const applyConfiguratorRouteProduct = (slug: string, product: configuratorProduc
   useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
   useConfigurationCart.getState().setActiveItemProduct({ slug, modelId, business });
   preloadGarmentProduct(modelId);
-  preloadConfiguratorScene();
+  preloadGarmentScene();
   useConfiguratorSceneLoad.getState().markRouteHydrated();
 };
 

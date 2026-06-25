@@ -47,6 +47,7 @@ const buildLogoStampSignature = (instances: ReturnType<typeof resolveLogoInstanc
       opacity: instance.opacity,
       naturalWidth: instance.naturalWidth,
       naturalHeight: instance.naturalHeight,
+      scale: instance.scale,
     })),
   );
 

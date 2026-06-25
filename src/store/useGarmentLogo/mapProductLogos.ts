@@ -2,6 +2,7 @@
 
 import type { garmentConfigType, logoInstanceType, logoPositionConfigType, logoPositionType, uvPointType } from '@types';
 
+import { LOGO_UPLOAD_ROTATION_DEG } from '@constants';
 import { resolvePartUvBounds } from '@utils';
 
 const resolvePartIdForAtlasUv = (product: garmentConfigType, uv: uvPointType): string => {
@@ -69,7 +70,7 @@ const createLogoInstance = (
   showGizmo: (options.isDefault ?? position.isDefault) ? position.showGizmo : true,
   naturalWidth: options.naturalWidth ?? 0,
   naturalHeight: options.naturalHeight ?? 0,
-  uploadRotation: options.uploadRotation ?? 0,
+  uploadRotation: options.uploadRotation ?? LOGO_UPLOAD_ROTATION_DEG,
   opacity: 1,
 });
 

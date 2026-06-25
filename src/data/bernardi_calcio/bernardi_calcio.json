@@ -1,6 +1,7 @@
 {
   "id": "bernardi_calcio",
   "path": "/models/bernardi_calcio/",
+  "modelFile": "model.glb",
   "printAtlas": {
     "width": 4096,
     "height": 2257
@@ -10,12 +11,6 @@
     "model_label",
     "model_sweatband"
   ],
-  "pbrTextures": {
-    "bakeNormal": "bake_normal.jpg",
-    "bakeAoRoughness": "bake_ao_roughness.jpg",
-    "fabricNormal": "fabric_normal.jpg",
-    "fabricRoughness": "fabric_roughness.jpg"
-  },
   "parts": [
     {
       "name": "Davanti",

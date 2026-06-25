@@ -1,0 +1,1 @@
+export { hasPrintableGarmentParts } from './productPbr';

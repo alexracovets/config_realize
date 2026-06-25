@@ -9,7 +9,7 @@ const CanvasControl = () => {
 
   return (
     <>
-      <ambientLight intensity={1.1} />
+      <ambientLight intensity={3} />
       <ViewControls />
     </>
   );

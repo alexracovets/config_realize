@@ -2,18 +2,22 @@
 
 import { Center } from '@react-three/drei';
 
-import { resolveModelUrl } from '../../../../../../utils/resolveModelUrl';
-import { useConfiguratorProduct } from '@store';
+import { GarmentModel } from '@features/garment-scene';
 
-import { GarmentModel } from '../GarmentModel';
+import { GarmentLogoTextureLayer } from '../GarmentLogoTextureLayer';
+import { GarmentNameTextureLayer } from '../GarmentNameTextureLayer';
+import { GarmentTextureLayer } from '../GarmentTextureLayer';
+import { PrintGizmoLayer } from '../PrintGizmoLayer';
 
 const Model = () => {
-  const product = useConfiguratorProduct((state) => state.product);
-  const modelUrl = resolveModelUrl(product);
-
   return (
-    <Center cacheKey={modelUrl}>
-      <GarmentModel />
+    <Center>
+      <GarmentModel>
+        <GarmentTextureLayer />
+        <GarmentNameTextureLayer />
+        <GarmentLogoTextureLayer />
+        <PrintGizmoLayer />
+      </GarmentModel>
     </Center>
   );
 };

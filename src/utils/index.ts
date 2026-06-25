@@ -1,7 +1,5 @@
 export { DEFAULT_CURRENCY_CODE, DEFAULT_MODEL_ID, deriveLocalBusiness, getModel, hasModel, MODELS, resolveProductPreviewSrc } from './garmentCatalog';
-export { cn } from './cn';
-export { composePartAlbedo } from './composePartAlbedo/composePartAlbedo';
-export {
+export { cn } from './cn';export {
   composeLogoPrintAtlas,
   resolveLogoDisplayScale,
   resolveLogoDrawSize,
@@ -11,15 +9,9 @@ export {
 export { composeLogoStampAtlas } from './composeLogoAtlas/composeLogoStampAtlas';
 export { composeNameMaskAtlas, resolveNameStampSize } from './composeNameAtlas/composeNameMaskAtlas';
 export { measureNameGizmoHalf, measureNameStampPixelSize, unionStampPixelSize } from './drawNameOnAtlas/measureNameStampBounds';
-export { composePrintAtlas } from './composePrintAtlas/composePrintAtlas';
-export { composePrintAtlasFbo } from './composePrintAtlasFbo/composePrintAtlasFbo';
-export { PrintAtlasFbo } from './composePrintAtlasFbo/printAtlasFbo';
-export { GARMENT_SHADER_VERSION, createGarmentMaterial, upgradeGarmentMaterialShader } from './createGarmentMaterial';
-export { scheduleGarmentShaderUpgrade } from './scheduleGarmentShaderUpgrade/scheduleGarmentShaderUpgrade';
+export { GARMENT_SHADER_VERSION, createGarmentMaterial, upgradeGarmentMaterialShader } from './createGarmentMaterial';export { scheduleGarmentShaderUpgrade } from './scheduleGarmentShaderUpgrade/scheduleGarmentShaderUpgrade';
 export { getProductAppearanceTextures, readProductAppearanceTextures, syncProductAppearanceTextures } from './garmentAppearance/garmentProductAppearanceCache';
-export { createPartAlbedoTexture } from './createPartAlbedoTexture/createPartAlbedoTexture';
-export { applyGarmentGradient, applyGarmentPartUvBounds } from './garmentGradient/applyGarmentGradient';
-export { buildLineHeightStyleUniforms, DEFAULT_LINE_HEIGHT } from './garmentPrint/buildLineHeightStyleUniforms';
+export { applyGarmentGradient, applyGarmentPartUvBounds } from './garmentGradient/applyGarmentGradient';export { buildLineHeightStyleUniforms, DEFAULT_LINE_HEIGHT } from './garmentPrint/buildLineHeightStyleUniforms';
 export { buildNameStyleUniforms } from './garmentPrint/buildNameStyleUniforms';
 export { buildNumberStyleUniforms } from './garmentPrint/buildNumberStyleUniforms';
 export { buildTestoStyleUniforms } from './garmentPrint/buildTestoStyleUniforms';
@@ -116,8 +108,7 @@ export { getCheckoutDeliveryTimeline } from './checkoutDeliveryDates';
 export { CHECKOUT_SUMMARY_ICON_MAP } from './checkoutSummaryIcons';
 export { priceFormat } from './priceFormat';
 export { resolveModelUrl } from './resolveModelUrl';
-export { resolvePbrTexturePaths } from './resolvePbrTexturePaths';
-export { suppressThreeClockDeprecation } from './suppressThreeClockDeprecation';
+export { hasPrintableGarmentParts } from './productPbr';export { suppressThreeClockDeprecation } from './suppressThreeClockDeprecation';
 export { preloadGarmentProduct, preloadGarmentProductAssets } from './preloadGarmentProduct';
 export { isAcceptedLogoFile, LogoFileError, logoFileToDisplayUrl, preloadLogoDisplayUrl, warmupGhostscriptWorker, yieldToMain } from './logoFile';
 export { withListPunctuation } from './modalInfo';

@@ -37,6 +37,7 @@
       "@shaders": ["./src/shaders"],
       "@constants": ["./src/constants"],
       "@data": ["./src/data"],
+      "@features/*": ["./src/features/*"],
       "@shopify": ["./src/shopify"]
     }
   },

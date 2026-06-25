@@ -29,7 +29,7 @@ import { getEmptyPrintTexture } from '../garmentPrint/emptyPrintTexture';
 
 import { applyGarmentPrintBase, applyPbrMaps } from './applyPbrMaps';
 
-const GARMENT_SHADER_VERSION = 'garment-pbr-print-v85-bake-normal-decode';
+const GARMENT_SHADER_VERSION = 'garment-pbr-print-v86-bake-roughness-only';
 
 type GarmentGradientState = {
   color2: string;

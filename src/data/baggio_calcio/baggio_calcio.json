@@ -1,6 +1,7 @@
 {
   "id": "baggio_calcio",
   "path": "/models/baggio_calcio/",
+  "modelFile": "model.glb",
   "printAtlas": {
     "width": 4096,
     "height": 2133
@@ -11,12 +12,6 @@
     "model_sweatband"
   ],
   "pbrUvChannel": 0,
-  "pbrTextures": {
-    "bakeNormal": "bake_normal.jpg",
-    "bakeAoRoughness": "bake_ao_roughness.jpg",
-    "fabricNormal": "fabric_normal.jpg",
-    "fabricRoughness": "fabric_roughness.jpg"
-  },
   "parts": [
     {
       "name": "Davanti",

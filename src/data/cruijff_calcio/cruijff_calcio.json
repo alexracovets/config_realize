@@ -1,6 +1,7 @@
 {
   "id": "cruijff_calcio",
   "path": "/models/cruijff_calcio/",
+  "modelFile": "model.glb",
   "printAtlas": {
     "width": 4096,
     "height": 2149
@@ -9,12 +10,6 @@
     "model_inside",
     "model_laces"
   ],
-  "pbrTextures": {
-    "bakeNormal": "bake_normal.jpg",
-    "bakeAoRoughness": "bake_ao_roughness.jpg",
-    "fabricNormal": "fabric_normal.jpg",
-    "fabricRoughness": "fabric_roughness.jpg"
-  },
   "parts": [
     {
       "name": "Davanti",

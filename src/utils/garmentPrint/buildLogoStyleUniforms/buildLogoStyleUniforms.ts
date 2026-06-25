@@ -1,5 +1,5 @@
 import type { garmentPartConfigType, logoInstanceType, logoSlotBounds4Type, logoSlotFloat4Type, logoSlotVec2Type, logoStyleUniformsType } from '@types';
-import { FULL_UV_BOUNDS, LOGO_SLOT_COUNT } from '@constants';
+import { FULL_UV_BOUNDS, LOGO_SLOT_COUNT, LOGO_UPLOAD_ROTATION_DEG } from '@constants';
 import { resolveLogoDisplayScale } from '../../composeLogoAtlas/composeLogoPrintAtlas';
 import { resolvePartPrintRotation, resolvePartUvBounds } from '../../resolveProductRenderConfig/resolveProductRenderConfig';
 
@@ -38,7 +38,7 @@ const buildLogoStyleUniforms = (
     slotActive[index] = 1;
     anchorUv[index] = instance.uv;
     rotation[index] = (instance.rotation * Math.PI) / 180;
-    uploadRotation[index] = ((instance.uploadRotation ?? 0) * Math.PI) / 180;
+    uploadRotation[index] = (((instance.uploadRotation ?? LOGO_UPLOAD_ROTATION_DEG) * Math.PI) / 180);
     partRotation[index] = part ? (resolvePartPrintRotation(part) * Math.PI) / 180 : 0;
     scale[index] = resolveLogoDisplayScale(instance, naturalWidth, naturalHeight, atlasWidth, atlasHeight);
     partBounds[index] = bounds;

@@ -1,12 +1,6 @@
-import type { ReactNode } from 'react';
 import type { Object3D } from 'three';
 
-import type { pbrTexturePathsType, printablePartMeshesType, printGizmoElementType } from '@types';
-
-interface pbrMapsLoaderPropsType {
-  paths: pbrTexturePathsType | null;
-  children: ReactNode;
-}
+import type { printablePartMeshesType, printGizmoElementType } from '@types';
 
 interface garmentPartMeshPropsType {
   registryKey: string;
@@ -35,4 +29,4 @@ interface printGizmoInstancePropsType {
   selectedInstanceId: string | null;
 }
 
-export type { garmentPartMeshPropsType, pbrMapsLoaderPropsType, preserveGltfMeshPropsType, printGizmoInstancePropsType, staticGltfMeshPropsType };
+export type { garmentPartMeshPropsType, preserveGltfMeshPropsType, printGizmoInstancePropsType, staticGltfMeshPropsType };

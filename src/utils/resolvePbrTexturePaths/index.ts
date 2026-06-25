@@ -1,1 +1,0 @@
-export { resolvePbrTexturePaths } from './resolvePbrTexturePaths';

@@ -87,11 +87,4 @@ const useMaterialRegistryRevision = (): number => {
   return useSyncExternalStore(subscribeMaterials, getRevision, getRevision);
 };
 
-const useGarmentSceneReady = (partIds: readonly string[]): boolean => {
-  const { hasMaterialsForParts, subscribeMaterials, getRevision } = useGarmentMaterialRegistry();
-  useSyncExternalStore(subscribeMaterials, getRevision, getRevision);
-
-  return hasMaterialsForParts(partIds);
-};
-
-export { GarmentMaterialRegistryProvider, useGarmentMaterialRegistry, useGarmentSceneReady, useMaterialRegistryRevision };
+export { GarmentMaterialRegistryProvider, useGarmentMaterialRegistry, useMaterialRegistryRevision };
