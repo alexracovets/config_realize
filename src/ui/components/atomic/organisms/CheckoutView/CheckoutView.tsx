@@ -9,7 +9,7 @@ import { useCheckout, useConfigurationCart } from '@store';
 const CheckoutView = () => {
   const { navigateToConfigurator } = useNavigateToConfigurator();
   const products = useCheckout((state) => state.products);
-  const activeSlug = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId)?.slug ?? state.items[0]?.slug);
+  const activeItem = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId) ?? state.items[0]);
 
   return (
     <Grid className="grid-cols-[minmax(0,1fr)_380px]">
@@ -20,8 +20,8 @@ const CheckoutView = () => {
         <Button
           size="sm"
           className="self-start border border-gray-20 bg-white"
-          onClick={() => activeSlug && navigateToConfigurator(activeSlug)}
-          disabled={!activeSlug}
+          onClick={() => activeItem && navigateToConfigurator(activeItem.collectionHandle, activeItem.slug)}
+          disabled={!activeItem?.collectionHandle}
         >
           <SvgIcon name="plus" />
           Aggiungi altri prodotti

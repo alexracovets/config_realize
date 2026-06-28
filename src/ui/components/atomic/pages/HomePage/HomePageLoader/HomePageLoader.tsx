@@ -1,7 +1,7 @@
 import { HomePage } from '@pages/HomePage/HomePage';
-import { resolveHomeCollections } from '@shopify';
+import { resolveHomeCollectionSummaries } from '@shopify';
 const HomePageLoader = async () => {
-  const collections = await resolveHomeCollections();
+  const collections = await resolveHomeCollectionSummaries();
 
   return <HomePage collections={collections} />;
 };

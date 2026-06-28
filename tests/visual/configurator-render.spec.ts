@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import path from 'node:path';
 
 const CONFIGURATOR_ROUTES = [
-  { slug: 'cruijff_calcio', label: 'cruijff-shorts' },
-  { slug: 'baggio_calcio', label: 'baggio' },
+  { collectionHandle: 'completo-gara-calcio', slug: 'cruijff_calcio', label: 'cruijff-shorts' },
+  { collectionHandle: 'completo-gara-calcio', slug: 'baggio_calcio', label: 'baggio' },
 ] as const;
 
 const OUTPUT_DIR = path.join(process.cwd(), 'tests', 'visual', 'output');
@@ -30,7 +30,7 @@ const waitForConfiguratorScene = async (page: import('@playwright/test').Page) =
 
 for (const route of CONFIGURATOR_ROUTES) {
   test(`renders 3D configurator: ${route.slug}`, async ({ page }) => {
-    await page.goto(`/${route.slug}`, { waitUntil: 'networkidle' });
+    await page.goto(`/${route.collectionHandle}/${route.slug}`, { waitUntil: 'networkidle' });
     await waitForConfiguratorScene(page);
 
     await page.screenshot({

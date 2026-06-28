@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { AtomImage } from '@atoms';
 import { useAppNavigate, useGarmentCatalogPreload } from '@hooks';
 import type { productFlipCardPropsType } from '@types';
-import { cn, resolveProductFlipCardSrc } from '@utils';
+import { cn, buildConfiguratorPath, resolveProductFlipCardSrc } from '@utils';
 
 const ProductFlipCard = ({ collection, slug, alt, previewSrc, activePreviewSrc, className }: productFlipCardPropsType) => {
   const { toAppPath } = useAppNavigate();
@@ -61,7 +61,7 @@ const ProductFlipCard = ({ collection, slug, alt, previewSrc, activePreviewSrc, 
   return (
     <Link
       ref={cardRef}
-      href={toAppPath(`/${slug}`)}
+      href={toAppPath(buildConfiguratorPath(collection, slug))}
       prefetch={false}
       tabIndex={0}
       onPointerEnter={warmProductAssets}

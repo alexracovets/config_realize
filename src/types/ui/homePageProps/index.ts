@@ -1,1 +1,1 @@
-export type { homePageCollectionType, homePageProductType, homePagePropsType } from './homePageProps';
+export type { collectionPagePropsType, homePageCollectionSummaryType, homePageCollectionType, homePageProductType, homePagePropsType } from './homePageProps';

@@ -1,0 +1,1 @@
+export { CollectionPageLoader } from './CollectionPageLoader';

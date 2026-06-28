@@ -261,6 +261,28 @@ const buildHomeCollection = async (collection: shopifyCollectionListNodeType): P
   };
 };
 
+const fetchCollectionSummaryByHandle = async (handle: string): Promise<homePageCollectionType | null> => {
+  const isStorefront = getShopifyApiMode() === 'storefront';
+  const query = isStorefront ? STOREFRONT_COLLECTION_BY_HANDLE_QUERY : ADMIN_COLLECTION_BY_HANDLE_QUERY;
+  const request = isStorefront ? shopifyGraphql : shopifyAdminGraphql;
+
+  const data = await request<{
+    collection?: shopifyCollectionListNodeType | null;
+    collectionByHandle?: shopifyCollectionListNodeType | null;
+  }>(query, { handle });
+
+  const collection = data.collection ?? data.collectionByHandle;
+  if (!collection) return null;
+
+  return {
+    id: collection.id,
+    title: collection.title,
+    handle: collection.handle,
+    imageSrc: collection.image?.url ?? null,
+    products: [],
+  };
+};
+
 const fetchCollectionByHandle = async (handle: string): Promise<homePageCollectionType | null> => {
   const isStorefront = getShopifyApiMode() === 'storefront';
   const query = isStorefront ? STOREFRONT_COLLECTION_BY_HANDLE_QUERY : ADMIN_COLLECTION_BY_HANDLE_QUERY;
@@ -309,4 +331,40 @@ const fetchConfiguratorCollections = async (): Promise<homePageCollectionType[]>
   return discoveredCollections.filter((collection): collection is homePageCollectionType => collection != null);
 };
 
-export { fetchConfiguratorCollections };
+const fetchConfiguratorCollectionSummaries = async (): Promise<homePageCollectionType[]> => {
+  const explicitHandles = getShopifyHomeCollectionHandles();
+  const collections = await Promise.all(explicitHandles.map((handle) => fetchCollectionSummaryByHandle(handle)));
+  const resolved = collections.filter((collection): collection is homePageCollectionType => collection != null);
+
+  if (resolved.length > 0) {
+    return resolved;
+  }
+
+  if (explicitHandles.length > 0) {
+    console.warn(
+      `[shopify] No home collection summaries resolved for handles: ${explicitHandles.join(', ')}. Falling back to auto-discovery.`,
+    );
+  }
+
+  const isStorefront = getShopifyApiMode() === 'storefront';
+  const listQuery = isStorefront ? STOREFRONT_COLLECTION_LIST_QUERY : ADMIN_COLLECTION_LIST_QUERY;
+  const request = isStorefront ? shopifyGraphql : shopifyAdminGraphql;
+
+  const listData = await request<{
+    collections?: {
+      nodes?: shopifyCollectionListNodeType[];
+    };
+  }>(listQuery);
+
+  const candidates = listData.collections?.nodes?.filter((collection) => collection.handle !== FRONTPAGE_HANDLE) ?? [];
+
+  return candidates.map((collection) => ({
+    id: collection.id,
+    title: collection.title,
+    handle: collection.handle,
+    imageSrc: collection.image?.url ?? null,
+    products: [],
+  }));
+};
+
+export { fetchCollectionByHandle, fetchConfiguratorCollectionSummaries, fetchConfiguratorCollections };

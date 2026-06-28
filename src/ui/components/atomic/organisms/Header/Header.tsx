@@ -7,19 +7,24 @@ import { Box, Container, Flex, Grid, Logo } from '@atoms';
 import { useAppNavigate } from '@hooks';
 import { useEmbedded } from '@providers';
 import { useConfigurationCart } from '@store';
+import { buildConfiguratorPath, isConfiguratorPath } from '@utils';
 
 const Header = () => {
   const { embedded } = useEmbedded();
   const { toAppPath } = useAppNavigate();
   const pathname = usePathname();
-  const activeSlug = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId)?.slug ?? state.items[0]?.slug);
+  const activeItem = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId) ?? state.items[0]);
 
   if (embedded) {
     return null;
   }
 
-  const isOnConfigurator = pathname !== '/' && pathname !== '/checkout';
-  const logoHref = toAppPath(isOnConfigurator || !activeSlug ? '/' : `/${activeSlug}`);
+  const isOnConfigurator = isConfiguratorPath(pathname);
+  const logoHref = toAppPath(
+    isOnConfigurator || !activeItem?.collectionHandle
+      ? '/'
+      : buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug),
+  );
 
   return (
     <Box variant="header" asChild>

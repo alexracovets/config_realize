@@ -39,7 +39,7 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
             <Button variant="primary" size="xs">
               Elenco giocatori
             </Button>
-            <Button size="xs" className="font-normal" onClick={() => cartItem && navigateToConfigurator(cartItem.slug)} disabled={!cartItem}>
+            <Button size="xs" className="font-normal" onClick={() => cartItem && navigateToConfigurator(cartItem.collectionHandle, cartItem.slug)} disabled={!cartItem?.collectionHandle}>
               Modifica Bozza
             </Button>
           </Flex>

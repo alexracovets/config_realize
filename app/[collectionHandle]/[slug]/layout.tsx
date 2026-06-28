@@ -3,7 +3,7 @@ import { ConfiguratorLayoutTemplate } from '@templates';
 import { resolveConfiguratorProduct } from '@shopify';
 
 type configuratorLayoutPropsType = childrenType & {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ collectionHandle: string; slug: string }>;
 };
 
 const ConfiguratorLayout = async ({ children, params }: configuratorLayoutPropsType) => {
