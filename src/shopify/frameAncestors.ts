@@ -1,5 +1,7 @@
 const SHOPIFY_THEME_EDITOR_ORIGIN = 'https://admin.shopify.com';
+const SHOPIFY_THEME_PREVIEW_ORIGIN = 'https://online-store-web.shopifyapps.com';
 const SHOPIFY_DOMAIN_PATTERN = /^[a-z0-9][a-z0-9-]*\.myshopify\.com$/;
+const FRAME_ANCESTOR_WILDCARD_PATTERN = /\*/;
 
 const readEnv = (key: string): string | undefined => {
   const value = process.env[key]?.trim();
@@ -15,10 +17,14 @@ const normalizeShopDomain = (shop: string | null | undefined): string | null => 
   return SHOPIFY_DOMAIN_PATTERN.test(trimmed) ? trimmed : null;
 };
 
-const normalizeFrameAncestor = (origin: string): string => {
+const normalizeFrameAncestor = (origin: string): string | null => {
   const trimmed = origin.trim();
 
-  if (!trimmed || trimmed === "'self'" || trimmed.startsWith('http')) {
+  if (!trimmed || trimmed === "'self'" || FRAME_ANCESTOR_WILDCARD_PATTERN.test(trimmed)) {
+    return null;
+  }
+
+  if (trimmed.startsWith('http')) {
     return trimmed;
   }
 
@@ -27,7 +33,7 @@ const normalizeFrameAncestor = (origin: string): string => {
 
 /** Builds frame-ancestors sources for Shopify storefront + Theme Editor embeds. */
 const buildShopifyFrameAncestors = (shop?: string | null): string[] => {
-  const origins = new Set<string>(["'self'", SHOPIFY_THEME_EDITOR_ORIGIN]);
+  const origins = new Set<string>(["'self'", SHOPIFY_THEME_EDITOR_ORIGIN, SHOPIFY_THEME_PREVIEW_ORIGIN]);
 
   const shopFromRequest = normalizeShopDomain(shop);
   if (shopFromRequest) {
@@ -61,4 +67,5 @@ export {
   buildShopifyFrameAncestorsHeader,
   normalizeShopDomain,
   SHOPIFY_THEME_EDITOR_ORIGIN,
+  SHOPIFY_THEME_PREVIEW_ORIGIN,
 };
