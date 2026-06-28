@@ -47,14 +47,15 @@ const useProductSessionRowHover = () => {
   const pointerRef = useRef({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
 
-  const [isHovered, setIsHovered] = useState(false);
+  const [isPortalVisible, setIsPortalVisible] = useState(false);
+  const [isAnchorHidden, setIsAnchorHidden] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoverSession, setHoverSession] = useState(0);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    isHoveredRef.current = isHovered;
-  }, [isHovered]);
+    isHoveredRef.current = isPortalVisible;
+  }, [isPortalVisible]);
 
   const rememberPointer = useCallback((clientX: number, clientY: number) => {
     pointerRef.current = { x: clientX, y: clientY };
@@ -88,6 +89,11 @@ const useProductSessionRowHover = () => {
     updatePosition();
   }, [updatePosition]);
 
+  const dismissPortal = useCallback(() => {
+    setIsPortalVisible(false);
+    releaseProductSessionHover(hoverOwnerRef.current);
+  }, []);
+
   const stableDismissHover = useCallback(() => {
     cancelExpandFrames();
 
@@ -97,9 +103,9 @@ const useProductSessionRowHover = () => {
     }
 
     setIsExpanded(false);
-    setIsHovered(false);
-    releaseProductSessionHover(hoverOwnerRef.current);
-  }, [cancelExpandFrames]);
+    setIsAnchorHidden(false);
+    requestAnimationFrame(dismissPortal);
+  }, [cancelExpandFrames, dismissPortal]);
 
   const isPointerOverPortal = useCallback(() => {
     const portal = portalRef.current;
@@ -129,7 +135,8 @@ const useProductSessionRowHover = () => {
       cancelExpandFrames();
       updatePosition();
       setIsExpanded(false);
-      setIsHovered(true);
+      setIsPortalVisible(true);
+      setIsAnchorHidden(true);
       setHoverSession((session) => session + 1);
     },
     [cancelExpandFrames, rememberPointer, stableDismissHover, updatePosition],
@@ -140,11 +147,11 @@ const useProductSessionRowHover = () => {
     setIsExpanded(false);
 
     collapseTimerRef.current = setTimeout(() => {
-      setIsHovered(false);
+      setIsAnchorHidden(false);
+      requestAnimationFrame(dismissPortal);
       collapseTimerRef.current = null;
-      releaseProductSessionHover(hoverOwnerRef.current);
     }, PRODUCT_SESSION_ROW_HOVER_TRANSITION_MS);
-  }, [cancelExpandFrames]);
+  }, [cancelExpandFrames, dismissPortal]);
 
   useEffect(() => {
     const hoverOwner = hoverOwnerRef.current;
@@ -157,7 +164,7 @@ const useProductSessionRowHover = () => {
   }, [cancelExpandFrames]);
 
   useEffect(() => {
-    if (!isHovered) return;
+    if (!isPortalVisible) return;
 
     const onPointerMove = (event: PointerEvent) => {
       rememberPointer(event.clientX, event.clientY);
@@ -166,13 +173,13 @@ const useProductSessionRowHover = () => {
     window.addEventListener('pointermove', onPointerMove, { passive: true });
 
     return () => window.removeEventListener('pointermove', onPointerMove);
-  }, [isHovered, rememberPointer]);
+  }, [isPortalVisible, rememberPointer]);
 
   useLayoutEffect(() => {
-    if (!isHovered) return;
+    if (!isPortalVisible) return;
 
     ensureAnchorVisibleInScrollViewport();
-  }, [ensureAnchorVisibleInScrollViewport, hoverSession, isHovered]);
+  }, [ensureAnchorVisibleInScrollViewport, hoverSession, isPortalVisible]);
 
   useLayoutEffect(() => {
     if (!isExpanded) return;
@@ -182,7 +189,7 @@ const useProductSessionRowHover = () => {
   }, [ensureAnchorVisibleInScrollViewport, isExpanded, updatePosition]);
 
   useLayoutEffect(() => {
-    if (!isHovered) return;
+    if (!isPortalVisible) return;
 
     let innerFrame = 0;
     const outerFrame = requestAnimationFrame(() => {
@@ -197,10 +204,10 @@ const useProductSessionRowHover = () => {
       if (innerFrame) cancelAnimationFrame(innerFrame);
       expandFramesRef.current = null;
     };
-  }, [hoverSession, isHovered]);
+  }, [hoverSession, isPortalVisible]);
 
   useLayoutEffect(() => {
-    if (!isHovered) return;
+    if (!isPortalVisible) return;
 
     updatePosition();
 
@@ -218,10 +225,10 @@ const useProductSessionRowHover = () => {
       window.removeEventListener('resize', onPositionChange);
       scrollParents.forEach((parent) => parent.removeEventListener('scroll', onPositionChange));
     };
-  }, [isHovered, syncHoverWithPointer, updatePosition]);
+  }, [isPortalVisible, syncHoverWithPointer, updatePosition]);
 
   useEffect(() => {
-    if (!isHovered) return;
+    if (!isPortalVisible) return;
 
     const portal = portalRef.current;
     if (!portal) return;
@@ -238,12 +245,13 @@ const useProductSessionRowHover = () => {
     portal.addEventListener('wheel', onWheel, { passive: false });
 
     return () => portal.removeEventListener('wheel', onWheel);
-  }, [isHovered, syncHoverWithPointer]);
+  }, [isPortalVisible, syncHoverWithPointer]);
 
   return {
     anchorRef,
     portalRef,
-    isHovered,
+    isPortalVisible,
+    isAnchorHidden,
     isExpanded,
     position,
     showHover,

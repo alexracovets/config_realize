@@ -5,6 +5,8 @@ import { createContext, useContext, useSyncExternalStore } from 'react';
 import type { embeddedContextType, embeddedProviderPropsType } from '@types';
 import { resolveEmbeddedContext } from '@utils';
 
+import { EmbeddedUrlSyncBridge } from './EmbeddedUrlSyncBridge';
+
 const EmbeddedContext = createContext<embeddedContextType>({
   embedded: false,
   shop: null,
@@ -38,7 +40,12 @@ const useEmbedded = (): embeddedContextType => useContext(EmbeddedContext);
 const EmbeddedProvider = ({ children }: embeddedProviderPropsType) => {
   const value = useEmbeddedSearchParams();
 
-  return <EmbeddedContext.Provider value={value}>{children}</EmbeddedContext.Provider>;
+  return (
+    <EmbeddedContext.Provider value={value}>
+      <EmbeddedUrlSyncBridge />
+      {children}
+    </EmbeddedContext.Provider>
+  );
 };
 
 export { EmbeddedProvider, useEmbedded };

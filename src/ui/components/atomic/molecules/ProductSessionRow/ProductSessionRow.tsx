@@ -12,14 +12,15 @@ import { ProductSessionRowCard } from './ProductSessionRowCard';
 import {
   PRODUCT_SESSION_ROW_CARD_HEIGHT_PX,
   PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
-  PRODUCT_SESSION_ROW_EXPANDED_VIEWPORT_PADDING_PX,
+  PRODUCT_SESSION_ROW_EXPANDED_WIDTH_PX,
   PRODUCT_SESSION_ROW_SCROLL_EDGE_PADDING_PX,
 } from './productSessionRow.constants';
 import { useProductSessionRowHover } from './useProductSessionRowHover';
 
 const ProductSessionRow = ({ name, previewSrc, active = false, onSelect, onRemove }: productSessionRowPropsType) => {
   const [isPreviewLoaded, setIsPreviewLoaded] = useState(false);
-  const { anchorRef, portalRef, isHovered, isExpanded, position, showHover, hideHover, rememberPointer } = useProductSessionRowHover();
+  const { anchorRef, portalRef, isPortalVisible, isAnchorHidden, isExpanded, position, showHover, hideHover, rememberPointer } =
+    useProductSessionRowHover();
 
   const cardProps = {
     name,
@@ -35,7 +36,7 @@ const ProductSessionRow = ({ name, previewSrc, active = false, onSelect, onRemov
     <>
       <Box
         asChild
-        className={cn('relative shrink-0 overflow-hidden', isHovered && 'invisible')}
+        className={cn('relative shrink-0 overflow-hidden', isAnchorHidden && 'invisible')}
         style={{
           width: PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
           height: PRODUCT_SESSION_ROW_CARD_HEIGHT_PX,
@@ -44,31 +45,24 @@ const ProductSessionRow = ({ name, previewSrc, active = false, onSelect, onRemov
         }}
       >
         <div ref={anchorRef} onMouseEnter={(event) => showHover(event.clientX, event.clientY)}>
-          <ProductSessionRowCard {...cardProps} showDetails={false} isExpanded={false} />
+          <ProductSessionRowCard {...cardProps} variant="anchor" isExpanded={false} />
         </div>
       </Box>
-      {isHovered &&
+      {isPortalVisible &&
         typeof document !== 'undefined' &&
         createPortal(
           <Box
             asChild
-            className={cn(
-              'fixed z-50 overflow-hidden transition-shadow duration-200 ease-out',
-              isExpanded && 'w-max',
-            )}
+            className="fixed z-50 overflow-hidden transition-[width,box-shadow] duration-200 ease-out"
             style={{
               top: position.top,
               left: position.left,
-              width: isExpanded ? 'max-content' : PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
-              maxWidth: isExpanded
-                ? `calc(100vw - ${position.left}px - ${PRODUCT_SESSION_ROW_EXPANDED_VIEWPORT_PADDING_PX}px)`
-                : PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
-              minWidth: PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
+              width: isExpanded ? PRODUCT_SESSION_ROW_EXPANDED_WIDTH_PX : PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
               height: PRODUCT_SESSION_ROW_CARD_HEIGHT_PX,
             }}
           >
             <div ref={portalRef} onMouseEnter={(event) => rememberPointer(event.clientX, event.clientY)} onMouseLeave={hideHover}>
-              <ProductSessionRowCard {...cardProps} showDetails={isExpanded} isExpanded={isExpanded} />
+              <ProductSessionRowCard {...cardProps} variant="portal" isExpanded={isExpanded} />
             </div>
           </Box>,
           document.body,
