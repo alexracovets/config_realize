@@ -1,1 +1,0 @@
-export { preloadGarmentAppearance } from './preloadGarmentAppearance';

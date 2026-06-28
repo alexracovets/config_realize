@@ -1,7 +1,6 @@
 'use client';
 
-import { LogoFileError } from '../../logoFileError';
-
+import { LogoFileError } from '@utils/logoFile/logoFileError';
 interface WorkerResult {
   id: number;
   png?: ArrayBuffer;

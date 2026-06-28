@@ -1,4 +1,4 @@
-import { mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +15,9 @@ import sharp from 'sharp';
  * The original .svg files are KEPT as the full-resolution master for the future
  * print/export pipeline; only the runtime loads the .webp (see crewneck.json).
  *
+ * UI design picker cards use static SVG templates under public/svg/design/ — no
+ * raster thumbnails are generated here.
+ *
  * Re-runnable. Override defaults with env vars:
  *   DESIGN_WIDTH=4096 DESIGN_QUALITY=90 node scripts/convert-design-assets.mjs
  */
@@ -22,11 +25,9 @@ import sharp from 'sharp';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 
-// Keep in sync with PRINT_ATLAS_WIDTH (src/constants/printAtlas.ts) — the atlas is the resolution ceiling.
+// Keep in sync with PRINT_ATLAS_WIDTH (@configurator/constants).
 const TARGET_WIDTH = Number(process.env.DESIGN_WIDTH ?? 4096);
 const WEBP_QUALITY = Number(process.env.DESIGN_QUALITY ?? 90);
-const THUMB_WIDTH = Number(process.env.DESIGN_THUMB_WIDTH ?? 100);
-const THUMB_QUALITY = Number(process.env.DESIGN_THUMB_QUALITY ?? 80);
 
 const findDesignSvgs = (dir) => {
   const found = [];
@@ -73,33 +74,17 @@ const normalizeSvg = (svgText, targetWidth) => {
 
 const formatKb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
 
-const writeDesignThumb = async (webpPath, sourceWidth, sourceHeight) => {
-  const thumbsDir = join(dirname(webpPath), 'thumbs');
-  const thumbPath = join(thumbsDir, basename(webpPath));
-  const thumbHeight = Math.max(1, Math.round((THUMB_WIDTH * sourceHeight) / sourceWidth));
-
-  mkdirSync(thumbsDir, { recursive: true });
-  await sharp(webpPath)
-    .resize({ width: THUMB_WIDTH, height: thumbHeight, fit: 'fill' })
-    .webp({ quality: THUMB_QUALITY, alphaQuality: 100, effort: 4 })
-    .toFile(thumbPath);
-
-  return statSync(thumbPath).size;
-};
-
 const convert = async (svgPath) => {
   const svgText = readFileSync(svgPath, 'utf8');
   const { svg, width, height } = normalizeSvg(svgText, TARGET_WIDTH);
   const outPath = svgPath.replace(/\.svg$/i, '.webp');
 
   await sharp(Buffer.from(svg)).resize({ width, height, fit: 'fill' }).webp({ quality: WEBP_QUALITY, alphaQuality: 100, effort: 6 }).toFile(outPath);
-  const thumbSize = await writeDesignThumb(outPath, width, height);
 
   return {
     name: basename(svgPath),
     before: statSync(svgPath).size,
     after: statSync(outPath).size,
-    thumbSize,
     width,
     height,
   };
@@ -117,23 +102,21 @@ const run = async () => {
 
   let totalBefore = 0;
   let totalAfter = 0;
-  let totalThumb = 0;
 
   for (const svgPath of svgFiles) {
     const result = await convert(svgPath);
     totalBefore += result.before;
     totalAfter += result.after;
-    totalThumb += result.thumbSize;
 
     const reduction = (100 * (1 - result.after / result.before)).toFixed(1);
     console.log(
-      `  ${result.name.padEnd(36)} ${formatKb(result.before).padStart(9)} → ${formatKb(result.after).padStart(8)}  (-${reduction}%)  ${result.width}×${result.height}  thumb ${formatKb(result.thumbSize)}`,
+      `  ${result.name.padEnd(36)} ${formatKb(result.before).padStart(9)} → ${formatKb(result.after).padStart(8)}  (-${reduction}%)  ${result.width}×${result.height}`,
     );
   }
 
   const totalReduction = (100 * (1 - totalAfter / totalBefore)).toFixed(1);
-  console.log(`\nTotal: ${formatKb(totalBefore)} → ${formatKb(totalAfter)}  (-${totalReduction}%), thumbs ${formatKb(totalThumb)}`);
-  console.log('Originals (.svg) kept as export masters. Thumbnails saved under designs/thumbs/.');
+  console.log(`\nTotal: ${formatKb(totalBefore)} → ${formatKb(totalAfter)}  (-${totalReduction}%)`);
+  console.log('Originals (.svg) kept as export masters.');
 };
 
 run().catch((error) => {

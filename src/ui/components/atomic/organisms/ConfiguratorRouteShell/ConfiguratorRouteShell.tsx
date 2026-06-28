@@ -1,24 +1,24 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-import type { configuratorProductHydrationType } from '@types';
-import { applyConfiguratorRouteProduct } from '../../../../../utils/configuratorRoute/applyConfiguratorRouteProduct';
+import type { configuratorProductHydrationType } from '@configurator/types';
+import { applyConfiguratorRouteProduct } from '@utils';
 
 type configuratorRouteShellPropsType = {
   slug: string;
   product: configuratorProductHydrationType | null;
-  children?: ReactNode;
+  children?: React.ReactNode;
 };
 
 /**
- * Stamps slug/product onto zustand before paint; Canvas waits for `isRouteHydrated`.
+ * Stamps slug/product onto zustand after first paint so the initial loader can render
+ * before route activation and asset preloads run.
  */
 const ConfiguratorRouteShell = ({ slug, product, children }: configuratorRouteShellPropsType) => {
   const appliedRouteKeyRef = useRef<string | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const routeKey = `${slug}:${product?.modelId ?? 'local'}`;
     if (appliedRouteKeyRef.current === routeKey) return;
 

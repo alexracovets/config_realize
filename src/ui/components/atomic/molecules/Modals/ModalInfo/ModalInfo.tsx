@@ -1,15 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
+import { AtomTabsSlidingList } from '@molecules/AtomTabsSlidingList';
+import { ModalInfoTabContent } from '@molecules/Modals/ModalInfo/Content';
+import { MODAL_INFO_TABS } from '@molecules/Modals/ModalInfo/modalInfoTabs';
 import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomTabs, AtomTabsTrigger, ScrollArea } from '@atoms';
-import { AtomTabsSlidingList } from '../../AtomTabsSlidingList';
-
-import { ModalInfoTabContent } from './Content';
-import { MODAL_INFO_TABS } from './modalInfoTabs';
-
 import { useInfoDialog } from '@store';
-
+import { useState } from 'react';
 const ModalInfo = () => {
   const isOpen = useInfoDialog((state) => state.isOpen);
   const setIsOpen = useInfoDialog((state) => state.setIsOpen);

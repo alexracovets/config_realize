@@ -1,15 +1,14 @@
 'use client';
 
-import { canvasToPngBlobUrl } from '../../canvasToBlobUrl';
-import { LogoFileError } from '../../logoFileError';
-
+import { canvasToPngBlobUrl } from '@utils/logoFile/canvasToBlobUrl';
+import { LogoFileError } from '@utils/logoFile/logoFileError';
 let pdfjsModule: typeof import('pdfjs-dist') | null = null;
 
 const ensurePdfJs = async (): Promise<typeof import('pdfjs-dist')> => {
   if (pdfjsModule) return pdfjsModule;
   const pdfjs = await import('pdfjs-dist');
   if (typeof window !== 'undefined') {
-    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+    pdfjs.GlobalWorkerOptions.workerSrc = '/ghostscript/pdf.worker.min.mjs';
   }
   pdfjsModule = pdfjs;
   return pdfjs;

@@ -18,8 +18,8 @@ export { LangSwitcher } from './LangSwitcher';
 export { Notification } from './Notification';
 export { Search } from './Search';
 export { UserBar } from './UserBar';
-export { ModalInfo } from './Modals/ModalInfo/ModalInfo';
-export { ModalTutorial } from './Modals/ModalTutorial/ModalTutorial';
+export { ModalInfo } from './Modals/ModalInfo';
+export { ModalTutorial } from './Modals/ModalTutorial';
 export { CanvasLoaderBackground } from './Loaders/CanvasLoader';
 export { MainLoader, MainLoaderBackground } from './Loaders/MainLoader';
 export { VideoPlayer, VideoPlayerPreview } from './VideoPlayer';
@@ -32,4 +32,5 @@ export {
   ConfigurationNumbers,
   ConfigurationShading,
   ConfigurationTesto,
+  STEPS_CONFIGURATION,
 } from './ConfigurationSteps';

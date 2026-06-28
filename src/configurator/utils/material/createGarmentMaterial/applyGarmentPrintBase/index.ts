@@ -1,0 +1,1 @@
+export { applyGarmentPrintBase } from './applyGarmentPrintBase';

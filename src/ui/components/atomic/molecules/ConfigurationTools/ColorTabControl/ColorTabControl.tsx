@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
-import { Flex, Text } from '@atoms';
 import type { colorTabControlPropsType, colorTabType, colorTabVariantType } from '@types';
+import { Flex, Text } from '@atoms';
+import { ColorControl } from '@molecules/ConfigurationTools/ColorControl';
 import { cn } from '@utils';
-import { ColorControl } from '../ColorControl';
-
+import { useState } from 'react';
 const COLOR_TABS_BY_VARIANT: Record<colorTabVariantType, { id: colorTabType; label: string }[]> = {
   design: [
     { id: 'colori', label: 'Colore 1' },

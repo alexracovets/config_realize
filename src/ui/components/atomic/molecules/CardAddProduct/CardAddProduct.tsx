@@ -1,16 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
-
+import { ProductCatalogPopover } from '@molecules/ProductCatalogPopover';
+import { ProductSessionAddButton } from '@molecules/ProductSessionAddButton';
+import { ProductSessionRow } from '@molecules/ProductSessionRow';
 import { Flex, ScrollArea } from '@atoms';
-
-import { getCatalogProductEntry, getModel, preloadGarmentProduct, resolveCartItemDisplayPreview } from '@utils';
+import { useGarmentCatalogPreloadEffect } from '@hooks';
 import { useConfigurationCart } from '@store';
-
-import { ProductCatalogPopover } from '../ProductCatalogPopover';
-import { ProductSessionAddButton } from '../ProductSessionAddButton';
-import { ProductSessionRow } from '../ProductSessionRow';
-
+import { getModel, resolveCartItemDisplayPreview } from '@utils';
+import { useMemo } from 'react';
 const CardAddProduct = () => {
   const items = useConfigurationCart((state) => state.items);
   const activeItemId = useConfigurationCart((state) => state.activeItemId);
@@ -20,12 +17,9 @@ const CardAddProduct = () => {
   const removeItem = useConfigurationCart((state) => state.removeItem);
 
   const activeItem = items.find((item) => item.id === activeItemId) ?? items[0];
+  const modelIds = useMemo(() => items.map((item) => item.modelId), [items]);
 
-  useEffect(() => {
-    for (const item of items) {
-      preloadGarmentProduct(item.modelId);
-    }
-  }, [items]);
+  useGarmentCatalogPreloadEffect(modelIds);
 
   return (
     <Flex className="absolute left-0 top-4 z-30 flex max-h-[calc(100%-1rem)] w-[92px] flex-col gap-0 overflow-visible">
@@ -35,8 +29,7 @@ const CardAddProduct = () => {
             const product = getModel(item.modelId);
             if (!product) return null;
 
-            const catalogEntry = getCatalogProductEntry(item.collection, item.slug);
-            const displayName = catalogEntry?.name ?? item.business.name ?? product.name;
+            const displayName = item.business.name ?? product.name;
 
             return (
               <ProductSessionRow
@@ -52,7 +45,7 @@ const CardAddProduct = () => {
         </Flex>
       </ScrollArea>
       <div className="shrink-0">
-        <ProductCatalogPopover activeCollection={activeItem.collection} onSelect={addItem}>
+        <ProductCatalogPopover activeCollectionHandle={activeItem.collectionHandle} onSelect={addItem}>
           <ProductSessionAddButton />
         </ProductCatalogPopover>
       </div>

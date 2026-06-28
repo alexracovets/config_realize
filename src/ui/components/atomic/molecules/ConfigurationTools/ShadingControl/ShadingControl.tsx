@@ -1,12 +1,11 @@
 'use client';
 
-import { Flex, Text } from '@atoms';
-import { ColorControl } from '../ColorControl';
-import { RangeControl } from '../RangeControl';
-import { ToggleControl } from '../ToggleControl';
-import { DEFAULT_COLOR, DISABLED_PART_GRADIENT, useGarmentColor } from '@store';
+import { ColorControl } from '@molecules/ConfigurationTools/ColorControl';
+import { RangeControl } from '@molecules/ConfigurationTools/RangeControl';
+import { ToggleControl } from '@molecules/ConfigurationTools/ToggleControl';
 import type { shadingControlPropsType } from '@types';
-
+import { Flex, Text } from '@atoms';
+import { DEFAULT_COLOR, DISABLED_PART_GRADIENT, useGarmentColor } from '@store';
 const ShadingControl = ({ partId }: shadingControlPropsType) => {
   const baseColor = useGarmentColor((state) => state.byPart[partId] ?? DEFAULT_COLOR);
   const gradient = useGarmentColor((state) => state.gradientsByPart[partId] ?? DISABLED_PART_GRADIENT);

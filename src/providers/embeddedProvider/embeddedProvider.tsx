@@ -3,6 +3,7 @@
 import { createContext, useContext, useSyncExternalStore } from 'react';
 
 import type { embeddedContextType, embeddedProviderPropsType } from '@types';
+import { resolveEmbeddedContext } from '@utils';
 
 const EmbeddedContext = createContext<embeddedContextType>({
   embedded: false,
@@ -14,15 +15,13 @@ const EMBEDDED_DEFAULT: embeddedContextType = { embedded: false, shop: null };
 let cachedEmbeddedSnapshot: embeddedContextType = EMBEDDED_DEFAULT;
 
 const getEmbeddedContextSnapshot = (): embeddedContextType => {
-  const params = new URLSearchParams(window.location.search);
-  const embedded = params.get('embedded') === '1';
-  const shop = params.get('shop');
+  const next = resolveEmbeddedContext();
 
-  if (cachedEmbeddedSnapshot.embedded === embedded && cachedEmbeddedSnapshot.shop === shop) {
+  if (cachedEmbeddedSnapshot.embedded === next.embedded && cachedEmbeddedSnapshot.shop === next.shop) {
     return cachedEmbeddedSnapshot;
   }
 
-  cachedEmbeddedSnapshot = { embedded, shop };
+  cachedEmbeddedSnapshot = next;
   return cachedEmbeddedSnapshot;
 };
 

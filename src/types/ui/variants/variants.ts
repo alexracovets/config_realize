@@ -10,7 +10,8 @@ type textVariantType =
   | 'h2'
   | 'h3'
   | 'small'
-  | 'small_secondary';
+  | 'small_secondary'
+  | 'product_card_name';
 
 type boxVariantType = 'default' | 'header' | 'footer' | 'toggle_handle';
 
@@ -23,7 +24,8 @@ type flexVariantType =
   | 'aside_configurator_content'
   | 'configurator_part'
   | 'slider_labels'
-  | 'info_part';
+  | 'info_part'
+  | 'product_card_name';
 
 type gridVariantType = 'default' | 'header' | 'configurator' | 'configurator_price' | 'select_parts' | 'aside_configurator';
 

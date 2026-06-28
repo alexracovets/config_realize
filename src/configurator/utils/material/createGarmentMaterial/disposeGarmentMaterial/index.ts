@@ -1,0 +1,1 @@
+export { disposeGarmentMaterial } from './disposeGarmentMaterial';

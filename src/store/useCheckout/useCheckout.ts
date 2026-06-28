@@ -1,18 +1,14 @@
 'use client';
 
+import { captureGarmentConfiguration, useConfigurationCart } from '@store/useConfigurationCart';
+import { sanitizeNumberText } from '@store/useGarmentNumber';
+import { buildCheckoutRows, createCheckoutRowFromPreset, extractCheckoutRowPreset } from '@store/useCheckout/buildCheckoutRows';
+import { getCheckoutDiscountPercent, getProductRowQuantity, getProductsSubtotal, getProductUnitPrice } from '@store/useCheckout/checkoutPricing';
+import { resolveCheckoutPrintAvailability } from '@store/useCheckout/resolveCheckoutPrintAvailability';
 import type { checkoutLineRowPatchType, checkoutProductType } from '@types';
-
 import { clampCheckoutRowQuantity } from '@constants';
 import { getModel } from '@utils';
 import { create } from 'zustand';
-
-import { captureGarmentConfiguration, useConfigurationCart } from '../useConfigurationCart';
-import { sanitizeNumberText } from '../useGarmentNumber';
-
-import { buildCheckoutRows, createCheckoutRowFromPreset, extractCheckoutRowPreset } from './buildCheckoutRows';
-import { getCheckoutDiscountPercent, getProductRowQuantity, getProductsSubtotal, getProductUnitPrice } from './checkoutPricing';
-import { resolveCheckoutPrintAvailability } from './resolveCheckoutPrintAvailability';
-
 interface CheckoutState {
   products: checkoutProductType[];
   initializeFromCart: () => void;

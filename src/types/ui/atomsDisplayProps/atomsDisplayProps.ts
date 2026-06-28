@@ -63,9 +63,14 @@ interface scrollAreaPropsType {
   fadeEdges?: boolean;
 }
 
+interface logoPropsType {
+  href?: string;
+}
+
 export type {
   atomImagePropsType,
   atomListPropsType,
+  logoPropsType,
   scrollAreaPropsType,
   slidingIndicatorPropsType,
   slidingIndicatorTrackPropsType,

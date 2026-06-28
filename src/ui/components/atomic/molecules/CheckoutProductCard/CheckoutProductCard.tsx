@@ -1,17 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
-
+import type { checkoutProductCardPropsType } from '@types';
 import { AtomImage, Box, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
-
 import { CHECKOUT_SHIPPING_DAYS_LABEL } from '@constants';
 import { useNavigateToConfigurator } from '@hooks';
+import { CheckoutConfigurationTable } from '@molecules/CheckoutConfigurationTable';
 import { resolveCheckoutPrintAvailability, resolveTestoLimits, useCheckout, useConfigurationCart } from '@store';
-import type { checkoutProductCardPropsType } from '@types';
 import { getModel, priceFormat, resolveCartItemDisplayPreview } from '@utils';
-
-import { CheckoutConfigurationTable } from '../CheckoutConfigurationTable';
-
+import { useMemo } from 'react';
 const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
   const { navigateToConfigurator } = useNavigateToConfigurator();
   const quantity = useCheckout((state) => state.getProductQuantity(product.cartItemId));

@@ -1,2 +1,2 @@
-export { ModalInfo } from './ModalInfo/ModalInfo';
-export { ModalTutorial } from './ModalTutorial/ModalTutorial';
+export { ModalInfo } from './ModalInfo';
+export { ModalTutorial } from './ModalTutorial';

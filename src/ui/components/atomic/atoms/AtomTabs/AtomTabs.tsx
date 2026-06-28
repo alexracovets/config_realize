@@ -5,13 +5,7 @@ import { createContext, forwardRef, useContext } from 'react';
 import { cva } from 'class-variance-authority';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@shared';
-import type {
-  atomTabsContentPropsType,
-  atomTabsListPropsType,
-  atomTabsRootPropsType,
-  atomTabsTriggerPropsType,
-  atomTabsVariantType,
-} from '@types';
+import type { atomTabsContentPropsType, atomTabsListPropsType, atomTabsRootPropsType, atomTabsTriggerPropsType, atomTabsVariantType } from '@types';
 import { cn } from '@utils';
 
 const AtomTabsVariantContext = createContext<atomTabsVariantType>('default');

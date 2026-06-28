@@ -2,13 +2,13 @@
 
 import { useEffect } from 'react';
 
+import { warmProductGltfCache } from '@configurator';
 import { useConfiguratorSceneLoad } from '@store';
-import { preloadGarmentScene } from '@features/garment-scene';
 
 const useConfiguratorInitialSceneLoad = () => {
   useEffect(() => {
     useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
-    preloadGarmentScene();
+    warmProductGltfCache();
   }, []);
 };
 

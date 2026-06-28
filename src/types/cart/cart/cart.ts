@@ -1,8 +1,16 @@
-import type { garmentBusinessType, logoInstanceType, modelIdType, nameInstanceType, numberInstanceType, partGradientType, productCollectionIdType, testoInstanceType } from '@types';
+import type {
+  garmentBusinessType,
+  logoInstanceType,
+  modelIdType,
+  nameInstanceType,
+  numberInstanceType,
+  partGradientType,
+  testoInstanceType,
+} from '@types';
 
 interface cartItemType {
   id: string;
-  collection: productCollectionIdType;
+  collectionHandle: string;
   slug: string;
   /** Local geometry model id (== Shopify `custom.id`). */
   modelId: modelIdType;

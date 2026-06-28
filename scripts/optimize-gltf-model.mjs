@@ -3,6 +3,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { NodeIO, PropertyType } from '@gltf-transform/core';
+import { EXTTextureWebP } from '@gltf-transform/extensions';
 import { dedup, prune, textureCompress } from '@gltf-transform/functions';
 import sharp from 'sharp';
 
@@ -12,9 +13,9 @@ import sharp from 'sharp';
  * Safe transforms (UV-preserving):
  *   - dedup   — merge duplicate meshes/materials/textures (accessors/UVs excluded)
  *   - prune   — remove unused nodes (keepAttributes: true keeps TEXCOORD_0 + TEXCOORD_1)
- *   - textureCompress — recompress embedded textures (does not touch mesh UVs)
+ *   - textureCompress — resize + WebP recompress (does not touch mesh UVs)
  *
- * Intentionally skipped (can alter UV seams or geometry):
+ * Intentionally skipped (can alter UV seams, mesh names, or print layout):
  *   - weld, simplify, join, flatten, quantize, meshopt
  *
  * Usage:
@@ -24,14 +25,15 @@ import sharp from 'sharp';
  *   node scripts/optimize-gltf-model.mjs federer_calcio --dry-run
  *
  * Env:
- *   TEXTURE_JPEG_QUALITY=85
- *   TEXTURE_PNG_QUALITY=90
+ *   TEXTURE_MAX_SIZE=1024
+ *   TEXTURE_WEBP_QUALITY=85
  */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 
-const JPEG_QUALITY = Number(process.env.TEXTURE_JPEG_QUALITY ?? 85);
+const TEXTURE_MAX_SIZE = Number(process.env.TEXTURE_MAX_SIZE ?? 1024);
+const WEBP_QUALITY = Number(process.env.TEXTURE_WEBP_QUALITY ?? 85);
 const UV_TOLERANCE = 1e-5;
 
 const args = process.argv.slice(2).filter((arg) => !arg.startsWith('-'));
@@ -39,6 +41,8 @@ const flags = new Set(process.argv.slice(2).filter((arg) => arg.startsWith('-'))
 const dryRun = flags.has('--dry-run');
 
 const CALCIO_MODELS = ['federer_calcio', 'baggio_calcio', 'bernardi_calcio', 'cruijff_calcio'];
+
+const createIo = () => new NodeIO().registerExtensions([EXTTextureWebP]);
 
 const resolveModelDirs = (inputs) => {
   if (inputs.length === 0) {
@@ -76,8 +80,8 @@ const folderSize = (dir, names) =>
     }
   }, 0);
 
-const collectUvBounds = (document) => {
-  const bounds = {};
+const collectUvSnapshot = (document) => {
+  const snapshot = {};
 
   for (const mesh of document.getRoot().listMeshes()) {
     const meshLabel = mesh.getName() || 'mesh';
@@ -105,21 +109,22 @@ const collectUvBounds = (document) => {
         }
 
         const key = `${meshLabel}:${semantic}`;
-        bounds[key] = {
+        snapshot[key] = {
           minU,
           maxU,
           minV,
           maxV,
           count: array.length / 2,
+          values: array,
         };
       }
     }
   }
 
-  return bounds;
+  return snapshot;
 };
 
-const compareUvBounds = (before, after) => {
+const compareUvSnapshots = (before, after) => {
   const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
   const mismatches = [];
 
@@ -142,14 +147,23 @@ const compareUvBounds = (before, after) => {
         mismatches.push(`${key}: ${field} ${a[field].toFixed(6)} → ${b[field].toFixed(6)}`);
       }
     }
+
+    let maxDelta = 0;
+    for (let i = 0; i < a.values.length; i += 1) {
+      maxDelta = Math.max(maxDelta, Math.abs(a.values[i] - b.values[i]));
+    }
+
+    if (maxDelta > UV_TOLERANCE) {
+      mismatches.push(`${key}: per-vertex max delta ${maxDelta.toExponential(3)}`);
+    }
   }
 
   return mismatches;
 };
 
-const printUvSummary = (bounds, title) => {
+const printUvSummary = (snapshot, title) => {
   console.log(`\n${title}`);
-  for (const [key, value] of Object.entries(bounds).sort()) {
+  for (const [key, value] of Object.entries(snapshot).sort()) {
     console.log(
       `  ${key}: U [${value.minU.toFixed(4)}, ${value.maxU.toFixed(4)}], V [${value.minV.toFixed(4)}, ${value.maxV.toFixed(4)}], verts=${value.count}`,
     );
@@ -159,10 +173,10 @@ const printUvSummary = (bounds, title) => {
 const optimizeModel = async (modelDir) => {
   const inputGltf = join(modelDir, 'model.gltf');
   const outputGlb = join(modelDir, 'model.glb');
+  const io = createIo();
 
-  const io = new NodeIO();
   const document = await io.read(inputGltf);
-  const uvBefore = collectUvBounds(document);
+  const uvBefore = collectUvSnapshot(document);
 
   await document.transform(
     dedup({
@@ -171,14 +185,15 @@ const optimizeModel = async (modelDir) => {
     prune({ keepAttributes: true }),
     textureCompress({
       encoder: sharp,
-      quality: JPEG_QUALITY,
+      targetFormat: 'webp',
+      resize: [TEXTURE_MAX_SIZE, TEXTURE_MAX_SIZE],
+      quality: WEBP_QUALITY,
       effort: 6,
-      chromaSubsampling: '4:4:4',
     }),
   );
 
-  const uvAfter = collectUvBounds(document);
-  const uvMismatches = compareUvBounds(uvBefore, uvAfter);
+  const uvAfter = collectUvSnapshot(document);
+  const uvMismatches = compareUvSnapshots(uvBefore, uvAfter);
 
   printUvSummary(uvBefore, 'UV bounds (before)');
   printUvSummary(uvAfter, 'UV bounds (after)');
@@ -189,7 +204,8 @@ const optimizeModel = async (modelDir) => {
     process.exit(1);
   }
 
-  console.log('\nUV verification: OK (bounds unchanged)');
+  console.log('\nUV verification: OK (TEXCOORD_0/1 unchanged)');
+  console.log(`Textures: WebP, max ${TEXTURE_MAX_SIZE}px, quality ${WEBP_QUALITY}`);
 
   if (dryRun) {
     console.log('\nDry run — model.glb was not written.');
@@ -227,6 +243,7 @@ const optimizeModel = async (modelDir) => {
   }
 
   console.log('\nPBR bake maps are read from embedded GLB materials when pbrTextures is omitted in product JSON.');
+  console.log('Run: pnpm validate:model-uv ' + basename(modelDir));
 };
 
 const run = async () => {

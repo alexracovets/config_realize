@@ -4,7 +4,7 @@
     {
       "name": "Federer Calcio",
       "type": "shirt",
-      "previewImage": "designs/thumbs/crewneck_design_7.webp",
+      "previewImage": "designs/crewneck_design_7.webp",
       "price": 100,
       "bonus_count": 10,
       "bonus_discount": 20,
@@ -21,9 +21,7 @@
           "name": "Davanti",
           "label": "Davanti",
           "id": "front_crewneck",
-          "meshNames": [
-            "crewneck_front"
-          ],
+          "meshNames": ["crewneck_front"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0.5028,
@@ -44,9 +42,7 @@
           "name": "Retro",
           "label": "Retro",
           "id": "back_crewneck",
-          "meshNames": [
-            "crewneck_back"
-          ],
+          "meshNames": ["crewneck_back"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0.0038,
@@ -67,9 +63,7 @@
           "name": "Manica 1",
           "label": "Manica 1",
           "id": "sleeve_left_crewneck",
-          "meshNames": [
-            "crewneck_sleeve_left"
-          ],
+          "meshNames": ["crewneck_sleeve_left"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0.0026,
@@ -90,9 +84,7 @@
           "name": "Manica 2",
           "label": "Manica 2",
           "id": "sleeve_right_crewneck",
-          "meshNames": [
-            "crewneck_sleeve_right"
-          ],
+          "meshNames": ["crewneck_sleeve_right"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0.3125,
@@ -113,9 +105,7 @@
           "name": "Collar",
           "label": "Collar",
           "id": "collar_crewneck",
-          "meshNames": [
-            "crewneck_collar"
-          ],
+          "meshNames": ["crewneck_collar"],
           "renderOrder": 1,
           "colorOnly": true
         }
@@ -126,9 +116,7 @@
         "fabricNormal": "cotton_jersey_nor_gl.jpg",
         "fabricRoughness": "cotton_jersey_rough.jpg"
       },
-      "preserveGltfMeshes": [
-        "crewneck_inside"
-      ],
+      "preserveGltfMeshes": ["crewneck_inside"],
       "patterns": [
         {
           "name": "Design 1",
@@ -416,7 +404,7 @@
     {
       "name": "Shorts Classic",
       "type": "shorts",
-      "previewImage": "designs/thumbs/mans_shorts_raw_pattern.webp",
+      "previewImage": "designs/mans_shorts_raw_pattern.webp",
       "price": 80,
       "bonus_count": 10,
       "bonus_discount": 15,
@@ -428,17 +416,13 @@
         "height": 2149
       },
       "gizmoRotation": -90,
-      "hiddenSteps": [
-        "name"
-      ],
+      "hiddenSteps": ["name"],
       "parts": [
         {
           "name": "Davanti",
           "label": "Left",
           "id": "left_shorts",
-          "meshNames": [
-            "mans_shorts_left"
-          ],
+          "meshNames": ["mans_shorts_left"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0.5,
@@ -451,9 +435,7 @@
           "name": "Retro",
           "label": "Right",
           "id": "right_shorts",
-          "meshNames": [
-            "mans_shorts_right"
-          ],
+          "meshNames": ["mans_shorts_right"],
           "renderOrder": 1,
           "uvBounds": {
             "minX": 0,
@@ -463,10 +445,7 @@
           }
         }
       ],
-      "preserveGltfMeshes": [
-        "mans_shorts_inside",
-        "mans_shorts_laces"
-      ],
+      "preserveGltfMeshes": ["mans_shorts_inside", "mans_shorts_laces"],
       "patterns": [],
       "default_pattern": [
         {

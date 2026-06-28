@@ -1,18 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { AtomImage, Flex } from '@atoms';
-import { useConfigurationCart } from '@store';
+import type { logoPropsType } from '@types';
 
-const Logo = () => {
-  const pathname = usePathname();
-  const activeSlug = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId)?.slug ?? state.items[0]?.slug);
-
-  const isOnConfigurator = pathname !== '/' && pathname !== '/checkout';
-  const href = isOnConfigurator || !activeSlug ? '/' : `/${activeSlug}`;
-
+const Logo = ({ href = '/' }: logoPropsType) => {
   return (
     <Flex className="w-full">
       <Link href={href}>

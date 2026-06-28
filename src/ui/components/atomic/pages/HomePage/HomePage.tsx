@@ -13,9 +13,9 @@ const HomePage = ({ collections }: homePagePropsType) => {
           title={title}
           items={products.map((product) => ({
             collection: handle,
-            slug: product.modelId ?? product.handle,
+            slug: product.handle,
             alt: product.title,
-            previewSrc: product.previewSrc,
+            previewSrc: product.flipPreviewSrc,
             activePreviewSrc: product.activePreviewSrc,
           }))}
         />

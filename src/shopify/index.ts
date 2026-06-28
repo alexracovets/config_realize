@@ -2,4 +2,5 @@ export { assertShopifyConfigured, getShopifyFrameAncestors, isShopifyEnabled } f
 export { fetchConfiguratorProductByHandle } from './fetchConfiguratorProductByHandle';
 export { fetchConfiguratorCollections } from './fetchConfiguratorCollections';
 export { resolveConfiguratorProduct } from './resolveConfiguratorProduct';
-export { resolveHomeCollections, resolveLocalHomeCollections } from './resolveHomeCollections';
+export { resolveHomeCollections } from './resolveHomeCollections';
+export { mapHomePageProductBusiness } from './mapHomePageProductBusiness';

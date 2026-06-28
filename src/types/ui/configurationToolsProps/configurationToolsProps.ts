@@ -1,7 +1,5 @@
+import type { stepLogoPartStateType } from '@types';
 import type { ChangeEvent } from 'react';
-
-import type { stepLogoPartStateType } from '../../garment/logo/logo';
-
 interface colorControlPropsType {
   color: string;
   label?: string;

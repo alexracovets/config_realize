@@ -1,11 +1,8 @@
 'use client';
 
 import type { modalInfoTabContentPropsType } from '@types';
-
 import { AtomTabsContent, Flex, Text } from '@atoms';
-
-import { ModalInfoSectionParts } from './ModalInfoSectionParts';
-
+import { ModalInfoSectionParts } from '@molecules/Modals/ModalInfo/Content/ModalInfoTabContent/ModalInfoSectionParts';
 const ModalInfoTabContent = ({ tab, tabValue }: modalInfoTabContentPropsType) => {
   return (
     <AtomTabsContent value={tabValue}>

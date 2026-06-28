@@ -1,0 +1,1 @@
+export { resolveProductFlipCardSrc } from './resolveProductFlipCardSrc';

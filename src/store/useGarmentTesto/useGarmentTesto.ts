@@ -1,11 +1,8 @@
 'use client';
 
 import type { garmentConfigType, garmentTestoSnapshotType, testoInstanceType, testoPositionType, testoPreviewType } from '@types';
-
+import { mapProductTestoPositions } from '@store/useGarmentTesto/mapProductTesto';
 import { create } from 'zustand';
-
-import { mapProductTestoPositions } from './mapProductTesto';
-
 interface GarmentTestoState {
   productPath: string | null;
   positionsKey: string | null;

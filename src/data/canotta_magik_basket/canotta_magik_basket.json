@@ -1,0 +1,214 @@
+{
+  "id": "canotta_magik_basket",
+  "path": "/models/canotta_magik_basket/",
+  "modelFile": "model.glb",
+  "printAtlas": {
+    "width": 4096,
+    "height": 1679
+  },
+  "preserveGltfMeshes": ["basketball_top_inside", "basketball_top_sweatband", "basketball_top_label"],
+  "parts": [
+    {
+      "name": "Davanti",
+      "label": "Davanti",
+      "id": "canotta_magik_basket_front",
+      "meshNames": ["basketball_top_front"],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.5251,
+        "maxX": 0.9978,
+        "minY": 0.0065,
+        "maxY": 0.8869
+      },
+      "printRotation": 180,
+      "gradient": {
+        "reversed": false,
+        "rotation": 0,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    },
+    {
+      "name": "Retro",
+      "label": "Retro",
+      "id": "canotta_magik_basket_back",
+      "meshNames": ["basketball_top_back"],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.0013,
+        "maxX": 0.4748,
+        "minY": 0.0071,
+        "maxY": 0.8848
+      },
+      "printRotation": 0,
+      "gradient": {
+        "reversed": true,
+        "rotation": 0,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    },
+    {
+      "name": "Manica 1",
+      "label": "Manica 1",
+      "id": "canotta_magik_basket_sleeve_left",
+      "meshNames": ["basketball_top_sleeve_left"],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.481,
+        "maxX": 0.5191,
+        "minY": 0.0569,
+        "maxY": 0.9384
+      },
+      "printRotation": -90,
+      "gradient": {
+        "reversed": false,
+        "rotation": 90,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    },
+    {
+      "name": "Manica 2",
+      "label": "Manica 2",
+      "id": "canotta_magik_basket_sleeve_right",
+      "meshNames": ["basketball_top_sleeve_right"],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.5395,
+        "maxX": 0.9015,
+        "minY": 0.9034,
+        "maxY": 0.9967
+      },
+      "printRotation": 270,
+      "gradient": {
+        "reversed": true,
+        "rotation": 270,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    },
+    {
+      "name": "Collar",
+      "label": "Collar",
+      "id": "canotta_magik_basket_collar",
+      "meshNames": ["basketball_top_collar"],
+      "renderOrder": 1,
+      "colorOnly": true
+    }
+  ],
+  "patterns": [],
+  "default_pattern": [
+    {
+      "name": "Logos",
+      "parts": [
+        {
+          "path_name": "logos.webp"
+        }
+      ]
+    }
+  ],
+  "nameDefaults": {
+    "text": "PLAYER",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 20,
+    "fontSizeMin": 50,
+    "fontSizeMax": 400,
+    "strokeWidthMax": 20
+  },
+  "numberDefaults": {
+    "text": "10",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 2,
+    "fontSizeMin": 50,
+    "fontSizeMax": 600,
+    "strokeWidthMax": 20,
+    "lineHeight": 1.5,
+    "lineHeightMin": 0.5,
+    "lineHeightMax": 2,
+    "line_height_show": false
+  },
+  "testoDefaults": {
+    "text": "TEAM",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 20,
+    "fontSizeMin": 50,
+    "fontSizeMax": 400,
+    "strokeWidthMax": 20,
+    "lineHeight": 1,
+    "lineHeightMin": 1,
+    "lineHeightMax": 2,
+    "line_height_show": true,
+    "letterSpacing": 0,
+    "letterSpacingMin": -10,
+    "letterSpacingMax": 40,
+    "letter_spacing_show": true
+  },
+  "namePositions": [
+    {
+      "label": "Back",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.25,
+        "y": 0.45
+      },
+      "rotation": 0,
+      "fontSize": 200,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ],
+  "numberPositions": [
+    {
+      "label": "Front",
+      "partId": "canotta_magik_basket_front",
+      "uv": {
+        "x": 0.75,
+        "y": 0.45
+      },
+      "rotation": 0,
+      "fontSize": 180,
+      "show_frame": true,
+      "show_gizmo": false
+    },
+    {
+      "label": "Back",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.24,
+        "y": 0.45
+      },
+      "rotation": 0,
+      "fontSize": 580,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ],
+  "testoPositions": [
+    {
+      "label": "Front",
+      "partId": "canotta_magik_basket_front",
+      "uv": {
+        "x": 0.75,
+        "y": 0.55
+      },
+      "rotation": 0,
+      "fontSize": 180,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ]
+}

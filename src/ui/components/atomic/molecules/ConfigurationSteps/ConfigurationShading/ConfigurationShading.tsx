@@ -1,13 +1,11 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
-
+import { PartColorSwitch } from '@molecules/ConfigurationTools/PartColorSwitch';
+import { ShadingControl } from '@molecules/ConfigurationTools/ShadingControl';
 import { AccordionAtom, Flex } from '@atoms';
-import { PartColorSwitch } from '../../ConfigurationTools/PartColorSwitch';
-import { ShadingControl } from '../../ConfigurationTools/ShadingControl';
 import { CONFIGURATOR_GRADIENT_ACTIVE_LABEL } from '@constants';
 import { DEFAULT_COLOR, useConfiguratorProduct, useGarmentColor } from '@store';
-
+import { useCallback, useMemo } from 'react';
 const ConfigurationShading = () => {
   const product = useConfiguratorProduct((state) => state.product);
   const byPart = useGarmentColor((state) => state.byPart);

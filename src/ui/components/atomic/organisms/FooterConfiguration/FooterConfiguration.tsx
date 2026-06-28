@@ -33,7 +33,7 @@ const FooterConfiguration = () => {
           <SvgIcon name="share" />
           Condividi
         </Button>
-        <ProductCatalogPopover activeCollection={activeItem.collection} onSelect={addItem} contentSide="top" contentAlign="center">
+        <ProductCatalogPopover activeCollectionHandle={activeItem.collectionHandle} onSelect={addItem} contentSide="top" contentAlign="center">
           <Button size="sm">
             <SvgIcon name="plus" />
             Prodotto

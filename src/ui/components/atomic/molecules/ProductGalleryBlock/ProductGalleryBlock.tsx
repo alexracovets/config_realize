@@ -1,11 +1,9 @@
 'use client';
 
-import { Grid, Text } from '@atoms';
 import type { productGalleryBlockPropsType } from '@types';
+import { Grid, Text } from '@atoms';
+import { ProductFlipCard } from '@molecules/ProductFlipCard';
 import { cn } from '@utils';
-
-import { ProductFlipCard } from '../ProductFlipCard';
-
 const ProductGalleryBlock = ({ title, items, className }: productGalleryBlockPropsType) => {
   return (
     <section className={cn('w-full', className)}>

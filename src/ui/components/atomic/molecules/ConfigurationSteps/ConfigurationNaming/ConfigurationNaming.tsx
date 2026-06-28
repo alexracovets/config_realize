@@ -1,15 +1,12 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
-
-import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
-import { useConfigurationPositionPicker } from '@hooks';
-import { CONFIGURATOR_NAME_POSITION_SELECT_LABEL } from '@constants';
-import { createNameInstance, resolveNameDefaults, resolveNameLimits, useConfiguratorProduct, useGarmentName } from '@store';
 import type { namePartFormPropsType, namePositionType } from '@types';
-
-import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '../../ConfigurationTools';
-
+import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
+import { CONFIGURATOR_NAME_POSITION_SELECT_LABEL } from '@constants';
+import { useConfigurationPositionPicker } from '@hooks';
+import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
+import { createNameInstance, resolveNameDefaults, resolveNameLimits, useConfiguratorProduct, useGarmentName } from '@store';
+import { useCallback, useMemo } from 'react';
 const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType) => {
   const instance = useGarmentName((state) => state.instances.find((item) => item.id === instanceId));
   const updateInstance = useGarmentName((state) => state.updateInstance);

@@ -30,6 +30,10 @@ const variantText = cva('font-inter font-[400] leading-none', {
       h3: 'text-[24px] leading-[1] font-semibold text-base-black mb-3',
       small: 'text-[14px] text-gray',
       small_secondary: 'text-[16px] leading-[15px] text-gray',
+      product_card_name: cn(
+        'text-[14px] leading-[16px] font-[800] line-clamp-2 w-full wrap-break-word text-center whitespace-normal px-[0.5]',
+        'transition-colors duration-200 ease-in-out group-hover/button:text-active',
+      ),
     },
   },
   defaultVariants: {

@@ -1,12 +1,10 @@
 'use client';
 
-import { type ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
-
+import type { filePickContextType } from '@types';
 import { Flex } from '@atoms';
 import { useLogoFileHandler, useStepLogo } from '@hooks';
-import { HiddenLogoFileInput, LogoEditPanel, LogoUpload, LogoUploadedFilesSection } from '../../ConfigurationTools';
-import type { filePickContextType } from '@types';
-
+import { HiddenLogoFileInput, LogoEditPanel, LogoUpload, LogoUploadedFilesSection } from '@molecules/ConfigurationTools';
+import { type ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
 const ConfigurationLogo = () => {
   const parts = useStepLogo((state) => state.parts);
   const positions = useStepLogo((state) => state.positions);

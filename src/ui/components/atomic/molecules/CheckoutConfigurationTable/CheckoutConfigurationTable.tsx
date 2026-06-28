@@ -1,17 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
-
+import { createCheckoutConfigurationTableColumns } from '@molecules/CheckoutConfigurationTable/checkoutConfigurationTableColumns';
+import { getCheckoutColumnStyle } from '@molecules/CheckoutConfigurationTable/getCheckoutColumnStyle';
+import type { checkoutConfigurationTablePropsType } from '@types';
 import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Button, SvgIcon } from '@atoms';
-
 import { CHECKOUT_TABLE_ADD_ROW_LABEL } from '@constants';
 import { useCheckoutConfigurationTable } from '@hooks';
-import type { checkoutConfigurationTablePropsType } from '@types';
 import { cn } from '@utils';
-
-import { createCheckoutConfigurationTableColumns } from './checkoutConfigurationTableColumns';
-import { getCheckoutColumnStyle } from './getCheckoutColumnStyle';
-
+import { useMemo } from 'react';
 const CheckoutConfigurationTable = ({ cartItemId, rows, testoMaxLength, printAvailability }: checkoutConfigurationTablePropsType) => {
   const { handleAddRow, handleRemoveRow, handlePatchRow } = useCheckoutConfigurationTable(cartItemId);
 

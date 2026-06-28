@@ -1,0 +1,1 @@
+export { useSyncGarmentMaterials } from './useSyncGarmentMaterials';

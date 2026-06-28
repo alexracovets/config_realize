@@ -1,0 +1,1 @@
+export { warmProductAssets } from './warmProductAssets';

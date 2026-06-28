@@ -1,0 +1,1 @@
+export { SceneFrameSync } from './SceneFrameSync';

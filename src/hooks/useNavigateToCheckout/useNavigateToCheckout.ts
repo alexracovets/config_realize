@@ -1,11 +1,8 @@
 'use client';
 
-import { useCallback } from 'react';
-
+import { useAppNavigate } from '@hooks/useAppNavigate';
 import { useCheckout, useConfigurationCart } from '@store';
-
-import { useAppNavigate } from '../useAppNavigate';
-
+import { useCallback } from 'react';
 const useNavigateToCheckout = () => {
   const { navigateToAppPath } = useAppNavigate();
   const persistActiveItemSnapshot = useConfigurationCart((state) => state.persistActiveItemSnapshot);

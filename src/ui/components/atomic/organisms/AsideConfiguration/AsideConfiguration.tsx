@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
 import { Flex, Grid, ScrollArea } from '@atoms';
 import { CardAddProduct, ConfiguratorProduct, ConfiguratorProductDescription } from '@molecules';
 
+import { registerAsideOrbitGuard } from '@configurator/canvas';
 import { useProductStepsConfiguration, useShowConfigurationSkeleton } from '@hooks';
 import { ConfigurationStepSkeleton, ConfiguratorProductDescriptionSkeleton } from '@skeletons';
 import { useConfigurationControl } from '@store';
@@ -30,8 +33,12 @@ const ActiveStepContent = () => {
 };
 
 const AsideConfiguration = () => {
+  const asideRef = useRef<HTMLElement>(null);
+
+  useEffect(() => registerAsideOrbitGuard(asideRef.current), []);
+
   return (
-    <aside className="relative h-full min-h-0 overflow-visible p-4 pl-28">
+    <aside ref={asideRef} className="relative h-full min-h-0 overflow-visible p-4 pl-28">
       <CardAddProduct />
       <Grid className="grid h-full min-h-0 w-[334px] grid-rows-[auto_minmax(0,1fr)] gap-6">
         <ConfiguratorProduct />

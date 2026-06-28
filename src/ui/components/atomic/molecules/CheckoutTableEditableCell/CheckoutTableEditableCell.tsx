@@ -1,14 +1,10 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-
-import { AtomInput, Button, Flex, SvgIcon } from '@atoms';
-
 import type { checkoutTableEditableCellPropsType } from '@types';
+import { AtomInput, Button, Flex, SvgIcon } from '@atoms';
+import { CheckoutTablePlaceholder } from '@molecules/CheckoutTablePlaceholder';
 import { cn } from '@utils';
-
-import { CheckoutTablePlaceholder } from '../CheckoutTablePlaceholder';
-
+import { useCallback, useState } from 'react';
 const CheckoutTableEditableCell = ({
   value,
   placeholder,
@@ -77,7 +73,7 @@ const CheckoutTableEditableCell = ({
   return (
     <AtomInput
       // Inline table edit: focus the cell input when entering edit mode.
-      // eslint-disable-next-line jsx-a11y/no-autofocus
+
       autoFocus
       aria-label={placeholder}
       variant="checkout"

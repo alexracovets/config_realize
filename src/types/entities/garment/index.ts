@@ -1,7 +1,6 @@
 export type {
   garmentBusinessType,
   garmentConfigType,
-  garmentPbrUvChannelType,
   garmentPartConfigType,
   logoPositionConfigType,
   modelIdType,

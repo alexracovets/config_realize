@@ -17,7 +17,12 @@ const CheckoutView = () => {
         {products.map((product) => (
           <CheckoutProductCard key={product.cartItemId} product={product} />
         ))}
-        <Button size="sm" className="self-start border border-gray-20 bg-white" onClick={() => activeSlug && navigateToConfigurator(activeSlug)} disabled={!activeSlug}>
+        <Button
+          size="sm"
+          className="self-start border border-gray-20 bg-white"
+          onClick={() => activeSlug && navigateToConfigurator(activeSlug)}
+          disabled={!activeSlug}
+        >
           <SvgIcon name="plus" />
           Aggiungi altri prodotti
         </Button>

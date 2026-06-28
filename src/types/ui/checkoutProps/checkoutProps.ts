@@ -1,7 +1,5 @@
+import type { checkoutLineRowPatchType, checkoutLineRowType, checkoutPrintAvailabilityType, checkoutProductType } from '@types';
 import type { ReactNode } from 'react';
-
-import type { checkoutLineRowPatchType, checkoutLineRowType, checkoutPrintAvailabilityType, checkoutProductType } from '../../checkout';
-
 interface checkoutProductCardPropsType {
   product: checkoutProductType;
 }

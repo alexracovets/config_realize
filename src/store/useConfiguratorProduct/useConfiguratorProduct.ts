@@ -1,9 +1,9 @@
 'use client';
 
-import type { garmentBusinessType, garmentConfigType, modelIdType } from "@types";
-import { DEFAULT_MODEL_ID, deriveLocalBusiness, getModel } from "@utils";
+import type { garmentBusinessType, garmentConfigType, modelIdType } from '@types';
+import { DEFAULT_MODEL_ID, deriveLocalBusiness, getModel } from '@utils';
 
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface ConfiguratorProductState {
   modelId: modelIdType;

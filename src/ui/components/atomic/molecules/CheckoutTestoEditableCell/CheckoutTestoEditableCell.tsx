@@ -1,12 +1,9 @@
 'use client';
 
-import { Flex } from '@atoms';
-
+import { CheckoutTableEditableCell } from '@molecules/CheckoutTableEditableCell';
+import { CheckoutTablePlaceholder } from '@molecules/CheckoutTablePlaceholder';
 import type { checkoutTestoEditableCellPropsType } from '@types';
-
-import { CheckoutTableEditableCell } from '../CheckoutTableEditableCell';
-import { CheckoutTablePlaceholder } from '../CheckoutTablePlaceholder';
-
+import { Flex } from '@atoms';
 const CheckoutTestoEditableCell = ({ texts, maxLength, canEdit = true, onChangeText }: checkoutTestoEditableCellPropsType) => {
   if (!canEdit || texts.length === 0) {
     return <CheckoutTablePlaceholder />;

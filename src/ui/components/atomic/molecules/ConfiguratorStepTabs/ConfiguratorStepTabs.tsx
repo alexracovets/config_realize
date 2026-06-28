@@ -1,13 +1,10 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { AtomTabs } from '@atoms';
 import { useProductStepsConfiguration } from '@hooks';
+import { ConfiguratorStepTabsList } from '@molecules/ConfiguratorStepTabs/ConfiguratorStepTabsList';
 import { useConfigurationControl } from '@store';
-
-import { ConfiguratorStepTabsList } from './ConfiguratorStepTabsList';
-
+import { useCallback } from 'react';
 const ConfiguratorStepTabs = () => {
   const activeStep = useConfigurationControl((state) => state.activeStep);
   const setActiveStep = useConfigurationControl((state) => state.setActiveStep);

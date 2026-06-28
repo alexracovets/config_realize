@@ -1,11 +1,3 @@
-export {
-  getCatalogProductEntry,
-  getCatalogProductEntryBySlug,
-  listCatalogProducts,
-  listCatalogProductsByCollection,
-  listOtherProductCollections,
-  resolveConfiguratorProductBySlug,
-  toCatalogProductRef,
-} from './productCatalog';
+export { resolveConfiguratorProductBySlug } from './productCatalog';
 export { resolveCartItemDisplayPreview } from './resolveCartItemDisplayPreview';
 export { resolveCartItemPreviewSrc } from './resolveCartItemPreviewSrc';

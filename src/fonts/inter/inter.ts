@@ -1,5 +1,5 @@
 const inter = {
-  variable: "font-inter",
+  variable: 'font-inter',
 };
 
 export { inter };

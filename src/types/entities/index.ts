@@ -1,4 +1,4 @@
-export type { catalogProductEntryType, catalogProductRefType, productCollectionIdType, productCollectionType } from './catalog';
+export type { configuratorCatalogProductPickType } from './catalog';
 export type {
   modalInfoImagePartType,
   modalInfoListPartType,
@@ -13,7 +13,6 @@ export type {
 export type {
   garmentBusinessType,
   garmentConfigType,
-  garmentPbrUvChannelType,
   garmentPartConfigType,
   logoPositionConfigType,
   modelIdType,

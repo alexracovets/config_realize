@@ -1,9 +1,8 @@
 'use client';
 
+import { canvasToPngBlobUrl } from '@utils/logoFile/canvasToBlobUrl';
+import { LogoFileError } from '@utils/logoFile/logoFileError';
 import UTIF from 'utif';
-
-import { canvasToPngBlobUrl } from '../../canvasToBlobUrl';
-import { LogoFileError } from '../../logoFileError';
 
 const convertTiffToDisplayUrl = async (buffer: ArrayBuffer): Promise<string> => {
   try {

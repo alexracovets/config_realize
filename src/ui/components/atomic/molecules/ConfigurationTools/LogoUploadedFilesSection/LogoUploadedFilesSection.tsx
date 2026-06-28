@@ -1,13 +1,10 @@
 'use client';
 
-import { Flex, Text } from '@atoms';
-
-import { CONFIGURATOR_UPLOADED_FILES_LABEL } from '@constants';
+import { DefaultBrandLogoPlaceholder } from '@molecules/ConfigurationTools/DefaultBrandLogoPlaceholder';
+import { LogoListRow } from '@molecules/ConfigurationTools/LogoListRow';
 import type { logoUploadedFilesSectionPropsType } from '@types';
-
-import { DefaultBrandLogoPlaceholder } from '../DefaultBrandLogoPlaceholder';
-import { LogoListRow } from '../LogoListRow';
-
+import { Flex, Text } from '@atoms';
+import { CONFIGURATOR_UPLOADED_FILES_LABEL } from '@constants';
 const LogoUploadedFilesSection = ({ userLogos, onEdit, onDelete }: logoUploadedFilesSectionPropsType) => {
   return (
     <Flex className="flex-col gap-3 items-start w-full">

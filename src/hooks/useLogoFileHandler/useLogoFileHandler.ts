@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
+import { loadCachedImage } from '@configurator';
 import { useConfiguratorProduct, useGarmentLogo } from '@store';
 import type { stepLogoPositionStateType } from '@types';
 import { LogoFileError, logoFileToDisplayUrl, preloadLogoDisplayUrl, yieldToMain } from '@utils';
@@ -10,6 +11,11 @@ interface UploadLogoOptions {
   position?: stepLogoPositionStateType;
   partId?: string;
 }
+
+const resolveLogoNaturalSize = async (src: string) => {
+  const image = await loadCachedImage(src);
+  return { width: image.naturalWidth, height: image.naturalHeight };
+};
 
 const useLogoFileHandler = () => {
   const product = useConfiguratorProduct((state) => state.product);
@@ -33,9 +39,10 @@ const useLogoFileHandler = () => {
 
       try {
         const src = await processFile(file);
+        const natural = await resolveLogoNaturalSize(src);
 
         if (options?.partId) {
-          await replaceInstanceImage(options.partId, src, file.name);
+          replaceInstanceImage(options.partId, src, file.name, natural.width, natural.height);
           return;
         }
 
@@ -46,11 +53,11 @@ const useLogoFileHandler = () => {
             throw new LogoFileError('Nessuna posizione disponibile');
           }
 
-          await addUserInstance(logoPosition, src, file.name);
+          addUserInstance(logoPosition, src, file.name, natural.width, natural.height);
           return;
         }
 
-        await addFreeUserInstance(product, src, file.name);
+        addFreeUserInstance(product, src, file.name, natural.width, natural.height);
       } catch (uploadError) {
         const message = uploadError instanceof LogoFileError ? uploadError.message : 'Impossibile caricare il file';
         setError(message);

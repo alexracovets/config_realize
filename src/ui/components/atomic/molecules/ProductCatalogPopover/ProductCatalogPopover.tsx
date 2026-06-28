@@ -1,84 +1,125 @@
 'use client';
 
-import type { catalogProductRefType, productCatalogPopoverPropsType, productCollectionIdType } from '@types';
-import { listCatalogProductsByCollection } from '@utils';
-import { PRODUCT_COLLECTIONS } from '@constants';
-
-import { useState } from 'react';
-
 import { AtomPopover, AtomPopoverContent, AtomPopoverTrigger, Button, Grid, Text } from '@atoms';
+import { mapHomePageProductBusiness } from '@shopify/mapHomePageProductBusiness';
+import { useConfiguratorCatalog } from '@providers/configuratorCatalogProvider';
+import { ProductCatalogOption } from '@molecules/ProductCatalogOption';
+import type { homePageCollectionType, productCatalogPopoverPropsType } from '@types';
+import { cn, hasModel } from '@utils';
+import { useMemo, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
-import { ProductCatalogOption } from '../ProductCatalogOption';
+type catalogPopoverViewType = 'collections' | 'products';
 
-type catalogPopoverViewType = 'groups' | 'products';
+const CATALOG_CARD_SIZE_PX = 160;
+const CATALOG_GRID_GAP_PX = 4;
+const CATALOG_GRID_ROWS = 2;
+const CATALOG_TITLE_HEIGHT_PX = 40;
+const CATALOG_CARD_INNER_GAP_PX = 4;
+const CATALOG_CARD_PADDING_Y_PX = 8;
+const CATALOG_CELL_HEIGHT_PX = CATALOG_CARD_SIZE_PX + CATALOG_TITLE_HEIGHT_PX + CATALOG_CARD_INNER_GAP_PX + CATALOG_CARD_PADDING_Y_PX;
+const CATALOG_GRID_HEIGHT_PX = CATALOG_GRID_ROWS * CATALOG_CELL_HEIGHT_PX + (CATALOG_GRID_ROWS - 1) * CATALOG_GRID_GAP_PX;
 
-const ProductCatalogPopover = ({ activeCollection, onSelect, children, contentSide = 'right', contentAlign = 'start' }: productCatalogPopoverPropsType) => {
+const resolveCatalogGridColumns = (itemCount: number) => {
+  if (itemCount <= 2) {
+    return Math.max(1, itemCount);
+  }
+
+  return Math.ceil(itemCount / CATALOG_GRID_ROWS);
+};
+
+const resolveCatalogGridWidthPx = (columnCount: number) => columnCount * CATALOG_CARD_SIZE_PX + Math.max(0, columnCount - 1) * CATALOG_GRID_GAP_PX;
+
+const POPOVER_PADDING_X_PX = 24;
+
+const ProductCatalogPopover = ({
+  activeCollectionHandle,
+  onSelect,
+  children,
+  contentSide = 'right',
+  contentAlign = 'start',
+}: productCatalogPopoverPropsType) => {
+  const { collections } = useConfiguratorCatalog();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<catalogPopoverViewType>('products');
-  const [selectedCollection, setSelectedCollection] = useState<productCollectionIdType>(activeCollection);
+  const [selectedCollectionHandle, setSelectedCollectionHandle] = useState(activeCollectionHandle);
 
-  const collectionProducts = listCatalogProductsByCollection(selectedCollection);
+  const selectedCollection = useMemo(
+    () => collections.find((collection) => collection.handle === selectedCollectionHandle) ?? collections[0],
+    [collections, selectedCollectionHandle],
+  );
+
+  const gridItems = view === 'collections' ? collections : (selectedCollection?.products ?? []);
+  const columnCount = resolveCatalogGridColumns(gridItems.length);
+  const popoverWidthPx = resolveCatalogGridWidthPx(columnCount) + POPOVER_PADDING_X_PX;
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
 
     if (nextOpen) {
-      setView('products');
-      setSelectedCollection(activeCollection);
+      const initialHandle = activeCollectionHandle || collections[0]?.handle || '';
+      setSelectedCollectionHandle(initialHandle);
+      setView(initialHandle ? 'products' : 'collections');
       return;
     }
 
     setView('products');
-    setSelectedCollection(activeCollection);
+    setSelectedCollectionHandle(activeCollectionHandle);
   };
 
-  const handleProductSelect = (product: catalogProductRefType) => {
-    if (!product.configurable) return;
+  const handleProductSelect = (collectionHandle: string, product: homePageCollectionType['products'][number]) => {
+    if (!product.modelId || !hasModel(product.modelId)) return;
 
     onSelect({
-      collection: product.collection,
-      slug: product.slug,
+      collectionHandle,
+      slug: product.handle,
       modelId: product.modelId,
+      business: mapHomePageProductBusiness(product, product.modelId),
     });
     handleOpenChange(false);
   };
 
-  const handleGroupSelect = (collectionId: productCollectionIdType) => {
-    setSelectedCollection(collectionId);
+  const handleCollectionSelect = (collectionHandle: string) => {
+    setSelectedCollectionHandle(collectionHandle);
     setView('products');
   };
 
   return (
     <AtomPopover open={open} onOpenChange={handleOpenChange}>
       <AtomPopoverTrigger asChild>{children}</AtomPopoverTrigger>
-      <AtomPopoverContent side={contentSide} align={contentAlign} className="w-[240px] p-3" gap="sm">
-        <Text className="text-[14px] font-semibold text-default">{view === 'groups' ? 'Seleziona gruppo' : 'Seleziona prodotto'}</Text>
-
+      <AtomPopoverContent side={contentSide} align={contentAlign} className="flex flex-col gap-1 p-3" style={{ width: popoverWidthPx }}>
+        <Text className="text-[16px]  uppercase font-semibold text-default">{view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}</Text>
         {view === 'products' && (
-          <Button type="button" variant="ghost" className="h-auto justify-start px-0 text-[13px] text-gray" onClick={() => setView('groups')}>
-            ← Gruppi
+          <Button type="button" variant="ghost" className={cn('h-auto justify-start leading-none items-center gap-1 px-0 text-[14px] font-medium text-default hover:text-active')} onClick={() => setView('collections')}>
+            <ArrowLeft className="size-4 shrink-0" /> Collezioni
           </Button>
         )}
-
-        <Grid className="grid-cols-2 gap-2">
-          {view === 'groups' &&
-            PRODUCT_COLLECTIONS.map((collection) => (
+        <Grid
+          style={{
+            gap: CATALOG_GRID_GAP_PX,
+            height: CATALOG_GRID_HEIGHT_PX,
+            gridTemplateRows: `repeat(${CATALOG_GRID_ROWS}, ${CATALOG_CELL_HEIGHT_PX}px)`,
+            gridTemplateColumns: `repeat(${columnCount}, ${CATALOG_CARD_SIZE_PX}px)`,
+          }}
+        >
+          {view === 'collections' &&
+            collections.map((collection) => (
               <ProductCatalogOption
                 key={collection.id}
-                name={collection.label}
-                previewSrc={collection.coverSrc}
-                onSelect={() => handleGroupSelect(collection.id)}
+                name={collection.title}
+                previewSrc={collection.imageSrc ?? ''}
+                onSelect={() => handleCollectionSelect(collection.handle)}
               />
             ))}
 
           {view === 'products' &&
-            collectionProducts.map((product) => (
+            selectedCollection?.products.map((product) => (
               <ProductCatalogOption
-                key={`${product.collection}-${product.slug}`}
-                name={product.name}
-                previewSrc={product.previewSrc}
-                disabled={!product.configurable}
-                onSelect={() => handleProductSelect(product)}
+                key={product.id}
+                name={product.title}
+                previewSrc={product.previewSrc ?? ''}
+                disabled={!product.modelId || !hasModel(product.modelId)}
+                onSelect={() => handleProductSelect(selectedCollection.handle, product)}
               />
             ))}
         </Grid>

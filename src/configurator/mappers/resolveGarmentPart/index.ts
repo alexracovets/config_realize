@@ -1,0 +1,1 @@
+export { resolveGarmentPart } from './resolveGarmentPart';

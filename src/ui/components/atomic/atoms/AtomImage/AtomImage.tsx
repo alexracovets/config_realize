@@ -41,11 +41,11 @@ const AtomImage = ({
   const useFill = !hasDimensions;
   const resolvedLoading = loading ?? (priority ? 'eager' : 'lazy');
 
-  const imageStyle: CSSProperties = useFill
-    ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit }
-    : (style ?? {});
+  const imageStyle: CSSProperties = useFill ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit } : (style ?? {});
 
   const imageElement = (
+    // Native img: data/blob URLs, arbitrary external src, and fill layout without next/image loader.
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src || EMPTY_IMAGE_SRC}
       alt={alt || 'image'}

@@ -1,16 +1,15 @@
 'use client';
 
-import { LogoFileError } from '../../logoFileError';
-
+import { LogoFileError } from '@utils/logoFile/logoFileError';
 let magickInitPromise: Promise<void> | null = null;
 
 const ensureMagick = async (): Promise<typeof import('@imagemagick/magick-wasm')> => {
   const magick = await import('@imagemagick/magick-wasm');
   if (!magickInitPromise) {
     magickInitPromise = (async () => {
-      const res = await fetch('/magick.wasm');
+      const res = await fetch('/ghostscript/magick.wasm');
       if (!res.ok) {
-        throw new LogoFileError('ImageMagick WASM non trovato. Esegui: pnpm copy:logo-assets');
+        throw new LogoFileError('ImageMagick WASM non trovato in /ghostscript/magick.wasm');
       }
       await magick.initializeImageMagick(await res.arrayBuffer());
     })().catch((err) => {

@@ -1,0 +1,286 @@
+{
+  "id": "picci_pallavolo",
+  "path": "/models/picci_pallavolo/",
+  "modelFile": "model.glb",
+  "printAtlas": {
+    "width": 4096,
+    "height": 2149
+  },
+  "preserveGltfMeshes": [
+    "model_inside",
+    "womans_shorts_laces"
+  ],
+  "parts": [
+    {
+      "name": "Davanti",
+      "label": "Davanti",
+      "id": "picci_pallavolo_front",
+      "meshNames": [
+        "model_left"
+      ],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.5495,
+        "maxX": 0.9992,
+        "minY": 0.0044,
+        "maxY": 0.9987
+      },
+      "printRotation": 180,
+      "gradient": {
+        "reversed": false,
+        "rotation": 0,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    },
+    {
+      "name": "Retro",
+      "label": "Retro",
+      "id": "picci_pallavolo_back",
+      "meshNames": [
+        "model_right"
+      ],
+      "renderOrder": 1,
+      "uvBounds": {
+        "minX": 0.0013,
+        "maxX": 0.4507,
+        "minY": 0.0035,
+        "maxY": 0.9987
+      },
+      "printRotation": 0,
+      "gradient": {
+        "reversed": true,
+        "rotation": 0,
+        "position": 0.5,
+        "softness": 0.5,
+        "opacity": 1
+      }
+    }
+  ],
+  "patterns": [
+    {
+      "name": "Design 1",
+      "parts": [
+        {
+          "path_name": "design_1_color_1.webp"
+        },
+        {
+          "path_name": "design_1_color_2.webp"
+        }
+      ],
+      "designId": "design_01"
+    },
+    {
+      "name": "Design 2",
+      "parts": [
+        {
+          "path_name": "design_2_color_1.webp"
+        },
+        {
+          "path_name": "design_2_color_2.webp"
+        }
+      ],
+      "designId": "design_02"
+    },
+    {
+      "name": "Design 3",
+      "parts": [
+        {
+          "path_name": "design_3_color_1.webp"
+        },
+        {
+          "path_name": "design_3_color_2.webp"
+        }
+      ],
+      "designId": "design_03"
+    },
+    {
+      "name": "Design 4",
+      "parts": [
+        {
+          "path_name": "design_4_color_2.webp"
+        },
+        {
+          "path_name": "design_4_color_1.webp"
+        }
+      ],
+      "designId": "design_04"
+    },
+    {
+      "name": "Design 5",
+      "parts": [
+        {
+          "path_name": "design_5_color_1.webp"
+        },
+        {
+          "path_name": "design_5_color_2.webp"
+        }
+      ],
+      "designId": "design_05"
+    },
+    {
+      "name": "Design 6",
+      "parts": [
+        {
+          "path_name": "design_6.webp"
+        }
+      ],
+      "designId": "design_06"
+    },
+    {
+      "name": "Design 7",
+      "parts": [
+        {
+          "path_name": "design_7_color_1.webp"
+        },
+        {
+          "path_name": "design_7_color_2.webp"
+        }
+      ],
+      "designId": "design_07"
+    },
+    {
+      "name": "Design 8",
+      "parts": [
+        {
+          "path_name": "design_8_color_1.webp"
+        },
+        {
+          "path_name": "design_8_color_2.webp"
+        }
+      ],
+      "designId": "design_08"
+    },
+    {
+      "name": "Design 9",
+      "parts": [
+        {
+          "path_name": "design_9_color_1.webp"
+        },
+        {
+          "path_name": "design_9_color_2.webp"
+        }
+      ],
+      "designId": "design_09"
+    },
+    {
+      "name": "Design 10",
+      "parts": [
+        {
+          "path_name": "design_10.webp"
+        }
+      ],
+      "designId": "design_10"
+    }
+  ],
+  "default_pattern": [
+    {
+      "name": "Logos",
+      "parts": [
+        {
+          "path_name": "logos.webp"
+        }
+      ]
+    }
+  ],
+  "nameDefaults": {
+    "text": "PLAYER",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 20,
+    "fontSizeMin": 50,
+    "fontSizeMax": 400,
+    "strokeWidthMax": 20
+  },
+  "numberDefaults": {
+    "text": "10",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 2,
+    "fontSizeMin": 50,
+    "fontSizeMax": 600,
+    "strokeWidthMax": 20,
+    "lineHeight": 1.5,
+    "lineHeightMin": 0.5,
+    "lineHeightMax": 2,
+    "line_height_show": false
+  },
+  "testoDefaults": {
+    "text": "TEAM",
+    "font": "Oswald",
+    "textColor": "#000000",
+    "strokeColor": "#ffffff",
+    "strokeWidth": 2,
+    "maxLength": 20,
+    "fontSizeMin": 50,
+    "fontSizeMax": 400,
+    "strokeWidthMax": 20,
+    "lineHeight": 1,
+    "lineHeightMin": 1,
+    "lineHeightMax": 2,
+    "line_height_show": true,
+    "letterSpacing": 0,
+    "letterSpacingMin": -10,
+    "letterSpacingMax": 40,
+    "letter_spacing_show": true
+  },
+  "namePositions": [
+    {
+      "label": "Back",
+      "partId": "picci_pallavolo_back",
+      "uv": {
+        "x": 0.41,
+        "y": 0.36
+      },
+      "rotation": 0,
+      "fontSize": 200,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ],
+  "numberPositions": [
+    {
+      "label": "Front",
+      "partId": "picci_pallavolo_front",
+      "uv": {
+        "x": 0.3,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 180,
+      "show_frame": true,
+      "show_gizmo": false
+    },
+    {
+      "label": "Back",
+      "partId": "picci_pallavolo_back",
+      "uv": {
+        "x": 0.573,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 580,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ],
+  "testoPositions": [
+    {
+      "label": "Front",
+      "partId": "picci_pallavolo_front",
+      "uv": {
+        "x": 0.71,
+        "y": 0.45
+      },
+      "rotation": 0,
+      "fontSize": 180,
+      "show_frame": true,
+      "show_gizmo": false
+    }
+  ]
+}

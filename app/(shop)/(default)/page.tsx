@@ -1,10 +1,3 @@
-import { HomePage } from '@pages';
-import { resolveHomeCollections } from '@shopify';
+import { HomePageLoader } from '@pages';
 
-const Home = async () => {
-  const collections = await resolveHomeCollections();
-
-  return <HomePage collections={collections} />;
-};
-
-export default Home;
+export default HomePageLoader;

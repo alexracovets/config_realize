@@ -1,0 +1,1 @@
+export { ConfiguratorLayoutTemplate } from './ConfiguratorLayoutTemplate';

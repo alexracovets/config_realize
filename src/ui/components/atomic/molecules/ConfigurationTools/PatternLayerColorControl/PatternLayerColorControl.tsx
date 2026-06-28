@@ -1,13 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
-import { Flex, Text } from '@atoms';
-import { ColorControl } from '../ColorControl';
-
 import type { patternLayerColorControlPropsType } from '@types';
+import { Flex, Text } from '@atoms';
+import { ColorControl } from '@molecules/ConfigurationTools/ColorControl';
 import { cn } from '@utils';
-
+import { useState } from 'react';
 const PatternLayerColorControl = ({ layers, colors, onColorChange, onPreviewColorChange, label = 'Colore design' }: patternLayerColorControlPropsType) => {
   const [activeLayerKey, setActiveLayerKey] = useState(layers[0]?.key ?? '');
 

@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactElement, ReactNode } from 'react';
 
-import type { catalogProductRefType, productCollectionIdType } from '@types';
+import type { configuratorCatalogProductPickType } from '@types';
 import type { ReactPlayerProps } from 'react-player/types';
 
 type videoPlayerVariantType = 'default' | 'tutorial';
@@ -19,8 +19,8 @@ interface productCatalogOptionPropsType {
 }
 
 interface productCatalogPopoverPropsType {
-  activeCollection: productCollectionIdType;
-  onSelect: (product: Pick<catalogProductRefType, 'collection' | 'slug' | 'modelId'>) => void;
+  activeCollectionHandle: string;
+  onSelect: (product: configuratorCatalogProductPickType) => void;
   children: ReactNode;
   contentSide?: 'top' | 'right' | 'bottom' | 'left';
   contentAlign?: 'start' | 'center' | 'end';

@@ -1,0 +1,1 @@
+export { ConfiguratorCatalogShell } from './ConfiguratorCatalogShell';

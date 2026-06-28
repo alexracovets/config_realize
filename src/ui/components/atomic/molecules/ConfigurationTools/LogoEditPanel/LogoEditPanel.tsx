@@ -1,10 +1,9 @@
 'use client';
 
-import { AtomImage, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
-import { RangeControl } from '../RangeControl';
-import { useStepLogo } from '@hooks';
 import type { logoEditPanelPropsType } from '@types';
-
+import { AtomImage, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
+import { useStepLogo } from '@hooks';
+import { RangeControl } from '@molecules/ConfigurationTools/RangeControl';
 const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: logoEditPanelPropsType) => {
   const part = useStepLogo((state) => state.parts.find((item) => item.id === partId));
   const updatePart = useStepLogo((state) => state.updatePart);

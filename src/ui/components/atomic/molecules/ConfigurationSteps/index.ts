@@ -5,3 +5,4 @@ export { ConfigurationDesign } from './ConfigurationDesign';
 export { ConfigurationNaming } from './ConfigurationNaming';
 export { ConfigurationLogo } from './ConfigurationLogo';
 export { ConfigurationTesto } from './ConfigurationTesto';
+export { STEPS_CONFIGURATION } from './configurationStepsRegistry';

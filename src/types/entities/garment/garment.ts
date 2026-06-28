@@ -1,4 +1,4 @@
-import type { configuratorStepValueType } from '../../configurator';
+import type { configuratorStepValueType } from '@configurator/types';
 
 interface uvPointType {
   x: number;
@@ -113,9 +113,6 @@ interface preserveGltfMeshEntryConfigType {
 
 type preserveGltfMeshConfigType = string | preserveGltfMeshEntryConfigType;
 
-/** UV channel for baked PBR maps (normal/AO). Default 1; use 0 when print and bake share TEXCOORD_0. */
-type garmentPbrUvChannelType = 0 | 1;
-
 interface garmentConfigType {
   /** Geometry id — matches the data folder name and the Shopify `custom.id` metafield. */
   id?: string;
@@ -130,8 +127,6 @@ interface garmentConfigType {
   minimum_count?: number;
   path: string;
   modelFile?: string;
-  /** UV channel for baked PBR (default 1). Baggio uses 0 after TEXCOORD swap in GLTF. */
-  pbrUvChannel?: garmentPbrUvChannelType;
   parts: garmentPartConfigType[];
   staticMeshes?: garmentStaticMeshConfigType[];
   preserveGltfMeshes?: preserveGltfMeshConfigType[];
@@ -175,7 +170,6 @@ interface garmentBusinessType {
 export type {
   garmentBusinessType,
   garmentConfigType,
-  garmentPbrUvChannelType,
   garmentPartConfigType,
   logoPositionConfigType,
   modelIdType,

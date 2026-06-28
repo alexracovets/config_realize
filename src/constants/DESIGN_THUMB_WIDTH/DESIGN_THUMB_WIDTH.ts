@@ -1,3 +1,0 @@
-const DESIGN_THUMB_WIDTH = 100;
-
-export { DESIGN_THUMB_WIDTH };

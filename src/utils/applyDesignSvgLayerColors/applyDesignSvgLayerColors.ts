@@ -38,7 +38,6 @@ const applyDesignSvgLayerColors = (svgText: string, layerColors: string[]): stri
   return new XMLSerializer().serializeToString(root);
 };
 
-const designSvgTextToDataUrl = (svgText: string): string =>
-  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
+const designSvgTextToDataUrl = (svgText: string): string => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
 
 export { applyDesignSvgLayerColors, designSvgTextToDataUrl };

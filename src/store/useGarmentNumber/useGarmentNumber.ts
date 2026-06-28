@@ -1,11 +1,8 @@
 'use client';
 
 import type { garmentConfigType, garmentNumberSnapshotType, numberInstanceType, numberPositionType, numberPreviewType } from '@types';
-
+import { mapProductNumberPositions } from '@store/useGarmentNumber/mapProductNumbers';
 import { create } from 'zustand';
-
-import { mapProductNumberPositions } from './mapProductNumbers';
-
 interface GarmentNumberState {
   productPath: string | null;
   positionsKey: string | null;

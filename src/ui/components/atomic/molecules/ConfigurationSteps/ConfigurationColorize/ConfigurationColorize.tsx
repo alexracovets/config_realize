@@ -1,14 +1,11 @@
 'use client';
 
-import { memo, useMemo } from 'react';
-
-import { AccordionAtom, Flex } from '@atoms';
-import { ColorControl } from '../../ConfigurationTools/ColorControl';
-import { PartColorSwitch } from '../../ConfigurationTools/PartColorSwitch';
-
-import { DEFAULT_COLOR, useConfiguratorProduct, useGarmentColor } from '@store';
+import { ColorControl } from '@molecules/ConfigurationTools/ColorControl';
+import { PartColorSwitch } from '@molecules/ConfigurationTools/PartColorSwitch';
 import type { partColorControlPropsType } from '@types';
-
+import { AccordionAtom, Flex } from '@atoms';
+import { DEFAULT_COLOR, useConfiguratorProduct, useGarmentColor } from '@store';
+import { memo, useMemo } from 'react';
 const PartColorControl = memo(({ partId }: partColorControlPropsType) => {
   const color = useGarmentColor((state) => state.byPart[partId] ?? DEFAULT_COLOR);
   const setPartColor = useGarmentColor((state) => state.setPartColor);
