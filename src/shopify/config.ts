@@ -1,3 +1,5 @@
+import { buildShopifyFrameAncestors } from './frameAncestors';
+
 const readEnv = (key: string): string | undefined => {
   const value = process.env[key]?.trim();
   return value ? value : undefined;
@@ -49,18 +51,7 @@ const getShopifyApiMode = (): shopifyApiModeType => {
   return 'admin';
 };
 
-const getShopifyFrameAncestors = (): string[] => {
-  const raw = readEnv('SHOPIFY_FRAME_ANCESTORS');
-
-  if (!raw) {
-    return ['https://*.myshopify.com', 'https://admin.shopify.com'];
-  }
-
-  return raw
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-};
+const getShopifyFrameAncestors = (): string[] => buildShopifyFrameAncestors();
 
 const assertShopifyConfigured = (): {
   storeDomain: string;
