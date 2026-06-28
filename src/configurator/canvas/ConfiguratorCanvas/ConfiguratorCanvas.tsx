@@ -1,13 +1,10 @@
 'use client';
 
 import { CanvasControl, SceneModel } from '@configurator/canvas';
-import { suppressThreeClockDeprecation } from '@configurator/utils';
 import { Canvas } from '@react-three/fiber';
+import { ACESFilmicToneMapping } from 'three';
 import { useConfiguratorSceneLoad } from '@store';
 import { Suspense, useState } from 'react';
-import * as THREE from 'three';
-
-suppressThreeClockDeprecation();
 
 const ConfiguratorCanvas = () => {
   const [canvasKey, setCanvasKey] = useState(0);
@@ -28,7 +25,7 @@ const ConfiguratorCanvas = () => {
         powerPreference: 'high-performance',
         preserveDrawingBuffer: true,
         stencil: true,
-        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMapping: ACESFilmicToneMapping,
         toneMappingExposure: 0.72,
       }}
       dpr={[1, 2]}

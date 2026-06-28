@@ -1,3 +1,5 @@
+import '../src/configurator/utils/render/suppressThreeClockDeprecation/suppressThreeClockDeprecation';
+
 import { Geist } from 'next/font/google';
 
 import '@styles';

@@ -16,9 +16,14 @@ const suppressThreeClockDeprecation = () => {
     if (message.includes('THREE.Clock') && message.includes('deprecated')) return;
     if (message.includes('THREE.WebGLProgram')) return;
     if (message.includes('cannot be represented accurately in double precision')) return;
+    if (message.includes('Multiple instances of Three.js being imported')) return;
 
     originalWarn(...args);
   };
 };
+
+if (typeof window !== 'undefined') {
+  suppressThreeClockDeprecation();
+}
 
 export { suppressThreeClockDeprecation };
