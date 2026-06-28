@@ -15,7 +15,6 @@ const useEmbeddedUrlSync = (): void => {
   const { embedded, shop } = useEmbedded();
   const pathname = usePathname();
   const router = useRouter();
-  const lastPostedRef = useRef<string | null>(null);
   const lastAppliedRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -28,11 +27,6 @@ const useEmbeddedUrlSync = (): void => {
       return;
     }
 
-    if (lastPostedRef.current === pathname) {
-      return;
-    }
-
-    lastPostedRef.current = pathname;
     postEmbeddedUrlToParent(pathname);
   }, [embedded, pathname]);
 

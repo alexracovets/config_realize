@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import { buildAppPath } from '@utils';
+import { buildAppPath, isEmbeddedSession } from '@utils';
+import { postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 
 const useAppNavigate = () => {
   const router = useRouter();
@@ -11,6 +12,10 @@ const useAppNavigate = () => {
   const navigateToAppPath = useCallback(
     (pathname: string) => {
       router.push(buildAppPath(pathname));
+
+      if (isEmbeddedSession()) {
+        postEmbeddedUrlToParent(pathname);
+      }
     },
     [router],
   );
