@@ -1,4 +1,5 @@
 export { assertShopifyConfigured, getShopifyFrameAncestors, isShopifyEnabled } from './config';
+export { createCheckoutCart } from './createCheckoutCart';
 export { fetchConfiguratorProductByHandle } from './fetchConfiguratorProductByHandle';
 export { fetchCollectionByHandle, fetchConfiguratorCollectionSummaries, fetchConfiguratorCollections } from './fetchConfiguratorCollections';
 export { resolveConfiguratorProduct } from './resolveConfiguratorProduct';

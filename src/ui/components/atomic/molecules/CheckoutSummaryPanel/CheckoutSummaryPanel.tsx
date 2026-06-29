@@ -14,11 +14,12 @@ import {
   CHECKOUT_SUMMARY_TRUST_ITEMS,
   CHECKOUT_SUMMARY_VAT_LABEL,
 } from '@constants';
-import { useCheckoutSummary } from '@hooks';
+import { useCheckoutSummary, useSubmitCheckout } from '@hooks';
 import { CHECKOUT_SUMMARY_ICON_MAP, getCheckoutDeliveryTimeline, priceFormat } from '@utils';
 
 const CheckoutSummaryPanel = () => {
   const { lineItems, shippingCost, discountPercent, discountAmount, grandTotal } = useCheckoutSummary();
+  const { submitCheckout, isSubmitting, error } = useSubmitCheckout();
   const deliveryTimeline = useMemo(() => getCheckoutDeliveryTimeline(), []);
 
   return (
@@ -60,9 +61,18 @@ const CheckoutSummaryPanel = () => {
           <p className="mt-1 text-[12px] leading-snug">Con questo ordine risparmierai: {priceFormat(discountAmount)}</p>
         </div>
 
-        <Button variant="default" size="sm" className="h-12 w-full rounded-[8px] bg-base-black text-[16px] font-semibold text-white hover:bg-base-black/90">
-          {CHECKOUT_SUMMARY_PROCEED_LABEL}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="default"
+            size="sm"
+            disabled={isSubmitting}
+            onClick={submitCheckout}
+            className="h-12 w-full rounded-[8px] bg-base-black text-[16px] font-semibold text-white hover:bg-base-black/90 disabled:opacity-60"
+          >
+            {isSubmitting ? 'Attendere…' : CHECKOUT_SUMMARY_PROCEED_LABEL}
+          </Button>
+          {error && <p className="text-[12px] text-red-600">{error}</p>}
+        </div>
 
         <div className="flex flex-col gap-4">
           <p className="text-[14px] font-semibold text-default">{CHECKOUT_SUMMARY_TIMELINE_TITLE}</p>

@@ -2,6 +2,7 @@ export { DEFAULT_CURRENCY_CODE, DEFAULT_MODEL_ID, deriveLocalBusiness, getModel,
 export { cn } from './cn';
 export { buildAppPath, isEmbeddedSession, resolveEmbeddedContext } from './embeddedSession';
 export { buildCollectionPath, buildConfiguratorPath, isConfiguratorPath, isInternalAppPath } from './appPaths';
+export { buildOrderPreset } from './buildOrderPreset';
 export { canvasToPngBlobUrl } from './logoFile/canvasToBlobUrl';
 export { applyConfiguratorRouteProduct, resolveRouteModel } from './configuratorRoute';
 export { applyDesignSvgLayerColors, designSvgTextToDataUrl } from './applyDesignSvgLayerColors';
