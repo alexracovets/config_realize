@@ -12,8 +12,8 @@ import {
 } from '@configurator/utils';
 import { OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useConfiguratorProduct } from '@store';
-import { useEffect, useRef } from 'react';
+import { useConfiguratorProduct, useConfiguratorSceneLoad } from '@store';
+import { useCallback, useEffect, useRef } from 'react';
 import { Raycaster, Vector3 } from 'three';
 const ORBIT_MIN_DISTANCE = 0.05;
 const ORBIT_MAX_DISTANCE = 0.9;
@@ -37,10 +37,13 @@ const ViewControls = () => {
   const gl = useThree((state) => state.gl);
   const invalidate = useThree((state) => state.invalidate);
   const controls = useThree((state) => state.controls as OrbitControlsImpl | undefined);
+  const modelId = useConfiguratorProduct((state) => state.modelId);
   const productPath = useConfiguratorProduct((state) => state.product.path);
+  const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
+  const wasTransitioningRef = useRef(false);
 
-  useEffect(() => {
-    if (!controls) return;
+  const runGarmentCameraFraming = useCallback(() => {
+    if (!controls) return () => undefined;
 
     pendingZoomRef.current = 0;
 
@@ -51,7 +54,7 @@ const ViewControls = () => {
     let stableFrames = 0;
     let lastMeshCount = -1;
     let zoomedOut = false;
-    let attemptsLeft = 90;
+    let attemptsLeft = 120;
     let frameTick = 0;
 
     const zoomOutOnProductSwitch = () => {
@@ -68,6 +71,8 @@ const ViewControls = () => {
 
     const centerOnGarment = () => {
       if (cancelled) return;
+
+      const stillTransitioning = useConfiguratorSceneLoad.getState().isSceneTransitionLoading;
 
       frameTick += 1;
       if (frameTick % 2 === 0) {
@@ -89,6 +94,12 @@ const ViewControls = () => {
         controls.target.copy(center);
         controls.update();
         invalidate();
+      }
+
+      if (stillTransitioning) {
+        stableFrames = 0;
+        if (attemptsLeft-- > 0) raf = requestAnimationFrame(centerOnGarment);
+        return;
       }
 
       const centerStable = center.distanceToSquared(lastCenter) < 1e-12;
@@ -115,7 +126,32 @@ const ViewControls = () => {
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, [camera, controls, invalidate, scene, productPath]);
+  }, [camera, controls, invalidate, scene]);
+
+  useEffect(() => runGarmentCameraFraming(), [modelId, productPath, runGarmentCameraFraming]);
+
+  useEffect(() => {
+    const wasTransitioning = wasTransitioningRef.current;
+    wasTransitioningRef.current = isSceneTransitionLoading;
+
+    if (!wasTransitioning || isSceneTransitionLoading) return;
+
+    let cleanup: (() => void) | undefined;
+    let outerRaf = 0;
+    let innerRaf = 0;
+
+    outerRaf = requestAnimationFrame(() => {
+      innerRaf = requestAnimationFrame(() => {
+        cleanup = runGarmentCameraFraming();
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(outerRaf);
+      cancelAnimationFrame(innerRaf);
+      cleanup?.();
+    };
+  }, [isSceneTransitionLoading, runGarmentCameraFraming]);
 
   useEffect(() => {
     if (!controls) return;
