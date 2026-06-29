@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 import type { configuratorProductHydrationType } from '@configurator/types';
+import { useEmbeddedActiveProductSync } from '@hooks/useEmbeddedActiveProductSync';
 import { applyConfiguratorRouteProduct } from '@utils';
 
 type configuratorRouteShellPropsType = {
@@ -17,6 +18,8 @@ type configuratorRouteShellPropsType = {
  */
 const ConfiguratorRouteShell = ({ slug, product, children }: configuratorRouteShellPropsType) => {
   const appliedRouteKeyRef = useRef<string | null>(null);
+
+  useEmbeddedActiveProductSync();
 
   useEffect(() => {
     const routeKey = `${slug}:${product?.modelId ?? 'local'}`;
