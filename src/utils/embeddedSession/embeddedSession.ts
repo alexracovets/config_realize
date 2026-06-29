@@ -1,23 +1,26 @@
 const EMBEDDED_STORAGE_KEY = 'realize:embedded';
 const SHOP_STORAGE_KEY = 'realize:shop';
+const HOST_STORAGE_KEY = 'realize:host';
 
 type embeddedSessionType = {
   embedded: boolean;
   shop: string | null;
+  host: string | null;
 };
 
 const readEmbeddedSession = (): embeddedSessionType => {
   if (typeof window === 'undefined') {
-    return { embedded: false, shop: null };
+    return { embedded: false, shop: null, host: null };
   }
 
   return {
     embedded: sessionStorage.getItem(EMBEDDED_STORAGE_KEY) === '1',
     shop: sessionStorage.getItem(SHOP_STORAGE_KEY),
+    host: sessionStorage.getItem(HOST_STORAGE_KEY),
   };
 };
 
-const persistEmbeddedSession = (embedded: boolean, shop: string | null): void => {
+const persistEmbeddedSession = (embedded: boolean, shop: string | null, host: string | null): void => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -33,19 +36,26 @@ const persistEmbeddedSession = (embedded: boolean, shop: string | null): void =>
   } else {
     sessionStorage.removeItem(SHOP_STORAGE_KEY);
   }
+
+  if (host) {
+    sessionStorage.setItem(HOST_STORAGE_KEY, host);
+  } else {
+    sessionStorage.removeItem(HOST_STORAGE_KEY);
+  }
 };
 
 const resolveEmbeddedContext = (): embeddedSessionType => {
   if (typeof window === 'undefined') {
-    return { embedded: false, shop: null };
+    return { embedded: false, shop: null, host: null };
   }
 
   const params = new URLSearchParams(window.location.search);
   const urlEmbedded = params.get('embedded') === '1';
   const urlShop = params.get('shop');
+  const urlHost = params.get('host');
 
   if (urlEmbedded) {
-    persistEmbeddedSession(true, urlShop);
+    persistEmbeddedSession(true, urlShop, urlHost);
   }
 
   const session = readEmbeddedSession();
@@ -53,13 +63,14 @@ const resolveEmbeddedContext = (): embeddedSessionType => {
   return {
     embedded: urlEmbedded || session.embedded,
     shop: urlShop ?? session.shop,
+    host: urlHost ?? session.host,
   };
 };
 
 const isEmbeddedSession = (): boolean => resolveEmbeddedContext().embedded;
 
 const buildEmbeddedSearchParams = (): URLSearchParams | null => {
-  const { embedded, shop } = resolveEmbeddedContext();
+  const { embedded, shop, host } = resolveEmbeddedContext();
 
   if (!embedded) {
     return null;
@@ -69,6 +80,10 @@ const buildEmbeddedSearchParams = (): URLSearchParams | null => {
 
   if (shop) {
     params.set('shop', shop);
+  }
+
+  if (host) {
+    params.set('host', host);
   }
 
   return params;

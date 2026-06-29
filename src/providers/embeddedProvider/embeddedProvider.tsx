@@ -10,16 +10,21 @@ import { EmbeddedUrlSyncBridge } from './EmbeddedUrlSyncBridge';
 const EmbeddedContext = createContext<embeddedContextType>({
   embedded: false,
   shop: null,
+  host: null,
 });
 
-const EMBEDDED_DEFAULT: embeddedContextType = { embedded: false, shop: null };
+const EMBEDDED_DEFAULT: embeddedContextType = { embedded: false, shop: null, host: null };
 
 let cachedEmbeddedSnapshot: embeddedContextType = EMBEDDED_DEFAULT;
 
 const getEmbeddedContextSnapshot = (): embeddedContextType => {
   const next = resolveEmbeddedContext();
 
-  if (cachedEmbeddedSnapshot.embedded === next.embedded && cachedEmbeddedSnapshot.shop === next.shop) {
+  if (
+    cachedEmbeddedSnapshot.embedded === next.embedded &&
+    cachedEmbeddedSnapshot.shop === next.shop &&
+    cachedEmbeddedSnapshot.host === next.host
+  ) {
     return cachedEmbeddedSnapshot;
   }
 

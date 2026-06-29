@@ -5,9 +5,10 @@ import { buildShopifyFrameAncestorsHeader } from './src/shopify/frameAncestors';
 
 const middleware = (request: NextRequest) => {
   const shop = request.nextUrl.searchParams.get('shop');
+  const host = request.nextUrl.searchParams.get('host');
   const response = NextResponse.next();
 
-  response.headers.set('Content-Security-Policy', buildShopifyFrameAncestorsHeader(shop));
+  response.headers.set('Content-Security-Policy', buildShopifyFrameAncestorsHeader(shop, host));
 
   return response;
 };
