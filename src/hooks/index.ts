@@ -1,6 +1,7 @@
 'use client';
 
 export { useAppNavigate } from './useAppNavigate';
+export { useConfiguratorRouteReset } from './useConfiguratorRouteReset';
 export { useEmbeddedActiveProductSync } from './useEmbeddedActiveProductSync';
 export { useEmbeddedLoaderSync } from './useEmbeddedLoaderSync';
 export { useEmbeddedUrlSync } from './useEmbeddedUrlSync';

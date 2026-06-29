@@ -19,11 +19,14 @@ interface ConfiguratorSceneLoadState {
   loaderVisibleUntil: number;
   transitionSession: number;
   transitionVisibleUntil: number;
+  sceneRouteKey: number;
   markRouteHydrated: () => void;
+  resetForCatalogLeave: () => void;
   beginInitialSceneLoad: () => void;
   markInitialSceneLoaded: () => void;
   beginSceneTransitionLoad: (options?: SceneTransitionOptions) => void;
   markSceneTransitionLoaded: () => void;
+  bumpSceneRouteKey: () => void;
 }
 
 const loaderTimeouts: Record<LoaderKind, ReturnType<typeof setTimeout> | null> = {
@@ -89,7 +92,10 @@ const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) =
   loaderVisibleUntil: 0,
   transitionSession: 0,
   transitionVisibleUntil: 0,
+  sceneRouteKey: 0,
   markRouteHydrated: () => set({ isRouteHydrated: true }),
+  resetForCatalogLeave: () => set({ isRouteHydrated: false }),
+  bumpSceneRouteKey: () => set((state) => ({ sceneRouteKey: state.sceneRouteKey + 1 })),
   beginInitialSceneLoad: () => {
     const { patch } = beginLoader('initial', get, (loaderSession, loaderVisibleUntil) => ({
       isInitialSceneLoading: true,

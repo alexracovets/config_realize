@@ -8,13 +8,14 @@ import { Suspense, useState } from 'react';
 
 const ConfiguratorCanvas = () => {
   const [canvasKey, setCanvasKey] = useState(0);
+  const sceneRouteKey = useConfiguratorSceneLoad((state) => state.sceneRouteKey);
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
   const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const useContinuousFrameLoop = isInitialSceneLoading || isSceneTransitionLoading;
 
   return (
     <Canvas
-      key={canvasKey}
+      key={`${sceneRouteKey}:${canvasKey}`}
       camera={{ position: [0, 0, 3], fov: 45 }}
       style={{ width: '100%', height: '100%' }}
       frameloop={useContinuousFrameLoop ? 'always' : 'demand'}
@@ -39,6 +40,7 @@ const ConfiguratorCanvas = () => {
         canvas.addEventListener('webglcontextlost', (event) => {
           event.preventDefault();
           useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
+          setCanvasKey((currentKey) => currentKey + 1);
         });
 
         canvas.addEventListener('webglcontextrestored', () => {

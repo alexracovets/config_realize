@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import type { configuratorProductHydrationType } from '@configurator/types';
 import { applyConfiguratorRouteProduct } from '@utils';
@@ -13,13 +13,12 @@ type configuratorRouteShellPropsType = {
 };
 
 /**
- * Stamps slug/product onto zustand after first paint so the initial loader can render
- * before route activation and asset preloads run.
+ * Stamps slug/product onto zustand before paint so WebGL mounts with the active route product.
  */
 const ConfiguratorRouteShell = ({ collectionHandle, slug, product, children }: configuratorRouteShellPropsType) => {
   const appliedRouteKeyRef = useRef<string | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const routeKey = `${collectionHandle}:${slug}:${product?.modelId ?? 'local'}`;
     if (appliedRouteKeyRef.current === routeKey) return;
 

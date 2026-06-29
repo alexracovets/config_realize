@@ -21,6 +21,7 @@ const applyConfiguratorRouteProduct = (
 ) => {
   const { modelId, business } = resolveRouteModel(slug, product);
 
+  useConfiguratorSceneLoad.getState().bumpSceneRouteKey();
   useConfiguratorSceneLoad.getState().beginInitialSceneLoad();
   useConfigurationCart.getState().setActiveItemProduct({ slug, modelId, business, collectionHandle });
   useConfiguratorSceneLoad.getState().markRouteHydrated();
