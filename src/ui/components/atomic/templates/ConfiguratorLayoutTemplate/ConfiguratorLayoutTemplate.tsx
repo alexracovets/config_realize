@@ -12,13 +12,14 @@ import {
 } from '@organisms';
 
 type configuratorLayoutTemplatePropsType = childrenType & {
+  collectionHandle: string;
   slug: string;
   product: configuratorProductHydrationType | null;
 };
 
-const ConfiguratorLayoutTemplate = ({ children, slug, product }: configuratorLayoutTemplatePropsType) => {
+const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
   return (
-    <ConfiguratorRouteShell slug={slug} product={product}>
+    <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
       <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
         <div className="shrink-0">
           <Header />

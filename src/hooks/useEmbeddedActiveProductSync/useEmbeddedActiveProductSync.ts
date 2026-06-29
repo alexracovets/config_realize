@@ -41,7 +41,9 @@ const useEmbeddedActiveProductSync = (): void => {
 
     lastSyncedKeyRef.current = syncKey;
 
-    const pathname = buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug);
+    const pathname = activeItem.collectionHandle
+      ? buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug)
+      : `/${activeItem.business.handle || activeItem.slug}`;
 
     postEmbeddedUrlToParent(pathname);
     postEmbeddedDocumentMetadataToParent({

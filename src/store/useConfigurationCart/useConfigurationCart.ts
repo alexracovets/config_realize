@@ -18,7 +18,12 @@ interface ConfigurationCartState {
   previews: Record<string, string>;
   addItem: (product: configuratorCatalogProductPickType) => void;
   /** Stamp a Shopify product (from the slug route loader) onto the active cart item. */
-  setActiveItemProduct: (product: { slug: string; modelId: modelIdType; business: garmentBusinessType }) => void;
+  setActiveItemProduct: (product: {
+    slug: string;
+    modelId: modelIdType;
+    business: garmentBusinessType;
+    collectionHandle?: string;
+  }) => void;
   duplicateActiveItem: () => void;
   selectItem: (id: string) => void;
   removeItem: (id: string) => void;
@@ -75,11 +80,13 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     activateCartItem(get, item.id);
   },
 
-  setActiveItemProduct: ({ slug, modelId, business }) => {
+  setActiveItemProduct: ({ slug, modelId, business, collectionHandle }) => {
     const { items, activeItemId, configurations } = get();
     const activeItem = items.find((item) => item.id === activeItemId);
     if (!activeItem) return;
     if (!getModel(modelId)) return;
+
+    const nextCollectionHandle = collectionHandle ?? activeItem.collectionHandle;
 
     // The geometry (modelId) is what drives the heavy 3D rebuild. The default cart item
     // is already initialised with the default model, so when the loaded product maps to the
@@ -87,7 +94,11 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     // time on every open. Only the slug + business need refreshing in that case.
     if (activeItem.modelId === modelId) {
       set({
-        items: items.map((item) => (item.id === activeItemId ? { ...item, slug, business } : item)),
+        items: items.map((item) =>
+          item.id === activeItemId
+            ? { ...item, slug, business, collectionHandle: nextCollectionHandle }
+            : item,
+        ),
       });
       useConfiguratorProduct.getState().initFromLoader(modelId, business);
 
@@ -103,7 +114,11 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     const nextConfigurations = Object.fromEntries(Object.entries(configurations).filter(([itemId]) => itemId !== activeItemId));
 
     set({
-      items: items.map((item) => (item.id === activeItemId ? { ...item, slug, modelId, business } : item)),
+      items: items.map((item) =>
+        item.id === activeItemId
+          ? { ...item, slug, modelId, business, collectionHandle: nextCollectionHandle }
+          : item,
+      ),
       configurations: nextConfigurations,
     });
 
