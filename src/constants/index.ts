@@ -2,7 +2,7 @@ import type { configuratorStepValueType } from '@configurator/types';
 import type { modelIdType } from '@types';
 
 const DEFAULT_CONFIGURATOR_MODEL_ID: modelIdType = 'federer_pallavolo';
-const DEFAULT_CONFIGURATOR_SLUG = 'federer_p';
+const DEFAULT_CONFIGURATOR_SLUG = 'federer_pallavolo';
 const DEFAULT_CONFIGURATOR_COLLECTION_HANDLE = '';
 
 // --- Configurator copy ---
