@@ -1,6 +1,8 @@
 'use client';
 
 export { useAppNavigate } from './useAppNavigate';
+export { useEmbeddedActiveProductSync } from './useEmbeddedActiveProductSync';
+export { useEmbeddedLoaderSync } from './useEmbeddedLoaderSync';
 export { useEmbeddedUrlSync } from './useEmbeddedUrlSync';
 export { isConfiguratorStepAvailable, resolveAvailableConfiguratorStepNumbers, resolveProductStepsConfiguration } from './resolveProductStepsConfiguration';
 export { useGarmentCatalogPreload, useGarmentCatalogPreloadEffect, warmGarmentCatalogAssets, warmGarmentCatalogAssetsEager } from './useGarmentCatalogPreload';
