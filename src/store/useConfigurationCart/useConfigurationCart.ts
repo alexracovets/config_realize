@@ -9,7 +9,8 @@ import { createCartItem, createDefaultCartItem } from '@store/useConfigurationCa
 import { persistCartItemSnapshot } from '@store/useConfigurationCart/persistCartItemSnapshot';
 import type { cartItemConfigurationType, cartItemType, configuratorCatalogProductPickType, garmentBusinessType, modelIdType } from '@types';
 import { warmProductAssets } from '@configurator';
-import { getModel } from '@utils';
+import { buildConfiguratorPath, getModel } from '@utils';
+import { postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 import { create } from 'zustand';
 interface ConfigurationCartState {
   items: cartItemType[];
@@ -203,5 +204,35 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     persistCartItemSnapshot(get, activeItemId);
   },
 }));
+
+/**
+ * Mirror the *active* session item into the host (Shopify) URL + SEO when embedded.
+ * Switching/adding products only mutates this store (no Next.js route change), so the
+ * route-based {@link useEmbeddedUrlSync} never fires. We post a `navigate` message here
+ * instead; the theme updates the address bar and refetches product metadata.
+ *
+ * Lives at the store module level (already part of the configurator chunk) on purpose —
+ * wiring this through a provider/React hook pulled the 3D bundle into a second chunk and
+ * produced duplicate `@react-three/fiber` instances ("Hooks can only be used within the
+ * Canvas component").
+ */
+let lastPostedActiveProductPath: string | null = null;
+
+useConfigurationCart.subscribe((state) => {
+  const activeItem = state.items.find((item) => item.id === state.activeItemId);
+
+  if (!activeItem || !activeItem.collectionHandle || !activeItem.slug) {
+    return;
+  }
+
+  const pathname = buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug);
+
+  if (lastPostedActiveProductPath === pathname) {
+    return;
+  }
+
+  lastPostedActiveProductPath = pathname;
+  postEmbeddedUrlToParent(pathname);
+});
 
 export { useConfigurationCart };
