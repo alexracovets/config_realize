@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import { buildAppPath, isEmbeddedSession } from '@utils';
+import { buildAppPath, isEmbeddedSession, isInternalAppPath } from '@utils';
 import { postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 
 const useAppNavigate = () => {
@@ -13,7 +13,7 @@ const useAppNavigate = () => {
     (pathname: string) => {
       router.push(buildAppPath(pathname));
 
-      if (isEmbeddedSession()) {
+      if (isEmbeddedSession() && !isInternalAppPath(pathname)) {
         postEmbeddedUrlToParent(pathname);
       }
     },

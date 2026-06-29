@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 import { useEmbedded } from '@providers';
-import { buildAppPath } from '@utils';
+import { buildAppPath, isInternalAppPath } from '@utils';
 import {
   EMBEDDED_URL_SYNC_SOURCE_SHOPIFY,
   isEmbeddedUrlSyncMessage,
@@ -29,6 +29,12 @@ const useEmbeddedUrlSync = (): void => {
     }
 
     if (lastPostedRef.current === pathname) {
+      return;
+    }
+
+    // In-app-only routes (e.g. the internal checkout/summary view) must not be mirrored
+    // to the host URL — the theme would treat `/checkout` as the real Shopify checkout.
+    if (isInternalAppPath(pathname)) {
       return;
     }
 

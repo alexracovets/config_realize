@@ -1,1 +1,1 @@
-export { buildCollectionPath, buildConfiguratorPath, isConfiguratorPath } from './appPaths';
+export { buildCollectionPath, buildConfiguratorPath, isConfiguratorPath, isInternalAppPath } from './appPaths';
