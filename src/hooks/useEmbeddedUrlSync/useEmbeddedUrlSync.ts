@@ -12,9 +12,10 @@ import {
 } from '@utils/embeddedUrlSync';
 
 const useEmbeddedUrlSync = (): void => {
-  const { embedded, shop, host } = useEmbedded();
+  const { embedded, shop } = useEmbedded();
   const pathname = usePathname();
   const router = useRouter();
+  const lastPostedRef = useRef<string | null>(null);
   const lastAppliedRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -27,6 +28,11 @@ const useEmbeddedUrlSync = (): void => {
       return;
     }
 
+    if (lastPostedRef.current === pathname) {
+      return;
+    }
+
+    lastPostedRef.current = pathname;
     postEmbeddedUrlToParent(pathname);
   }, [embedded, pathname]);
 
@@ -44,17 +50,10 @@ const useEmbeddedUrlSync = (): void => {
         return;
       }
 
-      // The iframe is embedded on the live storefront domain (custom/primary),
-      // which is carried by `host`. `shop` (*.myshopify.com) is an accepted
-      // fallback since the storefront may also be served from it.
-      const allowedHosts = [host, shop].filter((value): value is string => Boolean(value));
+      if (shop) {
+        const expectedOrigin = `https://${shop}`;
 
-      if (allowedHosts.length > 0) {
-        const isAllowedOrigin = allowedHosts.some(
-          (value) => event.origin === `https://${value}` || event.origin === `http://${value}`,
-        );
-
-        if (!isAllowedOrigin) {
+        if (event.origin !== expectedOrigin && event.origin !== `http://${shop}`) {
           return;
         }
       }
@@ -72,7 +71,7 @@ const useEmbeddedUrlSync = (): void => {
     window.addEventListener('message', onMessage);
 
     return () => window.removeEventListener('message', onMessage);
-  }, [embedded, pathname, router, shop, host]);
+  }, [embedded, pathname, router, shop]);
 };
 
 export { useEmbeddedUrlSync };

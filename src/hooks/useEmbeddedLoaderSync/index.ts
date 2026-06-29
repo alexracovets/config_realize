@@ -1,1 +1,0 @@
-export { useEmbeddedLoaderSync } from './useEmbeddedLoaderSync';

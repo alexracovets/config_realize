@@ -20,11 +20,7 @@ let cachedEmbeddedSnapshot: embeddedContextType = EMBEDDED_DEFAULT;
 const getEmbeddedContextSnapshot = (): embeddedContextType => {
   const next = resolveEmbeddedContext();
 
-  if (
-    cachedEmbeddedSnapshot.embedded === next.embedded &&
-    cachedEmbeddedSnapshot.shop === next.shop &&
-    cachedEmbeddedSnapshot.host === next.host
-  ) {
+  if (cachedEmbeddedSnapshot.embedded === next.embedded && cachedEmbeddedSnapshot.shop === next.shop && cachedEmbeddedSnapshot.host === next.host) {
     return cachedEmbeddedSnapshot;
   }
 
