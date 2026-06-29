@@ -1,0 +1,1 @@
+export { useEmbeddedActiveProductSync } from './useEmbeddedActiveProductSync';
