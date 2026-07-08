@@ -3,6 +3,7 @@
 import { cva } from 'class-variance-authority';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@shared';
+import { Button, SvgIcon } from '@atoms';
 import type { accordionAtomPropsType } from '@types';
 import { cn } from '@utils';
 
@@ -42,15 +43,53 @@ const accordionContentVariants = cva('', {
   },
 });
 
-const AccordionAtom = ({ items, variant = 'default', className, defaultValue, value, onValueChange, multiple = false }: accordionAtomPropsType) => {
+const AccordionDeleteAction = ({ onDelete }: { onDelete: () => void }) => (
+  <Button
+    type="button"
+    variant="delete"
+    size="delete"
+    className="shrink-0"
+    aria-label="Eliminare"
+    onPointerDown={(event) => event.stopPropagation()}
+    onClick={(event) => {
+      event.stopPropagation();
+      onDelete();
+    }}
+  >
+    <SvgIcon name="delete" className="w-[14px] h-[15.75px]" />
+  </Button>
+);
+
+const AccordionAtom = ({
+  items,
+  variant = 'default',
+  className,
+  defaultValue,
+  value,
+  onValueChange,
+  onItemActivate,
+  multiple = false,
+}: accordionAtomPropsType) => {
   return (
     <Accordion className={cn(className)} multiple={multiple} defaultValue={defaultValue} value={value} onValueChange={onValueChange}>
-      {items.map(({ value, trigger, content }) => (
-        <AccordionItem key={value} value={value} className={accordionItemVariants({ variant })}>
-          <AccordionTrigger className={cn(accordionTriggerVariants({ variant }))}>{trigger}</AccordionTrigger>
-          <AccordionContent className={accordionContentVariants({ variant })}>{content}</AccordionContent>
-        </AccordionItem>
-      ))}
+      {items.map(({ value: itemValue, trigger, content, onDelete }) => {
+        const activateItem = () => onItemActivate?.(itemValue);
+
+        return (
+          <AccordionItem key={itemValue} value={itemValue} className={accordionItemVariants({ variant })}>
+            <AccordionTrigger
+              className={cn(accordionTriggerVariants({ variant }))}
+              onClick={activateItem}
+              actions={onDelete ? <AccordionDeleteAction onDelete={onDelete} /> : undefined}
+            >
+              {trigger}
+            </AccordionTrigger>
+            <AccordionContent className={accordionContentVariants({ variant })} onClick={activateItem}>
+              {content}
+            </AccordionContent>
+          </AccordionItem>
+        );
+      })}
     </Accordion>
   );
 };

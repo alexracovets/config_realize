@@ -1,12 +1,13 @@
 'use client';
 
 import { ConfiguratorView } from '@organisms';
-import { ModalInfo, ModalTutorial } from '@molecules';
+import { ModalAddProductDesign, ModalInfo, ModalTutorial } from '@molecules';
 
 const ConfiguratorPage = () => {
   return (
     <>
       <ConfiguratorView />
+      <ModalAddProductDesign />
       <ModalInfo />
       <ModalTutorial />
     </>

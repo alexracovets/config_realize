@@ -154,7 +154,7 @@ async function Module(moduleArg = {}) {
     }
   }
   var Ca = (a) => {
-      for (; 0 < a.length; ) a.shift()(f);
+      for (; 0 < a.length;) a.shift()(f);
     },
     Da = [],
     Ea = [],
@@ -166,9 +166,9 @@ async function Module(moduleArg = {}) {
     Ha = 'undefined' != typeof TextDecoder ? new TextDecoder() : void 0,
     F = (a, b = 0) => {
       var c = b;
-      for (var d = c + void 0; a[c] && !(c >= d); ) ++c;
+      for (var d = c + void 0; a[c] && !(c >= d);) ++c;
       if (16 < c - b && a.buffer && Ha) return Ha.decode(a.subarray(b, c));
-      for (d = ''; b < c; ) {
+      for (d = ''; b < c;) {
         var e = a[b++];
         if (e & 128) {
           var g = a[b++] & 63;
@@ -650,7 +650,7 @@ async function Module(moduleArg = {}) {
     var b = eb(a.parent.id, a.name);
     if (I.pa[b] === a) I.pa[b] = a.xa;
     else
-      for (b = I.pa[b]; b; ) {
+      for (b = I.pa[b]; b;) {
         if (b.xa === a) {
           b.xa = a.xa;
           break;
@@ -698,7 +698,7 @@ async function Module(moduleArg = {}) {
     throw new I.da(32);
   }
   function O(a) {
-    for (var b; ; ) {
+    for (var b; ;) {
       if (I.Ia(a)) return ((a = a.ia.Xa), b ? ('/' !== a[a.length - 1] ? `${a}/${b}` : a + b) : a);
       b = b ? `${a.name}/${b}` : a.name;
       a = a.parent;
@@ -778,7 +778,7 @@ async function Module(moduleArg = {}) {
   }
   function nb(a) {
     var b = [];
-    for (a = [a]; a.length; ) {
+    for (a = [a]; a.length;) {
       var c = a.pop();
       b.push(c);
       a.push(...c.za);
@@ -972,7 +972,7 @@ async function Module(moduleArg = {}) {
       var b = a.na,
         c = nb(b);
       Object.keys(I.pa).forEach((d) => {
-        for (d = I.pa[d]; d; ) {
+        for (d = I.pa[d]; d;) {
           var e = d.xa;
           c.includes(d.ia) && Ya(d);
           d = e;
@@ -1296,7 +1296,7 @@ async function Module(moduleArg = {}) {
     },
     Bb(a, b) {
       a = 'string' == typeof a ? a : O(a);
-      for (b = b.split('/').reverse(); b.length; ) {
+      for (b = b.split('/').reverse(); b.length;) {
         var c = b.pop();
         if (c) {
           var d = G(a + '/' + c);
@@ -1678,7 +1678,7 @@ async function Module(moduleArg = {}) {
             case 0:
               var e = S();
               if (0 > e) break;
-              for (; I.streams[e]; ) e++;
+              for (; I.streams[e];) e++;
               return lb(d, e).fd;
             case 1:
             case 2:
@@ -2265,7 +2265,7 @@ async function Module(moduleArg = {}) {
         na?.(f);
         f.onRuntimeInitialized?.();
         if (f.postRun)
-          for ('function' == typeof f.postRun && (f.postRun = [f.postRun]); f.postRun.length; ) {
+          for ('function' == typeof f.postRun && (f.postRun = [f.postRun]); f.postRun.length;) {
             var b = f.postRun.shift();
             Da.push(b);
           }
@@ -2274,7 +2274,7 @@ async function Module(moduleArg = {}) {
     }
     if (0 < E) ta = cc;
     else {
-      if (f.preRun) for ('function' == typeof f.preRun && (f.preRun = [f.preRun]); f.preRun.length; ) Fa();
+      if (f.preRun) for ('function' == typeof f.preRun && (f.preRun = [f.preRun]); f.preRun.length;) Fa();
       Ca(Ea);
       0 < E
         ? (ta = cc)
@@ -2287,7 +2287,7 @@ async function Module(moduleArg = {}) {
           : a();
     }
   }
-  if (f.preInit) for ('function' == typeof f.preInit && (f.preInit = [f.preInit]); 0 < f.preInit.length; ) f.preInit.shift()();
+  if (f.preInit) for ('function' == typeof f.preInit && (f.preInit = [f.preInit]); 0 < f.preInit.length;) f.preInit.shift()();
   cc();
   ra
     ? (moduleRtn = f)

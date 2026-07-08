@@ -33,6 +33,8 @@ const resolveNumberLimits = (product: garmentConfigType): numberLimitsType => {
 const mapProductNumberPositions = (product: garmentConfigType): numberPositionType[] =>
   (product.numberPositions ?? []).map((position, index) => ({
     key: `number-pos-${index}`,
+    positionId: position.id,
+    conflicts: position.conflicts,
     label: position.label,
     partId: resolveGarmentPart(product, position.partId, 'a number position').id,
     uv: resolveNumberLocalUvToAtlas(product, position.partId, position.uv),

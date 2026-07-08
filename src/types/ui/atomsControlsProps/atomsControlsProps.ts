@@ -11,6 +11,7 @@ interface accordionAtomPropsType {
   defaultValue?: string[];
   value?: string[];
   onValueChange?: (value: string[]) => void;
+  onItemActivate?: (value: string) => void;
   multiple?: boolean;
 }
 

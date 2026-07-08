@@ -5,7 +5,7 @@ import { AtomImage, Box, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
 import { CHECKOUT_SHIPPING_DAYS_LABEL } from '@constants';
 import { useNavigateToConfigurator } from '@hooks';
 import { CheckoutConfigurationTable } from '@molecules/CheckoutConfigurationTable';
-import { resolveCheckoutPrintAvailability, resolveTestoLimits, useCheckout, useConfigurationCart } from '@store';
+import { resolveCheckoutPrintAvailability, useCheckout, useConfigurationCart } from '@store';
 import { getModel, priceFormat, resolveCartItemDisplayPreview } from '@utils';
 import { useMemo } from 'react';
 const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
@@ -19,10 +19,6 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
   const previewSrc = cartItem ? resolveCartItemDisplayPreview(cartItem, capturedPreview) : '';
 
   const productName = useMemo(() => product.business.name || 'Prodotto', [product.business.name]);
-  const testoMaxLength = useMemo(() => {
-    if (!garment?.testoDefaults) return undefined;
-    return resolveTestoLimits(garment).maxLength;
-  }, [garment]);
   const printAvailability = useMemo(() => resolveCheckoutPrintAvailability(garment), [garment]);
 
   if (!garment) return null;
@@ -39,7 +35,12 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
             <Button variant="primary" size="xs">
               Elenco giocatori
             </Button>
-            <Button size="xs" className="font-normal" onClick={() => cartItem && navigateToConfigurator(cartItem.collectionHandle, cartItem.slug)} disabled={!cartItem?.collectionHandle}>
+            <Button
+              size="xs"
+              className="font-normal"
+              onClick={() => cartItem && navigateToConfigurator(cartItem.collectionHandle, cartItem.slug)}
+              disabled={!cartItem?.collectionHandle}
+            >
               Modifica Bozza
             </Button>
           </Flex>
@@ -66,7 +67,7 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
       </Grid>
 
       <div className="pt-6">
-        <CheckoutConfigurationTable cartItemId={product.cartItemId} rows={product.rows} testoMaxLength={testoMaxLength} printAvailability={printAvailability} />
+        <CheckoutConfigurationTable cartItemId={product.cartItemId} rows={product.rows} printAvailability={printAvailability} />
       </div>
     </article>
   );

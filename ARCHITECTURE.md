@@ -57,7 +57,9 @@ The codebase separates concerns into four axes:
 ```mermaid
 flowchart TB
   subgraph routes [App Router]
-    Slug["/[slug]"]
+    Home["/"]
+    Collection["/:collectionHandle"]
+    Configurator["/:collectionHandle/:slug"]
     Checkout["/checkout"]
   end
 
@@ -91,7 +93,9 @@ flowchart TB
     RouteUtils["configuratorRoute"]
   end
 
-  Slug --> Page
+  Home --> Collection
+  Collection --> Configurator
+  Configurator --> Page
   Page --> Aside
   Page --> Organism
   Page --> RouteUtils
@@ -112,7 +116,7 @@ flowchart TB
   Aside --> state
 ```
 
-1. **Route** resolves product (`ConfiguratorRouteShell` / Shopify) and calls `applyConfiguratorRouteProduct` from `@utils/configuratorRoute`.
+1. **Route** resolves product (`ConfiguratorRouteShell` / Shopify) and calls `applyConfiguratorRouteProduct` from `@utils/configuratorRoute` (includes `collectionHandle` + `slug`).
 2. **Store** holds user configuration (colors, design, names, logos, cart).
 3. **`GarmentRuntime`** subscribes to stores via hooks and drives shader uniforms + gizmo interaction.
 4. **UI panels** (molecules) read/write the same stores; they never import R3F scene internals directly.
@@ -132,6 +136,7 @@ src/configurator/
 │   ├── index.ts
 │   ├── warmProductAssets/
 │   ├── warmProductGltfCache/
+│   ├── clientConsoleSuppression/  # THREE.Clock deprecation filter (root layout side-effect)
 │   └── previewCapture/   # Cart preview snapshot bridge
 ├── canvas/               # R3F <Canvas>, controls, scene mount
 │   ├── ConfiguratorCanvas/
@@ -319,7 +324,29 @@ Consumed by `@configurator/utils/createGarmentMaterial`.
 
 ### `src/shopify/` (`@shopify`)
 
-Shopify Storefront GraphQL, product/collection resolution, `configuratorProductHydrationType` mapping.
+Shopify Storefront / Admin GraphQL, collection and product resolution, checkout cart creation, iframe CSP helpers.
+
+| Module                           | Role                                                          |
+| -------------------------------- | ------------------------------------------------------------- |
+| `resolveHomeCollectionSummaries` | Light collection list for `/` (no products)                   |
+| `resolveHomeCollectionByHandle`  | Full collection + products for `/:collectionHandle`           |
+| `resolveHomeCollections`         | Full catalog for `ProductCatalogPopover` (configurator only)  |
+| `resolveConfiguratorProduct`     | Product hydration for `/:collectionHandle/:slug` layout       |
+| `createCheckoutCart`             | Server-side Storefront `cartCreate` (used by `/api/checkout`) |
+| `frameAncestors`                 | `frame-ancestors` CSP for Shopify Theme Editor embeds         |
+| `checkoutPayload`                | Wire types between client checkout UI and `/api/checkout`     |
+| `uploadShopifyFile`              | Admin API staged upload + `fileCreate` (Shopify Files)        |
+| `setOrderMetafields`             | Admin API `metafieldsSet` on an order (`configurator.*`)      |
+| `verifyShopifyWebhookSignature`  | HMAC verification for inbound Shopify webhooks                |
+| `resolveShopifyAdminAccessToken` | Admin API token resolution; self-refreshes via `client_credentials` when short-lived |
+
+**Env:** `SHOPIFY_ENABLED`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN` (production). Optional `SHOPIFY_API_MODE=admin` + `SHOPIFY_ADMIN_ACCESS_TOKEN` for dev. See `.env.example`. The order-asset upload flow below needs Admin API access (scopes `write_files`, `write_orders`) — either `SHOPIFY_ADMIN_CLIENT_ID` + `SHOPIFY_ADMIN_CLIENT_SECRET` (Dev Dashboard app; tokens expire ~24h and are auto-refreshed by `resolveShopifyAdminAccessToken`) or a static `SHOPIFY_ADMIN_ACCESS_TOKEN` (classic custom app, no expiry). `SHOPIFY_ADMIN_CLIENT_SECRET` doubles as the `orders/create` webhook HMAC secret (Dev Dashboard apps sign webhooks with the same client secret used for `client_credentials` — one value, no separate `SHOPIFY_WEBHOOK_SECRET`).
+
+**Checkout:** `useSubmitCheckout` → `POST /api/checkout` → `createCheckoutCart` → Shopify `checkoutUrl`. Storefront token stays on the server.
+
+**Order PDF/UV asset upload:** the order-confirmation PDF, cutting-pattern PDF, and UV texture PNGs are generated client-side only (no server-safe renderer exists for the `html2canvas`/canvas-based export documents). `useSubmitCheckout` captures the already-mounted hidden export documents (`CheckoutOrderExport`, `OrderCuttingExport`), builds PDF blobs (`buildCheckoutOrderExportPdfBlob`, `buildOrderCuttingExportPdfBlob`) and UV blobs (`collectOrderCuttingExportUvBlobs`), and posts them to `POST /api/checkout/assets`, which uploads each via `uploadShopifyFile` and returns their Shopify CDN URLs. Those URLs ride along as cart-level `attributes` (`_order_pdf_url`, `_cutting_pdf_url`, `_uv_image_urls`) through `cartCreate`, which Shopify carries onto the resulting order's `note_attributes`. A thin `POST /api/webhooks/orders-create` webhook (HMAC-verified via `verifyShopifyWebhookSignature`) reads those attributes off the real order and calls `setOrderMetafields` to persist them as `configurator.order_pdf_url` / `configurator.cutting_pdf_url` / `configurator.uv_image_urls` metafields on the order. Asset upload failures never block checkout.
+
+**Embedded:** `proxy.ts` sets CSP `frame-ancestors`; `useEmbeddedUrlSync` + cart subscription mirror in-app paths to the host theme (`/checkout` is excluded — internal summary only).
 
 ### `src/constants/` (`@constants`)
 
@@ -329,7 +356,7 @@ Wizard step metadata: `CONFIGURATOR_STEP_META`. React step wiring: `STEPS_CONFIG
 
 ### `src/providers/` (`@providers`)
 
-App-level React context: embedded mode, shared `getStrictContext` helper for UI primitives.
+App-level React context: embedded mode (`EmbeddedProvider` + URL sync bridges), configurator catalog (`ConfiguratorCatalogShell` — loaded only on configurator routes), shared `getStrictContext` helper for UI primitives.
 
 ### `src/configurator/constants/` (`@configurator/constants`)
 
@@ -354,26 +381,38 @@ UI fonts (`inter`) and sport fonts for garment text rendering.
 
 ```
 app/
-├── layout.tsx                          # Root layout (<html>, fonts, global styles)
-├── (shop)/                             # Scrollable shop shell — URL: /, /checkout
-│   ├── layout.tsx                      # <body> + Header + main
+├── layout.tsx                          # Root: fonts, EmbeddedProvider, console suppression side-effect
+├── proxy.ts                            # CSP frame-ancestors for Shopify iframe embeds
+├── api/checkout/route.ts               # POST → createCheckoutCart (Storefront API)
+├── api/checkout/assets/route.ts        # POST → uploadShopifyFile (order/cutting PDFs + UV PNGs)
+├── api/webhooks/orders-create/route.ts # POST → Shopify `orders/create` webhook → setOrderMetafields
+├── (shop)/                             # Scrollable shop shell — URL: /, /checkout, /:collectionHandle
+│   ├── layout.tsx                      # Header + main
 │   ├── (default)/
 │   │   ├── layout.tsx                  # Footer wrapper
-│   │   └── page.tsx                    # / → HomePageLoader (async RSC)
+│   │   ├── page.tsx                    # / → HomePageLoader (collection summaries)
+│   │   └── [collectionHandle]/
+│   │       └── page.tsx                # /:collectionHandle → CollectionPageLoader
 │   └── checkout/
-│       └── page.tsx                    # /checkout → CheckoutPage
-└── [slug]/                             # Product configurator — URL: /:slug
-    ├── layout.tsx                      # ConfiguratorLayoutTemplate + Shopify product resolve
+│       └── page.tsx                    # /checkout → CheckoutPage (internal summary; not Shopify checkout)
+└── [collectionHandle]/[slug]/          # Fullscreen configurator — URL: /:collectionHandle/:slug
+    ├── layout.tsx                      # ConfiguratorCatalogShell + ConfiguratorLayoutTemplate + Shopify resolve
     └── page.tsx                        # ConfiguratorPage
 ```
 
-| URL         | Page component                | Notes                                        |
-| ----------- | ----------------------------- | -------------------------------------------- |
-| `/`         | `HomePageLoader` → `HomePage` | Product gallery (async catalog load)         |
-| `/checkout` | `CheckoutPage`                | Static route; wins over `[slug]`             |
-| `/:slug`    | `ConfiguratorPage`            | Layout resolves product; page mounts UI + 3D |
+| URL                        | Page component                            | Notes                                                          |
+| -------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| `/`                        | `HomePageLoader` → `HomePage`             | Collection index (`resolveHomeCollectionSummaries`)            |
+| `/:collectionHandle`       | `CollectionPageLoader` → `CollectionPage` | Product gallery for one collection                             |
+| `/:collectionHandle/:slug` | `ConfiguratorPage`                        | Layout resolves product; catalog shell for add-product popover |
+| `/checkout`                | `CheckoutPage`                            | Static route under `(shop)`; wins over `[collectionHandle]`    |
+| `POST /api/checkout`       | API route                                 | Creates Shopify cart; redirects via `checkoutUrl`              |
+| `POST /api/checkout/assets` | API route                                | Uploads order/cutting PDFs + UV PNGs to Shopify Files           |
+| `POST /api/webhooks/orders-create` | API route                         | Shopify `orders/create` webhook → order metafields              |
 
-Routes stay **thin**: import from `@pages` only.
+**Thin routes:** `page.tsx` files import from `@pages` only. Layouts may use `@templates`, `@shopify`, `@providers` for shells and data loading.
+
+**Path helpers:** `@utils/appPaths` — `buildCollectionPath`, `buildConfiguratorPath`, `isConfiguratorPath`, `isInternalAppPath`.
 
 ---
 
@@ -398,31 +437,31 @@ Routes stay **thin**: import from `@pages` only.
 
 ## Scripts & tooling
 
-| Script                               | Description                                                                                              |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `dev` / `build` / `start`            | Next.js development and production                                                                       |
-| `lint` / `lint:fix`                  | ESLint over `src/` and `scripts/`                                                                        |
-| `format` / `format:check`            | Prettier                                                                                                 |
-| `validate`                           | format + lint + `typecheck` + `verify:architecture`                                                      |
-| `typecheck`                          | `tsc --noEmit`                                                                                           |
+| Script                               | Description                                                                                                                        |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `dev` / `build` / `start`            | Next.js development and production                                                                                                 |
+| `lint` / `lint:fix`                  | ESLint over `src/` and `scripts/`                                                                                                  |
+| `format` / `format:check`            | Prettier                                                                                                                           |
+| `validate`                           | format + lint + `typecheck` + `verify:architecture`                                                                                |
+| `typecheck`                          | `tsc --noEmit`                                                                                                                     |
 | `verify:architecture`                | Legacy paths + import boundaries + module folder structure + 3D constants outside configurator (`scripts/verify-architecture.mjs`) |
 | `scan:module-structure`              | Standalone check for module folder pattern (`scripts/scan-module-structure.mjs`)                                                   |
-| `convert:design-assets`              | SVG design masters → WebP for 3D print atlas (keeps `.svg` originals)                                    |
-| `sync:wasm-assets`                   | Optional — refresh logo-upload WASM in `public/ghostscript/` after dependency upgrades                   |
-| `optimize:model` / `optimize:models` | Dev-only GLTF → GLB compression (UV-safe); not part of CI                                                |
-| `test:unit`                          | Vitest — printLayout, render config, gizmo drag                                                          |
-| `test:visual`                        | Playwright                                                                                               |
+| `convert:design-assets`              | SVG design masters → WebP for 3D print atlas (keeps `.svg` originals)                                                              |
+| `sync:wasm-assets`                   | Optional — refresh logo-upload WASM in `public/ghostscript/` after dependency upgrades                                             |
+| `optimize:model` / `optimize:models` | Dev-only GLTF → GLB compression (UV-safe); not part of CI                                                                          |
+| `test:unit`                          | Vitest — printLayout, render config, gizmo drag                                                                                    |
+| `test:visual`                        | Playwright                                                                                                                         |
 
 Node scripts in `scripts/`:
 
-| Script                      | Keep?                                                     | Role                                                                   |
-| --------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `verify-architecture.mjs`   | Yes                                                       | CI — legacy paths + import boundaries + module folder structure      |
-| `scan-module-structure.mjs` | Yes (manual / CI via verify)                              | Module folder pattern only                                             |
-| `lib/scan-module-structure.mjs` | Yes                                                   | Shared scanner used by verify + scan scripts                           |
-| `convert-design-assets.mjs` | Yes                                                       | Asset pipeline — rasterize heavy design SVGs to WebP for runtime atlas |
-| `sync-wasm-assets.mjs`      | Optional manual — refresh WASM after npm package upgrades |
-| `optimize-gltf-model.mjs`   | Yes (manual)                                              | Optional dev tool when updating garment GLTF sources                   |
+| Script                          | Keep?                                                     | Role                                                                   |
+| ------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `verify-architecture.mjs`       | Yes                                                       | CI — legacy paths + import boundaries + module folder structure        |
+| `scan-module-structure.mjs`     | Yes (manual / CI via verify)                              | Module folder pattern only                                             |
+| `lib/scan-module-structure.mjs` | Yes                                                       | Shared scanner used by verify + scan scripts                           |
+| `convert-design-assets.mjs`     | Yes                                                       | Asset pipeline — rasterize heavy design SVGs to WebP for runtime atlas |
+| `sync-wasm-assets.mjs`          | Optional manual — refresh WASM after npm package upgrades |
+| `optimize-gltf-model.mjs`       | Yes (manual)                                              | Optional dev tool when updating garment GLTF sources                   |
 
 Removed one-off migration scripts (`add-use-client`, `rename-types-to-camel-type`) and design thumbnail generation (UI uses `public/svg/design/*.svg` templates).
 
@@ -432,34 +471,35 @@ Removed one-off migration scripts (`add-use-client`, `rename-types-to-camel-type
 
 Defined in `tsconfig.json`:
 
-| Alias                         | Path                          |
-| ----------------------------- | ----------------------------- |
-| `@atoms` … `@pages`           | `src/ui/components/atomic/*`  |
-| `@shared`                     | `src/ui/components/shared`    |
-| `@skeletons`                  | `src/ui/components/skeletons` |
-| `@styles`                     | `src/ui/styles/globals.css`   |
-| `@hooks`                      | `src/hooks`                   |
-| `@store`                      | `src/store`                   |
-| `@types`                      | `src/types`                   |
-| `@utils`                      | `src/utils`                   |
-| `@data`                       | `src/data`                    |
-| `@constants`                  | `src/constants`               |
-| `@providers`                  | `src/providers`               |
-| `@fonts`                      | `src/fonts`                   |
-| `@shopify`                    | `src/shopify`                 |
-| **`@configurator`**           | `src/configurator`            |
-| **`@configurator/bootstrap`** | `src/configurator/bootstrap`  |
-| **`@configurator/gizmo`**     | `src/configurator/gizmo`      |
-| **`@configurator/shaders`**   | `src/configurator/shaders`    |
-| **`@configurator/mappers`**   | `src/configurator/mappers`    |
-| **`@configurator/providers`** | `src/configurator/providers`  |
-| **`@configurator/canvas`**    | `src/configurator/canvas`     |
-| **`@configurator/scene`**     | `src/configurator/scene`      |
-| **`@configurator/runtime`**   | `src/configurator/runtime`    |
-| **`@configurator/hooks`**     | `src/configurator/hooks`      |
-| **`@configurator/utils`**     | `src/configurator/utils`      |
-| **`@configurator/types`**     | `src/configurator/types`      |
-| **`@configurator/constants`** | `src/configurator/constants`  |
+| Alias                           | Path                           |
+| ------------------------------- | ------------------------------ |
+| `@atoms` … `@pages`             | `src/ui/components/atomic/*`   |
+| `@shared`                       | `src/ui/components/shared`     |
+| `@skeletons`                    | `src/ui/components/skeletons`  |
+| `@styles`                       | `src/ui/styles/globals.css`    |
+| `@hooks`                        | `src/hooks`                    |
+| `@store`                        | `src/store`                    |
+| `@types`                        | `src/types`                    |
+| `@utils`                        | `src/utils`                    |
+| `@data`                         | `src/data`                     |
+| `@constants`                    | `src/constants`                |
+| `@providers`                    | `src/providers`                |
+| `@fonts`                        | `src/fonts`                    |
+| `@shopify`                      | `src/shopify`                  |
+| **`@configurator`**             | `src/configurator`             |
+| **`@configurator/bootstrap`**   | `src/configurator/bootstrap`   |
+| **`@configurator/bootstrap/*`** | `src/configurator/bootstrap/*` |
+| **`@configurator/gizmo`**       | `src/configurator/gizmo`       |
+| **`@configurator/shaders`**     | `src/configurator/shaders`     |
+| **`@configurator/mappers`**     | `src/configurator/mappers`     |
+| **`@configurator/providers`**   | `src/configurator/providers`   |
+| **`@configurator/canvas`**      | `src/configurator/canvas`      |
+| **`@configurator/scene`**       | `src/configurator/scene`       |
+| **`@configurator/runtime`**     | `src/configurator/runtime`     |
+| **`@configurator/hooks`**       | `src/configurator/hooks`       |
+| **`@configurator/utils`**       | `src/configurator/utils`       |
+| **`@configurator/types`**       | `src/configurator/types`       |
+| **`@configurator/constants`**   | `src/configurator/constants`   |
 
 **Wildcard subpaths** (sibling modules within the same alias root):
 

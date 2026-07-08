@@ -47,6 +47,7 @@
       "@data/*": ["./src/data/*"],
       "@configurator": ["./src/configurator"],
       "@configurator/bootstrap": ["./src/configurator/bootstrap"],
+      "@configurator/bootstrap/*": ["./src/configurator/bootstrap/*"],
       "@configurator/hooks": ["./src/configurator/hooks"],
       "@configurator/hooks/*": ["./src/configurator/hooks/*"],
       "@configurator/utils": ["./src/configurator/utils"],

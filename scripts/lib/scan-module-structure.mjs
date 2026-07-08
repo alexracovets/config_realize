@@ -1,19 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
-const DEFAULT_SKIP = new Set([
-  path.resolve('src'),
-  path.resolve('src/ui'),
-  path.resolve('src/ui/components'),
-  path.resolve('src/ui/components/atomic'),
-]);
+const DEFAULT_SKIP = new Set([path.resolve('src'), path.resolve('src/ui'), path.resolve('src/ui/components'), path.resolve('src/ui/components/atomic')]);
 
 const isSourceFile = (name) =>
-  /\.(ts|tsx)$/.test(name) &&
-  !name.endsWith('.test.ts') &&
-  !name.endsWith('.d.ts') &&
-  name !== 'config.ts' &&
-  !name.endsWith('.worker.ts');
+  /\.(ts|tsx)$/.test(name) && !name.endsWith('.test.ts') && !name.endsWith('.d.ts') && name !== 'config.ts' && !name.endsWith('.worker.ts');
 
 /**
  * @param {string} [root='src']

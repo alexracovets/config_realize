@@ -54,8 +54,10 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
 }: TextPrintMaskPipelineConfig<TInstance, TPreview, TStyle>) => {
   const product = useConfiguratorProduct((state) => state.product);
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
+  const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);
   const activeStep = useConfigurationControl((state) => state.activeStep);
+  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
   const { getMaterials, hasMaterialsForParts } = useGarmentMaterialRegistry();
   const materialRevision = useMaterialRegistryRevision();
   const invalidate = useThree((state) => state.invalidate);
@@ -69,6 +71,7 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   const prevFillSignatureRef = useRef('');
   const prevSelectedSlotRef = useRef(-1);
   const prevSelectedIdRef = useRef<string | null>(null);
+  const wasGizmoHiddenRef = useRef(false);
 
   const maskRefs = useMemo<MaskResourceRefs>(
     () => ({
@@ -97,7 +100,7 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   const atlasSize = useMemo(() => resolvePrintAtlasSize(product), [product]);
 
   const isSynced = productPath === product.path;
-  const isReady = isSynced && hasMaterialsForParts(partIds) && !isInitialSceneLoading;
+  const isReady = isSynced && hasMaterialsForParts(partIds) && !isInitialSceneLoading && !isSceneTransitionLoading;
 
   const clearRuntime = useCallback(() => {
     clearMaskRuntime(maskRefs, prevFillSignatureRef);
@@ -134,17 +137,27 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   useEffect(() => {
     if (activeStep !== step) return;
 
+    if (!isGizmoVisible) {
+      wasGizmoHiddenRef.current = true;
+      setGizmoButtonsRevealTarget(-1);
+      return;
+    }
+
+    const snapFromHidden = wasGizmoHiddenRef.current;
+    wasGizmoHiddenRef.current = false;
+
     const snap =
-      prevSelectedIdRef.current === selectedInstanceId &&
-      prevSelectedSlotRef.current !== selectedSlotIndex &&
-      prevSelectedSlotRef.current >= 0 &&
-      selectedSlotIndex >= 0;
+      snapFromHidden ||
+      (prevSelectedIdRef.current === selectedInstanceId &&
+        prevSelectedSlotRef.current !== selectedSlotIndex &&
+        prevSelectedSlotRef.current >= 0 &&
+        selectedSlotIndex >= 0);
 
     prevSelectedIdRef.current = selectedInstanceId;
     prevSelectedSlotRef.current = selectedSlotIndex;
 
     setGizmoButtonsRevealTarget(selectedSlotIndex, snap);
-  }, [activeStep, selectedInstanceId, selectedSlotIndex, step]);
+  }, [activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex, step]);
 
   const updateMasks = useCallback(
     async (redrawFill: boolean, redrawStroke: boolean) => {

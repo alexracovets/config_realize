@@ -1,8 +1,10 @@
-export { GLTF_USE_DRACO, GLTF_USE_MESHOPT, isGltfModelReady, readCachedGarmentGltf, warmGltfModelCache } from './gltfModelCache';
+export { GLTF_USE_DRACO, GLTF_USE_MESHOPT, isGltfModelReady, preloadGarmentGltfEager, readCachedGarmentGltf, warmGltfModelCache } from './gltfModelCache';
 export { loadCachedImage } from './loadCachedImage';
 export { loadImage } from './loadImage';
 export { warmDefaultDesignTextures } from './warmDefaultDesignTextures';
 export { warmProductModelFile } from './warmProductModelFile';
+export type { warmProductModelFileOptionsType } from './warmProductModelFile';
 export { resolveModelUrl } from './resolveModelUrl';
 export { scheduleWhenIdle } from './scheduleWhenIdle';
+export { waitForPresenterFrames } from './waitForPresenterFrames';
 export { yieldToMain } from './yieldToMain';

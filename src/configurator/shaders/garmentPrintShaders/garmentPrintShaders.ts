@@ -26,8 +26,7 @@ ${garmentTestoMapFragment}
 ${garmentNumberMapFragment}
 
   vec4 defaultDesign = texture2D( uDefaultLogos, vPrintUv );
-  defaultDesign.rgb *= uPatternColor0;
-  defaultDesign.a = smoothstep( 0.4, 0.6, defaultDesign.a );
+  defaultDesign.a = step( 0.5, defaultDesign.a );
   garmentPrintColor = printColor;
   garmentPrintColor.rgb = defaultDesign.rgb * defaultDesign.a + garmentPrintColor.rgb * ( 1.0 - defaultDesign.a );
   garmentPrintColor.a = defaultDesign.a + garmentPrintColor.a * ( 1.0 - defaultDesign.a );
@@ -37,8 +36,15 @@ ${garmentNumberMapFragment}
 const garmentPbrShadeCaptureFragment = /* glsl */ `
 #ifdef USE_PRINT
   // Diffuse-only shade — excludes specular that blew out flat panels (e.g. shorts back).
+  // Use pre-gradient albedo so dark gradient targets (e.g. #000000) do not zero out luma
+  // and break smooth transitions at full opacity.
   float diffuseLuma = max( max( totalDiffuse.r, totalDiffuse.g ), totalDiffuse.b );
-  float albedoLuma = max( max( diffuseColor.r, diffuseColor.g ), diffuseColor.b );
+  #ifdef USE_GRADIENT
+  vec3 shadeAlbedo = garmentBaseAlbedo;
+  #else
+  vec3 shadeAlbedo = diffuseColor.rgb;
+  #endif
+  float albedoLuma = max( max( shadeAlbedo.r, shadeAlbedo.g ), shadeAlbedo.b );
   garmentPbrShade = clamp( diffuseLuma / max( albedoLuma, 0.001 ), 0.42, 1.0 );
 #endif
 `;

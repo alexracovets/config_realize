@@ -15,7 +15,7 @@ const createCheckoutRow = (size: string, name = '', number = '', testoTexts: str
 
 const extractCheckoutRowPreset = (configuration?: cartItemConfigurationType): checkoutRowPresetType => ({
   size: CHECKOUT_DEFAULT_SIZE,
-  name: configuration?.name.instances[0]?.text ?? '',
+  name: configuration?.name.instances.find((instance) => instance.text.trim())?.text.trim() ?? '',
   number: sanitizeNumberText(configuration?.number.instances[0]?.text ?? ''),
   testoTexts: extractUniqueTestoTexts(configuration),
 });

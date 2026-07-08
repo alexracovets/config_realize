@@ -1,15 +1,18 @@
 'use client';
 
-import { type RefObject, useCallback, useEffect } from 'react';
+import { type RefObject, useCallback, useEffect, useRef } from 'react';
+
+import { useFrame } from '@react-three/fiber';
 
 import type { Texture } from 'three';
 
 import type { patternMaskPairType } from '@configurator/types';
 import type { designPatternItemType } from '@types';
 import { PATTERN_LAYER_COUNT } from '@configurator/constants';
-import { useConfiguratorSceneLoad, useGarmentDesign } from '@store';
+import { useGarmentDesign } from '@store';
 import {
   emptyMaskPair,
+  getAppearanceCacheVersion,
   imageToMaskTexture,
   imageToTexture,
   readProductAppearanceTextures,
@@ -67,7 +70,7 @@ const useLoadPatternTextures = ({
   },
   reapplyAppearance,
 }: useLoadPatternTexturesOptionsType) => {
-  const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
+  const appearanceCacheVersionRef = useRef(getAppearanceCacheVersion());
 
   const syncAppearanceCache = useCallback(
     (targetPath: string) => {
@@ -93,7 +96,21 @@ const useLoadPatternTextures = ({
     maskTexturesRef.current = cached.maskTextures;
     masksPatternKeyRef.current = cached.masksPatternKey;
     pendingFrameReapplyRef.current = true;
-  }, [activeItemId, logosTextureRef, maskTexturesRef, masksPatternKeyRef, pendingFrameReapplyRef, productPathKey]);
+    transitionLoadCompletedRef.current = false;
+  }, [activeItemId, logosTextureRef, maskTexturesRef, masksPatternKeyRef, pendingFrameReapplyRef, productPathKey, transitionLoadCompletedRef]);
+
+  useFrame(() => {
+    const nextVersion = getAppearanceCacheVersion();
+    if (nextVersion === appearanceCacheVersionRef.current) return;
+
+    appearanceCacheVersionRef.current = nextVersion;
+    const cached = readProductAppearanceTextures(productPathKey);
+    logosTextureRef.current = cached.logosTexture;
+    maskTexturesRef.current = cached.maskTextures;
+    masksPatternKeyRef.current = cached.masksPatternKey;
+    pendingFrameReapplyRef.current = true;
+    reapplyAppearance();
+  });
 
   useEffect(() => {
     loadSessionRef.current += 1;
@@ -123,7 +140,7 @@ const useLoadPatternTextures = ({
   ]);
 
   useEffect(() => {
-    if (productPath !== productPathKey || isInitialSceneLoading) return;
+    if (productPath !== productPathKey) return;
 
     const logosSrc = defaultPattern?.parts[0]?.src ? resolveRasterDesignSrc(defaultPattern.parts[0].src) : null;
     if (!logosSrc || logosTextureRef.current) return;
@@ -152,7 +169,6 @@ const useLoadPatternTextures = ({
     };
   }, [
     defaultPattern,
-    isInitialSceneLoading,
     isLoadSessionActive,
     logosTextureFailedRef,
     logosTextureRef,
@@ -165,7 +181,7 @@ const useLoadPatternTextures = ({
   ]);
 
   useEffect(() => {
-    if (productPath !== productPathKey || isInitialSceneLoading) return;
+    if (productPath !== productPathKey) return;
 
     if (!activePatternKey) {
       maskTexturesRef.current = emptyMaskPair();
@@ -217,7 +233,6 @@ const useLoadPatternTextures = ({
   }, [
     activePattern,
     activePatternKey,
-    isInitialSceneLoading,
     isLoadSessionActive,
     maskTexturesFailedKeyRef,
     maskTexturesRef,

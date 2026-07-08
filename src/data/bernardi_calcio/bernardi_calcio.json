@@ -3,22 +3,16 @@
   "path": "/models/bernardi_calcio/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 2257
+    "width": 2048,
+    "height": 1129
   },
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_label",
-    "model_sweatband"
-  ],
+  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "bernardi_calcio_front",
-      "meshNames": [
-        "model_front"
-      ],
+      "meshNames": ["model_front"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.6215,
@@ -39,9 +33,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "bernardi_calcio_back",
-      "meshNames": [
-        "model_back"
-      ],
+      "meshNames": ["model_back"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0019,
@@ -49,7 +41,7 @@
         "minY": 0.0192,
         "maxY": 0.8941
       },
-      "printRotation": 90,
+      "printRotation": 270,
       "gradient": {
         "reversed": true,
         "rotation": 0,
@@ -62,9 +54,7 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "bernardi_calcio_sleeve_left",
-      "meshNames": [
-        "model_sleeve_left"
-      ],
+      "meshNames": ["model_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3319,
@@ -72,7 +62,7 @@
         "minY": 0.0127,
         "maxY": 0.4503
       },
-      "printRotation": 0,
+      "printRotation": 90,
       "gradient": {
         "reversed": false,
         "rotation": 90,
@@ -85,9 +75,7 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "bernardi_calcio_sleeve_right",
-      "meshNames": [
-        "model_sleeve_right"
-      ],
+      "meshNames": ["model_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3865,
@@ -95,7 +83,7 @@
         "minY": 0.4396,
         "maxY": 0.9957
       },
-      "printRotation": 0,
+      "printRotation": 180,
       "gradient": {
         "reversed": true,
         "rotation": 270,
@@ -105,12 +93,10 @@
       }
     },
     {
-      "name": "Collar",
-      "label": "Collar",
+      "name": "Collo",
+      "label": "Collo",
       "id": "bernardi_calcio_collar",
-      "meshNames": [
-        "model_collar"
-      ],
+      "meshNames": ["model_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -246,7 +232,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -257,7 +243,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -272,7 +258,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -288,104 +274,124 @@
   },
   "namePositions": [
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "bernardi_calcio_back",
       "uv": {
-        "x": 0.492,
-        "y": 0.179
+        "x": 0.5,
+        "y": 0.17
       },
-      "rotation": 180,
-      "fontSize": 200,
+      "rotation": 0,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "bernardi_calcio_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.745
+        "x": 0.5,
+        "y": 0.7
       },
-      "rotation": 180,
-      "fontSize": 200,
+      "rotation": 0,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "testo": ["bottom_back"]
+      }
     }
   ],
   "numberPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "bernardi_calcio_front",
       "uv": {
         "x": 0.5,
-        "y": 0.3
+        "y": 0.345
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "testo": ["front_center"]
+      }
     },
     {
-      "label": "Front Right",
+      "label": "Davanti sulla DX",
       "partId": "bernardi_calcio_front",
       "uv": {
-        "x": 0.29,
-        "y": 0.26
+        "x": 0.675,
+        "y": 0.287
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_right"
     },
     {
-      "label": "Back",
+      "label": "Dietro",
       "partId": "bernardi_calcio_back",
       "uv": {
         "x": 0.5,
-        "y": 0.427
+        "y": 0.404
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 250,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "back"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "bernardi_calcio_front",
       "uv": {
-        "x": 0.501,
-        "y": 0.419
+        "x": 0.5,
+        "y": 0.41
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "number": ["front_center"]
+      }
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "bernardi_calcio_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.755
+        "x": 0.5,
+        "y": 0.7
       },
-      "rotation": 180,
-      "fontSize": 180,
+      "rotation": 0,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "name": ["bottom_back"]
+      }
     },
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "bernardi_calcio_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.118
+        "x": 0.5,
+        "y": 0.1
       },
-      "rotation": 180,
-      "fontSize": 60,
+      "rotation": 0,
+      "fontSize": 50,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     }
   ]
 }

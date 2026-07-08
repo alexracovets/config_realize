@@ -1,0 +1,1 @@
+export { usePartAccordionCameraFocus } from './usePartAccordionCameraFocus';

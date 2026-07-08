@@ -1,6 +1,1 @@
-export type {
-  checkoutLineAttributeType,
-  checkoutLinePayloadType,
-  createCheckoutPayloadType,
-  createCheckoutResultType,
-} from './checkoutPayload';
+export type { checkoutLineAttributeType, checkoutLinePayloadType, createCheckoutPayloadType, createCheckoutResultType } from './checkoutPayload';

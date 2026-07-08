@@ -20,11 +20,7 @@ const Header = () => {
   }
 
   const isOnConfigurator = isConfiguratorPath(pathname);
-  const logoHref = toAppPath(
-    isOnConfigurator || !activeItem?.collectionHandle
-      ? '/'
-      : buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug),
-  );
+  const logoHref = toAppPath(isOnConfigurator || !activeItem?.collectionHandle ? '/' : buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug));
 
   return (
     <Box variant="header" asChild>

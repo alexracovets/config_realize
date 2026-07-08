@@ -1,6 +1,6 @@
 'use client';
 
-import type { namePartFormPropsType, namePositionType } from '@types';
+import type { configurationPositionPickerInstanceType, namePartFormPropsType, namePositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NAME_POSITION_SELECT_LABEL } from '@constants';
 import { useConfigurationPositionPicker } from '@hooks';
@@ -50,7 +50,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
   return (
     <Flex variant="configurator_part" className="gap-5 pt-2">
       <Flex variant="configurator_part">
-        <Text variant="configurator_control_label">Carattere</Text>
+        <Text variant="configurator_control_label">Testo</Text>
         <input
           type="text"
           value={sharedPreviewText ?? previewText ?? instance.text}
@@ -106,6 +106,7 @@ const ConfigurationNaming = () => {
   const positions = useGarmentName((state) => state.positions);
   const instances = useGarmentName((state) => state.instances);
   const addInstance = useGarmentName((state) => state.addInstance);
+  const removeInstance = useGarmentName((state) => state.removeInstance);
 
   const nameDefaults = useMemo(() => (positions.length > 0 ? resolveNameDefaults(product) : null), [positions.length, product]);
   const limits = useMemo(() => (positions.length > 0 ? resolveNameLimits(product) : null), [positions.length, product]);
@@ -117,10 +118,22 @@ const ConfigurationNaming = () => {
     [addInstance, product],
   );
 
-  const { availablePositions, openItems, handleOpenItemsChange, handlePositionSelect } = useConfigurationPositionPicker({
+  const resolveFocusFromPosition = useCallback(
+    (position: namePositionType) => ({ partId: position.partId, uv: position.uv }),
+    [],
+  );
+
+  const resolveFocusFromInstance = useCallback((instance: configurationPositionPickerInstanceType) => {
+    const item = useGarmentName.getState().instances.find((entry) => entry.id === instance.id);
+    return item ? { partId: item.partId, uv: item.uv } : null;
+  }, []);
+
+  const { availablePositions, openItems, handleItemActivate, handleOpenItemsChange, handlePositionSelect } = useConfigurationPositionPicker({
     positions,
     instances,
     onAddInstance: handleAddInstance,
+    resolveFocusFromPosition,
+    resolveFocusFromInstance,
   });
 
   const items = useMemo(
@@ -129,8 +142,9 @@ const ConfigurationNaming = () => {
         value: instance.id,
         trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
         content: <NamePartForm instanceId={instance.id} limits={limits!} placeholder={nameDefaults?.text ?? ''} />,
+        onDelete: () => removeInstance(instance.id),
       })),
-    [instances, limits, nameDefaults?.text],
+    [instances, limits, nameDefaults?.text, removeInstance],
   );
 
   if (positions.length === 0 || !limits || !nameDefaults) return null;
@@ -139,7 +153,16 @@ const ConfigurationNaming = () => {
     <Flex key={product.path} variant="step_design" className="gap-3">
       <ConfigurationPositionSelect label={CONFIGURATOR_NAME_POSITION_SELECT_LABEL} positions={availablePositions} onSelect={handlePositionSelect} />
 
-      {instances.length > 0 && <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} multiple className="gap-2" />}
+      {instances.length > 0 && (
+        <AccordionAtom
+          items={items}
+          value={openItems}
+          onValueChange={handleOpenItemsChange}
+          onItemActivate={handleItemActivate}
+          multiple
+          className="gap-2"
+        />
+      )}
     </Flex>
   );
 };

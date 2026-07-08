@@ -1,9 +1,13 @@
-import type { createCheckoutPayloadType } from '@shopify/checkoutPayload';
+import type { createCheckoutPayloadType } from '@shopify';
 import type { cartItemConfigurationType, checkoutProductType } from '@types';
 
 const CONFIG_PRESET_VERSION = 1;
 
-const joinTesto = (testoTexts: string[]): string => testoTexts.map((text) => text.trim()).filter(Boolean).join(' / ');
+const joinTesto = (testoTexts: string[]): string =>
+  testoTexts
+    .map((text) => text.trim())
+    .filter(Boolean)
+    .join(' / ');
 
 /**
  * Builds the `/api/checkout` payload from the checkout table state. Each table row becomes
@@ -33,9 +37,9 @@ const buildOrderPreset = (products: checkoutProductType[], configurations: Recor
         handle: product.business.handle,
         modelId: product.modelId,
         size: row.size,
-        name: row.name,
-        number: row.number,
-        testoTexts: row.testoTexts,
+        name: row.name.trim(),
+        number: row.number.trim(),
+        testoTexts: row.testoTexts.map((text) => text.trim()).filter(Boolean),
         quantity: row.quantity,
         configuration: configurations[product.cartItemId] ?? null,
       };

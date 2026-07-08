@@ -7,7 +7,7 @@ import { FONTS_CONFIGURATION } from '@fonts';
 const FontSelectRow = ({ font, onChange }: fontSelectRowPropsType) => {
   return (
     <Flex variant="configurator_part">
-      <Text variant="configurator_control_label">Sfondo</Text>
+      <Text variant="configurator_control_label">Carattere</Text>
       <AtomSelect
         variant="font"
         options={FONTS_CONFIGURATION.map((f) => ({ label: f.name, value: f.name, fontFamily: f.fontFamily }))}

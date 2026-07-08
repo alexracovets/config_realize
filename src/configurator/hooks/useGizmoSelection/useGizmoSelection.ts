@@ -15,10 +15,11 @@ interface UseGizmoSelectionOptions {
   elements: printGizmoElementType[];
   atlasSize: { width: number; height: number };
   gizmoStep: number | null;
+  isGizmoVisible: boolean;
   store: GizmoSelectionStore;
 }
 
-const useGizmoSelection = ({ elements, atlasSize, gizmoStep, store }: UseGizmoSelectionOptions) => {
+const useGizmoSelection = ({ elements, atlasSize, gizmoStep, isGizmoVisible, store }: UseGizmoSelectionOptions) => {
   const { selectedInstanceId, setSelectedInstance, clearSelectedInstance, bringInstanceToFront } = store;
 
   const { raycaster, camera, gl, scene, invalidate, controls } = useGizmoPointerContext();
@@ -27,6 +28,7 @@ const useGizmoSelection = ({ elements, atlasSize, gizmoStep, store }: UseGizmoSe
     elements,
     atlasSize,
     gizmoStep,
+    isGizmoVisible,
     selectedInstanceId,
     raycaster,
     camera,
@@ -43,6 +45,7 @@ const useGizmoSelection = ({ elements, atlasSize, gizmoStep, store }: UseGizmoSe
       elements,
       atlasSize,
       gizmoStep,
+      isGizmoVisible,
       selectedInstanceId,
       raycaster,
       camera,
@@ -97,6 +100,8 @@ const useGizmoSelection = ({ elements, atlasSize, gizmoStep, store }: UseGizmoSe
 
     const onControlsStart = () => {
       if (ctx.current.gizmoStep === null) return;
+      if (ctx.current.isGizmoVisible) return;
+
       ctx.current.clearSelectedInstance();
       clearGizmoButtonHover();
       ctx.current.invalidate();

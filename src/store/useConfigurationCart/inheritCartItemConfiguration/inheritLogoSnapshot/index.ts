@@ -1,0 +1,1 @@
+export { inheritLogoSnapshot } from './inheritLogoSnapshot';

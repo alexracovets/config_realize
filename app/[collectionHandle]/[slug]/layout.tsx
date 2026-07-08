@@ -1,5 +1,6 @@
 import type { childrenType } from '@types';
 import { ConfiguratorLayoutTemplate } from '@templates';
+import { ConfiguratorCatalogShell } from '@providers/configuratorCatalogProvider/ConfiguratorCatalogShell';
 import { resolveConfiguratorProduct } from '@shopify';
 
 type configuratorLayoutPropsType = childrenType & {
@@ -7,13 +8,15 @@ type configuratorLayoutPropsType = childrenType & {
 };
 
 const ConfiguratorLayout = async ({ children, params }: configuratorLayoutPropsType) => {
-  const { slug } = await params;
-  const product = await resolveConfiguratorProduct(slug);
+  const { collectionHandle, slug } = await params;
+  const product = await resolveConfiguratorProduct(slug, collectionHandle);
 
   return (
-    <ConfiguratorLayoutTemplate slug={slug} product={product}>
-      {children}
-    </ConfiguratorLayoutTemplate>
+    <ConfiguratorCatalogShell>
+      <ConfiguratorLayoutTemplate collectionHandle={collectionHandle} slug={slug} product={product}>
+        {children}
+      </ConfiguratorLayoutTemplate>
+    </ConfiguratorCatalogShell>
   );
 };
 

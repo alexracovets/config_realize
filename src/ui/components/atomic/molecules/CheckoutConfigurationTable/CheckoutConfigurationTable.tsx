@@ -8,7 +8,7 @@ import { CHECKOUT_TABLE_ADD_ROW_LABEL } from '@constants';
 import { useCheckoutConfigurationTable } from '@hooks';
 import { cn } from '@utils';
 import { useMemo } from 'react';
-const CheckoutConfigurationTable = ({ cartItemId, rows, testoMaxLength, printAvailability }: checkoutConfigurationTablePropsType) => {
+const CheckoutConfigurationTable = ({ cartItemId, rows, printAvailability }: checkoutConfigurationTablePropsType) => {
   const { handleAddRow, handleRemoveRow, handlePatchRow } = useCheckoutConfigurationTable(cartItemId);
 
   const columns = useMemo(
@@ -16,10 +16,9 @@ const CheckoutConfigurationTable = ({ cartItemId, rows, testoMaxLength, printAva
       createCheckoutConfigurationTableColumns({
         onPatchRow: handlePatchRow,
         onRemoveRow: handleRemoveRow,
-        testoMaxLength,
         printAvailability,
       }),
-    [handlePatchRow, handleRemoveRow, testoMaxLength, printAvailability],
+    [handlePatchRow, handleRemoveRow, printAvailability],
   );
 
   const tableMinWidth = useMemo(() => columns.reduce((total, column) => total + column.minSize, 0), [columns]);

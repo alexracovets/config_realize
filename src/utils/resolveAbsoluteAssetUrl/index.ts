@@ -1,0 +1,1 @@
+export { resolveAbsoluteAssetUrl } from './resolveAbsoluteAssetUrl';

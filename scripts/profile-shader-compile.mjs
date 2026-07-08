@@ -72,13 +72,15 @@ await page.addInitScript(() => {
 });
 
 await page.goto(`${baseUrl}${route}`, { waitUntil: 'domcontentloaded', timeout: 120_000 });
-await page.waitForFunction(
-  () => {
-    const loader = document.querySelector('[aria-busy="true"]');
-    return !loader || loader.getAttribute('aria-busy') === 'false';
-  },
-  { timeout: 60_000 },
-).catch(() => {});
+await page
+  .waitForFunction(
+    () => {
+      const loader = document.querySelector('[aria-busy="true"]');
+      return !loader || loader.getAttribute('aria-busy') === 'false';
+    },
+    { timeout: 60_000 },
+  )
+  .catch(() => {});
 await page.waitForTimeout(2000);
 
 const data = await page.evaluate(() => ({

@@ -5,11 +5,7 @@ import { useEffect, useRef } from 'react';
 
 import { useEmbedded } from '@providers';
 import { buildAppPath, isInternalAppPath } from '@utils';
-import {
-  EMBEDDED_URL_SYNC_SOURCE_SHOPIFY,
-  isEmbeddedUrlSyncMessage,
-  postEmbeddedUrlToParent,
-} from '@utils/embeddedUrlSync';
+import { EMBEDDED_URL_SYNC_SOURCE_SHOPIFY, isEmbeddedUrlSyncMessage, postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 
 const useEmbeddedUrlSync = (): void => {
   const { embedded, shop } = useEmbedded();

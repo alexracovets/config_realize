@@ -12,7 +12,7 @@ const COLOR_TABS_BY_VARIANT: Record<colorTabVariantType, { id: colorTabType; lab
   ],
   text: [
     { id: 'colori', label: 'Testo' },
-    { id: 'contorno', label: 'Carattere' },
+    { id: 'contorno', label: 'Contorno' },
   ],
 };
 

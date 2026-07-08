@@ -1,22 +1,39 @@
-import { assertShopifyConfigured } from '@shopify/config';
+import { getShopifyApiVersion, getShopifyStoreDomain } from '@shopify/config';
 import { fetchShopifyWithTimeout } from '@shopify/fetchShopifyWithTimeout';
+import { resolveShopifyAdminAccessToken } from '@shopify/resolveShopifyAdminAccessToken';
 type shopifyGraphqlResponseType<TData> = {
   data?: TData;
   errors?: Array<{ message: string }>;
 };
 
-const shopifyAdminGraphql = async <TData>(query: string, variables?: Record<string, unknown>): Promise<TData> => {
-  const { storeDomain, accessToken, apiVersion } = assertShopifyConfigured();
+const requestShopifyAdminGraphql = async (endpoint: string, query: string, variables: Record<string, unknown> | undefined, forceRefresh: boolean) => {
+  const accessToken = await resolveShopifyAdminAccessToken({ forceRefresh });
 
-  const response = await fetchShopifyWithTimeout(`https://${storeDomain}/admin/api/${apiVersion}/graphql.json`, {
+  return fetchShopifyWithTimeout(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Shopify-Access-Token': accessToken,
     },
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 },
+    cache: 'no-store',
   });
+};
+
+const shopifyAdminGraphql = async <TData>(query: string, variables?: Record<string, unknown>): Promise<TData> => {
+  const storeDomain = getShopifyStoreDomain();
+  const apiVersion = getShopifyApiVersion();
+
+  if (!storeDomain) {
+    throw new Error('[shopify] Missing SHOPIFY_STORE_DOMAIN for Admin API.');
+  }
+
+  const endpoint = `https://${storeDomain}/admin/api/${apiVersion}/graphql.json`;
+
+  let response = await requestShopifyAdminGraphql(endpoint, query, variables, false);
+  if (response.status === 401) {
+    response = await requestShopifyAdminGraphql(endpoint, query, variables, true);
+  }
 
   if (!response.ok) {
     throw new Error(`[shopify] Admin API HTTP ${response.status}: ${response.statusText}`);

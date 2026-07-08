@@ -47,6 +47,7 @@ const useGarmentTextGizmoUniforms = () => {
   const product = useConfiguratorProduct((state) => state.product);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);
   const activeStep = useConfigurationControl((state) => state.activeStep);
+  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
   const gizmoIcons = useGizmoIconAtlas();
 
   const nameInstances = useGarmentName((state) => state.instances);
@@ -92,9 +93,9 @@ const useGarmentTextGizmoUniforms = () => {
   const isTestoSynced = testoProductPath === product.path;
 
   const applyGizmoFrames = useCallback(() => {
-    const nameGizmoEnabled = activeStep === NAME_STEP;
-    const numberGizmoEnabled = activeStep === NUMBER_STEP;
-    const testoGizmoEnabled = activeStep === TESTO_STEP;
+    const nameGizmoEnabled = activeStep === NAME_STEP && isGizmoVisible;
+    const numberGizmoEnabled = activeStep === NUMBER_STEP && isGizmoVisible;
+    const testoGizmoEnabled = activeStep === TESTO_STEP && isGizmoVisible;
     const gizmoRotation = resolveProductGizmoRotation(product);
 
     for (const part of product.parts) {
@@ -112,7 +113,12 @@ const useGarmentTextGizmoUniforms = () => {
     }
 
     invalidate();
-  }, [activeStep, getMaterials, gizmoIcons, nameInstancesForRender, numberInstancesForRender, product, testoInstancesForRender, invalidate]);
+  }, [activeStep, getMaterials, gizmoIcons, isGizmoVisible, nameInstancesForRender, numberInstancesForRender, product, testoInstancesForRender, invalidate]);
+
+  useEffect(() => {
+    if (isGizmoVisible) return;
+    setGizmoButtonsRevealTarget(-1);
+  }, [isGizmoVisible]);
 
   useEffect(() => {
     if (activeStep === NAME_STEP || activeStep === NUMBER_STEP || activeStep === TESTO_STEP || activeStep === LOGO_STEP) return;

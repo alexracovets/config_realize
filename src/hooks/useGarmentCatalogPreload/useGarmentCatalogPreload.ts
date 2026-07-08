@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 
-import { waitForProductModelReady, warmProductAssets } from '@configurator';
+import { prepareGarmentModel, warmProductAssets } from '@configurator';
 import type { modelIdType } from '@types';
 import { getModel, hasModel } from '@utils';
 
@@ -22,8 +22,7 @@ const warmGarmentCatalogAssetsEager = async (modelId: modelIdType) => {
   const product = getModel(modelId);
   if (!product) return;
 
-  warmProductAssets(product, { deferHeavy: true });
-  await waitForProductModelReady(product);
+  await prepareGarmentModel(product);
 };
 
 const useGarmentCatalogPreload = () => {

@@ -24,15 +24,15 @@ const garmentLogoMapFragment = /* glsl */ `
   logo2.a *= logoInside2 * logoInsideStamp2;
   logo3.a *= logoInside3 * logoInsideStamp3;
 
-  printColor = garmentCompositeUiLayer( printColor, logo0 );
-  printColor = garmentCompositeUiLayer( printColor, logo1 );
-  printColor = garmentCompositeUiLayer( printColor, logo2 );
-  printColor = garmentCompositeUiLayer( printColor, logo3 );
+  printColor = garmentCompositePrintElement( printColor, logo0 );
+  printColor = garmentCompositePrintElement( printColor, logo1 );
+  printColor = garmentCompositePrintElement( printColor, logo2 );
+  printColor = garmentCompositePrintElement( printColor, logo3 );
 
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[0], uLogoScale[0], uLogoGizmoHalf[0], uGizmoRotation, uLogoPartRotation[0], uLogoGizmoEnabled * uLogoGizmoFrameActive[0], logoInside0 ) );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[1], uLogoScale[1], uLogoGizmoHalf[1], uGizmoRotation, uLogoPartRotation[1], uLogoGizmoEnabled * uLogoGizmoFrameActive[1], logoInside1 ) );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[2], uLogoScale[2], uLogoGizmoHalf[2], uGizmoRotation, uLogoPartRotation[2], uLogoGizmoEnabled * uLogoGizmoFrameActive[2], logoInside2 ) );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[3], uLogoScale[3], uLogoGizmoHalf[3], uGizmoRotation, uLogoPartRotation[3], uLogoGizmoEnabled * uLogoGizmoFrameActive[3], logoInside3 ) );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[0], uLogoScale[0], uLogoGizmoHalf[0], uGizmoRotation, uLogoPartRotation[0], uLogoGizmoEnabled * uLogoGizmoFrameActive[0], logoInside0 ) );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[1], uLogoScale[1], uLogoGizmoHalf[1], uGizmoRotation, uLogoPartRotation[1], uLogoGizmoEnabled * uLogoGizmoFrameActive[1], logoInside1 ) );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[2], uLogoScale[2], uLogoGizmoHalf[2], uGizmoRotation, uLogoPartRotation[2], uLogoGizmoEnabled * uLogoGizmoFrameActive[2], logoInside2 ) );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[3], uLogoScale[3], uLogoGizmoHalf[3], uGizmoRotation, uLogoPartRotation[3], uLogoGizmoEnabled * uLogoGizmoFrameActive[3], logoInside3 ) );
 
   vec4 logoGizmoUi = vec4( 0.0 );
   vec4 logoBtn0 = garmentGizmoButtons( vPrintUv, uLogoAnchorUv[0], uLogoScale[0], uLogoGizmoHalf[0], uGizmoRotation, uLogoPartRotation[0], uLogoGizmoEnabled * uLogoGizmoButtonsActive[0], uLogoGizmoButtonsReveal[0], logoInside0, uNameGizmoIcons, 0.0 );

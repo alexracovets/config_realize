@@ -24,26 +24,26 @@ const garmentTestoMapFragment = /* glsl */ `
   vec4 slotTesto0 = vec4( 0.0 );
   slotTesto0 = garmentCompositeNameLayer( slotTesto0, uTestoStrokeColors[0], testoStrokeMasks.r * testoInside0 );
   slotTesto0 = garmentCompositeNameLayer( slotTesto0, uTestoTextColors[0], testoFillMasks.r * testoInside0 );
-  printColor = garmentCompositeUiLayer( printColor, slotTesto0 );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[0], uTestoScale[0], uTestoGizmoHalf[0], uGizmoRotation, uTestoPartRotation[0], uTestoGizmoEnabled * uTestoGizmoFrameActive[0], testoInside0 ) );
+  printColor = garmentCompositePrintElement( printColor, slotTesto0 );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[0], uTestoScale[0], uTestoGizmoHalf[0], uGizmoRotation, uTestoPartRotation[0], uTestoGizmoEnabled * uTestoGizmoFrameActive[0], testoInside0 ) );
 
   vec4 slotTesto1 = vec4( 0.0 );
   slotTesto1 = garmentCompositeNameLayer( slotTesto1, uTestoStrokeColors[1], testoStrokeMasks.g * testoInside1 );
   slotTesto1 = garmentCompositeNameLayer( slotTesto1, uTestoTextColors[1], testoFillMasks.g * testoInside1 );
-  printColor = garmentCompositeUiLayer( printColor, slotTesto1 );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[1], uTestoScale[1], uTestoGizmoHalf[1], uGizmoRotation, uTestoPartRotation[1], uTestoGizmoEnabled * uTestoGizmoFrameActive[1], testoInside1 ) );
+  printColor = garmentCompositePrintElement( printColor, slotTesto1 );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[1], uTestoScale[1], uTestoGizmoHalf[1], uGizmoRotation, uTestoPartRotation[1], uTestoGizmoEnabled * uTestoGizmoFrameActive[1], testoInside1 ) );
 
   vec4 slotTesto2 = vec4( 0.0 );
   slotTesto2 = garmentCompositeNameLayer( slotTesto2, uTestoStrokeColors[2], testoStrokeMasks.b * testoInside2 );
   slotTesto2 = garmentCompositeNameLayer( slotTesto2, uTestoTextColors[2], testoFillMasks.b * testoInside2 );
-  printColor = garmentCompositeUiLayer( printColor, slotTesto2 );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[2], uTestoScale[2], uTestoGizmoHalf[2], uGizmoRotation, uTestoPartRotation[2], uTestoGizmoEnabled * uTestoGizmoFrameActive[2], testoInside2 ) );
+  printColor = garmentCompositePrintElement( printColor, slotTesto2 );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[2], uTestoScale[2], uTestoGizmoHalf[2], uGizmoRotation, uTestoPartRotation[2], uTestoGizmoEnabled * uTestoGizmoFrameActive[2], testoInside2 ) );
 
   vec4 slotTesto3 = vec4( 0.0 );
   slotTesto3 = garmentCompositeNameLayer( slotTesto3, uTestoStrokeColors[3], testoStrokeMasks.a * testoInside3 );
   slotTesto3 = garmentCompositeNameLayer( slotTesto3, uTestoTextColors[3], testoFillMasks.a * testoInside3 );
-  printColor = garmentCompositeUiLayer( printColor, slotTesto3 );
-  printColor = garmentCompositeUiLayer( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[3], uTestoScale[3], uTestoGizmoHalf[3], uGizmoRotation, uTestoPartRotation[3], uTestoGizmoEnabled * uTestoGizmoFrameActive[3], testoInside3 ) );
+  printColor = garmentCompositePrintElement( printColor, slotTesto3 );
+  printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[3], uTestoScale[3], uTestoGizmoHalf[3], uGizmoRotation, uTestoPartRotation[3], uTestoGizmoEnabled * uTestoGizmoFrameActive[3], testoInside3 ) );
 
   vec4 testoBtn0 = garmentGizmoButtons( vPrintUv, uTestoAnchorUv[0], uTestoScale[0], uTestoGizmoHalf[0], uGizmoRotation, uTestoPartRotation[0], uTestoGizmoEnabled * uTestoGizmoButtonsActive[0], uTestoGizmoButtonsReveal[0], testoInside0, uNameGizmoIcons, 0.0 );
   vec4 testoBtn1 = garmentGizmoButtons( vPrintUv, uTestoAnchorUv[1], uTestoScale[1], uTestoGizmoHalf[1], uGizmoRotation, uTestoPartRotation[1], uTestoGizmoEnabled * uTestoGizmoButtonsActive[1], uTestoGizmoButtonsReveal[1], testoInside1, uNameGizmoIcons, 1.0 );

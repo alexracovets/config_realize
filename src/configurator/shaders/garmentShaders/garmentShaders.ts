@@ -112,12 +112,28 @@ uniform float uPatternOpacity;
 
 vec4 garmentGizmoUiColor;
 vec4 garmentPrintColor;
+vec3 garmentBaseAlbedo;
 float garmentPbrShade;
 
 vec4 garmentCompositeUiLayer( vec4 base, vec4 layer ) {
   base.rgb = layer.rgb * layer.a + base.rgb * ( 1.0 - layer.a );
   base.a = layer.a + base.a * ( 1.0 - layer.a );
   return base;
+}
+
+// Clears pattern tint only under the element pixels (ink/frame/logo alpha), not the whole stamp rect.
+vec4 garmentCompositePrintElement( vec4 printColor, vec4 layer ) {
+  printColor.rgb *= ( 1.0 - layer.a );
+  printColor.a *= ( 1.0 - layer.a );
+  return garmentCompositeUiLayer( printColor, layer );
+}
+
+// Gizmo frame AA is thin; fully clear pattern under any border pixel so Colore 1 does not bleed through.
+vec4 garmentCompositeGizmoFrame( vec4 printColor, vec4 frame ) {
+  float erase = step( 0.001, frame.a );
+  printColor.rgb *= ( 1.0 - erase );
+  printColor.a *= ( 1.0 - erase );
+  return garmentCompositeUiLayer( printColor, frame );
 }
 
 vec4 garmentCompositeNameLayer( vec4 base, vec3 rgb, float alpha ) {
@@ -250,7 +266,7 @@ vec2 garmentGizmoFrameLocalPx( vec2 worldUv, vec2 anchor, float gizmoRotation, f
 // Fixed atlas-px chrome (NAME_GIZMO_* in nameStampConstants.ts). Independent of uNameScale.
 const float GIZMO_BTN_HALF = 24.0;
 const float GIZMO_BTN_OUTSET = 16.0;
-const float GIZMO_FRAME_LINE_HALF = 4.0;
+const float GIZMO_FRAME_LINE_HALF = 2.0;
 const float GIZMO_DASH_PERIOD = 40.0;
 const float GIZMO_BTN_HOVER_SCALE_RANGE = 0.1;
 const float GIZMO_BTN_REVEAL_SCALE_MIN = 0.9;
@@ -341,7 +357,10 @@ vec4 garmentGizmoButtons( vec2 worldUv, vec2 anchor, float scale, vec2 halfPx, f
 
 const garmentGizmoLightsFragment = /* glsl */ `
 #ifdef USE_PRINT
-  gl_FragColor.rgb = mix( gl_FragColor.rgb, garmentGizmoUiColor.rgb, garmentGizmoUiColor.a );
+  if ( garmentGizmoUiColor.a > 0.001 ) {
+    vec3 fabricShaded = garmentBaseAlbedo * garmentPbrShade;
+    gl_FragColor.rgb = garmentGizmoUiColor.rgb * garmentGizmoUiColor.a + fabricShaded * ( 1.0 - garmentGizmoUiColor.a );
+  }
 #endif
 `;
 

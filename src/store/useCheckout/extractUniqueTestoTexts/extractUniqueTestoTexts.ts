@@ -2,18 +2,21 @@
 
 import type { cartItemConfigurationType } from '@types';
 
+const isNonemptyPrintText = (text: string) => text.trim().length > 0;
+
 const extractUniqueTestoTexts = (configuration?: cartItemConfigurationType): string[] => {
   const instances = configuration?.testo?.instances ?? [];
   const seen = new Set<string>();
   const texts: string[] = [];
 
   for (const instance of instances) {
-    if (seen.has(instance.text)) continue;
-    seen.add(instance.text);
-    texts.push(instance.text);
+    const text = instance.text.trim();
+    if (!isNonemptyPrintText(text) || seen.has(text)) continue;
+    seen.add(text);
+    texts.push(text);
   }
 
   return texts;
 };
 
-export { extractUniqueTestoTexts };
+export { extractUniqueTestoTexts, isNonemptyPrintText };

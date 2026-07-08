@@ -31,10 +31,4 @@ type collectionPagePropsType = {
   collection: homePageCollectionType;
 };
 
-export type {
-  collectionPagePropsType,
-  homePageCollectionSummaryType,
-  homePageCollectionType,
-  homePageProductType,
-  homePagePropsType,
-};
+export type { collectionPagePropsType, homePageCollectionSummaryType, homePageCollectionType, homePageProductType, homePagePropsType };

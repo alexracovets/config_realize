@@ -1,5 +1,7 @@
 import type { garmentBusinessType } from '@types';
 
+import { mapSizeChartContent, type sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
+
 /** GraphQL fields needed to build `garmentBusinessType` from a Shopify product node. */
 const PRODUCT_BUSINESS_FIELDS = `#graphql
   id
@@ -23,6 +25,30 @@ const PRODUCT_BUSINESS_FIELDS = `#graphql
   minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
     value
   }
+  headingMetafield: metafield(namespace: "custom", key: "tabella_taglie_heading") {
+    value
+  }
+  descriptionMetafield: metafield(namespace: "custom", key: "tabella_taglie_description") {
+    value
+    type
+  }
+  imageMetafield: metafield(namespace: "custom", key: "tabella_taglie_image") {
+    reference {
+      ... on MediaImage {
+        image {
+          url
+          altText
+        }
+      }
+    }
+  }
+  tableMetafield: metafield(namespace: "custom", key: "tabella_taglie_table") {
+    value
+  }
+  noteMetafield: metafield(namespace: "custom", key: "tabella_taglie_note") {
+    value
+    type
+  }
 `;
 
 type shopifyProductBusinessNodeType = {
@@ -36,7 +62,7 @@ type shopifyProductBusinessNodeType = {
   bonusCountMetafield?: { value: string } | null;
   bonusDiscountMetafield?: { value: string } | null;
   minimumCountMetafield?: { value: string } | null;
-};
+} & sizeChartMetafieldsNodeType;
 
 const toNumber = (value?: string | null): number => {
   const parsed = Number(value);
@@ -51,9 +77,10 @@ const mapShopifyProductBusiness = (node: shopifyProductBusinessNodeType): garmen
   name: node.title,
   price: toNumber(node.priceRangeV2?.minVariantPrice?.amount),
   currencyCode: node.priceRangeV2?.minVariantPrice?.currencyCode ?? 'EUR',
-  bonusCount: toNumber(node.bonusCountMetafield?.value),
-  bonusDiscount: toNumber(node.bonusDiscountMetafield?.value),
   minimumCount: toNumber(node.minimumCountMetafield?.value),
+  bonusDiscount: toNumber(node.bonusDiscountMetafield?.value),
+  bonusCount: toNumber(node.bonusCountMetafield?.value),
+  sizeChart: mapSizeChartContent(node) ?? undefined,
 });
 
 export { mapShopifyProductBusiness, PRODUCT_BUSINESS_FIELDS, resolveProductModelId };

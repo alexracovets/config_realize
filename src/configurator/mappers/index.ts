@@ -1,4 +1,4 @@
-export { resolvePartUvBounds, resolvePrintLocalUvToAtlas } from './printLayout';
+export { resolvePartCenterUv, resolvePartUvBounds, resolvePrintLocalUvToAtlas } from './printLayout';
 export { resolveGarmentPart } from './resolveGarmentPart';
 export { createNameInstance, mapProductNamePositions, resolveNameDefaults, resolveNameLimits } from './mapProductNames';
 export {

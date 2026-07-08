@@ -1,7 +1,7 @@
 'use client';
 
 import type { checkoutPrintAvailabilityType, garmentConfigType } from '@types';
-import { isConfiguratorStepAvailable } from '@hooks';
+import { isConfiguratorStepAvailable } from '@hooks/resolveProductStepsConfiguration';
 
 const resolveCheckoutPrintAvailability = (product?: garmentConfigType): checkoutPrintAvailabilityType => {
   if (!product) {

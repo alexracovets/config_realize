@@ -1,0 +1,1 @@
+export { withGarmentGizmoSuppressedForCapture } from './suppressGarmentGizmoForCapture';

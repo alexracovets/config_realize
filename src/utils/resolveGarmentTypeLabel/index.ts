@@ -1,0 +1,1 @@
+export { resolveGarmentTypeLabel } from './resolveGarmentTypeLabel';

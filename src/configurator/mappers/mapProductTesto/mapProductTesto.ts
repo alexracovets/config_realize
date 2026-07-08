@@ -33,6 +33,8 @@ const resolveTestoLimits = (product: garmentConfigType): testoLimitsType => {
 const mapProductTestoPositions = (product: garmentConfigType): testoPositionType[] =>
   (product.testoPositions ?? []).map((position, index) => ({
     key: `testo-pos-${index}`,
+    positionId: position.id,
+    conflicts: position.conflicts,
     label: position.label,
     partId: position.partId,
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a testo position'), position.uv),

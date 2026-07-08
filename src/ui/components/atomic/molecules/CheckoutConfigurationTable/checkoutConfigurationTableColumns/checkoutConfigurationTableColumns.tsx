@@ -3,11 +3,11 @@
 import { CheckoutQuantityStepper } from '@molecules/CheckoutQuantityStepper';
 import { CheckoutSizePopover } from '@molecules/CheckoutSizePopover';
 import { CheckoutTableEditableCell } from '@molecules/CheckoutTableEditableCell';
-import { CheckoutTestoEditableCell } from '@molecules/CheckoutTestoEditableCell';
 import type { checkoutConfigurationTableColumnHandlersType, checkoutConfigurationTableColumnType } from '@types';
 import { Button, SvgIcon } from '@atoms';
 import { CHECKOUT_CONFIGURATION_TABLE_COLUMNS } from '@constants';
 import { NUMBER_MAX_LENGTH, sanitizeNumberText } from '@store';
+
 const getColumnSizing = (id: (typeof CHECKOUT_CONFIGURATION_TABLE_COLUMNS)[number]['id']) => {
   const column = CHECKOUT_CONFIGURATION_TABLE_COLUMNS.find((item) => item.id === id);
 
@@ -28,7 +28,6 @@ const createNameColumn = (onPatchRow: checkoutConfigurationTableColumnHandlersTy
   id: 'name',
   header: 'Nome',
   ...getColumnSizing('name'),
-  meta: { grow: true },
   cell: ({ row }) => <CheckoutTableEditableCell value={row.name} placeholder="Nome" canEdit onChange={(name) => onPatchRow(row.id, { name })} />,
 });
 
@@ -49,34 +48,13 @@ const createNumberColumn = (onPatchRow: checkoutConfigurationTableColumnHandlers
   ),
 });
 
-const createTestoColumn = (
-  onPatchRow: checkoutConfigurationTableColumnHandlersType['onPatchRow'],
-  testoMaxLength?: number,
-  canEdit = false,
-): checkoutConfigurationTableColumnType => ({
-  id: 'testo',
-  header: 'Testo',
-  ...getColumnSizing('testo'),
-  meta: { grow: true },
-  cell: ({ row }) => (
-    <CheckoutTestoEditableCell
-      texts={row.testoTexts}
-      maxLength={testoMaxLength}
-      canEdit={canEdit}
-      onChangeText={(index: number, testoText: string) => onPatchRow(row.id, { testoTextIndex: index, testoText })}
-    />
-  ),
-});
-
 const createCheckoutConfigurationTableColumns = ({
   onPatchRow,
   onRemoveRow,
-  testoMaxLength,
   printAvailability,
 }: checkoutConfigurationTableColumnHandlersType): checkoutConfigurationTableColumnType[] => {
   const showName = printAvailability?.hasName ?? false;
   const showNumber = printAvailability?.hasNumber ?? false;
-  const showTesto = printAvailability?.hasTesto ?? false;
 
   return [
     {
@@ -94,7 +72,6 @@ const createCheckoutConfigurationTableColumns = ({
     },
     ...(showName ? [createNameColumn(onPatchRow)] : []),
     ...(showNumber ? [createNumberColumn(onPatchRow)] : []),
-    ...(showTesto ? [createTestoColumn(onPatchRow, testoMaxLength, true)] : []),
     {
       id: 'quantity',
       header: 'Quantità',

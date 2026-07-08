@@ -1,0 +1,1 @@
+export { resolveAddProductDesignModalLabel } from './resolveAddProductDesignModalLabel';

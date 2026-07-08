@@ -36,6 +36,7 @@ const useCartPreviewCapture = () => {
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
   const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const captureGenerationRef = useRef(0);
 
   const capture = useCallback(() => {
     return captureConfiguratorPreview({
@@ -59,11 +60,14 @@ const useCartPreviewCapture = () => {
   useEffect(() => {
     if (isInitialSceneLoading || isSceneTransitionLoading) return;
 
+    const generation = ++captureGenerationRef.current;
+
     const scheduleCapture = () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
       debounceRef.current = setTimeout(() => {
         scheduleIdleWork(() => {
+          if (generation !== captureGenerationRef.current) return;
           persistActivePreview();
         });
         debounceRef.current = null;

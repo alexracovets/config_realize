@@ -1,5 +1,7 @@
-export { assertShopifyConfigured, getShopifyFrameAncestors, isShopifyEnabled } from './config';
+export { assertShopifyConfigured, getShopifyAdminClientSecret, getShopifyFrameAncestors, isShopifyEnabled } from './config';
 export { createCheckoutCart } from './createCheckoutCart';
+export type { checkoutLineAttributeType, createCheckoutPayloadType, createCheckoutResultType } from './checkoutPayload';
+export { buildShopifyFrameAncestors, buildShopifyFrameAncestorsHeader } from './frameAncestors';
 export { fetchConfiguratorProductByHandle } from './fetchConfiguratorProductByHandle';
 export { fetchCollectionByHandle, fetchConfiguratorCollectionSummaries, fetchConfiguratorCollections } from './fetchConfiguratorCollections';
 export { resolveConfiguratorProduct } from './resolveConfiguratorProduct';
@@ -7,3 +9,9 @@ export { resolveHomeCollectionByHandle } from './resolveHomeCollectionByHandle';
 export { resolveHomeCollectionSummaries } from './resolveHomeCollectionSummaries';
 export { resolveHomeCollections } from './resolveHomeCollections';
 export { mapHomePageProductBusiness } from './mapHomePageProductBusiness';
+export { mapSizeChartContent } from './mapSizeChartContent';
+export type { sizeChartMetafieldsNodeType } from './mapSizeChartContent';
+export { uploadShopifyFile } from './uploadShopifyFile';
+export { ORDER_METAFIELD_NAMESPACE, setOrderMetafields } from './setOrderMetafields';
+export type { orderMetafieldInputType } from './setOrderMetafields';
+export { verifyShopifyWebhookSignature } from './verifyShopifyWebhookSignature';

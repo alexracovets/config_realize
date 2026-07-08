@@ -1,3 +1,4 @@
+export { beginGarmentModelWarmup, isGarmentModelReadyForProduct, prepareGarmentModel } from './prepareGarmentModel';
 export { warmProductAssets } from './warmProductAssets';
 export { warmProductGltfCache } from './warmProductGltfCache';
 export { waitForProductModelReady } from '@configurator/scene';
@@ -8,3 +9,7 @@ export {
   registerConfiguratorPreviewCapture,
   unregisterConfiguratorPreviewCapture,
 } from './previewCapture';
+export {
+  CheckoutPreviewCaptureHost,
+  scheduleCheckoutPreviewCapture,
+} from './checkoutPreviewCapture';

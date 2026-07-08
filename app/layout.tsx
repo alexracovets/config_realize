@@ -1,11 +1,10 @@
-import '../src/configurator/utils/render/suppressThreeClockDeprecation/suppressThreeClockDeprecation';
+import '@configurator/bootstrap/clientConsoleSuppression';
 
 import { Geist } from 'next/font/google';
 
 import '@styles';
 
 import { anton, bebasNeue, blackOpsOne, inter, oswald, russoOne } from '@fonts';
-import { ConfiguratorCatalogShell } from '@providers/configuratorCatalogProvider/ConfiguratorCatalogShell';
 import { EmbeddedProvider } from '@providers';
 import type { childrenType } from '@types';
 
@@ -31,9 +30,7 @@ const RootLayout = ({ children }: childrenType) => {
       )}
     >
       <body className="min-h-full">
-        <EmbeddedProvider>
-          <ConfiguratorCatalogShell>{children}</ConfiguratorCatalogShell>
-        </EmbeddedProvider>
+        <EmbeddedProvider>{children}</EmbeddedProvider>
       </body>
     </html>
   );

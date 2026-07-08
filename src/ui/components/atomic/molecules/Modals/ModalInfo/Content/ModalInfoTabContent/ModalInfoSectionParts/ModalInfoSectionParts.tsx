@@ -4,7 +4,7 @@ import { ModalInfoListIcon } from '@molecules/Modals/ModalInfo/Content/ModalInfo
 import { ModalInfoTable } from '@molecules/Modals/ModalInfo/Content/ModalInfoTabContent/ModalInfoTable';
 import type { modalInfoSectionPartsPropsType } from '@types';
 import { AtomImage, AtomList, AtomRichText, Flex } from '@atoms';
-import { cn, withListPunctuation } from '@utils';
+import { withListPunctuation } from '@utils';
 const ModalInfoSectionParts = ({ parts }: modalInfoSectionPartsPropsType) => {
   return (
     <Flex className="w-full flex-col items-stretch gap-4">
@@ -12,7 +12,7 @@ const ModalInfoSectionParts = ({ parts }: modalInfoSectionPartsPropsType) => {
         switch (part.type) {
           case 'text':
             return (
-              <Flex key={index} className={cn('w-full flex-col', part.compact ? 'gap-0' : 'gap-1')}>
+              <Flex key={index} className="w-full flex-col gap-2">
                 {part.content.map((item, itemIndex) => (
                   <AtomRichText key={itemIndex} content={item} />
                 ))}
@@ -35,13 +35,13 @@ const ModalInfoSectionParts = ({ parts }: modalInfoSectionPartsPropsType) => {
             );
           case 'image':
             return (
-              <div key={index} className="mx-auto w-full max-w-[640px]">
+              <div key={index} className="mx-auto w-full max-w-[400px]">
                 <AtomImage
                   src={part.src}
                   alt={part.alt ?? ''}
-                  width={1024}
-                  height={1024}
-                  sizes="(max-width: 640px) 100vw, 640px"
+                  width={400}
+                  height={600}
+                  sizes="(max-width: 400px) 100vw, 400px"
                   className="h-auto w-full"
                   style={{ width: '100%', height: 'auto' }}
                 />

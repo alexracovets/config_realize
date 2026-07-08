@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { CollectionPage } from '@pages/CollectionPage/CollectionPage';
+import { CollectionPage } from '@pages';
 import { resolveHomeCollectionByHandle } from '@shopify';
 
 type collectionPageLoaderPropsType = {

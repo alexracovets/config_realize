@@ -1,7 +1,6 @@
 import type { printGizmoElementKindType } from '@configurator/types';
 import type { garmentConfigType, uvPointType } from '@types';
 import { resolvePartUvBounds } from '@configurator/mappers';
-import { resolveProductGizmoRotation } from '@configurator/utils';
 
 const round = (value: number, digits = 3) => Number(value.toFixed(digits));
 
@@ -10,16 +9,7 @@ const roundUv = (uv: uvPointType, digits = 3): uvPointType => ({
   y: round(uv.y, digits),
 });
 
-const resolveZoneFromPartId = (partId: string) => {
-  const lower = partId.toLowerCase();
-  if (lower.includes('front')) return 'front';
-  if (lower.includes('back')) return 'back';
-  if (lower.includes('left')) return 'left';
-  if (lower.includes('right')) return 'right';
-  return partId;
-};
-
-const atlasUvToZoneLocalUv = (product: garmentConfigType, partId: string, atlasUv: uvPointType): uvPointType => {
+const atlasUvToPartLocalUv = (product: garmentConfigType, partId: string, atlasUv: uvPointType): uvPointType => {
   const part = product.parts.find((item) => item.id === partId);
   if (!part) return roundUv(atlasUv);
 
@@ -45,37 +35,36 @@ interface LogGizmoPlacementInput {
   phase?: 'drag' | 'release';
 }
 
+const buildTextPositionSnippet = (
+  product: garmentConfigType,
+  partId: string,
+  label: string,
+  atlasUv: uvPointType,
+  rotation: number,
+  fontSize?: number,
+) => ({
+  label,
+  partId,
+  uv: atlasUvToPartLocalUv(product, partId, atlasUv),
+  rotation: round(rotation, 1),
+  ...(fontSize !== undefined ? { fontSize: Math.round(fontSize) } : {}),
+});
+
 const logGizmoPlacementForConfig = ({ kind, label, partId, uv, product, rotation = 0, fontSize, scale, phase = 'release' }: LogGizmoPlacementInput) => {
   const atlasUv = roundUv(uv);
   const phaseLabel = phase === 'drag' ? ' (drag)' : ' (release)';
   const rotationRounded = round(rotation, 1);
-  const productGizmoRotation = resolveProductGizmoRotation(product);
 
   if (kind === 'number') {
-    const zone = resolveZoneFromPartId(partId);
-    const localUv = atlasUvToZoneLocalUv(product, partId, uv);
-    const snippet = {
-      label,
-      zone,
-      uv: localUv,
-      rotation: rotationRounded,
-      ...(fontSize !== undefined ? { fontSize: Math.round(fontSize) } : {}),
-    };
+    const snippet = buildTextPositionSnippet(product, partId, label, uv, rotation, fontSize);
 
     console.log(`[gizmo]${phaseLabel} ${label} — numberPositions:\n${JSON.stringify(snippet, null, 2)}`);
-    console.log(`[gizmo]${phaseLabel} ${label} — atlas uv:`, atlasUv, 'partId:', partId, 'gizmoRotation:', productGizmoRotation);
     return;
   }
 
   if (kind === 'name' || kind === 'testo') {
     const positionsKey = kind === 'testo' ? 'testoPositions' : 'namePositions';
-    const snippet = {
-      label,
-      partId,
-      uv: atlasUv,
-      rotation: rotationRounded,
-      ...(fontSize !== undefined ? { fontSize: Math.round(fontSize) } : {}),
-    };
+    const snippet = buildTextPositionSnippet(product, partId, label, uv, rotation, fontSize);
 
     console.log(`[gizmo]${phaseLabel} ${label} — ${positionsKey}:\n${JSON.stringify(snippet, null, 2)}`);
     return;

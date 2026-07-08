@@ -9,7 +9,7 @@ import {
 } from '@configurator/shaders';
 import { applyGarmentPrintBase, bindGarmentPrintShaderUniforms, type GarmentGradientState, getEmptyPrintTexture } from '@configurator/utils';
 import { MeshStandardMaterial, Vector4 } from 'three';
-const GARMENT_SHADER_VERSION = 'garment-print-v91-diffuse-shade-tonemap';
+const GARMENT_SHADER_VERSION = 'garment-print-v92-gradient-shade-base';
 
 const garmentPrintFragmentPars = garmentFragmentUvPars.replace('#include <uv_pars_fragment>\n', '');
 

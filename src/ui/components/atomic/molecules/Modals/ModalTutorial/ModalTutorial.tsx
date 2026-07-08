@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 
 import { AtomDialog, AtomDialogContent, AtomDialogTitle } from '@atoms';
-import { VideoPlayer, VideoPlayerPreview } from '@molecules';
+import { VideoPlayer, VideoPlayerPreview } from '@molecules/VideoPlayer';
 
 import { TUTORIAL_VIDEO_URL } from '@constants';
 import { useTutorialDialog } from '@store';

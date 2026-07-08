@@ -2,7 +2,7 @@
 
 import type { configuratorStepValueType } from '@configurator/types';
 import { resolveProductStepsConfiguration } from '@hooks/resolveProductStepsConfiguration';
-import { STEPS_CONFIGURATION } from '@molecules';
+import { STEPS_CONFIGURATION } from '@molecules/ConfigurationSteps';
 import { useConfigurationControl, useConfiguratorProduct } from '@store';
 import { useEffect, useMemo } from 'react';
 const useProductStepsConfiguration = () => {

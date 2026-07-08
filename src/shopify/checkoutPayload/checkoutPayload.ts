@@ -14,6 +14,8 @@ type checkoutLinePayloadType = {
 
 type createCheckoutPayloadType = {
   lines: checkoutLinePayloadType[];
+  /** Cart-level attributes; become the resulting order's `note_attributes` once placed. */
+  attributes?: checkoutLineAttributeType[];
 };
 
 type createCheckoutResultType = {

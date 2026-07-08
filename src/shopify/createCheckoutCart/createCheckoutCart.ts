@@ -24,9 +24,7 @@ type productVariantNodeType = {
 
 const buildVariantQuery = (handles: string[]): string => {
   const args = handles.map((_, index) => `$h${index}: String!`).join(', ');
-  const body = handles
-    .map((_, index) => `p${index}: product(handle: $h${index}) { handle variants(first: 1) { nodes { id } } }`)
-    .join('\n    ');
+  const body = handles.map((_, index) => `p${index}: product(handle: $h${index}) { handle variants(first: 1) { nodes { id } } }`).join('\n    ');
 
   return `#graphql\n  query CheckoutVariants(${args}) {\n    ${body}\n  }`;
 };
@@ -76,7 +74,7 @@ const createCheckoutCart = async (payload: createCheckoutPayloadType): Promise<c
       cart?: { id: string; checkoutUrl: string } | null;
       userErrors?: { field?: string[] | null; message: string }[];
     };
-  }>(CART_CREATE_MUTATION, { input: { lines } });
+  }>(CART_CREATE_MUTATION, { input: { lines, attributes: payload.attributes ?? [] } });
 
   const userErrors = data.cartCreate?.userErrors ?? [];
   if (userErrors.length) {

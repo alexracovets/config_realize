@@ -309,9 +309,7 @@ const fetchConfiguratorCollections = async (): Promise<homePageCollectionType[]>
   }
 
   if (explicitHandles.length > 0) {
-    console.warn(
-      `[shopify] No home collections resolved for handles: ${explicitHandles.join(', ')}. Falling back to auto-discovery.`,
-    );
+    console.warn(`[shopify] No home collections resolved for handles: ${explicitHandles.join(', ')}. Falling back to auto-discovery.`);
   }
 
   const isStorefront = getShopifyApiMode() === 'storefront';
@@ -341,9 +339,7 @@ const fetchConfiguratorCollectionSummaries = async (): Promise<homePageCollectio
   }
 
   if (explicitHandles.length > 0) {
-    console.warn(
-      `[shopify] No home collection summaries resolved for handles: ${explicitHandles.join(', ')}. Falling back to auto-discovery.`,
-    );
+    console.warn(`[shopify] No home collection summaries resolved for handles: ${explicitHandles.join(', ')}. Falling back to auto-discovery.`);
   }
 
   const isStorefront = getShopifyApiMode() === 'storefront';

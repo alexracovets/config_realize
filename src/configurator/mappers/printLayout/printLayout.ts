@@ -3,6 +3,14 @@ import type { garmentPartConfigType, uvBoundsType, uvPointType } from '@types';
 
 const resolvePartUvBounds = (part: garmentPartConfigType): uvBoundsType => part.uvBounds ?? FULL_UV_BOUNDS;
 
+const resolvePartCenterUv = (part: garmentPartConfigType): uvPointType => {
+  const bounds = resolvePartUvBounds(part);
+  return {
+    x: (bounds.minX + bounds.maxX) * 0.5,
+    y: (bounds.minY + bounds.maxY) * 0.5,
+  };
+};
+
 /** Print placement UV in JSON is 0..1 inside the part; runtime expects atlas coordinates. */
 const resolvePrintLocalUvToAtlas = (part: garmentPartConfigType, localUv: uvPointType): uvPointType => {
   const bounds = resolvePartUvBounds(part);
@@ -13,4 +21,4 @@ const resolvePrintLocalUvToAtlas = (part: garmentPartConfigType, localUv: uvPoin
   };
 };
 
-export { resolvePartUvBounds, resolvePrintLocalUvToAtlas };
+export { resolvePartCenterUv, resolvePartUvBounds, resolvePrintLocalUvToAtlas };

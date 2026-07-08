@@ -1,6 +1,6 @@
 'use client';
 
-import { resolveAvailableConfiguratorStepNumbers } from '@hooks';
+import { resolveAvailableConfiguratorStepNumbers } from '@hooks/resolveProductStepsConfiguration';
 import { useConfiguratorProduct } from '@store/useConfiguratorProduct';
 import { create } from 'zustand';
 interface ConfigurationControlState {
@@ -12,8 +12,10 @@ interface ConfigurationControlState {
   count_to_bonus: number;
   bonus_discount: number;
   minimum_count: number;
+  isGizmoVisible: boolean;
   setActiveStep: (step: number) => void;
   setNumberProduct: (numberProduct: number) => void;
+  toggleGizmoVisible: () => void;
   goToPreviousStep: () => void;
   goToNextStep: () => void;
 }
@@ -29,12 +31,14 @@ const useConfigurationControl = create<ConfigurationControlState>((set, get) => 
   count_to_bonus: 5,
   bonus_discount: 0,
   minimum_count: 5,
+  isGizmoVisible: true,
   setActiveStep: (step) => {
     const availableSteps = resolveAvailableSteps();
     if (!availableSteps.includes(step)) return;
     set({ activeStep: step });
   },
   setNumberProduct: (numberProduct) => set({ numberProduct }),
+  toggleGizmoVisible: () => set((state) => ({ isGizmoVisible: !state.isGizmoVisible })),
   goToPreviousStep: () => {
     const availableSteps = resolveAvailableSteps();
     const { activeStep } = get();

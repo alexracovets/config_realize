@@ -1,5 +1,5 @@
-import { createCheckoutCart } from '@shopify/createCheckoutCart';
-import type { createCheckoutPayloadType } from '@shopify/checkoutPayload';
+import { createCheckoutCart } from '@shopify';
+import type { createCheckoutPayloadType } from '@shopify';
 
 export const dynamic = 'force-dynamic';
 

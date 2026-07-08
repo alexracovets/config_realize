@@ -3,10 +3,7 @@
  * Run: node scripts/profile-glb-isolated.mjs
  */
 import { chromium } from '@playwright/test';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const modelUrl = '/models/federer_pallavolo/model.glb';
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
 

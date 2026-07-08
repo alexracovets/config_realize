@@ -1,4 +1,4 @@
-import type { nameLimitsType, numberLimitsType, testoLimitsType } from '@types';
+import type { nameLimitsType, numberLimitsType, printPositionConflictsConfigType, testoLimitsType } from '@types';
 
 interface namePartFormPropsType {
   instanceId: string;
@@ -29,6 +29,8 @@ interface configurationPositionPickerPositionType {
   key: string;
   label: string;
   interactive: boolean;
+  positionId?: string;
+  conflicts?: printPositionConflictsConfigType;
 }
 
 interface configurationPositionPickerInstanceType {

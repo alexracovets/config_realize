@@ -31,6 +31,7 @@ const LOGO_STEP = 7;
 const PrintGizmoLayer = memo(() => {
   const product = useConfiguratorProduct((state) => state.product);
   const activeStep = useConfigurationControl((state) => state.activeStep);
+  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
 
   const nameInstances = useGarmentName((state) => state.instances);
   const nameSelectedInstanceId = useGarmentName((state) => state.selectedInstanceId);
@@ -110,15 +111,17 @@ const PrintGizmoLayer = memo(() => {
   const testoLimits = useMemo(() => (product.testoDefaults ? resolveTestoLimits(product) : null), [product]);
 
   const gizmoStep =
-    activeStep === NAME_STEP
-      ? NAME_STEP
-      : activeStep === NUMBER_STEP
-        ? NUMBER_STEP
-        : activeStep === TESTO_STEP
-          ? TESTO_STEP
-          : activeStep === LOGO_STEP
-            ? LOGO_STEP
-            : null;
+    !isGizmoVisible
+      ? null
+      : activeStep === NAME_STEP
+        ? NAME_STEP
+        : activeStep === NUMBER_STEP
+          ? NUMBER_STEP
+          : activeStep === TESTO_STEP
+            ? TESTO_STEP
+            : activeStep === LOGO_STEP
+              ? LOGO_STEP
+              : null;
 
   const nameInstancesForGizmo = useMemo(
     () => nameInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
@@ -138,6 +141,8 @@ const PrintGizmoLayer = memo(() => {
   );
 
   const elements = useMemo(() => {
+    if (!isGizmoVisible) return [];
+
     if (activeStep === NAME_STEP && nameLimits) {
       return buildNameGizmoElements({
         product,
@@ -168,6 +173,7 @@ const PrintGizmoLayer = memo(() => {
     return [];
   }, [
     activeStep,
+    isGizmoVisible,
     logoInstancesForGizmo,
     nameInstancesForGizmo,
     nameLimits,
@@ -259,7 +265,7 @@ const PrintGizmoLayer = memo(() => {
     if (activeStep !== LOGO_STEP) clearLogoSelectedInstance();
   }, [activeStep, clearLogoSelectedInstance]);
 
-  useGizmoSelection({ elements, atlasSize, gizmoStep, store: selectionStore });
+  useGizmoSelection({ elements, atlasSize, gizmoStep, isGizmoVisible, store: selectionStore });
   useGizmoButtonHover({ elements, atlasSize, gizmoStep, selectedInstanceId });
 
   if (elements.length === 0) return null;

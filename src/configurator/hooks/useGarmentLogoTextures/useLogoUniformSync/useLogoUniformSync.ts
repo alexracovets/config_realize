@@ -21,19 +21,25 @@ const LOGO_STEP = 7;
 type useLogoUniformSyncOptions = {
   product: garmentConfigType;
   activeStep: number;
+  isGizmoVisible: boolean;
   selectedInstanceId: string | null;
   selectedSlotIndex: number;
 };
 
-const useLogoUniformSync = ({ product, activeStep, selectedInstanceId, selectedSlotIndex }: useLogoUniformSyncOptions) => {
+const useLogoUniformSync = ({ product, activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex }: useLogoUniformSyncOptions) => {
   const { getMaterials } = useGarmentMaterialRegistry();
   const invalidate = useThree((state) => state.invalidate);
 
   useEffect(() => {
     if (activeStep !== LOGO_STEP) return;
 
-    setGizmoButtonsRevealTarget(selectedSlotIndex);
-  }, [activeStep, selectedInstanceId, selectedSlotIndex]);
+    if (!isGizmoVisible) {
+      setGizmoButtonsRevealTarget(-1);
+      return;
+    }
+
+    setGizmoButtonsRevealTarget(selectedSlotIndex, true);
+  }, [activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex]);
 
   useEffect(() => {
     if (activeStep === NAME_STEP || activeStep === LOGO_STEP) return;

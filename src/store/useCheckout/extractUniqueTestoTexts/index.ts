@@ -1,1 +1,1 @@
-export * from './extractUniqueTestoTexts';
+export { extractUniqueTestoTexts, isNonemptyPrintText } from './extractUniqueTestoTexts';

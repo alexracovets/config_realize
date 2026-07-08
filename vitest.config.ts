@@ -14,6 +14,8 @@ export default defineConfig({
       '@configurator/utils': path.resolve(__dirname, './src/configurator/utils'),
       '@configurator/types': path.resolve(__dirname, './src/configurator/types'),
       '@types': path.resolve(__dirname, './src/types'),
+      '@store': path.resolve(__dirname, './src/store'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
     },
   },
 });

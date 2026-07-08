@@ -1,12 +1,4 @@
-import type {
-  garmentBusinessType,
-  logoInstanceType,
-  modelIdType,
-  nameInstanceType,
-  numberInstanceType,
-  partGradientType,
-  testoInstanceType,
-} from '@types';
+import type { garmentBusinessType, logoInstanceType, modelIdType, nameInstanceType, numberInstanceType, partGradientType, testoInstanceType } from '@types';
 
 interface cartItemType {
   id: string;

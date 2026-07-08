@@ -9,7 +9,7 @@ import sharp from 'sharp';
  *
  * The design files under public/models/<style>/<model>/designs/*.svg are not real
  * vectors — each wraps one or more base64-encoded PNGs (multi-MB). At runtime they
- * are drawn into the print atlas (PRINT_ATLAS_WIDTH = 4096), so a 4096-wide WebP is
+ * are drawn into the print atlas (PRINT_ATLAS_WIDTH = 2048), so a 2048-wide WebP is
  * a 1:1 replacement that is an order of magnitude smaller.
  *
  * The original .svg files are KEPT as the full-resolution master for the future
@@ -19,14 +19,14 @@ import sharp from 'sharp';
  * raster thumbnails are generated here.
  *
  * Re-runnable. Override defaults with env vars:
- *   DESIGN_WIDTH=4096 DESIGN_QUALITY=90 node scripts/convert-design-assets.mjs
+ *   DESIGN_WIDTH=2048 DESIGN_QUALITY=90 node scripts/convert-design-assets.mjs
  */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 
 // Keep in sync with PRINT_ATLAS_WIDTH (@configurator/constants).
-const TARGET_WIDTH = Number(process.env.DESIGN_WIDTH ?? 4096);
+const TARGET_WIDTH = Number(process.env.DESIGN_WIDTH ?? 2048);
 const WEBP_QUALITY = Number(process.env.DESIGN_QUALITY ?? 90);
 
 const findDesignSvgs = (dir) => {

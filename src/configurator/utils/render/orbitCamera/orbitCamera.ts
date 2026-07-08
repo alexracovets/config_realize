@@ -37,6 +37,13 @@ const resolveGarmentCenter = (scene: Object3D, target: Vector3): boolean => {
   return true;
 };
 
+const resolveShortestAngleDelta = (from: number, to: number) => {
+  let delta = to - from;
+  while (delta > Math.PI) delta -= 2 * Math.PI;
+  while (delta < -Math.PI) delta += 2 * Math.PI;
+  return delta;
+};
+
 interface ResolveCursorFocusPointInput {
   camera: Camera;
   controls: OrbitControlsImpl;
@@ -161,6 +168,74 @@ const clampOrbitCameraOutsideGarment = ({ camera, controls, scene, clearance = O
   return true;
 };
 
+interface ResolveOrbitFocusPoseInput {
+  scene: Object3D;
+  focusPoint: Vector3;
+  surfaceNormal: Vector3;
+  currentCamera: Vector3;
+  currentTarget: Vector3;
+  minDistance: number;
+  maxDistance: number;
+  clearance?: number;
+  viewMode?: 'part' | 'surface';
+}
+
+/** Head-on orbit pose: camera looks straight at the surface point from outside the garment. */
+const resolveOrbitFocusPose = (
+  {
+    scene,
+    focusPoint,
+    surfaceNormal,
+    currentCamera,
+    currentTarget,
+    minDistance,
+    maxDistance,
+    clearance = ORBIT_SURFACE_CLEARANCE,
+    viewMode = 'surface',
+  }: ResolveOrbitFocusPoseInput,
+  target: Vector3,
+  cameraPosition: Vector3,
+): boolean => {
+  if (!resolveGarmentCenter(scene, garmentCenter)) return false;
+
+  target.copy(focusPoint);
+
+  if (viewMode === 'part') {
+    viewDirection.copy(focusPoint).sub(garmentCenter);
+    if (viewDirection.lengthSq() < 1e-8) {
+      viewDirection.copy(currentCamera).sub(currentTarget);
+    }
+    if (viewDirection.lengthSq() < 1e-8) {
+      viewDirection.set(0, 0, 1);
+    }
+    viewDirection.normalize();
+  } else {
+    viewDirection.copy(surfaceNormal);
+    if (viewDirection.lengthSq() < 1e-8) {
+      viewDirection.copy(focusPoint).sub(garmentCenter);
+    }
+    if (viewDirection.lengthSq() < 1e-8) {
+      viewDirection.copy(currentCamera).sub(currentTarget);
+    }
+    viewDirection.normalize();
+
+    targetOffset.copy(focusPoint).sub(garmentCenter);
+    if (targetOffset.lengthSq() > 1e-8 && viewDirection.dot(targetOffset) < 0) {
+      viewDirection.negate();
+    }
+  }
+
+  const distance = Math.min(maxDistance, Math.max(minDistance, currentCamera.distanceTo(currentTarget)));
+
+  const box = getGarmentBox(scene);
+  box.expandByScalar(clearance);
+  const minRadius = rayBoxExitDistance(box, target, viewDirection);
+  const radius = Number.isFinite(minRadius) ? Math.max(distance, minRadius + 1e-4) : distance;
+
+  cameraPosition.copy(target).addScaledVector(viewDirection, radius);
+  return true;
+};
+
 export {
   ORBIT_SURFACE_CLEARANCE,
   applyOrbitZoomAroundPoint,
@@ -169,4 +244,6 @@ export {
   recenterOrbitTargetByZoom,
   resolveCursorFocusPoint,
   resolveGarmentCenter,
+  resolveOrbitFocusPose,
+  resolveShortestAngleDelta,
 };

@@ -3,6 +3,7 @@
 import { Accordion as AccordionPrimitive } from '@base-ui/react/accordion';
 
 import { ChevronDownIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { cn } from '@utils';
 
@@ -14,13 +15,17 @@ const AccordionItem = ({ className, ...props }: AccordionPrimitive.Item.Props) =
   return <AccordionPrimitive.Item data-slot="accordion-item" className={cn('group/accordion-item', className)} {...props} />;
 };
 
-const AccordionTrigger = ({ className, children, ...props }: AccordionPrimitive.Trigger.Props) => {
+type accordionTriggerPropsType = AccordionPrimitive.Trigger.Props & {
+  actions?: ReactNode;
+};
+
+const AccordionTrigger = ({ className, children, actions, ...props }: accordionTriggerPropsType) => {
   return (
-    <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Header className="flex items-center gap-2">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          'group/accordion-trigger flex flex-1 items-center justify-between cursor-pointer outline-none',
+          'peer/accordion-trigger group/accordion-trigger flex min-w-0 flex-1 items-center cursor-pointer outline-none',
           'rounded-lg border border-transparent',
           'aria-disabled:pointer-events-none aria-disabled:opacity-50',
           'outline-none transition-colors',
@@ -29,16 +34,18 @@ const AccordionTrigger = ({ className, children, ...props }: AccordionPrimitive.
         {...props}
       >
         {children}
-        <ChevronDownIcon
-          data-slot="accordion-trigger-icon"
-          className="ml-auto mr-[8px] size-4 shrink-0 text-base-black transition-transform duration-150 ease-out group-aria-expanded/accordion-trigger:rotate-180"
-        />
       </AccordionPrimitive.Trigger>
+      {actions} 
+      <ChevronDownIcon
+        data-slot="accordion-trigger-icon"
+        aria-hidden
+        className="mr-[8px] size-4 shrink-0 text-base-black transition-transform duration-150 ease-out peer-aria-expanded/accordion-trigger:rotate-180"
+      />
     </AccordionPrimitive.Header>
   );
 };
 
-const AccordionContent = ({ className, children, ...props }: AccordionPrimitive.Panel.Props) => {
+const AccordionContent = ({ className, children, onClick, ...props }: AccordionPrimitive.Panel.Props) => {
   return (
     <AccordionPrimitive.Panel
       data-slot="accordion-content"
@@ -49,7 +56,9 @@ const AccordionContent = ({ className, children, ...props }: AccordionPrimitive.
       )}
       {...props}
     >
-      <div className={cn('p-1', className)}>{children}</div>
+      <div className={cn('p-1', className)} onClick={onClick}>
+        {children}
+      </div>
     </AccordionPrimitive.Panel>
   );
 };

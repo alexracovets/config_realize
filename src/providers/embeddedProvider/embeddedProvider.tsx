@@ -5,7 +5,8 @@ import { createContext, useContext, useSyncExternalStore } from 'react';
 import type { embeddedContextType, embeddedProviderPropsType } from '@types';
 import { resolveEmbeddedContext } from '@utils';
 
-import { EmbeddedUrlSyncBridge } from './EmbeddedUrlSyncBridge';
+import { ConfiguratorRouteResetBridge } from '@providers/embeddedProvider/ConfiguratorRouteResetBridge';
+import { EmbeddedUrlSyncBridge } from '@providers/embeddedProvider/EmbeddedUrlSyncBridge';
 
 const EmbeddedContext = createContext<embeddedContextType>({
   embedded: false,
@@ -44,6 +45,7 @@ const EmbeddedProvider = ({ children }: embeddedProviderPropsType) => {
   return (
     <EmbeddedContext.Provider value={value}>
       <EmbeddedUrlSyncBridge />
+      <ConfiguratorRouteResetBridge />
       {children}
     </EmbeddedContext.Provider>
   );

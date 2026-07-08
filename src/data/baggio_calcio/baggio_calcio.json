@@ -3,28 +3,22 @@
   "path": "/models/baggio_calcio/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 2133
+    "width": 2048,
+    "height": 1066
   },
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_label",
-    "model_sweatband"
-  ],
+  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "baggio_calcio_front",
-      "meshNames": [
-        "model_front"
-      ],
+      "meshNames": ["model_front"],
       "renderOrder": 1,
       "uvBounds": {
-        "minX": 0.2667,
-        "maxX": 0.9474,
-        "minY": 0.0054,
-        "maxY": 0.5228
+        "minX": 0.5202,
+        "maxX": 0.9977,
+        "minY": 0.0124,
+        "maxY": 0.7052
       },
       "printRotation": 180,
       "gradient": {
@@ -39,15 +33,13 @@
       "name": "Retro",
       "label": "Retro",
       "id": "baggio_calcio_back",
-      "meshNames": [
-        "model_back"
-      ],
+      "meshNames": ["model_back"],
       "renderOrder": 1,
       "uvBounds": {
-        "minX": 0.0027,
-        "maxX": 0.7289,
-        "minY": 0.4914,
-        "maxY": 0.9975
+        "minX": 0.0034,
+        "maxX": 0.5118,
+        "minY": 0.0181,
+        "maxY": 0.7056
       },
       "printRotation": 0,
       "gradient": {
@@ -62,15 +54,13 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "baggio_calcio_sleeve_left",
-      "meshNames": [
-        "model_sleeve_left"
-      ],
+      "meshNames": ["model_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
-        "minX": 0.6993,
-        "maxX": 0.9246,
-        "minY": 0.5455,
-        "maxY": 0.9654
+        "minX": 0.0306,
+        "maxX": 0.3551,
+        "minY": 0.6975,
+        "maxY": 0.9995
       },
       "printRotation": -90,
       "gradient": {
@@ -85,17 +75,15 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "baggio_calcio_sleeve_right",
-      "meshNames": [
-        "model_sleeve_right"
-      ],
+      "meshNames": ["model_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
-        "minX": 0.0497,
-        "maxX": 0.2762,
-        "minY": 0.0719,
-        "maxY": 0.4913
+        "minX": 0.3322,
+        "maxX": 0.6585,
+        "minY": 0.6927,
+        "maxY": 0.9948
       },
-      "printRotation": 270,
+      "printRotation": 90,
       "gradient": {
         "reversed": true,
         "rotation": 270,
@@ -105,12 +93,10 @@
       }
     },
     {
-      "name": "Collar",
-      "label": "Collar",
+      "name": "Collo",
+      "label": "Collo",
       "id": "baggio_calcio_collar",
-      "meshNames": [
-        "model_collar"
-      ],
+      "meshNames": ["model_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -246,7 +232,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -257,7 +243,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -272,7 +258,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -288,104 +274,124 @@
   },
   "namePositions": [
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "baggio_calcio_back",
       "uv": {
-        "x": 0.821,
-        "y": 0.492
+        "x": 0.79,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 200,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "baggio_calcio_back",
       "uv": {
         "x": 0.255,
-        "y": 0.479
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 200,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "testo": ["bottom_back"]
+      }
     }
   ],
   "numberPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "baggio_calcio_front",
       "uv": {
-        "x": 0.3,
+        "x": 0.394,
         "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "testo": ["front_center"]
+      }
     },
     {
-      "label": "Front Right",
+      "label": "Davanti sulla DX",
       "partId": "baggio_calcio_front",
       "uv": {
-        "x": 0.26,
-        "y": 0.29
+        "x": 0.328,
+        "y": 0.324
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_right"
     },
     {
-      "label": "Back",
+      "label": "Dietro",
       "partId": "baggio_calcio_back",
       "uv": {
-        "x": 0.573,
+        "x": 0.57,
         "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 270,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "back"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "baggio_calcio_front",
       "uv": {
-        "x": 0.419,
-        "y": 0.501
+        "x": 0.43,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "number": ["front_center"]
+      }
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "baggio_calcio_back",
       "uv": {
-        "x": 0.245,
-        "y": 0.479
+        "x": 0.255,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "name": ["bottom_back"]
+      }
     },
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "baggio_calcio_back",
       "uv": {
-        "x": 0.882,
-        "y": 0.479
+        "x": 0.855,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 60,
+      "fontSize": 50,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     }
   ]
 }

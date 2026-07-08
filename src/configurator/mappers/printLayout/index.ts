@@ -1,1 +1,1 @@
-export { resolvePartUvBounds, resolvePrintLocalUvToAtlas } from './printLayout';
+export { resolvePartCenterUv, resolvePartUvBounds, resolvePrintLocalUvToAtlas } from './printLayout';

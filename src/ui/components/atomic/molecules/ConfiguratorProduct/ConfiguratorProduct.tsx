@@ -6,11 +6,14 @@ import { Flex, Grid, Text } from '@atoms';
 
 import { useShowConfigurationSkeleton } from '@hooks';
 import { ConfiguratorProductSkeleton } from '@skeletons';
+import { buildMinimumQuantityLabel, buildVolumeDiscountLabel } from '@constants';
 import { priceFormat } from '@utils';
 import { useConfigurationControl, useConfiguratorProduct } from '@store';
 
 const ConfiguratorProduct = memo(() => {
-  const { price, name, bonusCount, minimumCount, bonusDiscount } = useConfiguratorProduct((state) => state.business);
+  const { price, name, minimumCount, bonusCount, bonusDiscount } = useConfiguratorProduct((state) => state.business);
+  const showMinimumQuantity = minimumCount > 0;
+  const showVolumeDiscount = bonusCount > 0 && bonusDiscount > 0;
   const numberProduct = useConfigurationControl((state) => state.numberProduct);
   const showSkeleton = useShowConfigurationSkeleton();
 
@@ -26,12 +29,16 @@ const ConfiguratorProduct = memo(() => {
         </Text>
         <Flex className="flex-col items-start px-3 py-2 rounded-[4px] bg-primary hover:bg-primary/90 transition-colors">
           <Text className="font-semibold">Prodotto {numberProduct}</Text>
-          <Text className="text-[14px] text-gray">Minimo {minimumCount ?? 0} pz</Text>
+          {showMinimumQuantity ? (
+            <Text className="text-[14px] text-gray">{buildMinimumQuantityLabel(minimumCount)}</Text>
+          ) : null}
         </Flex>
       </Grid>
       <Grid variant="configurator_price">
         <Text variant="product_price">{priceFormat(price)}</Text>
-        <Text className="text-[#6B7280] font-medium">{`>${bonusCount} pezzi +${bonusDiscount}% di sconto`}</Text>
+        {showVolumeDiscount ? (
+          <Text className="text-[#6B7280] font-medium">{buildVolumeDiscountLabel(bonusCount, bonusDiscount)}</Text>
+        ) : null}
       </Grid>
     </Flex>
   );

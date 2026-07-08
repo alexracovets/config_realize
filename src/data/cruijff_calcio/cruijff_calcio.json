@@ -3,21 +3,17 @@
   "path": "/models/cruijff_calcio/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 2149
+    "width": 2048,
+    "height": 806
   },
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_laces"
-  ],
+  "hiddenSteps": ["name"],
+  "preserveGltfMeshes": ["model_inside", "model_laces"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "cruijff_calcio_front",
-      "meshNames": [
-        "model_left"
-      ],
+      "meshNames": ["model_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5128,
@@ -25,7 +21,7 @@
         "minY": 0.0058,
         "maxY": 0.9973
       },
-      "printRotation": 180,
+      "printRotation": 270,
       "gradient": {
         "reversed": false,
         "rotation": 0,
@@ -38,9 +34,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "cruijff_calcio_back",
-      "meshNames": [
-        "model_right"
-      ],
+      "meshNames": ["model_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.001,
@@ -48,7 +42,7 @@
         "minY": 0.0034,
         "maxY": 0.9976
       },
-      "printRotation": 0,
+      "printRotation": 270,
       "gradient": {
         "reversed": true,
         "rotation": 0,
@@ -189,7 +183,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -200,7 +194,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -215,7 +209,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -229,58 +223,93 @@
     "letterSpacingMax": 40,
     "letter_spacing_show": true
   },
-  "namePositions": [
-    {
-      "label": "Back",
-      "partId": "cruijff_calcio_back",
-      "uv": {
-        "x": 0.41,
-        "y": 0.36
-      },
-      "rotation": 0,
-      "fontSize": 200,
-      "show_frame": true,
-      "show_gizmo": false
-    }
-  ],
+  "namePositions": [],
   "numberPositions": [
     {
-      "label": "Front",
-      "partId": "cruijff_calcio_front",
-      "uv": {
-        "x": 0.3,
-        "y": 0.5
-      },
-      "rotation": 0,
-      "fontSize": 180,
-      "show_frame": true,
-      "show_gizmo": false
-    },
-    {
-      "label": "Back",
+      "label": "Destra inferiore",
       "partId": "cruijff_calcio_back",
       "uv": {
-        "x": 0.573,
-        "y": 0.5
+        "x": 0.609,
+        "y": 0.748
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "right-bottom"
+    },
+    {
+      "label": "Destra superiore",
+      "partId": "cruijff_calcio_back",
+      "uv": {
+        "x": 0.609,
+        "y": 0.561
+      },
+      "rotation": 0,
+      "fontSize": 100,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "right-top"
+    },
+    {
+      "label": "Dietro",
+      "partId": "cruijff_calcio_back",
+      "uv": {
+        "x": 0.5,
+        "y": 0.65
+      },
+      "rotation": 0,
+      "fontSize": 100,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "right-center",
+      "conflicts": {
+        "testo": ["right"]
+      }
+    },
+    {
+      "label": "Davanti",
+      "partId": "cruijff_calcio_front",
+      "uv": {
+        "x": 0.391,
+        "y": 0.561
+      },
+      "rotation": 0,
+      "fontSize": 100,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "left-top"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front",
+      "label": "Destra",
+      "partId": "cruijff_calcio_back",
+      "uv": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rotation": 90,
+      "fontSize": 120,
+      "show_frame": true,
+      "show_gizmo": true,
+      "conflicts": {
+        "number": ["right-center"]
+      },
+      "id": "right"
+    },
+    {
+      "label": "Sinistra",
       "partId": "cruijff_calcio_front",
       "uv": {
-        "x": 0.71,
-        "y": 0.45
+        "x": 0.5,
+        "y": 0.5
       },
-      "rotation": 0,
-      "fontSize": 180,
+      "rotation": 270,
+      "fontSize": 120,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "left"
     }
   ]
 }

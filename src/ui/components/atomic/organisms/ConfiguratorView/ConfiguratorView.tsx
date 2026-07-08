@@ -6,6 +6,7 @@ import { useConfiguratorSceneLoad } from '@store';
 import { useEffect, useState } from 'react';
 
 const INITIAL_SCENE_WATCHDOG_MS = 8_000;
+const SCENE_TRANSITION_WATCHDOG_MS = 8_000;
 
 /** Let the initial loader paint before WebGL and GLTF parsing start. */
 const useDeferredCanvasMount = (enabled: boolean) => {
@@ -37,7 +38,9 @@ const useDeferredCanvasMount = (enabled: boolean) => {
 const ConfiguratorView = () => {
   const isRouteHydrated = useConfiguratorSceneLoad((state) => state.isRouteHydrated);
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
+  const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const loaderSession = useConfiguratorSceneLoad((state) => state.loaderSession);
+  const transitionSession = useConfiguratorSceneLoad((state) => state.transitionSession);
   const canMountCanvas = useDeferredCanvasMount(isRouteHydrated);
 
   useEffect(() => {
@@ -52,6 +55,19 @@ const ConfiguratorView = () => {
 
     return () => window.clearTimeout(timeoutId);
   }, [isRouteHydrated, isInitialSceneLoading, loaderSession]);
+
+  useEffect(() => {
+    if (!isRouteHydrated || isInitialSceneLoading || !isSceneTransitionLoading) return;
+
+    const session = transitionSession;
+    const timeoutId = window.setTimeout(() => {
+      const state = useConfiguratorSceneLoad.getState();
+      if (state.transitionSession !== session || !state.isSceneTransitionLoading) return;
+      state.markSceneTransitionLoaded();
+    }, SCENE_TRANSITION_WATCHDOG_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isInitialSceneLoading, isRouteHydrated, isSceneTransitionLoading, transitionSession]);
 
   if (!isRouteHydrated) {
     return <div className="relative h-full min-h-0 min-w-0 w-full" />;

@@ -3,22 +3,16 @@
   "path": "/models/federer_pallavolo/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 2149
+    "width": 2048,
+    "height": 1075
   },
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_label",
-    "model_sweatband"
-  ],
+  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "federer_pallavolo_front",
-      "meshNames": [
-        "model_front"
-      ],
+      "meshNames": ["model_front"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5028,
@@ -39,9 +33,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "federer_pallavolo_back",
-      "meshNames": [
-        "model_back"
-      ],
+      "meshNames": ["model_back"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0038,
@@ -62,9 +54,7 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "federer_pallavolo_sleeve_left",
-      "meshNames": [
-        "model_sleeve_left"
-      ],
+      "meshNames": ["model_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0026,
@@ -85,9 +75,7 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "federer_pallavolo_sleeve_right",
-      "meshNames": [
-        "model_sleeve_right"
-      ],
+      "meshNames": ["model_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3125,
@@ -105,12 +93,10 @@
       }
     },
     {
-      "name": "Collar",
-      "label": "Collar",
+      "name": "Collo",
+      "label": "Collo",
       "id": "federer_pallavolo_collar",
-      "meshNames": [
-        "model_collar"
-      ],
+      "meshNames": ["model_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -246,7 +232,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -257,7 +243,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -272,7 +258,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -288,104 +274,124 @@
   },
   "namePositions": [
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "federer_pallavolo_back",
       "uv": {
         "x": 0.821,
-        "y": 0.492
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 200,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "federer_pallavolo_back",
       "uv": {
         "x": 0.255,
-        "y": 0.479
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 200,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "testo": ["bottom_back"]
+      }
     }
   ],
   "numberPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "federer_pallavolo_front",
       "uv": {
-        "x": 0.3,
+        "x": 0.365,
         "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "testo": ["front_center"]
+      }
     },
     {
-      "label": "Front Right",
+      "label": "Davanti sulla DX",
       "partId": "federer_pallavolo_front",
       "uv": {
-        "x": 0.26,
-        "y": 0.29
+        "x": 0.29,
+        "y": 0.33
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_right"
     },
     {
-      "label": "Back",
+      "label": "Dietro",
       "partId": "federer_pallavolo_back",
       "uv": {
-        "x": 0.573,
+        "x": 0.57,
         "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 270,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "back"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "federer_pallavolo_front",
       "uv": {
-        "x": 0.419,
-        "y": 0.501
+        "x": 0.4,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "number": ["front_center"]
+      }
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "federer_pallavolo_back",
       "uv": {
-        "x": 0.245,
-        "y": 0.479
+        "x": 0.255,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "name": ["bottom_back"]
+      }
     },
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "federer_pallavolo_back",
       "uv": {
-        "x": 0.882,
-        "y": 0.479
+        "x": 0.89,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 60,
+      "fontSize": 50,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     }
   ]
 }

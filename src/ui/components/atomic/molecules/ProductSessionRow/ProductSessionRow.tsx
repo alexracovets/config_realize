@@ -8,19 +8,18 @@ import { Box } from '@atoms';
 import type { productSessionRowPropsType } from '@types';
 import { cn } from '@utils';
 
-import { ProductSessionRowCard } from './ProductSessionRowCard';
+import { ProductSessionRowCard } from '@molecules/ProductSessionRow/ProductSessionRowCard';
 import {
   PRODUCT_SESSION_ROW_CARD_HEIGHT_PX,
   PRODUCT_SESSION_ROW_CARD_WIDTH_PX,
   PRODUCT_SESSION_ROW_EXPANDED_WIDTH_PX,
   PRODUCT_SESSION_ROW_SCROLL_EDGE_PADDING_PX,
-} from './productSessionRow.constants';
-import { useProductSessionRowHover } from './useProductSessionRowHover';
+} from '@molecules/ProductSessionRow/productSessionRowConstants';
+import { useProductSessionRowHover } from '@molecules/ProductSessionRow/useProductSessionRowHover';
 
 const ProductSessionRow = ({ name, previewSrc, active = false, onSelect, onRemove }: productSessionRowPropsType) => {
   const [isPreviewLoaded, setIsPreviewLoaded] = useState(false);
-  const { anchorRef, portalRef, isPortalVisible, isAnchorHidden, isExpanded, position, showHover, hideHover, rememberPointer } =
-    useProductSessionRowHover();
+  const { anchorRef, portalRef, isPortalVisible, isAnchorHidden, isExpanded, position, showHover, hideHover, rememberPointer } = useProductSessionRowHover();
 
   const cardProps = {
     name,

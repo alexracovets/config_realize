@@ -7,14 +7,12 @@ interface checkoutProductCardPropsType {
 interface checkoutConfigurationTablePropsType {
   cartItemId: string;
   rows: checkoutProductType['rows'];
-  testoMaxLength?: number;
   printAvailability?: checkoutPrintAvailabilityType;
 }
 
 interface checkoutConfigurationTableColumnHandlersType {
   onPatchRow: (rowId: string, patch: checkoutLineRowPatchType) => void;
   onRemoveRow: (rowId: string) => void;
-  testoMaxLength?: number;
   printAvailability?: checkoutPrintAvailabilityType;
 }
 

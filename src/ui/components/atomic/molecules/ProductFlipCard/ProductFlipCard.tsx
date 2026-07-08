@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { AtomImage } from '@atoms';
 import { useAppNavigate, useGarmentCatalogPreload } from '@hooks';
 import type { productFlipCardPropsType } from '@types';
-import { cn, buildConfiguratorPath, resolveProductFlipCardSrc } from '@utils';
+import { buildConfiguratorPath, cn, resolveProductFlipCardSrc } from '@utils';
 
 const ProductFlipCard = ({ collection, slug, alt, previewSrc, activePreviewSrc, className }: productFlipCardPropsType) => {
   const { toAppPath } = useAppNavigate();
@@ -27,17 +27,7 @@ const ProductFlipCard = ({ collection, slug, alt, previewSrc, activePreviewSrc, 
   const warmProductAssetsEager = useCallback(() => {
     if (isEagerWarmRef.current) return;
     isEagerWarmRef.current = true;
-
-    const scheduleEagerWarm = () => {
-      void warmBySlugEager(slug);
-    };
-
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(scheduleEagerWarm, { timeout: 2_000 });
-      return;
-    }
-
-    requestAnimationFrame(scheduleEagerWarm);
+    void warmBySlugEager(slug);
   }, [slug, warmBySlugEager]);
 
   useEffect(() => {

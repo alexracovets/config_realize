@@ -31,8 +31,10 @@ const LOGO_STEP = 7;
 const useGarmentLogoTextures = () => {
   const product = useConfiguratorProduct((state) => state.product);
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);
+  const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);
   const activeStep = useConfigurationControl((state) => state.activeStep);
+  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
   const logoProductPath = useGarmentLogo((state) => state.productPath);
   const logoInstances = useGarmentLogo((state) => state.instances);
   const logoPreview = useGarmentLogo((state) => state.preview);
@@ -42,7 +44,7 @@ const useGarmentLogoTextures = () => {
   const materialRevision = useMaterialRegistryRevision();
   const invalidate = useThree((state) => state.invalidate);
   const isLogoSynced = logoProductPath === product.path;
-  const isSceneReady = isLogoSynced && hasMaterialsForParts(partIds) && !isInitialSceneLoading;
+  const isSceneReady = isLogoSynced && hasMaterialsForParts(partIds) && !isInitialSceneLoading && !isSceneTransitionLoading;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const textureRef = useRef<Texture | null>(null);
@@ -101,7 +103,7 @@ const useGarmentLogoTextures = () => {
 
     for (const part of product.parts) {
       const style = buildLogoStyleUniforms(instancesForRender, product.parts, part.id, cellSize, atlasSize.width);
-      const frame = buildLogoGizmoFrameUniforms(instancesForRender, part.id, activeStep === LOGO_STEP, gizmoRotation);
+      const frame = buildLogoGizmoFrameUniforms(instancesForRender, part.id, activeStep === LOGO_STEP && isGizmoVisible, gizmoRotation);
 
       for (const material of getMaterials(part.id)) {
         applyGarmentGizmoRotation(material, gizmoRotation);
@@ -113,7 +115,7 @@ const useGarmentLogoTextures = () => {
     }
 
     invalidate();
-  }, [activeStep, atlasSize.height, atlasSize.width, getMaterials, gizmoIcons, instancesForRender, invalidate, product]);
+  }, [activeStep, atlasSize.height, atlasSize.width, getMaterials, gizmoIcons, instancesForRender, invalidate, isGizmoVisible, product]);
 
   const applyStampToMaterials = useCallback(
     (texture: Texture, cellSize: { width: number; height: number }) => {
@@ -200,7 +202,7 @@ const useGarmentLogoTextures = () => {
     }
   }, [applyLogoStyleAndFrame, applyStampToMaterials, isSceneReady, materialRevision, partIds, styleSignature]);
 
-  useLogoUniformSync({ product, activeStep, selectedInstanceId, selectedSlotIndex });
+  useLogoUniformSync({ product, activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex });
 
   useEffect(() => () => clearRuntime(), [clearRuntime]);
 };

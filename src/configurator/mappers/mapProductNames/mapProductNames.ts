@@ -22,6 +22,8 @@ const resolveNameLimits = (product: garmentConfigType): nameLimitsType => {
 const mapProductNamePositions = (product: garmentConfigType): namePositionType[] =>
   (product.namePositions ?? []).map((position, index) => ({
     key: `name-pos-${index}`,
+    positionId: position.id,
+    conflicts: position.conflicts,
     label: position.label,
     partId: position.partId,
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a name position'), position.uv),

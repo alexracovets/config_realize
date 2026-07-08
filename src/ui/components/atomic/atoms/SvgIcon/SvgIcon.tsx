@@ -205,6 +205,11 @@ const ICONS: Record<svgIconNameType, React.ReactNode> = {
       <circle cx="13.5" cy="20.2501" r="2.025" fill="currentColor" />
     </svg>
   ),
+  arrow_right: (
+    <svg width="23" height="6" viewBox="0 0 23 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M23 2.88672L18 -3.26633e-05V5.77347L23 2.88672ZM0 2.88672V3.38672H18.5V2.88672V2.38672H0V2.88672Z" fill="currentColor" />
+    </svg>
+  ),
 };
 
 const SvgIcon = ({ name, className }: svgIconPropsType) => {

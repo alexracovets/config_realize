@@ -1,4 +1,9 @@
-export { readProductAppearanceTextures, syncProductAppearanceTextures } from './garmentAppearance/garmentProductAppearanceCache';
+export {
+  getAppearanceCacheVersion,
+  isGarmentAppearanceCached,
+  readProductAppearanceTextures,
+  syncProductAppearanceTextures,
+} from './garmentAppearance/garmentProductAppearanceCache';
 export { applyGarmentGradient, applyGarmentPartUvBounds } from './garmentGradient/applyGarmentGradient';
 export {
   clampUvToPartBounds,
@@ -19,5 +24,9 @@ export {
   recenterOrbitTargetByZoom,
   resolveCursorFocusPoint,
   resolveGarmentCenter,
+  resolveOrbitFocusPose,
+  resolveShortestAngleDelta,
 } from './orbitCamera';
-export { suppressThreeClockDeprecation } from './suppressThreeClockDeprecation';
+export type { resolvePrintUvWorldPointInputType, resolvePrintUvWorldPointResultType } from './resolvePrintUvWorldPoint';
+export { resolvePrintUvWorldPoint } from './resolvePrintUvWorldPoint';
+export { suppressThreeClockDeprecation } from '@configurator/bootstrap/clientConsoleSuppression/suppressThreeClockDeprecation';

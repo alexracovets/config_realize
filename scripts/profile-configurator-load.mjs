@@ -8,8 +8,7 @@ const route = `/${(process.argv[2] ?? 'federer_pallavolo').replace(/^\//, '')}`;
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
 const pageUrl = `${baseUrl}${route}`;
 
-const profilePage = async (page, label) => {
-  const longTasks = [];
+const profilePage = async (page, label) => { 
 
   await page.addInitScript(() => {
     window.__longTasks = [];
@@ -35,13 +34,15 @@ const profilePage = async (page, label) => {
   await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 120_000 });
 
   // Wait until loader hides or watchdog
-  await page.waitForFunction(
-    () => {
-      const loader = document.querySelector('[aria-busy="true"]');
-      return !loader || loader.getAttribute('aria-busy') === 'false';
-    },
-    { timeout: 60_000 },
-  ).catch(() => {});
+  await page
+    .waitForFunction(
+      () => {
+        const loader = document.querySelector('[aria-busy="true"]');
+        return !loader || loader.getAttribute('aria-busy') === 'false';
+      },
+      { timeout: 60_000 },
+    )
+    .catch(() => {});
 
   await page.waitForTimeout(1500);
 

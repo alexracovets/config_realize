@@ -10,7 +10,7 @@ const useConfigurationCartSync = () => {
   useLayoutEffect(() => {
     const syncActiveCartItem = () => {
       const { activeItemId } = useConfigurationCart.getState();
-      activateCartItem(() => useConfigurationCart.getState(), activeItemId);
+      void activateCartItem(() => useConfigurationCart.getState(), activeItemId);
     };
 
     const { product } = useConfiguratorProduct.getState();

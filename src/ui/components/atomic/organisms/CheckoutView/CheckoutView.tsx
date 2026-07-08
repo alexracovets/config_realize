@@ -3,7 +3,7 @@
 import { Button, Flex, Grid, SvgIcon } from '@atoms';
 
 import { useNavigateToConfigurator } from '@hooks';
-import { CheckoutProductCard, CheckoutSummaryPanel } from '@molecules';
+import { CheckoutOrderExport, CheckoutProductCard, CheckoutSummaryPanel, OrderCuttingExport } from '@molecules';
 import { useCheckout, useConfigurationCart } from '@store';
 
 const CheckoutView = () => {
@@ -17,6 +17,10 @@ const CheckoutView = () => {
         {products.map((product) => (
           <CheckoutProductCard key={product.cartItemId} product={product} />
         ))}
+        <Flex className="flex-wrap items-center gap-3">
+          <CheckoutOrderExport />
+          <OrderCuttingExport />
+        </Flex>
         <Button
           size="sm"
           className="self-start border border-gray-20 bg-white"

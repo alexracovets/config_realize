@@ -1,10 +1,11 @@
 import type { Camera, ColorSpace, Scene, WebGLRenderer } from 'three';
 import { LinearFilter, PerspectiveCamera, RGBAFormat, SRGBColorSpace, Vector3, WebGLRenderTarget } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { withGarmentGizmoSuppressedForCapture } from '@configurator/bootstrap/previewCapture/suppressGarmentGizmoForCapture';
 import { resolveGarmentCenter } from '@configurator/utils';
 
-const THUMBNAIL_WIDTH = 160*5;
-const THUMBNAIL_HEIGHT = 140*5;
+const THUMBNAIL_WIDTH = 160 * 5;
+const THUMBNAIL_HEIGHT = 140 * 5;
 const PREVIEW_CAMERA_OFFSET = new Vector3(0, 0.05, 0.9);
 
 interface captureConfiguratorPreviewInput {
@@ -88,7 +89,9 @@ const captureConfiguratorPreview = ({ gl, scene, camera }: captureConfiguratorPr
   gl.autoClear = true;
   gl.setRenderTarget(renderTarget);
   gl.clear();
-  gl.render(scene, previewCamera);
+  withGarmentGizmoSuppressedForCapture(scene, () => {
+    gl.render(scene, previewCamera);
+  });
   gl.readRenderTargetPixels(renderTarget, 0, 0, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, previewReadBuffer);
 
   gl.setRenderTarget(previousTarget);

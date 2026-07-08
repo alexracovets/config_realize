@@ -1,0 +1,1 @@
+export { useRequestAddProduct } from './useRequestAddProduct';

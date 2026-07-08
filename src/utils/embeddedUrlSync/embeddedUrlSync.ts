@@ -10,8 +10,7 @@ type embeddedUrlSyncMessage = {
   pathname: string;
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 const isEmbeddedUrlSyncMessage = (data: unknown): data is embeddedUrlSyncMessage => {
   if (!isRecord(data)) {

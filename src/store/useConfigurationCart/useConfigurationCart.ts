@@ -8,7 +8,6 @@ import { inheritCartItemConfiguration } from '@store/useConfigurationCart/inheri
 import { createCartItem, createDefaultCartItem } from '@store/useConfigurationCart/mapCartItems';
 import { persistCartItemSnapshot } from '@store/useConfigurationCart/persistCartItemSnapshot';
 import type { cartItemConfigurationType, cartItemType, configuratorCatalogProductPickType, garmentBusinessType, modelIdType } from '@types';
-import { warmProductAssets } from '@configurator';
 import { buildConfiguratorPath, getModel } from '@utils';
 import { postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 import { create } from 'zustand';
@@ -17,9 +16,9 @@ interface ConfigurationCartState {
   activeItemId: string;
   configurations: Record<string, cartItemConfigurationType>;
   previews: Record<string, string>;
-  addItem: (product: configuratorCatalogProductPickType) => void;
+  addItem: (product: configuratorCatalogProductPickType, options?: { inheritDesign?: boolean }) => void;
   /** Stamp a Shopify product (from the slug route loader) onto the active cart item. */
-  setActiveItemProduct: (product: { slug: string; modelId: modelIdType; business: garmentBusinessType }) => void;
+  setActiveItemProduct: (product: { collectionHandle: string; slug: string; modelId: modelIdType; business: garmentBusinessType }) => void;
   duplicateActiveItem: () => void;
   selectItem: (id: string) => void;
   removeItem: (id: string) => void;
@@ -39,44 +38,43 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
   configurations: {},
   previews: {},
 
-  addItem: (productRef) => {
+  addItem: (productRef, options) => {
+    const inheritDesign = options?.inheritDesign ?? false;
     const { items, activeItemId, configurations } = get();
     const item = createCartItem(productRef);
     const newProduct = getModel(productRef.modelId);
     if (!newProduct) return;
 
-    warmProductAssets(newProduct, { deferHeavy: true });
+    persistCartItemSnapshot(get, activeItemId, { previewMode: 'sync' });
 
-    persistCartItemSnapshot(get, activeItemId);
+    const referenceItem = items.find((entry) => entry.id === activeItemId) ?? items[0];
+    const referenceProduct = getModel(referenceItem.modelId);
+    const referenceConfiguration = captureGarmentConfiguration();
 
     const nextConfigurations: Record<string, cartItemConfigurationType> = {
       ...configurations,
-      [activeItemId]: get().getConfiguration(activeItemId) ?? captureGarmentConfiguration(),
+      [referenceItem.id]: referenceConfiguration,
     };
 
-    const firstItem = items[0];
-    const firstProduct = getModel(firstItem.modelId);
-    const referenceConfiguration =
-      nextConfigurations[firstItem.id] ?? (firstProduct ? createDefaultCartItemConfiguration(firstProduct) : createDefaultCartItemConfiguration(newProduct));
-
-    const inheritedConfiguration = firstProduct
-      ? inheritCartItemConfiguration(referenceConfiguration, firstProduct, newProduct)
-      : createDefaultCartItemConfiguration(newProduct);
+    const nextConfiguration =
+      inheritDesign && referenceProduct
+        ? inheritCartItemConfiguration(referenceConfiguration, referenceProduct, newProduct)
+        : createDefaultCartItemConfiguration(newProduct);
 
     set({
       items: [...items, item],
       activeItemId: item.id,
       configurations: {
         ...nextConfigurations,
-        [item.id]: inheritedConfiguration,
+        [item.id]: nextConfiguration,
       },
       previews: get().previews,
     });
 
-    activateCartItem(get, item.id);
+    void activateCartItem(get, item.id);
   },
 
-  setActiveItemProduct: ({ slug, modelId, business }) => {
+  setActiveItemProduct: ({ collectionHandle, slug, modelId, business }) => {
     const { items, activeItemId, configurations } = get();
     const activeItem = items.find((item) => item.id === activeItemId);
     if (!activeItem) return;
@@ -88,13 +86,13 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     // time on every open. Only the slug + business need refreshing in that case.
     if (activeItem.modelId === modelId) {
       set({
-        items: items.map((item) => (item.id === activeItemId ? { ...item, slug, business } : item)),
+        items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, business } : item)),
       });
       useConfiguratorProduct.getState().initFromLoader(modelId, business);
 
       const product = getModel(modelId);
       if (product && !areGarmentPrintStoresSynced(product.path)) {
-        activateCartItem(get, activeItemId);
+        void activateCartItem(get, activeItemId);
       }
 
       return;
@@ -104,11 +102,11 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     const nextConfigurations = Object.fromEntries(Object.entries(configurations).filter(([itemId]) => itemId !== activeItemId));
 
     set({
-      items: items.map((item) => (item.id === activeItemId ? { ...item, slug, modelId, business } : item)),
+      items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, modelId, business } : item)),
       configurations: nextConfigurations,
     });
 
-    activateCartItem(get, activeItemId);
+    void activateCartItem(get, activeItemId);
   },
 
   duplicateActiveItem: () => {
@@ -116,7 +114,7 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     const activeItem = items.find((item) => item.id === activeItemId);
     if (!activeItem) return;
 
-    persistCartItemSnapshot(get, activeItemId);
+    persistCartItemSnapshot(get, activeItemId, { previewMode: 'sync' });
 
     const currentConfiguration = get().getConfiguration(activeItemId) ?? captureGarmentConfiguration();
     const activePreview = get().getPreview(activeItemId);
@@ -139,14 +137,15 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
       previews: activePreview ? { ...get().previews, [duplicatedItem.id]: activePreview } : get().previews,
     });
 
-    activateCartItem(get, duplicatedItem.id);
+    void activateCartItem(get, duplicatedItem.id);
   },
 
   selectItem: (id) => {
     const { items, activeItemId } = get();
     if (!items.some((item) => item.id === id) || activeItemId === id) return;
 
-    activateCartItem(get, id, { savePreviousId: activeItemId });
+    persistCartItemSnapshot(get, activeItemId, { previewMode: 'sync' });
+    void activateCartItem(get, id, { savePreviousId: activeItemId });
     set({ activeItemId: id });
   },
 
@@ -168,7 +167,7 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     });
 
     if (wasActive) {
-      activateCartItem(get, nextActiveId);
+      void activateCartItem(get, nextActiveId);
     }
   },
 

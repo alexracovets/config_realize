@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-import { loadCachedImage } from '@configurator';
+import { loadCachedImage, requestConfiguratorCameraFocus } from '@configurator';
 import { useConfiguratorProduct, useGarmentLogo } from '@store';
 import type { stepLogoPositionStateType } from '@types';
 import { LogoFileError, logoFileToDisplayUrl, preloadLogoDisplayUrl, yieldToMain } from '@utils';
@@ -54,10 +54,18 @@ const useLogoFileHandler = () => {
           }
 
           addUserInstance(logoPosition, src, file.name, natural.width, natural.height);
+          requestConfiguratorCameraFocus({ partId: logoPosition.partId, uv: logoPosition.uv });
           return;
         }
 
         addFreeUserInstance(product, src, file.name, natural.width, natural.height);
+        const newInstance = useGarmentLogo
+          .getState()
+          .instances.filter((instance) => !instance.isDefault)
+          .at(-1);
+        if (newInstance) {
+          requestConfiguratorCameraFocus({ partId: newInstance.partId, uv: newInstance.uv });
+        }
       } catch (uploadError) {
         const message = uploadError instanceof LogoFileError ? uploadError.message : 'Impossibile caricare il file';
         setError(message);

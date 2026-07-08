@@ -4,13 +4,23 @@ import { PartColorSwitch } from '@molecules/ConfigurationTools/PartColorSwitch';
 import { ShadingControl } from '@molecules/ConfigurationTools/ShadingControl';
 import { AccordionAtom, Flex } from '@atoms';
 import { CONFIGURATOR_GRADIENT_ACTIVE_LABEL } from '@constants';
+import { usePartAccordionCameraFocus } from '@hooks';
+import type { garmentPartConfigType } from '@types';
 import { DEFAULT_COLOR, useConfiguratorProduct, useGarmentColor } from '@store';
 import { useCallback, useMemo } from 'react';
-const ConfigurationShading = () => {
-  const product = useConfiguratorProduct((state) => state.product);
+
+interface configurationShadingAccordionPropsType {
+  parts: garmentPartConfigType[];
+  partIds: string[];
+}
+
+const ConfigurationShadingAccordion = ({ parts, partIds }: configurationShadingAccordionPropsType) => {
   const byPart = useGarmentColor((state) => state.byPart);
   const gradientsByPart = useGarmentColor((state) => state.gradientsByPart);
-  const parts = useMemo(() => product.parts.filter((part) => !part.colorOnly), [product.parts]);
+  const { openItems, handleItemActivate, handleOpenItemsChange } = usePartAccordionCameraFocus({
+    partIds,
+    defaultOpenPartIds: partIds[0] ? [partIds[0]] : [],
+  });
 
   const getShadingPreview = useCallback(
     (partId: string) => {
@@ -43,11 +53,28 @@ const ConfigurationShading = () => {
     [getShadingPreview, gradientsByPart, parts],
   );
 
+  return (
+    <AccordionAtom
+      items={items}
+      value={openItems}
+      onValueChange={handleOpenItemsChange}
+      onItemActivate={handleItemActivate}
+      multiple
+      className="gap-3"
+    />
+  );
+};
+
+const ConfigurationShading = () => {
+  const product = useConfiguratorProduct((state) => state.product);
+  const parts = useMemo(() => product.parts.filter((part) => !part.colorOnly), [product.parts]);
+  const partIds = useMemo(() => parts.map((part) => part.id), [parts]);
+
   if (parts.length === 0) return null;
 
   return (
-    <Flex key={product.path} variant="step_design">
-      <AccordionAtom items={items} defaultValue={[parts[0].id]} multiple className="gap-3" />
+    <Flex variant="step_design">
+      <ConfigurationShadingAccordion key={product.path} parts={parts} partIds={partIds} />
     </Flex>
   );
 };

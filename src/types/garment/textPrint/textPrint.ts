@@ -1,4 +1,4 @@
-import type { textDefaultsConfigType, textPositionConfigType, uvPointType } from '@types';
+import type { printPositionConflictsConfigType, textDefaultsConfigType, textPositionConfigType, uvPointType } from '@types';
 
 interface mappedGizmoFlagsType {
   showFrame: boolean;
@@ -8,6 +8,8 @@ interface mappedGizmoFlagsType {
 
 type textPrintPositionType = {
   key: string;
+  positionId?: string;
+  conflicts?: printPositionConflictsConfigType;
   partId: string;
   uv: uvPointType;
 } & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize'> &

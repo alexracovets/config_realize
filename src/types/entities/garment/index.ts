@@ -6,6 +6,7 @@ export type {
   modelIdType,
   partGradientConfigType,
   patternConfigType,
+  printPositionConflictsConfigType,
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,

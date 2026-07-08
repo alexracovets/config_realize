@@ -2,13 +2,14 @@
 
 import { AtomTabsSlidingList } from '@molecules/AtomTabsSlidingList';
 import { ModalInfoTabContent } from '@molecules/Modals/ModalInfo/Content';
-import { MODAL_INFO_TABS } from '@molecules/Modals/ModalInfo/modalInfoTabs';
+import { MODAL_INFO_TABS, SIZE_CHART_TAB_VALUE } from '@molecules/Modals/ModalInfo/modalInfoTabs';
 import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomTabs, AtomTabsTrigger, ScrollArea } from '@atoms';
-import { useInfoDialog } from '@store';
+import { useConfiguratorProduct, useInfoDialog } from '@store';
 import { useState } from 'react';
 const ModalInfo = () => {
   const isOpen = useInfoDialog((state) => state.isOpen);
   const setIsOpen = useInfoDialog((state) => state.setIsOpen);
+  const sizeChart = useConfiguratorProduct((state) => state.business.sizeChart);
   const [activeTab, setActiveTab] = useState(MODAL_INFO_TABS[0]?.value ?? 'faq');
 
   return (
@@ -26,7 +27,7 @@ const ModalInfo = () => {
           </AtomTabsSlidingList>
           <ScrollArea className="min-h-0 flex-1 w-full" fadeEdges>
             {MODAL_INFO_TABS.map(({ value, tab }) => (
-              <ModalInfoTabContent key={value} tab={tab} tabValue={value} />
+              <ModalInfoTabContent key={value} tab={value === SIZE_CHART_TAB_VALUE ? (sizeChart ?? tab) : tab} tabValue={value} />
             ))}
           </ScrollArea>
         </AtomTabs>

@@ -41,6 +41,8 @@ export {
   useGarmentTesto,
 } from './useGarmentTesto';
 export { resolveLogoInstancesForRender, useGarmentLogo } from './useGarmentLogo';
+export { resolvePrintPositionConflicts } from './resolvePrintPositionConflicts';
+export { useAddProductDesignDialog } from './useAddProductDesignDialog';
 export { useInfoDialog } from './useInfoDialog';
 export { useTutorialDialog } from './useTutorialDialog';
 export { resolveCheckoutPrintAvailability, useCheckout } from './useCheckout';

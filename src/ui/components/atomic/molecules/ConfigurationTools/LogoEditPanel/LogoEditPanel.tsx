@@ -22,7 +22,7 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
         <Button
           type="button"
           variant="outline"
-          className="h-auto gap-1 px-0 py-0 text-[16px] font-semibold hover:text-error hover:bg-transparent"
+          className="h-auto gap-1 px-0 py-0 text-[16px] font-semibold hover:text-error bg-transparent"
           onClick={onClose}
         >
           Chiudi

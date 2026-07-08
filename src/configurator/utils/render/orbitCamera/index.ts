@@ -6,4 +6,6 @@ export {
   recenterOrbitTargetByZoom,
   resolveCursorFocusPoint,
   resolveGarmentCenter,
+  resolveOrbitFocusPose,
+  resolveShortestAngleDelta,
 } from './orbitCamera';

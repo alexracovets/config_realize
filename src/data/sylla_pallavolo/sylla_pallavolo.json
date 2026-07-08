@@ -3,22 +3,16 @@
   "path": "/models/sylla_pallavolo/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 2257
+    "width": 2048,
+    "height": 757
   },
-  "preserveGltfMeshes": [
-    "crewneck_womans_inside",
-    "crewneck_womans_inside_label",
-    "crewneck_womans_sweatband"
-  ],
+  "preserveGltfMeshes": ["crewneck_womans_inside", "crewneck_womans_inside_label", "crewneck_womans_sweatband"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "sylla_pallavolo_front",
-      "meshNames": [
-        "crewneck_womans_front"
-      ],
+      "meshNames": ["crewneck_womans_front"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5713,
@@ -26,7 +20,7 @@
         "minY": 0.0026,
         "maxY": 0.9063
       },
-      "printRotation": 270,
+      "printRotation": 180,
       "gradient": {
         "reversed": false,
         "rotation": 0,
@@ -39,9 +33,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "sylla_pallavolo_back",
-      "meshNames": [
-        "crewneck_womans_back"
-      ],
+      "meshNames": ["crewneck_womans_back"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0012,
@@ -49,7 +41,7 @@
         "minY": 0.0038,
         "maxY": 0.9048
       },
-      "printRotation": 90,
+      "printRotation": 0,
       "gradient": {
         "reversed": true,
         "rotation": 0,
@@ -62,9 +54,7 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "sylla_pallavolo_sleeve_left",
-      "meshNames": [
-        "crewneck_womans_sleeve_left"
-      ],
+      "meshNames": ["crewneck_womans_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.4403,
@@ -72,7 +62,7 @@
         "minY": 0.0116,
         "maxY": 0.6687
       },
-      "printRotation": 0,
+      "printRotation": 180,
       "gradient": {
         "reversed": false,
         "rotation": 90,
@@ -85,9 +75,7 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "sylla_pallavolo_sleeve_right",
-      "meshNames": [
-        "crewneck_womans_sleeve_right"
-      ],
+      "meshNames": ["crewneck_womans_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3779,
@@ -95,7 +83,7 @@
         "minY": 0.688,
         "maxY": 0.9636
       },
-      "printRotation": 0,
+      "printRotation": 270,
       "gradient": {
         "reversed": true,
         "rotation": 270,
@@ -105,12 +93,10 @@
       }
     },
     {
-      "name": "Collar",
-      "label": "Collar",
+      "name": "Collo",
+      "label": "Collo",
       "id": "sylla_pallavolo_collar",
-      "meshNames": [
-        "crewneck_womans_collar"
-      ],
+      "meshNames": ["crewneck_womans_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -246,7 +232,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -257,7 +243,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -272,11 +258,11 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
+    "fontSizeMin": 40,
     "fontSizeMax": 400,
-    "strokeWidthMax": 20,
+    "strokeWidthMax": 30,
     "lineHeight": 1,
     "lineHeightMin": 1,
     "lineHeightMax": 2,
@@ -288,104 +274,124 @@
   },
   "namePositions": [
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "sylla_pallavolo_back",
       "uv": {
-        "x": 0.492,
-        "y": 0.179
+        "x": 0.808,
+        "y": 0.5
       },
-      "rotation": 180,
-      "fontSize": 200,
+      "rotation": 0,
+      "fontSize": 90,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "sylla_pallavolo_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.745
+        "x": 0.3,
+        "y": 0.5
       },
-      "rotation": 180,
-      "fontSize": 200,
+      "rotation": 0,
+      "fontSize": 90,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "testo": ["bottom_back"]
+      }
     }
   ],
   "numberPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "sylla_pallavolo_front",
       "uv": {
-        "x": 0.5,
-        "y": 0.3
+        "x": 0.382,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 70,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "testo": ["front_center"]
+      }
     },
     {
-      "label": "Front Right",
+      "label": "Davanti sulla DX",
       "partId": "sylla_pallavolo_front",
       "uv": {
-        "x": 0.29,
-        "y": 0.26
+        "x": 0.327,
+        "y": 0.348
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 70,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_right"
     },
     {
-      "label": "Back",
+      "label": "Dietro",
       "partId": "sylla_pallavolo_back",
       "uv": {
-        "x": 0.5,
-        "y": 0.427
+        "x": 0.6,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 200,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "back"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front Center",
+      "label": "Davanti",
       "partId": "sylla_pallavolo_front",
       "uv": {
-        "x": 0.501,
-        "y": 0.419
+        "x": 0.434,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "number": ["front_center"]
+      }
     },
     {
-      "label": "Bottom Back",
+      "label": "Nome schiena inferiore",
       "partId": "sylla_pallavolo_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.755
+        "x": 0.3,
+        "y": 0.5
       },
-      "rotation": 180,
-      "fontSize": 180,
+      "rotation": 0,
+      "fontSize": 90,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "name": ["bottom_back"]
+      }
     },
     {
-      "label": "Top Back",
+      "label": "Nome schiena superiore",
       "partId": "sylla_pallavolo_back",
       "uv": {
-        "x": 0.479,
-        "y": 0.118
+        "x": 0.874,
+        "y": 0.5
       },
-      "rotation": 180,
-      "fontSize": 60,
+      "rotation": 0,
+      "fontSize": 40,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
     }
   ]
 }

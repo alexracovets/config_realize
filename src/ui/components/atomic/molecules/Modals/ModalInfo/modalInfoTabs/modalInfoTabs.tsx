@@ -7,6 +7,8 @@ import { discountsContent, faqContent, measureContent, reviewsContent, shippingC
 import { SvgIcon } from '@atoms';
 import type { modalInfoTabConfigType } from '@types';
 
+const SIZE_CHART_TAB_VALUE = 'info';
+
 const MODAL_INFO_TABS: modalInfoTabConfigType[] = [
   {
     value: 'faq',
@@ -15,7 +17,7 @@ const MODAL_INFO_TABS: modalInfoTabConfigType[] = [
     tab: faqContent,
   },
   {
-    value: 'info',
+    value: SIZE_CHART_TAB_VALUE,
     label: 'Tabella taglie',
     icon: <SvgIcon name="ruler" />,
     tab: measureContent,
@@ -40,4 +42,4 @@ const MODAL_INFO_TABS: modalInfoTabConfigType[] = [
   },
 ];
 
-export { MODAL_INFO_TABS };
+export { MODAL_INFO_TABS, SIZE_CHART_TAB_VALUE };

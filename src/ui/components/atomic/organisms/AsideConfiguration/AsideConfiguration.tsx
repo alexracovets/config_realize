@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 import { Flex, Grid, ScrollArea } from '@atoms';
-import { CardAddProduct, ConfiguratorProduct, ConfiguratorProductDescription } from '@molecules';
+import { CardAddProduct, ConfiguratorLogoStepNotice, ConfiguratorProduct, ConfiguratorProductDescription } from '@molecules';
 
 import { registerAsideOrbitGuard } from '@configurator/canvas';
 import { useProductStepsConfiguration, useShowConfigurationSkeleton } from '@hooks';
@@ -18,13 +18,24 @@ const ActiveStepContent = () => {
 
   if (!stepConfig) return null;
 
-  const { content: Content } = stepConfig;
+  const { content: Content, value: stepValue } = stepConfig;
+  const isLogoStep = stepValue === 'logo';
 
   return (
     <div className="flex min-h-0 flex-1 flex-col py-1">
       <ScrollArea className="min-h-0 flex-1 w-full pt-0">
         <Flex variant="step_design">
-          {showSkeleton ? <ConfiguratorProductDescriptionSkeleton /> : <ConfiguratorProductDescription />}
+          {showSkeleton ? (
+            <>
+              {isLogoStep ? <ConfiguratorLogoStepNotice /> : null}
+              <ConfiguratorProductDescriptionSkeleton />
+            </>
+          ) : (
+            <>
+              {isLogoStep ? <ConfiguratorLogoStepNotice /> : null}
+              <ConfiguratorProductDescription />
+            </>
+          )}
           {showSkeleton ? <ConfigurationStepSkeleton step={activeStep} /> : <Content />}
         </Flex>
       </ScrollArea>

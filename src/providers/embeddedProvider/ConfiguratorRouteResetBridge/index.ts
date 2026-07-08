@@ -1,0 +1,1 @@
+export { ConfiguratorRouteResetBridge } from './ConfiguratorRouteResetBridge';

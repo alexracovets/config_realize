@@ -1,5 +1,7 @@
 import type { garmentBusinessType, garmentConfigType, modelIdType } from '@types';
 
+import { CONFIGURATOR_DEFAULT_MINIMUM_COUNT } from '@constants';
+
 import baggioData from '@data/baggio_calcio/baggio_calcio.json';
 import bernardiCalcioData from '@data/bernardi_calcio/bernardi_calcio.json';
 import bernardiPallavoloData from '@data/bernardi_pallavolo/bernardi_pallavolo.json';
@@ -63,9 +65,9 @@ const deriveLocalBusiness = (modelId: modelIdType): garmentBusinessType => {
     name: product?.name ?? modelId,
     price: product?.price ?? 0,
     currencyCode: DEFAULT_CURRENCY_CODE,
+    minimumCount: product?.minimum_count ?? CONFIGURATOR_DEFAULT_MINIMUM_COUNT,
     bonusCount: product?.bonus_count ?? 0,
     bonusDiscount: product?.bonus_discount ?? 0,
-    minimumCount: product?.minimum_count ?? 0,
   };
 };
 

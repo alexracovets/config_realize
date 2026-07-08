@@ -1,4 +1,5 @@
 import type { configuratorStepValueType } from '@configurator/types';
+import type { modalInfoTabType } from '@types';
 
 interface uvPointType {
   x: number;
@@ -48,6 +49,14 @@ interface patternConfigType {
   parts: patternPartConfigType[];
 }
 
+interface printPositionConflictsConfigType {
+  name?: string[];
+  number?: string[];
+  testo?: string[];
+  /** @deprecated Legacy JSON key — use `testo`. */
+  text?: string[];
+}
+
 interface textPositionConfigType {
   label: string;
   uv: uvPointType;
@@ -58,6 +67,8 @@ interface textPositionConfigType {
   interactive?: boolean;
   show_frame?: boolean;
   show_gizmo?: boolean;
+  id?: string;
+  conflicts?: printPositionConflictsConfigType;
 }
 
 interface textDefaultsConfigType {
@@ -165,6 +176,8 @@ interface garmentBusinessType {
   bonusCount: number;
   bonusDiscount: number;
   minimumCount: number;
+  /** Per-product "Tabella taglie" content sourced from Shopify metafields; falls back to the static default when unset. */
+  sizeChart?: modalInfoTabType;
 }
 
 export type {
@@ -175,6 +188,7 @@ export type {
   modelIdType,
   partGradientConfigType,
   patternConfigType,
+  printPositionConflictsConfigType,
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,

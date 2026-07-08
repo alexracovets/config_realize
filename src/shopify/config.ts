@@ -1,4 +1,4 @@
-import { buildShopifyFrameAncestors } from './frameAncestors';
+import { buildShopifyFrameAncestors } from '@shopify/frameAncestors';
 
 const readEnv = (key: string): string | undefined => {
   const value = process.env[key]?.trim();
@@ -13,15 +13,15 @@ const getShopifyStoreDomain = (): string | undefined => readEnv('SHOPIFY_STORE_D
 
 const getShopifyAdminAccessToken = (): string | undefined => readEnv('SHOPIFY_ADMIN_ACCESS_TOKEN');
 
+/** Dev Dashboard API client id/secret; used to self-mint/refresh short-lived Admin API tokens via client_credentials. */
+const getShopifyAdminClientId = (): string | undefined => readEnv('SHOPIFY_ADMIN_CLIENT_ID');
+
+const getShopifyAdminClientSecret = (): string | undefined => readEnv('SHOPIFY_ADMIN_CLIENT_SECRET');
+
 const getShopifyStorefrontAccessToken = (): string | undefined => readEnv('SHOPIFY_STOREFRONT_ACCESS_TOKEN');
 
 /** Home page gallery order: calcio, pallavolo, basket, completo. Override via SHOPIFY_HOME_COLLECTION_HANDLES. */
-const DEFAULT_SHOPIFY_HOME_COLLECTION_HANDLES = [
-  'completo-gara-calcio',
-  'completo-gara-pallavolo',
-  'completo-gara-basket',
-  'completo',
-] as const;
+const DEFAULT_SHOPIFY_HOME_COLLECTION_HANDLES = ['completo-gara-calcio', 'completo-gara-pallavolo', 'completo-gara-basket', 'completo'] as const;
 
 const getShopifyHomeCollectionHandles = (): string[] => {
   const raw = readEnv('SHOPIFY_HOME_COLLECTION_HANDLES');
@@ -79,6 +79,8 @@ export {
   assertShopifyConfigured,
   DEFAULT_SHOPIFY_HOME_COLLECTION_HANDLES,
   getShopifyAdminAccessToken,
+  getShopifyAdminClientId,
+  getShopifyAdminClientSecret,
   getShopifyApiMode,
   getShopifyApiVersion,
   getShopifyFrameAncestors,

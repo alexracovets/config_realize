@@ -7,7 +7,36 @@ import {
   resolveProductModelId,
   type shopifyProductBusinessNodeType,
 } from '@shopify/mapShopifyProductBusiness';
+import type { sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
 import type { configuratorProductHydrationType } from '@configurator/types';
+
+const STOREFRONT_SIZE_CHART_FIELDS = `#graphql
+  headingMetafield: metafield(namespace: "custom", key: "tabella_taglie_heading") {
+    value
+  }
+  descriptionMetafield: metafield(namespace: "custom", key: "tabella_taglie_description") {
+    value
+    type
+  }
+  imageMetafield: metafield(namespace: "custom", key: "tabella_taglie_image") {
+    reference {
+      ... on MediaImage {
+        image {
+          url
+          altText
+        }
+      }
+    }
+  }
+  tableMetafield: metafield(namespace: "custom", key: "tabella_taglie_table") {
+    value
+  }
+  noteMetafield: metafield(namespace: "custom", key: "tabella_taglie_note") {
+    value
+    type
+  }
+`;
+
 const ADMIN_PRODUCT_BY_HANDLE_QUERY = `#graphql
   query ConfiguratorProductByHandle($handle: String!) {
     productByIdentifier(identifier: { handle: $handle }) {
@@ -50,6 +79,7 @@ const STOREFRONT_PRODUCT_BY_HANDLE_QUERY = `#graphql
       minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
         value
       }
+      ${STOREFRONT_SIZE_CHART_FIELDS}
     }
   }
 `;
@@ -79,6 +109,7 @@ const STOREFRONT_PRODUCTS_LOOKUP_QUERY = `#graphql
         minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
           value
         }
+        ${STOREFRONT_SIZE_CHART_FIELDS}
       }
     }
   }
@@ -105,7 +136,7 @@ type storefrontProductNodeType = {
   bonusCountMetafield?: { value: string } | null;
   bonusDiscountMetafield?: { value: string } | null;
   minimumCountMetafield?: { value: string } | null;
-};
+} & sizeChartMetafieldsNodeType;
 
 type storefrontProductByHandleResponseType = {
   product?: storefrontProductNodeType | null;
@@ -131,6 +162,11 @@ const mapStorefrontProductNode = (node: storefrontProductNodeType): shopifyProdu
   bonusCountMetafield: node.bonusCountMetafield,
   bonusDiscountMetafield: node.bonusDiscountMetafield,
   minimumCountMetafield: node.minimumCountMetafield,
+  headingMetafield: node.headingMetafield,
+  descriptionMetafield: node.descriptionMetafield,
+  imageMetafield: node.imageMetafield,
+  tableMetafield: node.tableMetafield,
+  noteMetafield: node.noteMetafield,
 });
 
 const toConfiguratorProduct = (node: shopifyProductBusinessNodeType): configuratorProductHydrationType | null => {

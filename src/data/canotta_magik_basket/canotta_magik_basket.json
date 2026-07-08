@@ -3,8 +3,8 @@
   "path": "/models/canotta_magik_basket/",
   "modelFile": "model.glb",
   "printAtlas": {
-    "width": 4096,
-    "height": 1679
+    "width": 2048,
+    "height": 840
   },
   "preserveGltfMeshes": ["basketball_top_inside", "basketball_top_sweatband", "basketball_top_label"],
   "parts": [
@@ -93,8 +93,8 @@
       }
     },
     {
-      "name": "Collar",
-      "label": "Collar",
+      "name": "Collo",
+      "label": "Collo",
       "id": "canotta_magik_basket_collar",
       "meshNames": ["basketball_top_collar"],
       "renderOrder": 1,
@@ -117,7 +117,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -128,7 +128,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 2,
     "fontSizeMin": 50,
     "fontSizeMax": 600,
@@ -143,7 +143,7 @@
     "font": "Oswald",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
-    "strokeWidth": 2,
+    "strokeWidth": 0,
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
@@ -159,56 +159,124 @@
   },
   "namePositions": [
     {
-      "label": "Back",
+      "label": "Nome schiena superiore",
       "partId": "canotta_magik_basket_back",
       "uv": {
-        "x": 0.25,
-        "y": 0.45
+        "x": 0.8,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 200,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "top_back"
+    },
+    {
+      "label": "Nome schiena inferiore",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.255,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 100,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "testo": ["bottom_back"]
+      }
     }
   ],
   "numberPositions": [
     {
-      "label": "Front",
+      "label": "Davanti",
       "partId": "canotta_magik_basket_front",
       "uv": {
-        "x": 0.75,
-        "y": 0.45
+        "x": 0.365,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "testo": ["front_center"]
+      }
     },
     {
-      "label": "Back",
-      "partId": "canotta_magik_basket_back",
+      "label": "Davanti sulla DX",
+      "partId": "canotta_magik_basket_front",
       "uv": {
-        "x": 0.24,
-        "y": 0.45
+        "x": 0.31,
+        "y": 0.33
       },
       "rotation": 0,
-      "fontSize": 580,
+      "fontSize": 80,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_right"
+    },
+    {
+      "label": "Dietro",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.578,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 240,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "back"
     }
   ],
   "testoPositions": [
     {
-      "label": "Front",
+      "label": "Davanti",
       "partId": "canotta_magik_basket_front",
       "uv": {
-        "x": 0.75,
-        "y": 0.55
+        "x": 0.415,
+        "y": 0.5
       },
       "rotation": 0,
-      "fontSize": 180,
+      "fontSize": 100,
       "show_frame": true,
-      "show_gizmo": false
+      "show_gizmo": true,
+      "id": "front_center",
+      "conflicts": {
+        "number": ["front_center"]
+      }
+    },
+    {
+      "label": "Nome schiena inferiore",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.255,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 100,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "bottom_back",
+      "conflicts": {
+        "name": ["bottom_back"]
+      }
+    },
+    {
+      "label": "Nome schiena superiore",
+      "partId": "canotta_magik_basket_back",
+      "uv": {
+        "x": 0.868,
+        "y": 0.5
+      },
+      "rotation": 0,
+      "fontSize": 50,
+      "show_frame": true,
+      "show_gizmo": true,
+      "id": "top_back"
     }
   ]
 }

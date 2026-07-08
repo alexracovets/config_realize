@@ -79,12 +79,9 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
       setGizmoDragging(!enabled);
     };
 
-    const GIZMO_LOG_THROTTLE_MS = 250;
-
     const startDrag = (mode: DragMode, clientX: number, clientY: number, buttonHit: gizmoButtonHitType | null) => {
       const el = ctx.current.element;
       let didChange = false;
-      let lastLogAt = 0;
 
       const logPlacement = (
         instance: { label: string; partId: string; uv: uvPointType; rotation: number; fontSize?: number; scale?: number },
@@ -102,13 +99,6 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
           product,
           phase,
         });
-      };
-
-      const maybeLogDuringDrag = (instance: { label: string; partId: string; uv: uvPointType; rotation: number; fontSize?: number; scale?: number }) => {
-        const now = Date.now();
-        if (now - lastLogAt < GIZMO_LOG_THROTTLE_MS) return;
-        lastLogAt = now;
-        logPlacement(instance, 'drag');
       };
 
       if (el.kind === 'name' || el.kind === 'number' || el.kind === 'testo') {
@@ -166,7 +156,7 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
           }
 
           const latest = garmentStore.getState().instances.find((item) => item.id === el.id);
-          if (latest) maybeLogDuringDrag(latest);
+          if (latest && didChange) logPlacement(latest, 'drag');
           ctx.current.invalidate();
         };
 
@@ -240,7 +230,7 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
         }
 
         const latest = useGarmentLogo.getState().instances.find((item) => item.id === el.id);
-        if (latest) maybeLogDuringDrag(latest);
+        if (latest && didChange) logPlacement(latest, 'drag');
         ctx.current.invalidate();
       };
 

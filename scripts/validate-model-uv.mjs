@@ -74,7 +74,10 @@ const validateModel = async (modelId) => {
   const document = await io.read(glbPath);
 
   const nodeMeshIndex = (nodeName) => {
-    const node = document.getRoot().listNodes().find((entry) => entry.getName() === nodeName);
+    const node = document
+      .getRoot()
+      .listNodes()
+      .find((entry) => entry.getName() === nodeName);
     if (!node) return null;
     return document.getRoot().listMeshes().indexOf(node.getMesh());
   };
@@ -119,9 +122,7 @@ const validateModel = async (modelId) => {
 
     if (!ok) {
       console.log(`         JSON  minX=${part.uvBounds.minX} maxX=${part.uvBounds.maxX} minY=${part.uvBounds.minY} maxY=${part.uvBounds.maxY}`);
-      console.log(
-        `         TEX0  minU=${tex0.minU.toFixed(4)} maxU=${tex0.maxU.toFixed(4)} minV=${tex0.minV.toFixed(4)} maxV=${tex0.maxV.toFixed(4)}`,
-      );
+      console.log(`         TEX0  minU=${tex0.minU.toFixed(4)} maxU=${tex0.maxU.toFixed(4)} minV=${tex0.minV.toFixed(4)} maxV=${tex0.maxV.toFixed(4)}`);
     }
   }
 
