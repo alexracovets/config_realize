@@ -114,6 +114,7 @@ const createStagedTarget = async (filename: string, mimeType: string, fileSize: 
       {
         filename,
         mimeType,
+        httpMethod: 'POST',
         resource: 'FILE',
         fileSize: fileSize.toString(),
       },
@@ -133,10 +134,10 @@ const createStagedTarget = async (filename: string, mimeType: string, fileSize: 
   return target;
 };
 
-const uploadToStagedTarget = async (target: stagedTargetType, file: Blob, filename: string): Promise<void> => {
+const uploadToStagedTarget = async (target: stagedTargetType, file: Blob): Promise<void> => {
   const formData = new FormData();
   target.parameters.forEach(({ name, value }) => formData.append(name, value));
-  formData.append('file', file, filename);
+  formData.append('file', file);
 
   const response = await fetch(target.url, { method: 'POST', body: formData });
   if (!response.ok) {
@@ -174,7 +175,7 @@ const uploadShopifyFile = async (file: Blob, filename: string, mimeType: string)
   const contentType: 'FILE' | 'IMAGE' = mimeType.startsWith('image/') ? 'IMAGE' : 'FILE';
 
   const target = await createStagedTarget(filename, mimeType, file.size);
-  await uploadToStagedTarget(target, file, filename);
+  await uploadToStagedTarget(target, file);
   return createShopifyFile(target.resourceUrl, contentType);
 };
 
