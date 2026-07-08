@@ -9,8 +9,7 @@ import {
   buildOrderCuttingExport,
   buildOrderCuttingExportPdfBlob,
   buildOrderPreset,
-  collectOrderCuttingExportUvBlobs,
-  isEmbeddedSession,
+  collectOrderCuttingExportUvBlobs, 
   waitAndCloneDocumentForCapture,
 } from '@utils';
 import { redirectToShopifyCheckout } from '@utils/embeddedUrlSync';
