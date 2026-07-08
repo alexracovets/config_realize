@@ -11,9 +11,9 @@ import {
   buildOrderPreset,
   collectOrderCuttingExportUvBlobs,
   isEmbeddedSession,
-  resolveAbsoluteAssetUrl,
+  waitAndCloneDocumentForCapture,
 } from '@utils';
-import { postEmbeddedCheckoutRedirect } from '@utils/embeddedUrlSync';
+import { redirectToShopifyCheckout } from '@utils/embeddedUrlSync';
 import type { checkoutLineAttributeType, createCheckoutPayloadType, createCheckoutResultType } from '@shopify';
 import type { uvExportBlobType } from '@utils';
 
@@ -25,35 +25,6 @@ type checkoutAssetsResponseType = {
   cuttingPdfUrl: string | null;
   uvImages: { cartItemId: string; label: string; url: string }[];
   error?: string;
-};
-
-/** Clones an already-mounted hidden export document into an offscreen capture host, resolving relative image URLs. */
-const cloneDocumentForCapture = (testId: string): { element: HTMLElement; dispose: () => void } | null => {
-  const source = document.querySelector(`[data-testid="${testId}"]`);
-  if (!(source instanceof HTMLElement)) return null;
-
-  const styleElement = source.parentElement?.querySelector('style') ?? null;
-
-  const captureHost = document.createElement('div');
-  captureHost.style.cssText = `position:fixed;left:-10000px;top:0;z-index:-1;pointer-events:none;background:#fff;width:${source.scrollWidth}px;`;
-  if (styleElement) captureHost.appendChild(styleElement.cloneNode(true));
-  captureHost.appendChild(source.cloneNode(true));
-  document.body.appendChild(captureHost);
-
-  const cloned = captureHost.querySelector(`[data-testid="${testId}"]`);
-  if (!(cloned instanceof HTMLElement)) {
-    captureHost.remove();
-    return null;
-  }
-
-  cloned.querySelectorAll('img').forEach((image) => {
-    if (!(image instanceof HTMLImageElement)) return;
-    const src = image.getAttribute('src');
-    if (!src || /^(?:https?:|blob:|data:)/.test(src)) return;
-    image.src = resolveAbsoluteAssetUrl(src);
-  });
-
-  return { element: cloned, dispose: () => captureHost.remove() };
 };
 
 const buildAssetsFormData = (orderPdfBlob: Blob | null, cuttingPdfBlob: Blob | null, uvBlobs: uvExportBlobType[]): FormData => {
@@ -79,13 +50,22 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
 
     const cuttingExportData = buildOrderCuttingExport({ products, configurations });
 
-    const orderCapture = cloneDocumentForCapture('checkout-order-export-document');
-    const cuttingCapture = cloneDocumentForCapture('order-cutting-export-document');
+    const [orderCapture, cuttingCapture] = await Promise.all([
+      waitAndCloneDocumentForCapture('checkout-order-export-document'),
+      waitAndCloneDocumentForCapture('order-cutting-export-document'),
+    ]);
 
     const [orderPdfBlob, uvBlobs] = await Promise.all([
-      orderCapture ? buildCheckoutOrderExportPdfBlob(orderCapture.element).finally(orderCapture.dispose) : Promise.resolve(null),
+      orderCapture
+        ? buildCheckoutOrderExportPdfBlob(orderCapture.element).catch((error) => {
+            console.error('Order PDF generation failed', error);
+            return null;
+          })
+        : Promise.resolve(null),
       collectOrderCuttingExportUvBlobs(cuttingExportData),
     ]);
+
+    orderCapture?.dispose();
 
     if (!orderPdfBlob && !uvBlobs.length && !cuttingCapture) return [];
 
@@ -170,11 +150,9 @@ const useSubmitCheckout = () => {
         throw new Error(data.error ?? 'Impossibile creare il checkout.');
       }
 
-      if (isEmbeddedSession()) {
-        postEmbeddedCheckoutRedirect(data.checkoutUrl);
-      } else {
-        window.location.assign(data.checkoutUrl);
-      }
+      redirectToShopifyCheckout(data.checkoutUrl, () => {
+        setIsSubmitting(false);
+      });
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Errore sconosciuto.');
       setIsSubmitting(false);

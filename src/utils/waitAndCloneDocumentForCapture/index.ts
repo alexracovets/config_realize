@@ -1,0 +1,1 @@
+export { waitAndCloneDocumentForCapture } from './waitAndCloneDocumentForCapture';

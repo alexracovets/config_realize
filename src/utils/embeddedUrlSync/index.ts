@@ -6,5 +6,6 @@ export {
   isEmbeddedUrlSyncMessage,
   postEmbeddedCheckoutRedirect,
   postEmbeddedUrlToParent,
+  redirectToShopifyCheckout,
 } from './embeddedUrlSync';
 export type { embeddedUrlSyncMessage } from './embeddedUrlSync';

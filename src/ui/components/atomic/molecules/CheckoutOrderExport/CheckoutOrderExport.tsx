@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { CHECKOUT_CREATE_ORDER_LABEL } from '@constants';
 import { useCheckoutOrderExport } from '@hooks';
@@ -10,15 +10,8 @@ import { CheckoutOrderExportDocument } from '@molecules/CheckoutOrderExport/Chec
 
 const CheckoutOrderExport = () => {
   const { documentRef, exportData, exportOrder } = useCheckoutOrderExport();
-  const [isDocumentReady, setIsDocumentReady] = useState(false);
 
   useEffect(() => registerCheckoutE2eDebug(), []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsDocumentReady(true);
-    }, 100);
-  }, []);
 
   return (
     <>
@@ -33,16 +26,14 @@ const CheckoutOrderExport = () => {
         {CHECKOUT_CREATE_ORDER_LABEL}
       </Button>
 
-      {isDocumentReady ? (
-        <div
-          ref={documentRef}
-          data-testid="checkout-order-export-host"
-          aria-hidden
-          className="pointer-events-none fixed top-0 left-[-9999px] w-[794px] overflow-hidden opacity-0"
-        >
-          <CheckoutOrderExportDocument exportData={exportData} />
-        </div>
-      ) : null}
+      <div
+        ref={documentRef}
+        data-testid="checkout-order-export-host"
+        aria-hidden
+        className="pointer-events-none fixed top-0 left-[-9999px] w-[794px] overflow-hidden opacity-0"
+      >
+        <CheckoutOrderExportDocument exportData={exportData} />
+      </div>
     </>
   );
 };
