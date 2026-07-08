@@ -13,25 +13,33 @@ import {
   collectOrderCuttingExportUvBlobs,
   uploadCheckoutAssetsDirect,
   waitAndCloneDocumentForCapture,
+  withTimeout,
 } from '@utils';
 import type { checkoutAssetUploadItemType } from '@utils';
 import { redirectToShopifyCheckout } from '@utils/embeddedUrlSync';
 import type { checkoutLineAttributeType, createCheckoutPayloadType, createCheckoutResultType } from '@shopify';
 
 const CHECKOUT_ENDPOINT = '/api/checkout';
+const CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS = 120_000;
 
 const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeType[]> => {
+  let orderCapture: Awaited<ReturnType<typeof waitAndCloneDocumentForCapture>> = null;
+  let cuttingCapture: Awaited<ReturnType<typeof waitAndCloneDocumentForCapture>> = null;
+
   try {
     const { products } = useCheckout.getState();
     const { configurations } = useConfigurationCart.getState();
 
     const cuttingExportData = buildOrderCuttingExport({ products, configurations });
 
-    const [orderCapture, cuttingCapture, uvBlobs] = await Promise.all([
+    const [orderCaptureResult, cuttingCaptureResult, uvBlobs] = await Promise.all([
       waitAndCloneDocumentForCapture('checkout-order-export-document'),
       waitAndCloneDocumentForCapture('order-cutting-export-document'),
       collectOrderCuttingExportUvBlobs(cuttingExportData),
     ]);
+
+    orderCapture = orderCaptureResult;
+    cuttingCapture = cuttingCaptureResult;
 
     const downloadUrls = await buildCuttingExportDownloadUrlsFromUvBlobs(uvBlobs);
 
@@ -49,9 +57,6 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
           })
         : Promise.resolve(null),
     ]);
-
-    orderCapture?.dispose();
-    cuttingCapture?.dispose();
 
     const uploadItems: checkoutAssetUploadItemType[] = [];
 
@@ -104,6 +109,9 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
   } catch (error) {
     console.error('Checkout asset upload failed', error);
     return [];
+  } finally {
+    orderCapture?.dispose();
+    cuttingCapture?.dispose();
   }
 };
 
@@ -124,7 +132,15 @@ const useSubmitCheckout = () => {
         throw new Error('Nessun prodotto da ordinare.');
       }
 
-      payload.attributes = await collectCheckoutAssetAttributes();
+      // Never let asset generation block the checkout indefinitely — proceed without attachments.
+      payload.attributes = await withTimeout(
+        collectCheckoutAssetAttributes(),
+        CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS,
+        'Checkout asset collection',
+      ).catch((assetError: unknown) => {
+        console.error('Checkout asset collection failed', assetError);
+        return [];
+      });
 
       const response = await fetch(CHECKOUT_ENDPOINT, {
         method: 'POST',

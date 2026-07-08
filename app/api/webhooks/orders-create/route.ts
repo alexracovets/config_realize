@@ -70,6 +70,8 @@ export async function POST(request: Request): Promise<Response> {
     await setOrderMetafields(`gid://shopify/Order/${order.id}`, fields);
   } catch (error) {
     console.error(`[shopify webhook] Failed to set ${ORDER_METAFIELD_NAMESPACE} metafields for order ${order.id}:`, error);
+    // Non-2xx makes Shopify redeliver the webhook; metafieldsSet is an idempotent upsert, so retries are safe.
+    return Response.json({ error: 'Failed to persist order metafields.' }, { status: 500 });
   }
 
   return Response.json({ ok: true });

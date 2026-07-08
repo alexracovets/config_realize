@@ -6,6 +6,7 @@ export { buildOrderPreset } from './buildOrderPreset';
 export { buildCheckoutOrderExport, formatCheckoutOrderDate } from './buildCheckoutOrderExport';
 export { buildOrderCuttingExport } from './buildOrderCuttingExport';
 export { buildCheckoutOrderExportPdfBlob, downloadCheckoutOrderExportPdf } from './downloadCheckoutOrderExportPdf';
+export { triggerExportPdfDownload, waitForExportImages, withTimeout } from './exportPdfCapture';
 export { buildOrderCuttingExportPdfBlob, downloadOrderCuttingExportPdf } from './downloadOrderCuttingExportPdf';
 export { collectOrderCuttingExportUvBlobs } from './collectOrderCuttingExportUvBlobs';
 export type { uvExportBlobType } from './collectOrderCuttingExportUvBlobs';
