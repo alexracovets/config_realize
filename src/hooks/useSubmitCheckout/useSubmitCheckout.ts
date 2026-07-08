@@ -6,13 +6,14 @@ import { CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from
 import { useCheckout, useConfigurationCart } from '@store';
 import {
   buildCheckoutOrderExportPdfBlob,
+  buildCuttingExportDownloadUrlsFromUvBlobs,
   buildOrderCuttingExport,
   buildOrderCuttingExportPdfBlob,
   buildOrderPreset,
-  collectOrderCuttingExportUvBlobs, 
+  collectOrderCuttingExportUvBlobs,
   waitAndCloneDocumentForCapture,
 } from '@utils';
-import { redirectToShopifyCheckout } from '@utils/embeddedUrlSync';
+import { openPendingCheckoutWindow, redirectToShopifyCheckout } from '@utils/embeddedUrlSync';
 import type { checkoutLineAttributeType, createCheckoutPayloadType, createCheckoutResultType } from '@shopify';
 import type { uvExportBlobType } from '@utils';
 
@@ -49,61 +50,46 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
 
     const cuttingExportData = buildOrderCuttingExport({ products, configurations });
 
-    const [orderCapture, cuttingCapture] = await Promise.all([
+    const [orderCapture, cuttingCapture, uvBlobs] = await Promise.all([
       waitAndCloneDocumentForCapture('checkout-order-export-document'),
       waitAndCloneDocumentForCapture('order-cutting-export-document'),
+      collectOrderCuttingExportUvBlobs(cuttingExportData),
     ]);
 
-    const [orderPdfBlob, uvBlobs] = await Promise.all([
+    const downloadUrls = await buildCuttingExportDownloadUrlsFromUvBlobs(uvBlobs);
+
+    const [orderPdfBlob, cuttingPdfBlob] = await Promise.all([
       orderCapture
         ? buildCheckoutOrderExportPdfBlob(orderCapture.element).catch((error) => {
             console.error('Order PDF generation failed', error);
             return null;
           })
         : Promise.resolve(null),
-      collectOrderCuttingExportUvBlobs(cuttingExportData),
+      cuttingCapture
+        ? buildOrderCuttingExportPdfBlob(cuttingCapture.element, { downloadUrls }).catch((error) => {
+            console.error('Cutting PDF generation failed', error);
+            return null;
+          })
+        : Promise.resolve(null),
     ]);
 
     orderCapture?.dispose();
+    cuttingCapture?.dispose();
 
-    if (!orderPdfBlob && !uvBlobs.length && !cuttingCapture) return [];
+    if (!orderPdfBlob && !cuttingPdfBlob && !uvBlobs.length) return [];
 
     const uploadResponse = await fetch(CHECKOUT_ASSETS_ENDPOINT, {
       method: 'POST',
-      body: buildAssetsFormData(orderPdfBlob, null, uvBlobs),
+      body: buildAssetsFormData(orderPdfBlob, cuttingPdfBlob, uvBlobs),
     });
 
     if (!uploadResponse.ok) return [];
 
     const uploadData = (await uploadResponse.json()) as checkoutAssetsResponseType;
-
-    let cuttingPdfUrl = uploadData.cuttingPdfUrl ?? null;
-
-    if (cuttingCapture && uploadData.uvImages?.length) {
-      try {
-        const cuttingPdfBlob = await buildOrderCuttingExportPdfBlob(cuttingCapture.element, {
-          downloadUrls: uploadData.uvImages,
-        });
-        const cuttingUploadResponse = await fetch(CHECKOUT_ASSETS_ENDPOINT, {
-          method: 'POST',
-          body: buildAssetsFormData(null, cuttingPdfBlob, []),
-        });
-
-        if (cuttingUploadResponse.ok) {
-          const cuttingUploadData = (await cuttingUploadResponse.json()) as checkoutAssetsResponseType;
-          cuttingPdfUrl = cuttingUploadData.cuttingPdfUrl ?? cuttingPdfUrl;
-        }
-      } finally {
-        cuttingCapture.dispose();
-      }
-    } else {
-      cuttingCapture?.dispose();
-    }
-
     const attributes: checkoutLineAttributeType[] = [];
 
     if (uploadData.orderPdfUrl) attributes.push({ key: '_order_pdf_url', value: uploadData.orderPdfUrl });
-    if (cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: cuttingPdfUrl });
+    if (uploadData.cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: uploadData.cuttingPdfUrl });
     if (uploadData.uvImages?.length) attributes.push({ key: '_uv_image_urls', value: JSON.stringify(uploadData.uvImages) });
 
     return attributes;
@@ -126,12 +112,15 @@ const useSubmitCheckout = () => {
     setIsSubmitting(true);
     setError(null);
 
+    const pendingCheckoutWindow = openPendingCheckoutWindow();
+
     try {
       const { products } = useCheckout.getState();
       const { configurations } = useConfigurationCart.getState();
       const payload: createCheckoutPayloadType = buildOrderPreset(products, configurations);
 
       if (!payload.lines.length) {
+        pendingCheckoutWindow?.close();
         throw new Error('Nessun prodotto da ordinare.');
       }
 
@@ -146,13 +135,17 @@ const useSubmitCheckout = () => {
       const data = (await response.json()) as createCheckoutResultType & { error?: string };
 
       if (!response.ok || !data.checkoutUrl) {
+        pendingCheckoutWindow?.close();
         throw new Error(data.error ?? 'Impossibile creare il checkout.');
       }
 
-      redirectToShopifyCheckout(data.checkoutUrl, () => {
+      redirectToShopifyCheckout(data.checkoutUrl, pendingCheckoutWindow);
+
+      if (pendingCheckoutWindow) {
         setIsSubmitting(false);
-      });
+      }
     } catch (submitError) {
+      pendingCheckoutWindow?.close();
       setError(submitError instanceof Error ? submitError.message : 'Errore sconosciuto.');
       setIsSubmitting(false);
     }

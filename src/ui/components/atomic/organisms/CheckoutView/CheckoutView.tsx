@@ -17,10 +17,8 @@ const CheckoutView = () => {
         {products.map((product) => (
           <CheckoutProductCard key={product.cartItemId} product={product} />
         ))}
-        <Flex className="flex-wrap items-center gap-3">
-          <CheckoutOrderExport />
-          <OrderCuttingExport />
-        </Flex>
+        <CheckoutOrderExport />
+        <OrderCuttingExport />
         <Button
           size="sm"
           className="self-start border border-gray-20 bg-white"

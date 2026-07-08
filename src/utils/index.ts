@@ -14,6 +14,7 @@ export type { cuttingExportDownloadUrlEntryType } from './applyCuttingExportDown
 export { composeOrderCuttingExportDownloadFile } from './composeOrderCuttingExportDownloadFile';
 export { resolveCuttingExportDownloadUrls } from './resolveCuttingExportDownloadUrls';
 export { hasOrderCuttingExportDownloadTarget, openOrderCuttingExportDownloadTarget, resolveOrderCuttingExportDownloadHref } from './resolveOrderCuttingExportDownloadHref';
+export { buildCuttingExportDownloadUrlsFromUvBlobs } from './buildCuttingExportDownloadUrlsFromUvBlobs';
 export { waitAndCloneDocumentForCapture } from './waitAndCloneDocumentForCapture';
 export { resolveAbsoluteAssetUrl } from './resolveAbsoluteAssetUrl';
 export { canvasToPngBlobUrl } from './logoFile/canvasToBlobUrl';

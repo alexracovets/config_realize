@@ -2,39 +2,25 @@
 
 import { useEffect } from 'react';
 
-import { CHECKOUT_CREATE_ORDER_LABEL } from '@constants';
 import { useCheckoutOrderExport } from '@hooks';
 import { registerCheckoutE2eDebug } from '@store/useCheckout/registerCheckoutE2eDebug';
-import { Button } from '@atoms';
 import { CheckoutOrderExportDocument } from '@molecules/CheckoutOrderExport/CheckoutOrderExportDocument';
 
+/** Offscreen order-confirmation document captured by `useSubmitCheckout` when the customer clicks Prosegui. */
 const CheckoutOrderExport = () => {
-  const { documentRef, exportData, exportOrder } = useCheckoutOrderExport();
+  const { documentRef, exportData } = useCheckoutOrderExport();
 
   useEffect(() => registerCheckoutE2eDebug(), []);
 
   return (
-    <>
-      <Button
-        type="button"
-        variant="default"
-        size="sm"
-        onClick={() => void exportOrder()}
-        data-testid="checkout-create-order-button"
-        className="h-12 rounded-[8px] bg-base-black px-8 text-[16px] font-semibold text-white hover:bg-base-black/90"
-      >
-        {CHECKOUT_CREATE_ORDER_LABEL}
-      </Button>
-
-      <div
-        ref={documentRef}
-        data-testid="checkout-order-export-host"
-        aria-hidden
-        className="pointer-events-none fixed top-0 left-[-9999px] w-[794px] overflow-hidden opacity-0"
-      >
-        <CheckoutOrderExportDocument exportData={exportData} />
-      </div>
-    </>
+    <div
+      ref={documentRef}
+      data-testid="checkout-order-export-host"
+      aria-hidden
+      className="pointer-events-none fixed top-0 left-[-9999px] w-[794px] overflow-hidden opacity-0"
+    >
+      <CheckoutOrderExportDocument exportData={exportData} />
+    </div>
   );
 };
 

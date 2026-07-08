@@ -95,19 +95,6 @@ test.describe('checkout order export', () => {
     await expect(tableRows.nth(2)).toContainText('M');
   });
 
-  test('downloads the order export as a pdf without opening a blank tab', async ({ page, context }) => {
-    const popupPromise = context.waitForEvent('page', { timeout: 1_500 }).catch(() => null);
-    const downloadPromise = page.waitForEvent('download');
-
-    await page.getByTestId('checkout-create-order-button').click();
-
-    const download = await downloadPromise;
-    const popup = await popupPromise;
-
-    expect(popup).toBeNull();
-    expect(download.suggestedFilename()).toBe('conferma-ordine.pdf');
-  });
-
   test('matches the checkout order export visual snapshot', async ({ page }) => {
     await page.evaluate(() => window.__checkoutE2e?.revealOrderExportDocument());
 
