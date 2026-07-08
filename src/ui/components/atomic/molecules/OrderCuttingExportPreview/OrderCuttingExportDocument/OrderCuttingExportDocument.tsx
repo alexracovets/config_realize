@@ -101,7 +101,12 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
         </table>
 
         {products.map((product) => (
-          <section key={product.cartItemId} className="cutting-export__product" aria-label={product.productTitle}>
+          <section
+            key={product.cartItemId}
+            className="cutting-export__product"
+            data-cart-item-id={product.cartItemId}
+            aria-label={product.productTitle}
+          >
             <header className="cutting-export__product-header">
               <h2 className="cutting-export__product-title">{product.productTitle}</h2>
               <p className="cutting-export__product-meta">
@@ -159,7 +164,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
                         {step.downloadFiles.length > 0 ? (
                           <div className="cutting-export__downloads">
                             {step.downloadFiles.map((file) => (
-                              <DownloadCard key={file.key} file={file} />
+                              <DownloadCard key={file.key} cartItemId={product.cartItemId} file={file} />
                             ))}
                           </div>
                         ) : null}

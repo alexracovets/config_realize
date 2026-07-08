@@ -12,10 +12,11 @@ import { AtomImage } from '@atoms';
 const DOWNLOAD_PREVIEW_SIZE_PX = 60;
 
 type orderCuttingExportDownloadCardPropsType = {
+  cartItemId: string;
   file: orderCuttingExportDownloadFileType;
 };
 
-const OrderCuttingExportDownloadCard = ({ file }: orderCuttingExportDownloadCardPropsType) => {
+const OrderCuttingExportDownloadCard = ({ cartItemId, file }: orderCuttingExportDownloadCardPropsType) => {
   const [composedUrl, setComposedUrl] = useState<string | null>(file.previewSrc ?? (file.downloadUrl || null));
   const [isLoading, setIsLoading] = useState(Boolean(file.composeKind));
 
@@ -99,6 +100,9 @@ const OrderCuttingExportDownloadCard = ({ file }: orderCuttingExportDownloadCard
   return (
     <a
       className={`cutting-export__download-card${isLoading ? ' cutting-export__download-card--disabled' : ''}`}
+      data-cart-item-id={cartItemId}
+      data-download-label={file.label}
+      data-download-file={file.fileName}
       href={href}
       target="_blank"
       rel="noopener noreferrer"

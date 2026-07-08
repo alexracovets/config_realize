@@ -82,27 +82,50 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
     const orderCapture = cloneDocumentForCapture('checkout-order-export-document');
     const cuttingCapture = cloneDocumentForCapture('order-cutting-export-document');
 
-    const [orderPdfBlob, cuttingPdfBlob, uvBlobs] = await Promise.all([
+    const [orderPdfBlob, uvBlobs] = await Promise.all([
       orderCapture ? buildCheckoutOrderExportPdfBlob(orderCapture.element).finally(orderCapture.dispose) : Promise.resolve(null),
-      cuttingCapture ? buildOrderCuttingExportPdfBlob(cuttingCapture.element).finally(cuttingCapture.dispose) : Promise.resolve(null),
       collectOrderCuttingExportUvBlobs(cuttingExportData),
     ]);
 
-    if (!orderPdfBlob && !cuttingPdfBlob && !uvBlobs.length) return [];
+    if (!orderPdfBlob && !uvBlobs.length && !cuttingCapture) return [];
 
-    const response = await fetch(CHECKOUT_ASSETS_ENDPOINT, {
+    const uploadResponse = await fetch(CHECKOUT_ASSETS_ENDPOINT, {
       method: 'POST',
-      body: buildAssetsFormData(orderPdfBlob, cuttingPdfBlob, uvBlobs),
+      body: buildAssetsFormData(orderPdfBlob, null, uvBlobs),
     });
 
-    if (!response.ok) return [];
+    if (!uploadResponse.ok) return [];
 
-    const data = (await response.json()) as checkoutAssetsResponseType;
+    const uploadData = (await uploadResponse.json()) as checkoutAssetsResponseType;
+
+    let cuttingPdfUrl = uploadData.cuttingPdfUrl ?? null;
+
+    if (cuttingCapture && uploadData.uvImages?.length) {
+      try {
+        const cuttingPdfBlob = await buildOrderCuttingExportPdfBlob(cuttingCapture.element, {
+          downloadUrls: uploadData.uvImages,
+        });
+        const cuttingUploadResponse = await fetch(CHECKOUT_ASSETS_ENDPOINT, {
+          method: 'POST',
+          body: buildAssetsFormData(null, cuttingPdfBlob, []),
+        });
+
+        if (cuttingUploadResponse.ok) {
+          const cuttingUploadData = (await cuttingUploadResponse.json()) as checkoutAssetsResponseType;
+          cuttingPdfUrl = cuttingUploadData.cuttingPdfUrl ?? cuttingPdfUrl;
+        }
+      } finally {
+        cuttingCapture.dispose();
+      }
+    } else {
+      cuttingCapture?.dispose();
+    }
+
     const attributes: checkoutLineAttributeType[] = [];
 
-    if (data.orderPdfUrl) attributes.push({ key: '_order_pdf_url', value: data.orderPdfUrl });
-    if (data.cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: data.cuttingPdfUrl });
-    if (data.uvImages?.length) attributes.push({ key: '_uv_image_urls', value: JSON.stringify(data.uvImages) });
+    if (uploadData.orderPdfUrl) attributes.push({ key: '_order_pdf_url', value: uploadData.orderPdfUrl });
+    if (cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: cuttingPdfUrl });
+    if (uploadData.uvImages?.length) attributes.push({ key: '_uv_image_urls', value: JSON.stringify(uploadData.uvImages) });
 
     return attributes;
   } catch (error) {

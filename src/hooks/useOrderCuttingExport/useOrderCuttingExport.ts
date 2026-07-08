@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { CHECKOUT_CUTTING_EXPORT_FILENAME } from '@constants';
 import { useCheckout, useConfigurationCart } from '@store';
-import { buildOrderCuttingExport, downloadOrderCuttingExportPdf, formatCheckoutOrderDate, resolveAbsoluteAssetUrl } from '@utils';
+import { buildOrderCuttingExport, downloadOrderCuttingExportPdf, formatCheckoutOrderDate, resolveAbsoluteAssetUrl, resolveCuttingExportDownloadUrls } from '@utils';
 
 const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
 
@@ -65,7 +65,8 @@ const useOrderCuttingExport = () => {
     });
 
     try {
-      await downloadOrderCuttingExportPdf(captureDocument, CHECKOUT_CUTTING_EXPORT_FILENAME);
+      const downloadUrls = await resolveCuttingExportDownloadUrls(exportData);
+      await downloadOrderCuttingExportPdf(captureDocument, CHECKOUT_CUTTING_EXPORT_FILENAME, { downloadUrls });
     } catch (error) {
       console.error('Order cutting export failed', error);
     } finally {
@@ -73,7 +74,7 @@ const useOrderCuttingExport = () => {
       isExportingRef.current = false;
       setIsExporting(false);
     }
-  }, []);
+  }, [exportData]);
 
   return { documentRef, exportData, exportCuttingOrder, isExporting };
 };

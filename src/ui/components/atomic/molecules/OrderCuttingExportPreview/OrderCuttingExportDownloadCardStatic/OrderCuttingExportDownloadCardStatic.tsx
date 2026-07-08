@@ -7,16 +7,20 @@ import { AtomImage } from '@atoms';
 const DOWNLOAD_PREVIEW_SIZE_PX = 60;
 
 type orderCuttingExportDownloadCardStaticPropsType = {
+  cartItemId: string;
   file: orderCuttingExportDownloadFileType;
 };
 
-const OrderCuttingExportDownloadCardStatic = ({ file }: orderCuttingExportDownloadCardStaticPropsType) => {
+const OrderCuttingExportDownloadCardStatic = ({ cartItemId, file }: orderCuttingExportDownloadCardStaticPropsType) => {
   const previewSrc = file.previewSrc ?? file.downloadUrl;
   const href = resolveOrderCuttingExportDownloadHref(file, previewSrc);
 
   return (
     <a
       className="cutting-export__download-card"
+      data-cart-item-id={cartItemId}
+      data-download-label={file.label}
+      data-download-file={file.fileName}
       href={href}
       target="_blank"
       rel="noopener noreferrer"

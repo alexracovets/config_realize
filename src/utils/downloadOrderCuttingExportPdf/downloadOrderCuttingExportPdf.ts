@@ -3,11 +3,18 @@
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+import type { cuttingExportDownloadUrlEntryType } from '@utils/applyCuttingExportDownloadUrls';
+import { applyCuttingExportDownloadUrls } from '@utils/applyCuttingExportDownloadUrls';
+
 import {
   ORDER_EXPORT_PAGE_HEIGHT_PX,
   ORDER_EXPORT_PAGE_WIDTH_PX,
   paginateOrderCuttingExportDocument,
 } from './paginateOrderCuttingExportDocument';
+
+type buildOrderCuttingExportPdfBlobOptionsType = {
+  downloadUrls?: cuttingExportDownloadUrlEntryType[];
+};
 
 const ORDER_CUTTING_EXPORT_PDF_WIDTH_MM = 210;
 const ORDER_CUTTING_EXPORT_PDF_HEIGHT_MM = 297;
@@ -106,11 +113,21 @@ const appendCanvasToPdf = (pdf: jsPDF, canvas: HTMLCanvasElement, pageIndex: num
   canvas.height = 0;
 };
 
+const resolvePdfLinkUrl = (anchor: HTMLAnchorElement): string | null => {
+  const href = anchor.getAttribute('href')?.trim();
+  if (!href || href === 'about:blank' || href === '#') return null;
+  if (/^(?:https?:|data:)/i.test(href)) return href;
+  return null;
+};
+
 const addPdfPageLinks = (pdf: jsPDF, pageElement: HTMLElement, pageIndex: number, pageHeightPx: number) => {
   const pageRect = pageElement.getBoundingClientRect();
 
   pageElement.querySelectorAll('a.cutting-export__download-card').forEach((anchor) => {
     if (!(anchor instanceof HTMLAnchorElement)) return;
+
+    const url = resolvePdfLinkUrl(anchor);
+    if (!url) return;
 
     const rect = anchor.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
@@ -121,7 +138,7 @@ const addPdfPageLinks = (pdf: jsPDF, pageElement: HTMLElement, pageIndex: number
     const height = (rect.height / pageHeightPx) * ORDER_CUTTING_EXPORT_PDF_HEIGHT_MM;
 
     pdf.setPage(pageIndex + 1);
-    pdf.link(x, y, width, height, { url: anchor.href || 'about:blank' });
+    pdf.link(x, y, width, height, { url });
   });
 };
 
@@ -135,7 +152,10 @@ const getCapturePages = (captureRoot: HTMLElement) => {
   return [captureRoot];
 };
 
-const buildOrderCuttingExportPdfBlob = async (documentElement: HTMLElement): Promise<Blob> => {
+const buildOrderCuttingExportPdfBlob = async (
+  documentElement: HTMLElement,
+  options: buildOrderCuttingExportPdfBlobOptionsType = {},
+): Promise<Blob> => {
   await waitForDocumentImages(documentElement);
 
   const captureRoot = paginateOrderCuttingExportDocument(documentElement);
@@ -144,6 +164,10 @@ const buildOrderCuttingExportPdfBlob = async (documentElement: HTMLElement): Pro
   if (captureRoot !== documentElement) {
     documentElement.setAttribute('hidden', '');
     mountParent.appendChild(captureRoot);
+  }
+
+  if (options.downloadUrls?.length) {
+    applyCuttingExportDownloadUrls(captureRoot, options.downloadUrls);
   }
 
   const pages = getCapturePages(captureRoot);
@@ -168,8 +192,12 @@ const buildOrderCuttingExportPdfBlob = async (documentElement: HTMLElement): Pro
   }
 };
 
-const downloadOrderCuttingExportPdf = async (documentElement: HTMLElement, filename: string) => {
-  const blob = await buildOrderCuttingExportPdfBlob(documentElement);
+const downloadOrderCuttingExportPdf = async (
+  documentElement: HTMLElement,
+  filename: string,
+  options: buildOrderCuttingExportPdfBlobOptionsType = {},
+) => {
+  const blob = await buildOrderCuttingExportPdfBlob(documentElement, options);
   const objectUrl = URL.createObjectURL(blob);
 
   const anchor = document.createElement('a');
@@ -181,3 +209,4 @@ const downloadOrderCuttingExportPdf = async (documentElement: HTMLElement, filen
 };
 
 export { buildOrderCuttingExportPdfBlob, downloadOrderCuttingExportPdf };
+export type { buildOrderCuttingExportPdfBlobOptionsType };

@@ -9,6 +9,10 @@ export { buildCheckoutOrderExportPdfBlob, downloadCheckoutOrderExportPdf } from 
 export { buildOrderCuttingExportPdfBlob, downloadOrderCuttingExportPdf } from './downloadOrderCuttingExportPdf';
 export { collectOrderCuttingExportUvBlobs } from './collectOrderCuttingExportUvBlobs';
 export type { uvExportBlobType } from './collectOrderCuttingExportUvBlobs';
+export { applyCuttingExportDownloadUrls } from './applyCuttingExportDownloadUrls';
+export type { cuttingExportDownloadUrlEntryType } from './applyCuttingExportDownloadUrls';
+export { composeOrderCuttingExportDownloadFile } from './composeOrderCuttingExportDownloadFile';
+export { resolveCuttingExportDownloadUrls } from './resolveCuttingExportDownloadUrls';
 export { hasOrderCuttingExportDownloadTarget, openOrderCuttingExportDownloadTarget, resolveOrderCuttingExportDownloadHref } from './resolveOrderCuttingExportDownloadHref';
 export { resolveAbsoluteAssetUrl } from './resolveAbsoluteAssetUrl';
 export { canvasToPngBlobUrl } from './logoFile/canvasToBlobUrl';
