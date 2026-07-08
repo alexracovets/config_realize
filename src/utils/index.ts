@@ -9,6 +9,7 @@ export { buildCheckoutOrderExportPdfBlob } from './buildCheckoutOrderExportPdf';
 export { buildOrderCuttingExportPdfBlob } from './buildOrderCuttingExportPdf';
 export type { buildOrderCuttingExportPdfBlobOptionsType } from './buildOrderCuttingExportPdf';
 export { isPdfReadyImageSrc, rasterizeImageForPdf, rasterizeImagesForPdf } from './exportPdfAssets';
+export { buildAssetDownloadUrl } from './buildAssetDownloadUrl';
 export { triggerPdfDownload } from './triggerPdfDownload';
 export { withTimeout } from './withTimeout';
 export { collectOrderCuttingExportUvBlobs } from './collectOrderCuttingExportUvBlobs';

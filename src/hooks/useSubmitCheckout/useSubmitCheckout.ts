@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from '@constants';
 import { useCheckout, useConfigurationCart } from '@store';
 import {
+  buildAssetDownloadUrl,
   buildCheckoutOrderExport,
   buildCuttingExportDownloadUrlsFromUvBlobs,
   buildOrderCuttingExport,
@@ -77,6 +78,13 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url }] : [];
     });
 
+    // PDF links go through the app's download route so a click downloads the file
+    // instead of navigating the tab away from the open PDF.
+    const linkUrls = uvBlobs.flatMap((uv) => {
+      const url = uvUrlById.get(`uv:${uv.cartItemId}:${uv.label}`);
+      return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url: buildAssetDownloadUrl(url, uv.fileName) }] : [];
+    });
+
     const downloadUrls = await buildCuttingExportDownloadUrlsFromUvBlobs(uvBlobs);
 
     const [orderPdfBlob, cuttingPdfBlob] = await Promise.all([
@@ -84,7 +92,7 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
         console.error('Order PDF generation failed', error);
         return null;
       }),
-      buildOrderCuttingExportPdfBlob(cuttingExportData, { downloadUrls, linkUrls: uvImages }).catch((error) => {
+      buildOrderCuttingExportPdfBlob(cuttingExportData, { downloadUrls, linkUrls }).catch((error) => {
         console.error('Cutting PDF generation failed', error);
         return null;
       }),
