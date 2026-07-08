@@ -5,9 +5,12 @@ export { buildCollectionPath, buildConfiguratorPath, isConfiguratorPath, isInter
 export { buildOrderPreset } from './buildOrderPreset';
 export { buildCheckoutOrderExport, formatCheckoutOrderDate } from './buildCheckoutOrderExport';
 export { buildOrderCuttingExport } from './buildOrderCuttingExport';
-export { buildCheckoutOrderExportPdfBlob, downloadCheckoutOrderExportPdf } from './downloadCheckoutOrderExportPdf';
-export { triggerExportPdfDownload, waitForExportImages, withTimeout } from './exportPdfCapture';
-export { buildOrderCuttingExportPdfBlob, downloadOrderCuttingExportPdf } from './downloadOrderCuttingExportPdf';
+export { buildCheckoutOrderExportPdfBlob } from './buildCheckoutOrderExportPdf';
+export { buildOrderCuttingExportPdfBlob } from './buildOrderCuttingExportPdf';
+export type { buildOrderCuttingExportPdfBlobOptionsType } from './buildOrderCuttingExportPdf';
+export { isPdfReadyImageSrc, rasterizeImageForPdf, rasterizeImagesForPdf } from './exportPdfAssets';
+export { triggerPdfDownload } from './triggerPdfDownload';
+export { withTimeout } from './withTimeout';
 export { collectOrderCuttingExportUvBlobs } from './collectOrderCuttingExportUvBlobs';
 export type { uvExportBlobType } from './collectOrderCuttingExportUvBlobs';
 export { applyCuttingExportDownloadUrls } from './applyCuttingExportDownloadUrls';
@@ -19,7 +22,6 @@ export { buildCuttingExportDownloadUrlsFromUvBlobs } from './buildCuttingExportD
 export { uploadBlobToStagedTarget } from './uploadBlobToStagedTarget';
 export { uploadCheckoutAssetsDirect } from './uploadCheckoutAssetsDirect';
 export type { checkoutAssetUploadItemType } from './uploadCheckoutAssetsDirect';
-export { waitAndCloneDocumentForCapture } from './waitAndCloneDocumentForCapture';
 export { resolveAbsoluteAssetUrl } from './resolveAbsoluteAssetUrl';
 export { canvasToPngBlobUrl } from './logoFile/canvasToBlobUrl';
 export { applyConfiguratorRouteProduct, resolveRouteModel } from './configuratorRoute';

@@ -5,14 +5,14 @@ import { useCallback, useState } from 'react';
 import { CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from '@constants';
 import { useCheckout, useConfigurationCart } from '@store';
 import {
-  buildCheckoutOrderExportPdfBlob,
+  buildCheckoutOrderExport,
   buildCuttingExportDownloadUrlsFromUvBlobs,
   buildOrderCuttingExport,
-  buildOrderCuttingExportPdfBlob,
   buildOrderPreset,
   collectOrderCuttingExportUvBlobs,
+  formatCheckoutOrderDate,
+  triggerPdfDownload,
   uploadCheckoutAssetsDirect,
-  waitAndCloneDocumentForCapture,
   withTimeout,
 } from '@utils';
 import type { checkoutAssetUploadItemType } from '@utils';
@@ -22,46 +22,82 @@ import type { checkoutLineAttributeType, createCheckoutPayloadType, createChecko
 const CHECKOUT_ENDPOINT = '/api/checkout';
 const CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS = 120_000;
 
+const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
+
 const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeType[]> => {
-  let orderCapture: Awaited<ReturnType<typeof waitAndCloneDocumentForCapture>> = null;
-  let cuttingCapture: Awaited<ReturnType<typeof waitAndCloneDocumentForCapture>> = null;
-
   try {
-    const { products } = useCheckout.getState();
-    const { configurations } = useConfigurationCart.getState();
+    const checkoutStore = useCheckout.getState();
+    const cartStore = useConfigurationCart.getState();
+    const { products } = checkoutStore;
+    const { configurations } = cartStore;
 
-    const cuttingExportData = buildOrderCuttingExport({ products, configurations });
+    // Both PDFs must reference the same order number and date.
+    const orderMeta = window.__checkoutE2e?.orderMeta ?? {
+      orderNumber: createCheckoutOrderNumber(),
+      orderDate: formatCheckoutOrderDate(),
+    };
 
-    const [orderCaptureResult, cuttingCaptureResult, uvBlobs] = await Promise.all([
-      waitAndCloneDocumentForCapture('checkout-order-export-document'),
-      waitAndCloneDocumentForCapture('order-cutting-export-document'),
+    const orderExportData = buildCheckoutOrderExport({
+      products,
+      cartItems: cartStore.items,
+      previews: cartStore.previews,
+      subtotal: checkoutStore.getSubtotal(),
+      discountAmount: checkoutStore.getDiscountAmount(),
+      shippingCost: checkoutStore.getShippingCost(),
+      grandTotal: checkoutStore.getGrandTotal(),
+      orderMeta,
+    });
+
+    const cuttingExportData = buildOrderCuttingExport({
+      products,
+      configurations,
+      orderNumber: orderMeta.orderNumber,
+      orderDate: orderMeta.orderDate,
+    });
+
+    // PDF renderer is heavy — load it only when the customer actually submits.
+    const [{ buildCheckoutOrderExportPdfBlob }, { buildOrderCuttingExportPdfBlob }, uvBlobs] = await Promise.all([
+      import('@utils/buildCheckoutOrderExportPdf'),
+      import('@utils/buildOrderCuttingExportPdf'),
       collectOrderCuttingExportUvBlobs(cuttingExportData),
     ]);
 
-    orderCapture = orderCaptureResult;
-    cuttingCapture = cuttingCaptureResult;
+    // Upload UV textures first: their public URLs become clickable links inside the cutting PDF.
+    const uvUrlById = await uploadCheckoutAssetsDirect(
+      uvBlobs.map((uv) => ({
+        id: `uv:${uv.cartItemId}:${uv.label}`,
+        blob: uv.blob,
+        filename: uv.fileName,
+        mimeType: uv.blob.type || 'image/png',
+      })),
+    );
+
+    const uvImages = uvBlobs.flatMap((uv) => {
+      const url = uvUrlById.get(`uv:${uv.cartItemId}:${uv.label}`);
+      return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url }] : [];
+    });
 
     const downloadUrls = await buildCuttingExportDownloadUrlsFromUvBlobs(uvBlobs);
 
     const [orderPdfBlob, cuttingPdfBlob] = await Promise.all([
-      orderCapture
-        ? buildCheckoutOrderExportPdfBlob(orderCapture.element).catch((error) => {
-            console.error('Order PDF generation failed', error);
-            return null;
-          })
-        : Promise.resolve(null),
-      cuttingCapture
-        ? buildOrderCuttingExportPdfBlob(cuttingCapture.element, { downloadUrls }).catch((error) => {
-            console.error('Cutting PDF generation failed', error);
-            return null;
-          })
-        : Promise.resolve(null),
+      buildCheckoutOrderExportPdfBlob(orderExportData).catch((error) => {
+        console.error('Order PDF generation failed', error);
+        return null;
+      }),
+      buildOrderCuttingExportPdfBlob(cuttingExportData, { downloadUrls, linkUrls: uvImages }).catch((error) => {
+        console.error('Cutting PDF generation failed', error);
+        return null;
+      }),
     ]);
 
-    const uploadItems: checkoutAssetUploadItemType[] = [];
+    // Hand the generated PDFs to the customer immediately, before the upload starts.
+    if (orderPdfBlob) triggerPdfDownload(orderPdfBlob, CHECKOUT_ORDER_EXPORT_FILENAME);
+    if (cuttingPdfBlob) triggerPdfDownload(cuttingPdfBlob, CHECKOUT_CUTTING_EXPORT_FILENAME);
+
+    const pdfUploadItems: checkoutAssetUploadItemType[] = [];
 
     if (orderPdfBlob) {
-      uploadItems.push({
+      pdfUploadItems.push({
         id: 'order-pdf',
         blob: orderPdfBlob,
         filename: CHECKOUT_ORDER_EXPORT_FILENAME,
@@ -70,7 +106,7 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
     }
 
     if (cuttingPdfBlob) {
-      uploadItems.push({
+      pdfUploadItems.push({
         id: 'cutting-pdf',
         blob: cuttingPdfBlob,
         filename: CHECKOUT_CUTTING_EXPORT_FILENAME,
@@ -78,40 +114,20 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       });
     }
 
-    uvBlobs.forEach((uv) => {
-      uploadItems.push({
-        id: `uv:${uv.cartItemId}:${uv.label}`,
-        blob: uv.blob,
-        filename: uv.fileName,
-        mimeType: uv.blob.type || 'image/png',
-      });
-    });
-
-    if (!uploadItems.length) return [];
-
-    const urlById = await uploadCheckoutAssetsDirect(uploadItems);
+    const pdfUrlById = pdfUploadItems.length ? await uploadCheckoutAssetsDirect(pdfUploadItems) : new Map<string, string>();
     const attributes: checkoutLineAttributeType[] = [];
 
-    const orderPdfUrl = urlById.get('order-pdf');
-    const cuttingPdfUrl = urlById.get('cutting-pdf');
+    const orderPdfUrl = pdfUrlById.get('order-pdf');
+    const cuttingPdfUrl = pdfUrlById.get('cutting-pdf');
 
     if (orderPdfUrl) attributes.push({ key: '_order_pdf_url', value: orderPdfUrl });
     if (cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: cuttingPdfUrl });
-
-    const uvImages = uvBlobs.flatMap((uv) => {
-      const url = urlById.get(`uv:${uv.cartItemId}:${uv.label}`);
-      return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url }] : [];
-    });
-
     if (uvImages.length) attributes.push({ key: '_uv_image_urls', value: JSON.stringify(uvImages) });
 
     return attributes;
   } catch (error) {
     console.error('Checkout asset upload failed', error);
     return [];
-  } finally {
-    orderCapture?.dispose();
-    cuttingCapture?.dispose();
   }
 };
 

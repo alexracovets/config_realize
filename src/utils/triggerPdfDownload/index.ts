@@ -1,0 +1,1 @@
+export { triggerPdfDownload } from './triggerPdfDownload';
