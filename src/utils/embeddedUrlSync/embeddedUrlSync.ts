@@ -59,35 +59,20 @@ const postEmbeddedCheckoutRedirect = (url: string): void => {
   );
 };
 
-/** Opens a blank tab synchronously (must run inside the click handler, before any await). */
-const openPendingCheckoutWindow = (): Window | null => {
-  if (!isEmbeddedSession() || window.parent === window) {
-    return null;
-  }
-
-  const pendingWindow = window.open('about:blank', '_blank', 'noopener,noreferrer');
-  if (pendingWindow) {
-    pendingWindow.opener = null;
-  }
-
-  return pendingWindow;
-};
-
-/**
- * Navigates to Shopify checkout. In embedded mode asks the theme to redirect the top window
- * and also navigates a pending tab opened synchronously on click (avoids popup blockers).
- */
-const redirectToShopifyCheckout = (checkoutUrl: string, pendingWindow: Window | null): void => {
+/** Navigates to Shopify checkout; in embedded mode asks the theme and uses target=_top as fallback. */
+const redirectToShopifyCheckout = (checkoutUrl: string): void => {
   if (isEmbeddedSession() && window.parent !== window) {
     postEmbeddedCheckoutRedirect(checkoutUrl);
   }
 
-  if (pendingWindow) {
-    pendingWindow.location.href = checkoutUrl;
-    return;
-  }
-
-  window.location.assign(checkoutUrl);
+  const anchor = document.createElement('a');
+  anchor.href = checkoutUrl;
+  anchor.target = '_top';
+  anchor.rel = 'noopener noreferrer';
+  anchor.style.display = 'none';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
 };
 
 export {
@@ -96,7 +81,6 @@ export {
   EMBEDDED_URL_SYNC_SOURCE_SHOPIFY,
   EMBEDDED_URL_SYNC_TYPE,
   isEmbeddedUrlSyncMessage,
-  openPendingCheckoutWindow,
   postEmbeddedCheckoutRedirect,
   postEmbeddedUrlToParent,
   redirectToShopifyCheckout,

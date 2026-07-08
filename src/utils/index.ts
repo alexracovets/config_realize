@@ -15,6 +15,9 @@ export { composeOrderCuttingExportDownloadFile } from './composeOrderCuttingExpo
 export { resolveCuttingExportDownloadUrls } from './resolveCuttingExportDownloadUrls';
 export { hasOrderCuttingExportDownloadTarget, openOrderCuttingExportDownloadTarget, resolveOrderCuttingExportDownloadHref } from './resolveOrderCuttingExportDownloadHref';
 export { buildCuttingExportDownloadUrlsFromUvBlobs } from './buildCuttingExportDownloadUrlsFromUvBlobs';
+export { uploadBlobToStagedTarget } from './uploadBlobToStagedTarget';
+export { uploadCheckoutAssetsDirect } from './uploadCheckoutAssetsDirect';
+export type { checkoutAssetUploadItemType } from './uploadCheckoutAssetsDirect';
 export { waitAndCloneDocumentForCapture } from './waitAndCloneDocumentForCapture';
 export { resolveAbsoluteAssetUrl } from './resolveAbsoluteAssetUrl';
 export { canvasToPngBlobUrl } from './logoFile/canvasToBlobUrl';

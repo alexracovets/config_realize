@@ -4,7 +4,6 @@ export {
   EMBEDDED_URL_SYNC_SOURCE_SHOPIFY,
   EMBEDDED_URL_SYNC_TYPE,
   isEmbeddedUrlSyncMessage,
-  openPendingCheckoutWindow,
   postEmbeddedCheckoutRedirect,
   postEmbeddedUrlToParent,
   redirectToShopifyCheckout,
