@@ -326,18 +326,18 @@ Consumed by `@configurator/utils/createGarmentMaterial`.
 
 Shopify Storefront / Admin GraphQL, collection and product resolution, checkout cart creation, iframe CSP helpers.
 
-| Module                           | Role                                                          |
-| -------------------------------- | ------------------------------------------------------------- |
-| `resolveHomeCollectionSummaries` | Light collection list for `/` (no products)                   |
-| `resolveHomeCollectionByHandle`  | Full collection + products for `/:collectionHandle`           |
-| `resolveHomeCollections`         | Full catalog for `ProductCatalogPopover` (configurator only)  |
-| `resolveConfiguratorProduct`     | Product hydration for `/:collectionHandle/:slug` layout       |
-| `createCheckoutCart`             | Server-side Storefront `cartCreate` (used by `/api/checkout`) |
-| `frameAncestors`                 | `frame-ancestors` CSP for Shopify Theme Editor embeds         |
-| `checkoutPayload`                | Wire types between client checkout UI and `/api/checkout`     |
-| `uploadShopifyFile`              | Admin API staged upload + `fileCreate` (Shopify Files)        |
-| `setOrderMetafields`             | Admin API `metafieldsSet` on an order (`configurator.*`)      |
-| `verifyShopifyWebhookSignature`  | HMAC verification for inbound Shopify webhooks                |
+| Module                           | Role                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------ |
+| `resolveHomeCollectionSummaries` | Light collection list for `/` (no products)                                          |
+| `resolveHomeCollectionByHandle`  | Full collection + products for `/:collectionHandle`                                  |
+| `resolveHomeCollections`         | Full catalog for `ProductCatalogPopover` (configurator only)                         |
+| `resolveConfiguratorProduct`     | Product hydration for `/:collectionHandle/:slug` layout                              |
+| `createCheckoutCart`             | Server-side Storefront `cartCreate` (used by `/api/checkout`)                        |
+| `frameAncestors`                 | `frame-ancestors` CSP for Shopify Theme Editor embeds                                |
+| `checkoutPayload`                | Wire types between client checkout UI and `/api/checkout`                            |
+| `uploadShopifyFile`              | Admin API staged upload + `fileCreate` (Shopify Files)                               |
+| `setOrderMetafields`             | Admin API `metafieldsSet` on an order (`configurator.*`)                             |
+| `verifyShopifyWebhookSignature`  | HMAC verification for inbound Shopify webhooks                                       |
 | `resolveShopifyAdminAccessToken` | Admin API token resolution; self-refreshes via `client_credentials` when short-lived |
 
 **Env:** `SHOPIFY_ENABLED`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN` (production). Optional `SHOPIFY_API_MODE=admin` + `SHOPIFY_ADMIN_ACCESS_TOKEN` for dev. See `.env.example`. The order-asset upload flow below needs Admin API access (scopes `write_files`, `write_orders`) — either `SHOPIFY_ADMIN_CLIENT_ID` + `SHOPIFY_ADMIN_CLIENT_SECRET` (Dev Dashboard app; tokens expire ~24h and are auto-refreshed by `resolveShopifyAdminAccessToken`) or a static `SHOPIFY_ADMIN_ACCESS_TOKEN` (classic custom app, no expiry). `SHOPIFY_ADMIN_CLIENT_SECRET` doubles as the `orders/create` webhook HMAC secret (Dev Dashboard apps sign webhooks with the same client secret used for `client_credentials` — one value, no separate `SHOPIFY_WEBHOOK_SECRET`).
@@ -400,15 +400,15 @@ app/
     └── page.tsx                        # ConfiguratorPage
 ```
 
-| URL                        | Page component                            | Notes                                                          |
-| -------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
-| `/`                        | `HomePageLoader` → `HomePage`             | Collection index (`resolveHomeCollectionSummaries`)            |
-| `/:collectionHandle`       | `CollectionPageLoader` → `CollectionPage` | Product gallery for one collection                             |
-| `/:collectionHandle/:slug` | `ConfiguratorPage`                        | Layout resolves product; catalog shell for add-product popover |
-| `/checkout`                | `CheckoutPage`                            | Static route under `(shop)`; wins over `[collectionHandle]`    |
-| `POST /api/checkout`       | API route                                 | Creates Shopify cart; redirects via `checkoutUrl`              |
-| `POST /api/checkout/assets` | API route                                | Uploads order/cutting PDFs + UV PNGs to Shopify Files           |
-| `POST /api/webhooks/orders-create` | API route                         | Shopify `orders/create` webhook → order metafields              |
+| URL                                | Page component                            | Notes                                                          |
+| ---------------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| `/`                                | `HomePageLoader` → `HomePage`             | Collection index (`resolveHomeCollectionSummaries`)            |
+| `/:collectionHandle`               | `CollectionPageLoader` → `CollectionPage` | Product gallery for one collection                             |
+| `/:collectionHandle/:slug`         | `ConfiguratorPage`                        | Layout resolves product; catalog shell for add-product popover |
+| `/checkout`                        | `CheckoutPage`                            | Static route under `(shop)`; wins over `[collectionHandle]`    |
+| `POST /api/checkout`               | API route                                 | Creates Shopify cart; redirects via `checkoutUrl`              |
+| `POST /api/checkout/assets`        | API route                                 | Uploads order/cutting PDFs + UV PNGs to Shopify Files          |
+| `POST /api/webhooks/orders-create` | API route                                 | Shopify `orders/create` webhook → order metafields             |
 
 **Thin routes:** `page.tsx` files import from `@pages` only. Layouts may use `@templates`, `@shopify`, `@providers` for shells and data loading.
 

@@ -3,8 +3,7 @@ import { Vector2, Vector3 } from 'three';
 
 import type { uvPointType } from '@types';
 
-const isGarmentMesh = (object: Object3D): object is Mesh =>
-  (object as Mesh).isMesh === true && object.visible && object.userData?.configuratorGarment === true;
+const isGarmentMesh = (object: Object3D): object is Mesh => (object as Mesh).isMesh === true && object.visible && object.userData?.configuratorGarment === true;
 
 const targetUv = new Vector2();
 const uvA = new Vector2();
@@ -32,7 +31,11 @@ const readUv = (attr: { getX: (index: number) => number; getY: (index: number) =
   target.set(attr.getX(index), attr.getY(index));
 };
 
-const readPosition = (attr: { getX: (index: number) => number; getY: (index: number) => number; getZ: (index: number) => number }, index: number, target: Vector3) => {
+const readPosition = (
+  attr: { getX: (index: number) => number; getY: (index: number) => number; getZ: (index: number) => number },
+  index: number,
+  target: Vector3,
+) => {
   target.set(attr.getX(index), attr.getY(index), attr.getZ(index));
 };
 
@@ -140,11 +143,7 @@ const resolveMeshWorldPoint = (mesh: Mesh, geometry: BufferGeometry, atlasUv: uv
   return true;
 };
 
-const resolvePrintUvWorldPoint = (
-  { scene, meshNames, atlasUv }: resolvePrintUvWorldPointInputType,
-  point: Vector3,
-  normal: Vector3,
-): boolean => {
+const resolvePrintUvWorldPoint = ({ scene, meshNames, atlasUv }: resolvePrintUvWorldPointInputType, point: Vector3, normal: Vector3): boolean => {
   const allowedMeshes = new Set(meshNames);
   let resolved = false;
 

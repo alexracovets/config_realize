@@ -1,7 +1,7 @@
 import type { garmentConfigType } from '@types';
 import { describe, expect, it } from 'vitest';
 
-import { formatPxAsCm, resolvePrintCmScale } from './resolvePrintCmScale';
+import { formatPxAsCm, resolvePrintCmScale } from '@utils/resolvePrintCmScale';
 
 const baseProduct = {
   path: '/models/test/',

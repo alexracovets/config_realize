@@ -56,11 +56,7 @@ const orbitAngularDelta = (from: orbitStateType, to: orbitStateType) => {
   return Math.hypot(deltaAzimuth, deltaPolar);
 };
 
-const waitForPartFocus = async (
-  page: import('@playwright/test').Page,
-  partId: string,
-  before: orbitStateType,
-) => {
+const waitForPartFocus = async (page: import('@playwright/test').Page, partId: string, before: orbitStateType) => {
   await page.waitForFunction(
     ({ expectedPartId, minRequestId, minDelta, beforeAzimuth, beforePolar }) => {
       const state = window.__configuratorCameraDebug?.getOrbitState();

@@ -161,11 +161,7 @@ const CheckoutOrderExportPdfDocument = ({ exportData, images }: checkoutOrderExp
       <Page size="A4" style={styles.page}>
         <View>
           <View style={styles.headerTop}>
-            {images.logoSrc ? (
-              <Image src={images.logoSrc} style={styles.logo} />
-            ) : (
-              <Text style={styles.logoFallback}>Realize You</Text>
-            )}
+            {images.logoSrc ? <Image src={images.logoSrc} style={styles.logo} /> : <Text style={styles.logoFallback}>Realize You</Text>}
             <View style={styles.contact}>
               <Text>{CHECKOUT_ORDER_EXPORT_WEBSITE}</Text>
               <Text>{CHECKOUT_ORDER_EXPORT_EMAIL}</Text>

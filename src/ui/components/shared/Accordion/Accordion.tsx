@@ -35,7 +35,7 @@ const AccordionTrigger = ({ className, children, actions, ...props }: accordionT
       >
         {children}
       </AccordionPrimitive.Trigger>
-      {actions} 
+      {actions}
       <ChevronDownIcon
         data-slot="accordion-trigger-icon"
         aria-hidden

@@ -7,8 +7,7 @@ const calcVatFromGross = (gross: number) => (gross * CHECKOUT_VAT_RATE) / (1 + C
 
 const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
 
-const formatCheckoutOrderDate = (date = new Date()) =>
-  new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+const formatCheckoutOrderDate = (date = new Date()) => new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
 
 const PLACEHOLDER_RECIPIENT = {
   name: 'Marco Rossi',

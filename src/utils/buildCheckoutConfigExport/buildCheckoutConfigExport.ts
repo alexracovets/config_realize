@@ -71,9 +71,7 @@ const buildCheckoutConfigExport = ({
     business: product.business,
     previewUrl: previewUrls[product.cartItemId] ?? null,
     configuration: configurations[product.cartItemId] ?? null,
-    uvImages: uvImages
-      .filter((uv) => uv.cartItemId === product.cartItemId)
-      .map((uv) => ({ label: uv.label, url: uv.url })),
+    uvImages: uvImages.filter((uv) => uv.cartItemId === product.cartItemId).map((uv) => ({ label: uv.label, url: uv.url })),
     lines: product.rows.map((row) => ({
       size: row.size,
       name: row.name.trim(),

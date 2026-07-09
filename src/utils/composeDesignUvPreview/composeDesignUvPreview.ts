@@ -7,7 +7,13 @@ type rgbColorType = { r: number; g: number; b: number };
 
 const hexToRgb = (hex: string): rgbColorType => {
   const normalized = hex.replace('#', '').trim();
-  const value = normalized.length === 3 ? normalized.split('').map((char) => char + char).join('') : normalized;
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split('')
+          .map((char) => char + char)
+          .join('')
+      : normalized;
 
   return {
     r: Number.parseInt(value.slice(0, 2), 16),

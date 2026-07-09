@@ -35,14 +35,7 @@ interface LogGizmoPlacementInput {
   phase?: 'drag' | 'release';
 }
 
-const buildTextPositionSnippet = (
-  product: garmentConfigType,
-  partId: string,
-  label: string,
-  atlasUv: uvPointType,
-  rotation: number,
-  fontSize?: number,
-) => ({
+const buildTextPositionSnippet = (product: garmentConfigType, partId: string, label: string, atlasUv: uvPointType, rotation: number, fontSize?: number) => ({
   label,
   partId,
   uv: atlasUvToPartLocalUv(product, partId, atlasUv),

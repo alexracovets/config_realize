@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveSizeReferenceCm } from './resolveSizeReferenceCm';
+import { resolveSizeReferenceCm } from '@shopify/mapSizeChartContent';
 
 const buildTableNode = (columns: unknown, rows: unknown) => ({ tableMetafield: { value: JSON.stringify({ columns, rows }) } });
 

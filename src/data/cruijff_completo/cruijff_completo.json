@@ -6,21 +6,14 @@
     "width": 2048,
     "height": 806
   },
-  "hiddenSteps": [
-    "name"
-  ],
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_laces"
-  ],
+  "hiddenSteps": ["name"],
+  "preserveGltfMeshes": ["model_inside", "model_laces"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "cruijff_completo_front",
-      "meshNames": [
-        "model_left"
-      ],
+      "meshNames": ["model_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5128,
@@ -41,9 +34,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "cruijff_completo_back",
-      "meshNames": [
-        "model_right"
-      ],
+      "meshNames": ["model_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.001,
@@ -273,9 +264,7 @@
       "show_gizmo": true,
       "id": "right-center",
       "conflicts": {
-        "testo": [
-          "right"
-        ]
+        "testo": ["right"]
       }
     },
     {
@@ -305,11 +294,7 @@
       "show_frame": true,
       "show_gizmo": true,
       "conflicts": {
-        "number": [
-          "right-bottom",
-          "right-top",
-          "right-center"
-        ]
+        "number": ["right-bottom", "right-top", "right-center"]
       },
       "id": "right"
     },

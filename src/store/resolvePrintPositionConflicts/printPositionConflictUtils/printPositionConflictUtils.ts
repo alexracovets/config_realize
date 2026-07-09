@@ -29,9 +29,4 @@ const removeInstancesByPositionIdsFromStore = (store: printConflictStoreLike, po
   }
 };
 
-export {
-  normalizePrintPositionConflicts,
-  removeInstancesByPositionIdsFromStore,
-  type printConflictStoreLike,
-  type printPositionWithConflictsType,
-};
+export { normalizePrintPositionConflicts, removeInstancesByPositionIdsFromStore, type printConflictStoreLike, type printPositionWithConflictsType };

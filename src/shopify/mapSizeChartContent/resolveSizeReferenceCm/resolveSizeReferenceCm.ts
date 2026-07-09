@@ -1,6 +1,6 @@
 import type { printReferenceCmType } from '@types';
 
-import type { sizeChartMetafieldsNodeType } from './mapSizeChartContent';
+import type { sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
 
 /** Size chart column whose header (or id) marks the reference L size. */
 const REFERENCE_SIZE = 'L';

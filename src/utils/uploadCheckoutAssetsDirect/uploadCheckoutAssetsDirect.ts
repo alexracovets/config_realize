@@ -36,8 +36,7 @@ type registerResponseType = {
   error?: string;
 };
 
-const resolveShopifyFileContentType = (mimeType: string): shopifyFileContentType =>
-  mimeType.startsWith('image/') ? 'IMAGE' : 'FILE';
+const resolveShopifyFileContentType = (mimeType: string): shopifyFileContentType => (mimeType.startsWith('image/') ? 'IMAGE' : 'FILE');
 
 const mapWithConcurrency = async <TItem, TResult>(
   items: TItem[],

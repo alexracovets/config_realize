@@ -58,9 +58,7 @@ const rasterizeImageForPdf = async (src: string): Promise<string | null> => {
 /** Rasterizes a set of image sources, deduplicating identical URLs. Failed sources map to null. */
 const rasterizeImagesForPdf = async (sources: string[]): Promise<Map<string, string | null>> => {
   const uniqueSources = Array.from(new Set(sources.filter(Boolean)));
-  const entries = await Promise.all(
-    uniqueSources.map(async (source) => [source, await rasterizeImageForPdf(source)] as const),
-  );
+  const entries = await Promise.all(uniqueSources.map(async (source) => [source, await rasterizeImageForPdf(source)] as const));
   return new Map(entries);
 };
 

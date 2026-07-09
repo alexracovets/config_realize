@@ -28,9 +28,7 @@ const blockNodeToHtml = (node: richTextBlockNodeType): string => {
   switch (node.type) {
     case 'list': {
       const tag = node.listType === 'ordered' ? 'ol' : 'ul';
-      const items = (node.children ?? [])
-        .map((item) => `<li>${childrenToHtml((item as richTextBlockNodeType).children)}</li>`)
-        .join('');
+      const items = (node.children ?? []).map((item) => `<li>${childrenToHtml((item as richTextBlockNodeType).children)}</li>`).join('');
       return `<${tag}>${items}</${tag}>`;
     }
     default:

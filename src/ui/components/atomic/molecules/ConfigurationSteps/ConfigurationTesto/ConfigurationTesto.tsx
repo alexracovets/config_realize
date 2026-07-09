@@ -158,10 +158,7 @@ const ConfigurationTesto = () => {
     [addInstance, product],
   );
 
-  const resolveFocusFromPosition = useCallback(
-    (position: testoPositionType) => ({ partId: position.partId, uv: position.uv }),
-    [],
-  );
+  const resolveFocusFromPosition = useCallback((position: testoPositionType) => ({ partId: position.partId, uv: position.uv }), []);
 
   const resolveFocusFromInstance = useCallback((instance: configurationPositionPickerInstanceType) => {
     const item = useGarmentTesto.getState().instances.find((entry) => entry.id === instance.id);
@@ -202,14 +199,7 @@ const ConfigurationTesto = () => {
       <ConfigurationPositionSelect label={CONFIGURATOR_TESTO_POSITION_SELECT_LABEL} positions={availablePositions} onSelect={handlePositionSelect} />
 
       {instances.length > 0 && (
-        <AccordionAtom
-          items={items}
-          value={openItems}
-          onValueChange={handleOpenItemsChange}
-          onItemActivate={handleItemActivate}
-          multiple
-          className="gap-2"
-        />
+        <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} onItemActivate={handleItemActivate} multiple className="gap-2" />
       )}
     </Flex>
   );

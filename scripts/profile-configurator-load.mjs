@@ -8,8 +8,7 @@ const route = `/${(process.argv[2] ?? 'federer_pallavolo').replace(/^\//, '')}`;
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
 const pageUrl = `${baseUrl}${route}`;
 
-const profilePage = async (page, label) => { 
-
+const profilePage = async (page, label) => {
   await page.addInitScript(() => {
     window.__longTasks = [];
     const obs = new PerformanceObserver((list) => {

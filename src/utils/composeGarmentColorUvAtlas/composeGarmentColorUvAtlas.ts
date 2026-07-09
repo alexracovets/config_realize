@@ -17,7 +17,13 @@ const gltfCache = new Map<string, Promise<Awaited<ReturnType<typeof gltfLoader.l
 
 const hexToRgb = (hex: string): rgbColorType => {
   const normalized = hex.replace('#', '').trim();
-  const value = normalized.length === 3 ? normalized.split('').map((char) => char + char).join('') : normalized;
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split('')
+          .map((char) => char + char)
+          .join('')
+      : normalized;
 
   return {
     r: Number.parseInt(value.slice(0, 2), 16),
@@ -48,16 +54,7 @@ const findMeshByName = (root: Object3D, meshName: string): Mesh | null => {
   return match;
 };
 
-const isPointInsideTriangle = (
-  px: number,
-  py: number,
-  ax: number,
-  ay: number,
-  bx: number,
-  by: number,
-  cx: number,
-  cy: number,
-): boolean => {
+const isPointInsideTriangle = (px: number, py: number, ax: number, ay: number, bx: number, by: number, cx: number, cy: number): boolean => {
   const denominator = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
   if (Math.abs(denominator) < 1e-8) return false;
 
@@ -196,12 +193,7 @@ const buildGradientColorResolver = (part: garmentColorAtlasPartType, atlasWidth:
   };
 };
 
-const composeGarmentColorUvAtlas = async (
-  modelSrc: string,
-  atlasWidth: number,
-  atlasHeight: number,
-  parts: garmentColorAtlasPartType[],
-): Promise<string> => {
+const composeGarmentColorUvAtlas = async (modelSrc: string, atlasWidth: number, atlasHeight: number, parts: garmentColorAtlasPartType[]): Promise<string> => {
   const gltf = await loadGarmentGltf(modelSrc);
   const pixels = new Uint8ClampedArray(atlasWidth * atlasHeight * 4);
 

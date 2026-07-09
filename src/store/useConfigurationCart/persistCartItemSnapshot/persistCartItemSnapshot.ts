@@ -44,11 +44,7 @@ const persistCartItemPreview = (get: () => persistCartItemSnapshotGetState, item
   if (preview) get().savePreview(itemId, preview);
 };
 
-const persistCartItemSnapshot = (
-  get: () => persistCartItemSnapshotGetState,
-  itemId: string,
-  options?: { previewMode?: persistCartItemPreviewModeType },
-) => {
+const persistCartItemSnapshot = (get: () => persistCartItemSnapshotGetState, itemId: string, options?: { previewMode?: persistCartItemPreviewModeType }) => {
   persistCartItemConfiguration(get, itemId);
 
   const previewMode = options?.previewMode ?? 'async';
@@ -63,9 +59,4 @@ const persistCartItemSnapshot = (
   schedulePreviewPersist(get, itemId);
 };
 
-export {
-  cancelPendingPreviewPersist,
-  persistCartItemConfiguration,
-  persistCartItemPreview,
-  persistCartItemSnapshot,
-};
+export { cancelPendingPreviewPersist, persistCartItemConfiguration, persistCartItemPreview, persistCartItemSnapshot };

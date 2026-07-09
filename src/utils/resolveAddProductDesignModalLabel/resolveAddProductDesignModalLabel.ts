@@ -1,10 +1,7 @@
 import type { configuratorCatalogProductPickType, garmentConfigType } from '@types';
 import { resolveGarmentTypeLabel } from '@utils/resolveGarmentTypeLabel';
 
-const resolveAddProductDesignModalLabel = (
-  product: configuratorCatalogProductPickType | null,
-  garment: garmentConfigType | null | undefined,
-): string => {
+const resolveAddProductDesignModalLabel = (product: configuratorCatalogProductPickType | null, garment: garmentConfigType | null | undefined): string => {
   if (garment?.type === 'shorts') return 'i pantaloncini';
   if (garment?.type === 'shirt') return 'la maglietta';
 

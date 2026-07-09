@@ -1,6 +1,6 @@
 import type { modalInfoPartType, modalInfoTableColumnType, modalInfoTablePartType, modalInfoTableRowType, modalInfoTabType } from '@types';
 
-import { metafieldValueToParagraphs } from './richTextToParagraphs';
+import { metafieldValueToParagraphs } from '@shopify/mapSizeChartContent/richTextToParagraphs';
 
 const LABEL_COLUMN_HEADER = 'Misure in cm';
 

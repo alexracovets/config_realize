@@ -7,18 +7,13 @@
     "height": 806
   },
   "hiddenSteps": ["name"],
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_laces"
-  ],
+  "preserveGltfMeshes": ["model_inside", "model_laces"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "malone_basket_front",
-      "meshNames": [
-        "model_left"
-      ],
+      "meshNames": ["model_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5128,
@@ -39,9 +34,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "malone_basket_back",
-      "meshNames": [
-        "model_right"
-      ],
+      "meshNames": ["model_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.001,

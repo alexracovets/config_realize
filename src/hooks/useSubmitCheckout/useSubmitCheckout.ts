@@ -146,14 +146,12 @@ const useSubmitCheckout = () => {
       }
 
       // Never let asset generation block the checkout indefinitely — proceed without attachments.
-      payload.attributes = await withTimeout(
-        collectCheckoutAssetAttributes(),
-        CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS,
-        'Checkout asset collection',
-      ).catch((assetError: unknown) => {
-        console.error('Checkout asset collection failed', assetError);
-        return [];
-      });
+      payload.attributes = await withTimeout(collectCheckoutAssetAttributes(), CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS, 'Checkout asset collection').catch(
+        (assetError: unknown) => {
+          console.error('Checkout asset collection failed', assetError);
+          return [];
+        },
+      );
 
       const response = await fetch(CHECKOUT_ENDPOINT, {
         method: 'POST',

@@ -23,8 +23,7 @@ const ORDER_EXPORT_FIXTURE = {
   },
 };
 
-const formatItalianPrice = (value: number) =>
-  `${new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)}€`;
+const formatItalianPrice = (value: number) => `${new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)}€`;
 
 const calcVatFromGross = (gross: number) => (gross * 0.22) / 1.22;
 

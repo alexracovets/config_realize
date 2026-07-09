@@ -34,11 +34,7 @@ const readProductAppearanceTextures = (productPath: string): productAppearanceTe
 
 const getAppearanceCacheVersion = (): number => appearanceCacheVersion;
 
-const isGarmentAppearanceCached = (
-  productPath: string,
-  defaultPattern: designPatternItemType | null,
-  activePatternKey: string | null,
-): boolean => {
+const isGarmentAppearanceCached = (productPath: string, defaultPattern: designPatternItemType | null, activePatternKey: string | null): boolean => {
   const cached = readProductAppearanceTextures(productPath);
   const logosSrc = defaultPattern?.parts[0]?.src ? resolveRasterDesignSrc(defaultPattern.parts[0].src) : null;
 
@@ -50,9 +46,4 @@ const isGarmentAppearanceCached = (
   return true;
 };
 
-export {
-  getAppearanceCacheVersion,
-  isGarmentAppearanceCached,
-  readProductAppearanceTextures,
-  syncProductAppearanceTextures,
-};
+export { getAppearanceCacheVersion, isGarmentAppearanceCached, readProductAppearanceTextures, syncProductAppearanceTextures };

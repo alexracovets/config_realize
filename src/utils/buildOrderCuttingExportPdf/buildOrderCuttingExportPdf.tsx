@@ -6,8 +6,8 @@ import type { orderCuttingExportType } from '@types';
 import type { cuttingExportDownloadUrlEntryType } from '@utils/applyCuttingExportDownloadUrls';
 import { isPdfReadyImageSrc, rasterizeImagesForPdf } from '@utils/exportPdfAssets';
 
-import { buildDownloadPreviewKey, OrderCuttingExportPdfDocument } from './OrderCuttingExportPdfDocument';
-import type { orderCuttingExportPdfImagesType } from './OrderCuttingExportPdfDocument';
+import { buildDownloadPreviewKey, OrderCuttingExportPdfDocument } from '@utils/buildOrderCuttingExportPdf/OrderCuttingExportPdfDocument';
+import type { orderCuttingExportPdfImagesType } from '@utils/buildOrderCuttingExportPdf/OrderCuttingExportPdfDocument';
 
 type buildOrderCuttingExportPdfBlobOptionsType = {
   /** Composed UV textures (PNG data URLs) keyed by cart item + label, produced at submit time. */
@@ -52,10 +52,7 @@ const prepareOrderCuttingExportPdfImages = async (
 };
 
 /** Renders the cutting-pattern PDF (vector text, auto-paginated, embedded UV previews) from export data. */
-const buildOrderCuttingExportPdfBlob = async (
-  exportData: orderCuttingExportType,
-  options: buildOrderCuttingExportPdfBlobOptionsType = {},
-): Promise<Blob> => {
+const buildOrderCuttingExportPdfBlob = async (exportData: orderCuttingExportType, options: buildOrderCuttingExportPdfBlobOptionsType = {}): Promise<Blob> => {
   const images = await prepareOrderCuttingExportPdfImages(exportData, options.downloadUrls ?? [], options.linkUrls ?? []);
   return pdf(<OrderCuttingExportPdfDocument exportData={exportData} images={images} />).toBlob();
 };

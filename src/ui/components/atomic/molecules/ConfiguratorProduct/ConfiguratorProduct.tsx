@@ -29,16 +29,12 @@ const ConfiguratorProduct = memo(() => {
         </Text>
         <Flex className="flex-col items-start px-3 py-2 rounded-[4px] bg-primary hover:bg-primary/90 transition-colors">
           <Text className="font-semibold">Prodotto {numberProduct}</Text>
-          {showMinimumQuantity ? (
-            <Text className="text-[14px] text-gray">{buildMinimumQuantityLabel(minimumCount)}</Text>
-          ) : null}
+          {showMinimumQuantity ? <Text className="text-[14px] text-gray">{buildMinimumQuantityLabel(minimumCount)}</Text> : null}
         </Flex>
       </Grid>
       <Grid variant="configurator_price">
         <Text variant="product_price">{priceFormat(price)}</Text>
-        {showVolumeDiscount ? (
-          <Text className="text-[#6B7280] font-medium">{buildVolumeDiscountLabel(bonusCount, bonusDiscount)}</Text>
-        ) : null}
+        {showVolumeDiscount ? <Text className="text-[#6B7280] font-medium">{buildVolumeDiscountLabel(bonusCount, bonusDiscount)}</Text> : null}
       </Grid>
     </Flex>
   );

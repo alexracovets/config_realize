@@ -31,8 +31,7 @@ const resolveShopifyCollectionVolumeDiscount = (collectionHandle: string): colle
 };
 
 const buildMinimumQuantityLabel = (minimumCount: number) => `Minimo ${minimumCount} pz`;
-const buildVolumeDiscountLabel = (bonusCount: number, bonusDiscount: number) =>
-  `>${bonusCount} pezzi +${bonusDiscount}% di sconto`;
+const buildVolumeDiscountLabel = (bonusCount: number, bonusDiscount: number) => `>${bonusCount} pezzi +${bonusDiscount}% di sconto`;
 const CONFIGURATOR_GRADIENT_ACTIVE_LABEL = 'Sfumatura attiva';
 const CONFIGURATOR_NAME_POSITION_SELECT_LABEL = 'Dove desideri inserire il nome?';
 const CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL = 'Dove desideri inserire il numero?';

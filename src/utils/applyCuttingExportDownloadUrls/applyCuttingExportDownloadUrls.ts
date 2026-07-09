@@ -8,14 +8,8 @@ const buildCuttingExportDownloadUrlKey = (cartItemId: string, label: string) => 
 
 const resolveCuttingExportDownloadAnchorMeta = (anchor: HTMLAnchorElement) => {
   const productSection = anchor.closest('.cutting-export__product');
-  const cartItemId =
-    anchor.dataset.cartItemId?.trim() ||
-    (productSection instanceof HTMLElement ? productSection.dataset.cartItemId?.trim() : undefined) ||
-    '';
-  const label =
-    anchor.dataset.downloadLabel?.trim() ||
-    anchor.querySelector('.cutting-export__download-label')?.textContent?.trim() ||
-    '';
+  const cartItemId = anchor.dataset.cartItemId?.trim() || (productSection instanceof HTMLElement ? productSection.dataset.cartItemId?.trim() : undefined) || '';
+  const label = anchor.dataset.downloadLabel?.trim() || anchor.querySelector('.cutting-export__download-label')?.textContent?.trim() || '';
 
   return { cartItemId, label };
 };

@@ -2,11 +2,9 @@ export const dynamic = 'force-dynamic';
 
 /** Only files we uploaded to Shopify Files may be proxied — anything else would make this an open proxy. */
 const ALLOWED_DOWNLOAD_HOSTS = new Set(['cdn.shopify.com']);
-const isAllowedDownloadHost = (hostname: string) =>
-  ALLOWED_DOWNLOAD_HOSTS.has(hostname) || hostname.endsWith('.shopifycdn.com');
+const isAllowedDownloadHost = (hostname: string) => ALLOWED_DOWNLOAD_HOSTS.has(hostname) || hostname.endsWith('.shopifycdn.com');
 
-const sanitizeDownloadFilename = (filename: string) =>
-  filename.replace(/[\\/:*?"<>|\r\n]/g, '').trim() || 'download';
+const sanitizeDownloadFilename = (filename: string) => filename.replace(/[\\/:*?"<>|\r\n]/g, '').trim() || 'download';
 
 export async function GET(request: Request): Promise<Response> {
   const { searchParams } = new URL(request.url);

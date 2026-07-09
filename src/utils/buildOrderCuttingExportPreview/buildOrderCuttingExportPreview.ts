@@ -13,7 +13,6 @@ const buildPreviewConfiguration = (modelId: modelIdType, patternIndex: number): 
 
   const partIds = model.parts.map((part) => part.id);
   const primaryPartId = partIds[0] ?? 'body';
-  const secondaryPartId = partIds[1] ?? primaryPartId;
 
   const gradientsByPart = Object.fromEntries(
     model.parts.map((part) => [
@@ -112,10 +111,7 @@ const buildPreviewProduct = (modelId: modelIdType): checkoutProductType => {
   };
 };
 
-const buildOrderCuttingExportPreview = ({
-  modelId = PREVIEW_MODEL_ID,
-  patternIndex = 0,
-}: buildOrderCuttingExportPreviewParamsType = {}) => {
+const buildOrderCuttingExportPreview = ({ modelId = PREVIEW_MODEL_ID, patternIndex = 0 }: buildOrderCuttingExportPreviewParamsType = {}) => {
   const resolvedModelId = modelId ?? PREVIEW_MODEL_ID;
   const configuration = buildPreviewConfiguration(resolvedModelId, patternIndex);
 

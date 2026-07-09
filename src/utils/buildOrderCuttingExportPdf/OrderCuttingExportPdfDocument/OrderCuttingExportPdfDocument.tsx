@@ -136,19 +136,13 @@ const DownloadCard = ({
   images: orderCuttingExportPdfImagesType;
 }) => {
   const previewKey = buildDownloadPreviewKey(cartItemId, file.label);
-  const previewSrc =
-    images.downloadPreviewByKey.get(previewKey) ?? images.downloadPreviewByKey.get(file.previewSrc ?? '') ?? null;
-  const linkUrl =
-    images.downloadLinkByKey.get(previewKey) ?? (isLinkableUrl(file.downloadUrl) ? file.downloadUrl : null);
+  const previewSrc = images.downloadPreviewByKey.get(previewKey) ?? images.downloadPreviewByKey.get(file.previewSrc ?? '') ?? null;
+  const linkUrl = images.downloadLinkByKey.get(previewKey) ?? (isLinkableUrl(file.downloadUrl) ? file.downloadUrl : null);
 
   const cardContent = (
     <>
       <View style={styles.downloadPreviewFrame}>
-        {previewSrc ? (
-          <Image src={previewSrc} style={styles.downloadPreview} />
-        ) : (
-          <Text style={styles.downloadPlaceholder}>{file.label}</Text>
-        )}
+        {previewSrc ? <Image src={previewSrc} style={styles.downloadPreview} /> : <Text style={styles.downloadPlaceholder}>{file.label}</Text>}
       </View>
       <Text style={styles.downloadLabel}>{file.label}</Text>
       <Text style={styles.downloadFile}>{file.fileName}</Text>
@@ -211,13 +205,7 @@ const StepDetails = ({ step }: { step: orderCuttingExportConfigurationStepType }
   );
 };
 
-const ProductSection = ({
-  product,
-  images,
-}: {
-  product: orderCuttingExportProductType;
-  images: orderCuttingExportPdfImagesType;
-}) => (
+const ProductSection = ({ product, images }: { product: orderCuttingExportProductType; images: orderCuttingExportPdfImagesType }) => (
   <View style={styles.product}>
     <View style={styles.productHeader} wrap={false}>
       <Text style={styles.productTitle}>{product.productTitle}</Text>
@@ -293,13 +281,11 @@ const OrderCuttingExportPdfDocument = ({ exportData, images }: orderCuttingExpor
           </View>
           {articles.map((article, index) => (
             <View key={`${article.modelLabel}-${article.size}-${index}`} style={styles.articlesRow} wrap={false}>
-              {[article.modelLabel, article.size, String(article.quantity), article.jerseyName, article.number].map(
-                (value, cellIndex) => (
-                  <Text key={cellIndex} style={[styles.articlesTd, { width: cellIndex === 0 ? '28%' : '18%' }]}>
-                    {value}
-                  </Text>
-                ),
-              )}
+              {[article.modelLabel, article.size, String(article.quantity), article.jerseyName, article.number].map((value, cellIndex) => (
+                <Text key={cellIndex} style={[styles.articlesTd, { width: cellIndex === 0 ? '28%' : '18%' }]}>
+                  {value}
+                </Text>
+              ))}
             </View>
           ))}
           {Array.from({ length: emptyArticleRows }).map((_, index) => (

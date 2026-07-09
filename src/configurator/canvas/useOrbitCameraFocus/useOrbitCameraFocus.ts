@@ -4,12 +4,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useFrame, useThree } from '@react-three/fiber';
 import { getConfiguratorCameraFocusState, registerConfiguratorCameraDebug, subscribeConfiguratorCameraFocus } from '@configurator/canvas/cameraFocus';
 import { orbitControlsRef, syncOrbitControlsEnabled } from '@configurator/canvas/orbitGuard';
-import {
-  clampOrbitCameraOutsideGarment,
-  resolveOrbitFocusPose,
-  resolvePrintUvWorldPoint,
-  resolveShortestAngleDelta,
-} from '@configurator/utils';
+import { clampOrbitCameraOutsideGarment, resolveOrbitFocusPose, resolvePrintUvWorldPoint, resolveShortestAngleDelta } from '@configurator/utils';
 import { useConfiguratorProduct } from '@store';
 import { useEffect, useRef } from 'react';
 import { Spherical, Vector3 } from 'three';
@@ -57,11 +52,7 @@ const useOrbitCameraFocus = () => {
     const part = product.parts.find((item) => item.id === partId);
     if (!part || !controls) return null;
 
-    const resolved = resolvePrintUvWorldPoint(
-      { scene, meshNames: part.meshNames, atlasUv },
-      focusPointRef.current,
-      focusNormalRef.current,
-    );
+    const resolved = resolvePrintUvWorldPoint({ scene, meshNames: part.meshNames, atlasUv }, focusPointRef.current, focusNormalRef.current);
     if (!resolved) return null;
 
     const poseResolved = resolveOrbitFocusPose(

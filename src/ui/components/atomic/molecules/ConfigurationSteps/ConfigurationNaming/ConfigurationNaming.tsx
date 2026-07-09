@@ -124,10 +124,7 @@ const ConfigurationNaming = () => {
     [addInstance, product],
   );
 
-  const resolveFocusFromPosition = useCallback(
-    (position: namePositionType) => ({ partId: position.partId, uv: position.uv }),
-    [],
-  );
+  const resolveFocusFromPosition = useCallback((position: namePositionType) => ({ partId: position.partId, uv: position.uv }), []);
 
   const resolveFocusFromInstance = useCallback((instance: configurationPositionPickerInstanceType) => {
     const item = useGarmentName.getState().instances.find((entry) => entry.id === instance.id);
@@ -160,14 +157,7 @@ const ConfigurationNaming = () => {
       <ConfigurationPositionSelect label={CONFIGURATOR_NAME_POSITION_SELECT_LABEL} positions={availablePositions} onSelect={handlePositionSelect} />
 
       {instances.length > 0 && (
-        <AccordionAtom
-          items={items}
-          value={openItems}
-          onValueChange={handleOpenItemsChange}
-          onItemActivate={handleItemActivate}
-          multiple
-          className="gap-2"
-        />
+        <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} onItemActivate={handleItemActivate} multiple className="gap-2" />
       )}
     </Flex>
   );

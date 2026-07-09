@@ -53,16 +53,7 @@ const ConfigurationShadingAccordion = ({ parts, partIds }: configurationShadingA
     [getShadingPreview, gradientsByPart, parts],
   );
 
-  return (
-    <AccordionAtom
-      items={items}
-      value={openItems}
-      onValueChange={handleOpenItemsChange}
-      onItemActivate={handleItemActivate}
-      multiple
-      className="gap-3"
-    />
-  );
+  return <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} onItemActivate={handleItemActivate} multiple className="gap-3" />;
 };
 
 const ConfigurationShading = () => {

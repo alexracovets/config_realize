@@ -7,12 +7,7 @@ import type { MeshStandardMaterial, Texture } from 'three';
 import type { patternMaskPairType } from '@configurator/types';
 import type { designPatternItemType, garmentConfigType } from '@types';
 import { useConfiguratorSceneLoad } from '@store';
-import {
-  compileGarmentShadersOverFrames,
-  isGarmentAppearanceCached,
-  readProductAppearanceTextures,
-  waitForPresenterFrames,
-} from '@configurator/utils';
+import { compileGarmentShadersOverFrames, isGarmentAppearanceCached, readProductAppearanceTextures, waitForPresenterFrames } from '@configurator/utils';
 
 type garmentLoadReadyRefsType = {
   logosTextureRef: RefObject<Texture | null>;
@@ -189,14 +184,7 @@ const useGarmentLoadReady = ({
 
     // Keep the initial loader visible until shader compilation finishes.
     runShaderUpgrade(completeInitialLoad);
-  }, [
-    finishSceneLoad,
-    hydrateAppearanceRefsFromCache,
-    initialLoadCompletedRef,
-    isGarmentAppearanceReady,
-    markInitialSceneLoaded,
-    runShaderUpgrade,
-  ]);
+  }, [finishSceneLoad, hydrateAppearanceRefsFromCache, initialLoadCompletedRef, isGarmentAppearanceReady, markInitialSceneLoaded, runShaderUpgrade]);
 
   const completeSceneLoadersIfReady = useCallback(() => {
     if (!initialLoadCompletedRef.current && isCoreSceneReady()) {

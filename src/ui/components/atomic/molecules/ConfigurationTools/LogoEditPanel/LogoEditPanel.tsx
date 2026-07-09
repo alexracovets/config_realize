@@ -19,12 +19,7 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
     <Flex className="w-full flex-col items-start justify-start gap-5">
       <Grid className="grid-cols-[1fr_auto] items-center w-full gap-2">
         <Text className="text-[14px] leading-[15px] text-gray">File caricati</Text>
-        <Button
-          type="button"
-          variant="outline"
-          className="h-auto gap-1 px-0 py-0 text-[16px] font-semibold hover:text-error bg-transparent"
-          onClick={onClose}
-        >
+        <Button type="button" variant="outline" className="h-auto gap-1 px-0 py-0 text-[16px] font-semibold hover:text-error bg-transparent" onClick={onClose}>
           Chiudi
           <SvgIcon name="close" />
         </Button>

@@ -110,18 +110,17 @@ const PrintGizmoLayer = memo(() => {
   const numberLimits = useMemo(() => (product.numberDefaults ? resolveNumberLimits(product) : null), [product]);
   const testoLimits = useMemo(() => (product.testoDefaults ? resolveTestoLimits(product) : null), [product]);
 
-  const gizmoStep =
-    !isGizmoVisible
-      ? null
-      : activeStep === NAME_STEP
-        ? NAME_STEP
-        : activeStep === NUMBER_STEP
-          ? NUMBER_STEP
-          : activeStep === TESTO_STEP
-            ? TESTO_STEP
-            : activeStep === LOGO_STEP
-              ? LOGO_STEP
-              : null;
+  const gizmoStep = !isGizmoVisible
+    ? null
+    : activeStep === NAME_STEP
+      ? NAME_STEP
+      : activeStep === NUMBER_STEP
+        ? NUMBER_STEP
+        : activeStep === TESTO_STEP
+          ? TESTO_STEP
+          : activeStep === LOGO_STEP
+            ? LOGO_STEP
+            : null;
 
   const nameInstancesForGizmo = useMemo(
     () => nameInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
