@@ -1,5 +1,3 @@
-'use client';
-
 /* eslint-disable jsx-a11y/alt-text -- @react-pdf/renderer's Image is not a DOM element and has no alt prop */
 import { Document, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 

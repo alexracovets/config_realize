@@ -2,17 +2,14 @@
 
 import { useCallback, useState } from 'react';
 
-import { CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from '@constants';
+import { CHECKOUT_CONFIG_EXPORT_FILENAME } from '@constants';
 import { useCheckout, useConfigurationCart } from '@store';
 import {
-  buildAssetDownloadUrl,
-  buildCheckoutOrderExport,
-  buildCuttingExportDownloadUrlsFromUvBlobs,
+  buildCheckoutConfigExport,
   buildOrderCuttingExport,
   buildOrderPreset,
   collectOrderCuttingExportUvBlobs,
   formatCheckoutOrderDate,
-  triggerPdfDownload,
   uploadCheckoutAssetsDirect,
   withTimeout,
 } from '@utils';
@@ -24,6 +21,38 @@ const CHECKOUT_ENDPOINT = '/api/checkout';
 const CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS = 120_000;
 
 const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
+
+/** Converts a captured canvas preview (data: URL) to a Blob so it can be uploaded to Shopify Files. */
+const dataUrlToBlob = async (dataUrl: string): Promise<Blob | null> => {
+  if (!dataUrl.startsWith('data:')) return null;
+  try {
+    return await (await fetch(dataUrl)).blob();
+  } catch {
+    return null;
+  }
+};
+
+/** Uploads each product's captured preview screenshot and returns the hosted URL keyed by cartItemId. */
+const uploadProductPreviews = async (previews: Record<string, string>): Promise<Record<string, string>> => {
+  const items: checkoutAssetUploadItemType[] = [];
+
+  for (const [cartItemId, dataUrl] of Object.entries(previews)) {
+    const blob = await dataUrlToBlob(dataUrl);
+    if (blob) {
+      items.push({ id: `preview:${cartItemId}`, blob, filename: `preview-${cartItemId}.png`, mimeType: blob.type || 'image/png' });
+    }
+  }
+
+  if (!items.length) return {};
+
+  const urlById = await uploadCheckoutAssetsDirect(items);
+  const previewUrls: Record<string, string> = {};
+  for (const [cartItemId] of Object.entries(previews)) {
+    const url = urlById.get(`preview:${cartItemId}`);
+    if (url) previewUrls[cartItemId] = url;
+  }
+  return previewUrls;
+};
 
 const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeType[]> => {
   try {
@@ -38,17 +67,6 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       orderDate: formatCheckoutOrderDate(),
     };
 
-    const orderExportData = buildCheckoutOrderExport({
-      products,
-      cartItems: cartStore.items,
-      previews: cartStore.previews,
-      subtotal: checkoutStore.getSubtotal(),
-      discountAmount: checkoutStore.getDiscountAmount(),
-      shippingCost: checkoutStore.getShippingCost(),
-      grandTotal: checkoutStore.getGrandTotal(),
-      orderMeta,
-    });
-
     const cuttingExportData = buildOrderCuttingExport({
       products,
       configurations,
@@ -56,14 +74,11 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       orderDate: orderMeta.orderDate,
     });
 
-    // PDF renderer is heavy — load it only when the customer actually submits.
-    const [{ buildCheckoutOrderExportPdfBlob }, { buildOrderCuttingExportPdfBlob }, uvBlobs] = await Promise.all([
-      import('@utils/buildCheckoutOrderExportPdf'),
-      import('@utils/buildOrderCuttingExportPdf'),
-      collectOrderCuttingExportUvBlobs(cuttingExportData),
-    ]);
+    // Compose the UV textures (three.js/canvas — browser-only). The PDFs themselves are rendered
+    // server-side in the orders/create webhook from the config.json + real order data, so the
+    // client only needs to produce and host the image assets the server will embed.
+    const uvBlobs = await collectOrderCuttingExportUvBlobs(cuttingExportData);
 
-    // Upload UV textures first: their public URLs become clickable links inside the cutting PDF.
     const uvUrlById = await uploadCheckoutAssetsDirect(
       uvBlobs.map((uv) => ({
         id: `uv:${uv.cartItemId}:${uv.label}`,
@@ -78,59 +93,34 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url }] : [];
     });
 
-    // PDF links go through the app's download route so a click downloads the file
-    // instead of navigating the tab away from the open PDF.
-    const linkUrls = uvBlobs.flatMap((uv) => {
-      const url = uvUrlById.get(`uv:${uv.cartItemId}:${uv.label}`);
-      return url ? [{ cartItemId: uv.cartItemId, label: uv.label, url: buildAssetDownloadUrl(url, uv.fileName) }] : [];
+    const previewUrls = await uploadProductPreviews(cartStore.previews);
+
+    // Single JSON snapshot of the whole order (every product's full configuration, business data,
+    // preview + UV texture URLs). Uploaded as a file and referenced via one short `_config_url`
+    // cart attribute; the webhook rebuilds both PDFs from it once the real order exists.
+    const configExport = buildCheckoutConfigExport({
+      products,
+      configurations,
+      uvImages,
+      previewUrls,
+      orderNumber: orderMeta.orderNumber,
+      orderDate: orderMeta.orderDate,
     });
 
-    const downloadUrls = await buildCuttingExportDownloadUrlsFromUvBlobs(uvBlobs);
-
-    const [orderPdfBlob, cuttingPdfBlob] = await Promise.all([
-      buildCheckoutOrderExportPdfBlob(orderExportData).catch((error) => {
-        console.error('Order PDF generation failed', error);
-        return null;
-      }),
-      buildOrderCuttingExportPdfBlob(cuttingExportData, { downloadUrls, linkUrls }).catch((error) => {
-        console.error('Cutting PDF generation failed', error);
-        return null;
-      }),
+    const configUrlById = await uploadCheckoutAssetsDirect([
+      {
+        id: 'config-json',
+        blob: new Blob([JSON.stringify(configExport)], { type: 'application/json' }),
+        filename: CHECKOUT_CONFIG_EXPORT_FILENAME,
+        mimeType: 'application/json',
+      },
     ]);
 
-    // Hand the generated PDFs to the customer immediately, before the upload starts.
-    if (orderPdfBlob) triggerPdfDownload(orderPdfBlob, CHECKOUT_ORDER_EXPORT_FILENAME);
-    if (cuttingPdfBlob) triggerPdfDownload(cuttingPdfBlob, CHECKOUT_CUTTING_EXPORT_FILENAME);
-
-    const pdfUploadItems: checkoutAssetUploadItemType[] = [];
-
-    if (orderPdfBlob) {
-      pdfUploadItems.push({
-        id: 'order-pdf',
-        blob: orderPdfBlob,
-        filename: CHECKOUT_ORDER_EXPORT_FILENAME,
-        mimeType: 'application/pdf',
-      });
-    }
-
-    if (cuttingPdfBlob) {
-      pdfUploadItems.push({
-        id: 'cutting-pdf',
-        blob: cuttingPdfBlob,
-        filename: CHECKOUT_CUTTING_EXPORT_FILENAME,
-        mimeType: 'application/pdf',
-      });
-    }
-
-    const pdfUrlById = pdfUploadItems.length ? await uploadCheckoutAssetsDirect(pdfUploadItems) : new Map<string, string>();
     const attributes: checkoutLineAttributeType[] = [];
+    const configUrl = configUrlById.get('config-json');
 
-    const orderPdfUrl = pdfUrlById.get('order-pdf');
-    const cuttingPdfUrl = pdfUrlById.get('cutting-pdf');
-
-    if (orderPdfUrl) attributes.push({ key: '_order_pdf_url', value: orderPdfUrl });
-    if (cuttingPdfUrl) attributes.push({ key: '_cutting_pdf_url', value: cuttingPdfUrl });
     if (uvImages.length) attributes.push({ key: '_uv_image_urls', value: JSON.stringify(uvImages) });
+    if (configUrl) attributes.push({ key: '_config_url', value: configUrl });
 
     return attributes;
   } catch (error) {
@@ -149,8 +139,7 @@ const useSubmitCheckout = () => {
 
     try {
       const { products } = useCheckout.getState();
-      const { configurations } = useConfigurationCart.getState();
-      const payload: createCheckoutPayloadType = buildOrderPreset(products, configurations);
+      const payload: createCheckoutPayloadType = buildOrderPreset(products);
 
       if (!payload.lines.length) {
         throw new Error('Nessun prodotto da ordinare.');

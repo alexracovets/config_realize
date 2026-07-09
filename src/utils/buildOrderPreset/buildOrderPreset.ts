@@ -1,7 +1,5 @@
 import type { createCheckoutPayloadType } from '@shopify';
-import type { cartItemConfigurationType, checkoutProductType } from '@types';
-
-const CONFIG_PRESET_VERSION = 1;
+import type { checkoutProductType } from '@types';
 
 const joinTesto = (testoTexts: string[]): string =>
   testoTexts
@@ -11,10 +9,12 @@ const joinTesto = (testoTexts: string[]): string =>
 
 /**
  * Builds the `/api/checkout` payload from the checkout table state. Each table row becomes
- * one Shopify cart line: human-readable line item properties (Taglia/Nome/Numero/Testo) for
- * the merchant/customer, plus a hidden `_config` JSON snapshot of the full configuration.
+ * one Shopify cart line carrying only human-readable line item properties (Taglia/Nome/Numero/
+ * Testo). The full configuration snapshot no longer travels per-line as a raw `_config` JSON
+ * (it overflows Shopify's 255-char attribute limit); instead it is uploaded once as a single
+ * `config.json` for the whole order and referenced via a cart-level `_config_url` attribute.
  */
-const buildOrderPreset = (products: checkoutProductType[], configurations: Record<string, cartItemConfigurationType>): createCheckoutPayloadType => {
+const buildOrderPreset = (products: checkoutProductType[]): createCheckoutPayloadType => {
   const lines = products.flatMap((product) =>
     product.rows.map((row) => {
       const attributes: { key: string; value: string }[] = [{ key: 'Taglia', value: row.size }];
@@ -31,20 +31,6 @@ const buildOrderPreset = (products: checkoutProductType[], configurations: Recor
       if (testo) {
         attributes.push({ key: 'Testo', value: testo });
       }
-
-      const preset = {
-        version: CONFIG_PRESET_VERSION,
-        handle: product.business.handle,
-        modelId: product.modelId,
-        size: row.size,
-        name: row.name.trim(),
-        number: row.number.trim(),
-        testoTexts: row.testoTexts.map((text) => text.trim()).filter(Boolean),
-        quantity: row.quantity,
-        configuration: configurations[product.cartItemId] ?? null,
-      };
-
-      attributes.push({ key: '_config', value: JSON.stringify(preset) });
 
       return {
         handle: product.business.handle,

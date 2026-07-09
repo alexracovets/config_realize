@@ -3,6 +3,8 @@ export { cn } from './cn';
 export { buildAppPath, isEmbeddedSession, resolveEmbeddedContext } from './embeddedSession';
 export { buildCollectionPath, buildConfiguratorPath, isConfiguratorPath, isInternalAppPath } from './appPaths';
 export { buildOrderPreset } from './buildOrderPreset';
+export { buildCheckoutConfigExport, CHECKOUT_CONFIG_EXPORT_VERSION } from './buildCheckoutConfigExport';
+export type { checkoutConfigExportType, checkoutConfigProductExportType } from './buildCheckoutConfigExport';
 export { buildCheckoutOrderExport, formatCheckoutOrderDate } from './buildCheckoutOrderExport';
 export { buildOrderCuttingExport } from './buildOrderCuttingExport';
 export { buildCheckoutOrderExportPdfBlob } from './buildCheckoutOrderExportPdf';
