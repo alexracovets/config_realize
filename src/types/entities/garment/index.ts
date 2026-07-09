@@ -10,6 +10,7 @@ export type {
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,
+  printReferenceCmType,
   styleConfigType,
   textDefaultsConfigType,
   textPositionConfigType,

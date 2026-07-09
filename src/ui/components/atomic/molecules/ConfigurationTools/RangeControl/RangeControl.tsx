@@ -7,9 +7,11 @@ import type { rangeControlPropsType } from '@types';
 
 const clamp = (v: number, safeMin: number, safeMax: number) => Math.min(Math.max(v, safeMin), safeMax);
 
-const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, unit = '' }: rangeControlPropsType) => {
+const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, unit = '', formatValue }: rangeControlPropsType) => {
   const safeMin = Math.min(min, max);
   const safeMax = Math.max(min, max);
+
+  const formatLabel = (labelValue: number) => (formatValue ? formatValue(labelValue) : `${labelValue}${unit}`);
 
   const [localValue, setLocalValue] = useState(() => clamp(value, safeMin, safeMax));
   const isDragging = useRef(false);
@@ -51,8 +53,7 @@ const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, un
       />
       <Flex variant="slider_labels">
         <Text variant="slider_label" style={{ opacity: hideMin ? 0 : 1, transition: 'opacity 0.15s' }}>
-          {safeMin}
-          {unit}
+          {formatLabel(safeMin)}
         </Text>
         <Text
           variant="slider_label"
@@ -62,12 +63,10 @@ const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, un
             translate: percent < 5 ? '0' : percent > 95 ? '-100%' : '-50% 0',
           }}
         >
-          {localValue}
-          {unit}
+          {formatLabel(localValue)}
         </Text>
         <Text variant="slider_label" style={{ opacity: hideMax ? 0 : 1, transition: 'opacity 0.15s' }}>
-          {safeMax}
-          {unit}
+          {formatLabel(safeMax)}
         </Text>
       </Flex>
     </Flex>

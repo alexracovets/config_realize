@@ -3,7 +3,8 @@
 import type { configurationPositionPickerInstanceType, namePartFormPropsType, namePositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NAME_POSITION_SELECT_LABEL } from '@constants';
-import { useConfigurationPositionPicker } from '@hooks';
+import { useConfigurationPositionPicker, usePrintCmScale } from '@hooks';
+import { formatPxAsCm } from '@utils';
 import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
 import { createNameInstance, resolveNameDefaults, resolveNameLimits, useConfiguratorProduct, useGarmentName } from '@store';
 import { useCallback, useMemo } from 'react';
@@ -23,6 +24,9 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
   const previewStrokeColor = previewPatch?.strokeColor;
   const previewFontSize = previewPatch?.fontSize;
   const previewStrokeWidth = previewPatch?.strokeWidth;
+
+  const cmScale = usePrintCmScale();
+  const formatCmY = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxY) : undefined;
 
   const commit = useCallback(
     (patch: Parameters<typeof updateInstance>[1]) => {
@@ -81,6 +85,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
         min={limits.fontSizeMin}
         max={limits.fontSizeMax}
         unit="px"
+        formatValue={formatCmY}
       />
 
       <RangeControl
@@ -91,6 +96,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
         min={0}
         max={limits.strokeWidthMax}
         unit="px"
+        formatValue={formatCmY}
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>

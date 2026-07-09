@@ -3,7 +3,8 @@
 import type { configurationPositionPickerInstanceType, numberPartFormPropsType, numberPositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL } from '@constants';
-import { useConfigurationPositionPicker } from '@hooks';
+import { useConfigurationPositionPicker, usePrintCmScale } from '@hooks';
+import { formatPxAsCm } from '@utils';
 import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
 import {
   createNumberInstance,
@@ -32,6 +33,9 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
   const previewFontSize = previewPatch?.fontSize;
   const previewStrokeWidth = previewPatch?.strokeWidth;
   const previewLineHeight = previewPatch?.lineHeight;
+
+  const cmScale = usePrintCmScale();
+  const formatCmY = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxY) : undefined;
 
   const commit = useCallback(
     (patch: Parameters<typeof updateInstance>[1]) => {
@@ -92,6 +96,7 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
         min={limits.fontSizeMin}
         max={limits.fontSizeMax}
         unit="px"
+        formatValue={formatCmY}
       />
 
       {lineHeightShow && (
@@ -114,6 +119,7 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
         min={0}
         max={limits.strokeWidthMax}
         unit="px"
+        formatValue={formatCmY}
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>

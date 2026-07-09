@@ -40,3 +40,6 @@ export { CHECKOUT_SUMMARY_ICON_MAP } from './checkoutSummaryIcons';
 export { priceFormat } from './priceFormat';
 export { isAcceptedLogoFile, LogoFileError, logoFileToDisplayUrl, preloadLogoDisplayUrl, warmupGhostscriptWorker, yieldToMain } from './logoFile';
 export { withListPunctuation } from './modalInfo';
+export { formatPxAsCm, resolvePrintCmScale } from './resolvePrintCmScale';
+export type { printCmScaleType } from './resolvePrintCmScale';
+export { fetchConfiguratorProductBusiness } from './fetchConfiguratorProductBusiness';

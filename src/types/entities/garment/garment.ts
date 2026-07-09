@@ -18,6 +18,14 @@ interface printAtlasConfigType {
   height: number;
 }
 
+/** Real-world garment measurements (cm) used to convert print-atlas pixels into centimetres. Sourced from the L column of the Shopify size chart. */
+interface printReferenceCmType {
+  /** Body height in cm (size chart "ALTEZZA" row, L column). */
+  heightCm: number;
+  /** Body width in cm (size chart "TORACE"/"VITA" row, L column). */
+  widthCm: number;
+}
+
 interface partGradientConfigType {
   reversed: boolean;
   rotation: number;
@@ -178,6 +186,8 @@ interface garmentBusinessType {
   minimumCount: number;
   /** Per-product "Tabella taglie" content sourced from Shopify metafields; falls back to the static default when unset. */
   sizeChart?: modalInfoTabType;
+  /** Real-world L-size measurements (cm) extracted from the size chart, used to display print sizes in cm instead of px. Undefined when the product has no Shopify size chart. */
+  printReferenceCm?: printReferenceCmType;
 }
 
 export type {
@@ -192,6 +202,7 @@ export type {
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,
+  printReferenceCmType,
   styleConfigType,
   textDefaultsConfigType,
   textPositionConfigType,

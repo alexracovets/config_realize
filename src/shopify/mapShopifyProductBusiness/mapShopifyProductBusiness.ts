@@ -1,6 +1,6 @@
 import type { garmentBusinessType } from '@types';
 
-import { mapSizeChartContent, type sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
+import { mapSizeChartContent, resolveSizeReferenceCm, type sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
 
 /** GraphQL fields needed to build `garmentBusinessType` from a Shopify product node. */
 const PRODUCT_BUSINESS_FIELDS = `#graphql
@@ -81,6 +81,7 @@ const mapShopifyProductBusiness = (node: shopifyProductBusinessNodeType): garmen
   bonusDiscount: toNumber(node.bonusDiscountMetafield?.value),
   bonusCount: toNumber(node.bonusCountMetafield?.value),
   sizeChart: mapSizeChartContent(node) ?? undefined,
+  printReferenceCm: resolveSizeReferenceCm(node) ?? undefined,
 });
 
 export { mapShopifyProductBusiness, PRODUCT_BUSINESS_FIELDS, resolveProductModelId };

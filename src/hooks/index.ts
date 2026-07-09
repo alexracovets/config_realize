@@ -27,3 +27,4 @@ export { useLogoFileHandler } from './useLogoFileHandler';
 export { useProductStepsConfiguration } from './useProductStepsConfiguration';
 export { useStepLogo } from './useStepLogo';
 export { useTintedDesignSvgSrc } from './useTintedDesignSvgSrc';
+export { usePrintCmScale } from './usePrintCmScale';

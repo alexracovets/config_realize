@@ -6,6 +6,7 @@ import { areGarmentPrintStoresSynced } from '@store/useConfigurationCart/areGarm
 import { captureGarmentConfiguration, cloneCartItemConfiguration, createDefaultCartItemConfiguration } from '@store/useConfigurationCart/cartItemConfiguration';
 import { inheritCartItemConfiguration } from '@store/useConfigurationCart/inheritCartItemConfiguration';
 import { createCartItem, createDefaultCartItem } from '@store/useConfigurationCart/mapCartItems';
+import { enrichCartItemBusiness } from '@store/useConfigurationCart/enrichCartItemBusiness';
 import { persistCartItemSnapshot } from '@store/useConfigurationCart/persistCartItemSnapshot';
 import type { cartItemConfigurationType, cartItemType, configuratorCatalogProductPickType, garmentBusinessType, modelIdType } from '@types';
 import { buildConfiguratorPath, getModel } from '@utils';
@@ -72,6 +73,13 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     });
 
     void activateCartItem(get, item.id);
+
+    // Catalog picks carry only placeholder business — lazily fetch the full Shopify business
+    // (size chart + printReferenceCm) so the Info modal and cm print sizes work for added products.
+    const updateItemBusiness = (targetId: string, business: garmentBusinessType) => {
+      set({ items: get().items.map((entry) => (entry.id === targetId ? { ...entry, business } : entry)) });
+    };
+    void enrichCartItemBusiness(get, updateItemBusiness, item.id);
   },
 
   setActiveItemProduct: ({ collectionHandle, slug, modelId, business }) => {

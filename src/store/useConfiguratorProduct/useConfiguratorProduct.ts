@@ -13,6 +13,8 @@ interface ConfiguratorProductState {
   business: garmentBusinessType;
   /** Switch the active model; business defaults to the local fallback unless provided. */
   setProduct: (modelId: modelIdType, business?: garmentBusinessType) => void;
+  /** Replace only the business data for the active model (e.g. after lazily fetching full Shopify data), without touching the 3D geometry. */
+  setBusiness: (business: garmentBusinessType) => void;
   /** Hydrate from a route loader (Shopify product → model id + business). */
   initFromLoader: (modelId: modelIdType, business: garmentBusinessType) => void;
 }
@@ -33,6 +35,9 @@ const useConfiguratorProduct = create<ConfiguratorProductState>((set) => ({
       product: resolveModel(modelId),
       business: business ?? deriveLocalBusiness(modelId),
     });
+  },
+  setBusiness: (business) => {
+    set({ business });
   },
   initFromLoader: (modelId, business) => {
     set({
