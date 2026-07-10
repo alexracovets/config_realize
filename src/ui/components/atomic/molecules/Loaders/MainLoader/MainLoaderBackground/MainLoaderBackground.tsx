@@ -34,6 +34,7 @@ const MainLoaderBackground = () => {
 
     if (!path) return;
 
+    const waveEpochMs = Date.now();
     const stopSvgFallback = startSvgWaveAnimation(path);
 
     if (!supportsOffscreenCanvas() || !host) {
@@ -92,6 +93,7 @@ const MainLoaderBackground = () => {
         width,
         height,
         devicePixelRatio: window.devicePixelRatio,
+        waveEpochMs,
       },
       [offscreen],
     );
