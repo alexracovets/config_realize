@@ -51,17 +51,19 @@ const useCheckout = create<CheckoutState>((set, get) => ({
       [cartState.activeItemId]: activeConfiguration,
     };
 
-    const products = cartState.items.map((item) => {
-      const rowPreset = extractCheckoutRowPreset(configurations[item.id]);
+    const products = cartState.items
+      .filter((item) => !item.isPlaceholder)
+      .map((item) => {
+        const rowPreset = extractCheckoutRowPreset(configurations[item.id]);
 
-      return {
-        cartItemId: item.id,
-        modelId: item.modelId,
-        business: item.business,
-        rowPreset,
-        rows: buildCheckoutRows(configurations[item.id]),
-      };
-    });
+        return {
+          cartItemId: item.id,
+          modelId: item.modelId,
+          business: item.business,
+          rowPreset,
+          rows: buildCheckoutRows(configurations[item.id]),
+        };
+      });
 
     set({ products });
   },

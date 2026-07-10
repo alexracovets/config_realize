@@ -18,7 +18,6 @@ interface ConfigurationCartState {
   configurations: Record<string, cartItemConfigurationType>;
   previews: Record<string, string>;
   addItem: (product: configuratorCatalogProductPickType, options?: { inheritDesign?: boolean }) => void;
-  /** Stamp a Shopify product (from the slug route loader) onto the active cart item. */
   setActiveItemProduct: (product: { collectionHandle: string; slug: string; modelId: modelIdType; business: garmentBusinessType }) => void;
   duplicateActiveItem: () => void;
   selectItem: (id: string) => void;
@@ -84,14 +83,9 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
     const activeItem = items.find((item) => item.id === activeItemId);
     if (!activeItem) return;
     if (!getModel(modelId)) return;
-
-    // The geometry (modelId) is what drives the heavy 3D rebuild. The default cart item
-    // is already initialised with the default model, so when the loaded product maps to the
-    // SAME model we must NOT reset/reactivate — that would rebuild the whole scene a second
-    // time on every open. Only the slug + business need refreshing in that case.
     if (activeItem.modelId === modelId) {
       set({
-        items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, business } : item)),
+        items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, business, isPlaceholder: false } : item)),
       });
       useConfiguratorProduct.getState().initFromLoader(modelId, business);
 
@@ -103,11 +97,10 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
       return;
     }
 
-    // Different model: reset this item's configuration so it rebuilds from the new model defaults.
     const nextConfigurations = Object.fromEntries(Object.entries(configurations).filter(([itemId]) => itemId !== activeItemId));
 
     set({
-      items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, modelId, business } : item)),
+      items: items.map((item) => (item.id === activeItemId ? { ...item, collectionHandle, slug, modelId, business, isPlaceholder: false } : item)),
       configurations: nextConfigurations,
     });
 

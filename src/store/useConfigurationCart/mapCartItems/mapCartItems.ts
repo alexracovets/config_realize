@@ -12,11 +12,13 @@ const createCartItem = (params: { collectionHandle: string; slug: string; modelI
   business: params.business ?? deriveLocalBusiness(params.modelId),
 });
 
-const createDefaultCartItem = () =>
-  createCartItem({
+const createDefaultCartItem = () => ({
+  ...createCartItem({
     collectionHandle: DEFAULT_CONFIGURATOR_COLLECTION_HANDLE,
     slug: DEFAULT_CONFIGURATOR_SLUG,
     modelId: DEFAULT_CONFIGURATOR_MODEL_ID,
-  });
+  }),
+  isPlaceholder: true,
+});
 
 export { createCartItem, createDefaultCartItem };
