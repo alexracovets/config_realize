@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Box, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
 import { LogoUploadSkeleton } from '@skeletons';
@@ -11,10 +11,6 @@ import { cn, warmupGhostscriptWorker } from '@utils';
 const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelected }: logoUploadPropsType) => {
   const [dragOver, setDragOver] = useState(false);
 
-  useEffect(() => {
-    warmupGhostscriptWorker();
-  }, []);
-
   const handleFile = async (file: File | undefined) => {
     if (!file || loading || !canUpload) return;
     await onFileSelected(file);
@@ -23,6 +19,12 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
   const openFilePicker = () => {
     if (loading || !canUpload) return;
     onOpenFilePicker();
+  };
+
+  // Preload the 15MB Ghostscript WASM only once the user shows real intent to drop/pick a
+  // file — not on every mount of this step — so plain PNG/JPG uploads never pay for it.
+  const warmupOnIntent = () => {
+    if (!loading && canUpload) warmupGhostscriptWorker();
   };
 
   if (loading) {
@@ -38,9 +40,12 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
         tabIndex={!canUpload || loading ? -1 : 0}
         onClick={openFilePicker}
         onKeyDown={(e) => e.key === 'Enter' && openFilePicker()}
+        onMouseEnter={warmupOnIntent}
+        onFocus={warmupOnIntent}
         onDragOver={(e) => {
           e.preventDefault();
           if (!loading && canUpload) setDragOver(true);
+          warmupOnIntent();
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={(e) => {

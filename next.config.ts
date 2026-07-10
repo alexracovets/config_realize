@@ -50,6 +50,18 @@ const nextConfig: NextConfig = {
     return config;
   },
   allowedDevOrigins: ['127.0.0.1'],
+  async headers() {
+    // Content-hashed by build (GLB/WASM/design assets don't change without a filename change) —
+    // safe to cache for a year at the edge/browser instead of relying on default static-file headers.
+    const immutableCacheControl = { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' };
+
+    return [
+      { source: '/models/:path*', headers: [immutableCacheControl] },
+      { source: '/ghostscript/:path*', headers: [immutableCacheControl] },
+      { source: '/png/:path*', headers: [immutableCacheControl] },
+      { source: '/svg/:path*', headers: [immutableCacheControl] },
+    ];
+  },
 };
 
 export default nextConfig;
