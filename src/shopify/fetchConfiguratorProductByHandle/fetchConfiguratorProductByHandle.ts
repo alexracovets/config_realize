@@ -55,31 +55,36 @@ const ADMIN_PRODUCTS_LOOKUP_QUERY = `#graphql
   }
 `;
 
+/** Single field selection reused by every Storefront query — add new fields once here, not per-query. */
+const STOREFRONT_PRODUCT_FIELDS = `#graphql
+  id
+  title
+  handle
+  priceRange {
+    minVariantPrice {
+      amount
+      currencyCode
+    }
+  }
+  modelMetafield: metafield(namespace: "custom", key: "id") {
+    value
+  }
+  bonusCountMetafield: metafield(namespace: "custom", key: "bonus_count") {
+    value
+  }
+  bonusDiscountMetafield: metafield(namespace: "custom", key: "bonus_discount") {
+    value
+  }
+  minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
+    value
+  }
+  ${STOREFRONT_SIZE_CHART_FIELDS}
+`;
+
 const STOREFRONT_PRODUCT_BY_HANDLE_QUERY = `#graphql
   query ConfiguratorProductByHandle($handle: String!) {
     product(handle: $handle) {
-      id
-      title
-      handle
-      priceRange {
-        minVariantPrice {
-          amount
-          currencyCode
-        }
-      }
-      modelMetafield: metafield(namespace: "custom", key: "id") {
-        value
-      }
-      bonusCountMetafield: metafield(namespace: "custom", key: "bonus_count") {
-        value
-      }
-      bonusDiscountMetafield: metafield(namespace: "custom", key: "bonus_discount") {
-        value
-      }
-      minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
-        value
-      }
-      ${STOREFRONT_SIZE_CHART_FIELDS}
+      ${STOREFRONT_PRODUCT_FIELDS}
     }
   }
 `;
@@ -88,28 +93,7 @@ const STOREFRONT_PRODUCTS_LOOKUP_QUERY = `#graphql
   query ConfiguratorProductsLookup {
     products(first: 100) {
       nodes {
-        id
-        title
-        handle
-        priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
-        }
-        modelMetafield: metafield(namespace: "custom", key: "id") {
-          value
-        }
-        bonusCountMetafield: metafield(namespace: "custom", key: "bonus_count") {
-          value
-        }
-        bonusDiscountMetafield: metafield(namespace: "custom", key: "bonus_discount") {
-          value
-        }
-        minimumCountMetafield: metafield(namespace: "custom", key: "minimum_count") {
-          value
-        }
-        ${STOREFRONT_SIZE_CHART_FIELDS}
+        ${STOREFRONT_PRODUCT_FIELDS}
       }
     }
   }
@@ -125,7 +109,8 @@ type adminProductsLookupResponseType = {
   };
 };
 
-type storefrontProductNodeType = {
+/** Base (non-metafield) fields shared by every Storefront node — kept in one place alongside `STOREFRONT_PRODUCT_FIELDS`. */
+type storefrontProductBaseNodeType = {
   id: string;
   title: string;
   handle: string;
@@ -136,7 +121,9 @@ type storefrontProductNodeType = {
   bonusCountMetafield?: { value: string } | null;
   bonusDiscountMetafield?: { value: string } | null;
   minimumCountMetafield?: { value: string } | null;
-} & sizeChartMetafieldsNodeType;
+};
+
+type storefrontProductNodeType = storefrontProductBaseNodeType & sizeChartMetafieldsNodeType;
 
 type storefrontProductByHandleResponseType = {
   product?: storefrontProductNodeType | null;
@@ -148,25 +135,19 @@ type storefrontProductsLookupResponseType = {
   };
 };
 
-const mapStorefrontProductNode = (node: storefrontProductNodeType): shopifyProductBusinessNodeType => ({
-  id: node.id,
-  title: node.title,
-  handle: node.handle,
+/**
+ * Reshapes a Storefront node into the Admin-shaped `shopifyProductBusinessNodeType`.
+ * Metafields (`sizeChartMetafieldsNodeType` and beyond) pass through via spread — adding a new
+ * metafield only needs `STOREFRONT_PRODUCT_FIELDS` + the shared node type, not a new line here.
+ */
+const mapStorefrontProductNode = ({ priceRange, ...node }: storefrontProductNodeType): shopifyProductBusinessNodeType => ({
+  ...node,
   priceRangeV2: {
     minVariantPrice: {
-      amount: node.priceRange?.minVariantPrice?.amount,
-      currencyCode: node.priceRange?.minVariantPrice?.currencyCode,
+      amount: priceRange?.minVariantPrice?.amount,
+      currencyCode: priceRange?.minVariantPrice?.currencyCode,
     },
   },
-  modelMetafield: node.modelMetafield,
-  bonusCountMetafield: node.bonusCountMetafield,
-  bonusDiscountMetafield: node.bonusDiscountMetafield,
-  minimumCountMetafield: node.minimumCountMetafield,
-  headingMetafield: node.headingMetafield,
-  descriptionMetafield: node.descriptionMetafield,
-  imageMetafield: node.imageMetafield,
-  tableMetafield: node.tableMetafield,
-  noteMetafield: node.noteMetafield,
 });
 
 const toConfiguratorProduct = (node: shopifyProductBusinessNodeType): configuratorProductHydrationType | null => {

@@ -1,13 +1,15 @@
 'use client';
 
 import { useConfiguratorProduct } from '@store/useConfiguratorProduct';
-import type { cartItemType, garmentBusinessType } from '@types';
+import type { cartItemType } from '@types';
 import { fetchConfiguratorProductBusiness } from '@utils';
 
 interface EnrichCartState {
   items: cartItemType[];
   activeItemId: string;
 }
+
+type EnrichCartSet = (partial: { items: cartItemType[] }) => void;
 
 /** Items whose full business has already been fetched (or is in flight) — avoids duplicate requests. */
 const requested = new Set<string>();
@@ -20,11 +22,7 @@ const requested = new Set<string>();
  * No-op when the item already carries a size chart, has no slug, or the fetch fails/returns a
  * different model. When the item is still active, the active product's business is refreshed too.
  */
-const enrichCartItemBusiness = async (
-  get: () => EnrichCartState,
-  updateItemBusiness: (itemId: string, business: garmentBusinessType) => void,
-  itemId: string,
-): Promise<void> => {
+const enrichCartItemBusiness = async (get: () => EnrichCartState, set: EnrichCartSet, itemId: string): Promise<void> => {
   const item = get().items.find((entry) => entry.id === itemId);
   if (!item || !item.slug || item.business.sizeChart || requested.has(itemId)) return;
 
@@ -38,7 +36,7 @@ const enrichCartItemBusiness = async (
   // The item may have been removed while the request was in flight.
   if (!get().items.some((entry) => entry.id === itemId)) return;
 
-  updateItemBusiness(itemId, business);
+  set({ items: get().items.map((entry) => (entry.id === itemId ? { ...entry, business } : entry)) });
   if (get().activeItemId === itemId) {
     useConfiguratorProduct.getState().setBusiness(business);
   }

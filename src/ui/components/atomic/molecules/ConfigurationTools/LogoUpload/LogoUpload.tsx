@@ -21,8 +21,6 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
     onOpenFilePicker();
   };
 
-  // Preload the 15MB Ghostscript WASM only once the user shows real intent to drop/pick a
-  // file — not on every mount of this step — so plain PNG/JPG uploads never pay for it.
   const warmupOnIntent = () => {
     if (!loading && canUpload) warmupGhostscriptWorker();
   };
@@ -34,7 +32,6 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
   return (
     <Flex className="flex w-full flex-col items-start justify-start gap-2">
       <Text className="text-[14px] leading-[15px] text-gray-10">Logo</Text>
-
       <div
         role="button"
         tabIndex={!canUpload || loading ? -1 : 0}

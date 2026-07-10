@@ -173,24 +173,26 @@ const ConfigurationTesto = () => {
     resolveFocusFromInstance,
   });
 
-  const items = useMemo(
-    () =>
-      instances.map((instance) => ({
-        value: instance.id,
-        trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-        content: (
-          <TestoPartForm
-            instanceId={instance.id}
-            limits={limits!}
-            placeholder={testoDefaults?.text ?? ''}
-            lineHeightShow={lineHeightShow}
-            letterSpacingShow={letterSpacingShow}
-          />
-        ),
-        onDelete: () => removeInstance(instance.id),
-      })),
-    [instances, letterSpacingShow, limits, lineHeightShow, removeInstance, testoDefaults?.text],
-  );
+  const items = useMemo(() => {
+    // `limits` is only unset while positions haven't loaded yet — instances is empty then too,
+    // so this never actually renders a TestoPartForm without limits.
+    if (!limits) return [];
+
+    return instances.map((instance) => ({
+      value: instance.id,
+      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+      content: (
+        <TestoPartForm
+          instanceId={instance.id}
+          limits={limits}
+          placeholder={testoDefaults?.text ?? ''}
+          lineHeightShow={lineHeightShow}
+          letterSpacingShow={letterSpacingShow}
+        />
+      ),
+      onDelete: () => removeInstance(instance.id),
+    }));
+  }, [instances, letterSpacingShow, limits, lineHeightShow, removeInstance, testoDefaults?.text]);
 
   if (positions.length === 0 || !limits || !testoDefaults) return null;
 

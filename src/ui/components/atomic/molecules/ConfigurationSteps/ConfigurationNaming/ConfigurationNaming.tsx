@@ -139,16 +139,16 @@ const ConfigurationNaming = () => {
     resolveFocusFromInstance,
   });
 
-  const items = useMemo(
-    () =>
-      instances.map((instance) => ({
-        value: instance.id,
-        trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-        content: <NamePartForm instanceId={instance.id} limits={limits!} placeholder={nameDefaults?.text ?? ''} />,
-        onDelete: () => removeInstance(instance.id),
-      })),
-    [instances, limits, nameDefaults?.text, removeInstance],
-  );
+  const items = useMemo(() => {
+    if (!limits) return [];
+
+    return instances.map((instance) => ({
+      value: instance.id,
+      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+      content: <NamePartForm instanceId={instance.id} limits={limits} placeholder={nameDefaults?.text ?? ''} />,
+      onDelete: () => removeInstance(instance.id),
+    }));
+  }, [instances, limits, nameDefaults?.text, removeInstance]);
 
   if (positions.length === 0 || !limits || !nameDefaults) return null;
 

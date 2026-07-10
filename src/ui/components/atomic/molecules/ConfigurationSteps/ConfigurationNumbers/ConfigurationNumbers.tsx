@@ -163,16 +163,18 @@ const ConfigurationNumbers = () => {
     resolveFocusFromInstance,
   });
 
-  const items = useMemo(
-    () =>
-      instances.map((instance) => ({
-        value: instance.id,
-        trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-        content: <NumberPartForm instanceId={instance.id} limits={limits!} placeholder={numberDefaults?.text ?? '00'} lineHeightShow={lineHeightShow} />,
-        onDelete: () => removeInstance(instance.id),
-      })),
-    [instances, limits, lineHeightShow, numberDefaults?.text, removeInstance],
-  );
+  const items = useMemo(() => {
+    // `limits` is only unset while positions haven't loaded yet — instances is empty then too,
+    // so this never actually renders a NumberPartForm without limits.
+    if (!limits) return [];
+
+    return instances.map((instance) => ({
+      value: instance.id,
+      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+      content: <NumberPartForm instanceId={instance.id} limits={limits} placeholder={numberDefaults?.text ?? '00'} lineHeightShow={lineHeightShow} />,
+      onDelete: () => removeInstance(instance.id),
+    }));
+  }, [instances, limits, lineHeightShow, numberDefaults?.text, removeInstance]);
 
   if (positions.length === 0 || !limits || !numberDefaults) return null;
 

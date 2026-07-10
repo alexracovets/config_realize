@@ -8,9 +8,9 @@ import { inheritCartItemConfiguration } from '@store/useConfigurationCart/inheri
 import { createCartItem, createDefaultCartItem } from '@store/useConfigurationCart/mapCartItems';
 import { enrichCartItemBusiness } from '@store/useConfigurationCart/enrichCartItemBusiness';
 import { persistCartItemSnapshot } from '@store/useConfigurationCart/persistCartItemSnapshot';
+import { syncActiveCartItemToEmbeddedUrl } from '@store/useConfigurationCart/syncActiveCartItemToEmbeddedUrl';
 import type { cartItemConfigurationType, cartItemType, configuratorCatalogProductPickType, garmentBusinessType, modelIdType } from '@types';
-import { buildConfiguratorPath, getModel } from '@utils';
-import { postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
+import { getModel } from '@utils';
 import { create } from 'zustand';
 interface ConfigurationCartState {
   items: cartItemType[];
@@ -76,10 +76,7 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
 
     // Catalog picks carry only placeholder business — lazily fetch the full Shopify business
     // (size chart + printReferenceCm) so the Info modal and cm print sizes work for added products.
-    const updateItemBusiness = (targetId: string, business: garmentBusinessType) => {
-      set({ items: get().items.map((entry) => (entry.id === targetId ? { ...entry, business } : entry)) });
-    };
-    void enrichCartItemBusiness(get, updateItemBusiness, item.id);
+    void enrichCartItemBusiness(get, set, item.id);
   },
 
   setActiveItemProduct: ({ collectionHandle, slug, modelId, business }) => {
@@ -212,34 +209,6 @@ const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
   },
 }));
 
-/**
- * Mirror the *active* session item into the host (Shopify) URL + SEO when embedded.
- * Switching/adding products only mutates this store (no Next.js route change), so the
- * route-based {@link useEmbeddedUrlSync} never fires. We post a `navigate` message here
- * instead; the theme updates the address bar and refetches product metadata.
- *
- * Lives at the store module level (already part of the configurator chunk) on purpose —
- * wiring this through a provider/React hook pulled the 3D bundle into a second chunk and
- * produced duplicate `@react-three/fiber` instances ("Hooks can only be used within the
- * Canvas component").
- */
-let lastPostedActiveProductPath: string | null = null;
-
-useConfigurationCart.subscribe((state) => {
-  const activeItem = state.items.find((item) => item.id === state.activeItemId);
-
-  if (!activeItem || !activeItem.collectionHandle || !activeItem.slug) {
-    return;
-  }
-
-  const pathname = buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug);
-
-  if (lastPostedActiveProductPath === pathname) {
-    return;
-  }
-
-  lastPostedActiveProductPath = pathname;
-  postEmbeddedUrlToParent(pathname);
-});
+syncActiveCartItemToEmbeddedUrl(useConfigurationCart.subscribe);
 
 export { useConfigurationCart };
