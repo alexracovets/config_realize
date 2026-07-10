@@ -21,6 +21,9 @@ const useSyncGarmentMaterials = () => {
   const loaderSession = useConfiguratorSceneLoad((state) => state.loaderSession);
   const transitionSession = useConfiguratorSceneLoad((state) => state.transitionSession);
   const invalidate = useThree((state) => state.invalidate);
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
+  const camera = useThree((state) => state.camera);
   const textureAnisotropy = useThree((state) => state.gl.capabilities.getMaxAnisotropy());
   const { bumpRevision, getMaterials, hasMaterialsForParts } = useGarmentMaterialRegistry();
   const materialRevision = useMaterialRegistryRevision();
@@ -40,6 +43,9 @@ const useSyncGarmentMaterials = () => {
     defaultPattern,
     hasMaterialsForParts,
     getMaterials,
+    gl,
+    scene,
+    camera,
     bumpRevision,
     invalidate,
     isSceneTransitionLoading,

@@ -30,6 +30,7 @@ float garmentGradientMask( vec2 uv ) {
 uniform sampler2D uDefaultLogos;
 uniform vec2 uPrintAtlasSize;
 uniform float uGizmoRotation;
+#ifdef USE_GARMENT_NAME
 uniform sampler2D uNameMask;
 uniform vec2 uNameStampSize;
 uniform vec2 uNameAnchorUv[4];
@@ -42,6 +43,13 @@ uniform float uNameSlotActive[4];
 uniform vec4 uNamePartBounds[4];
 uniform vec3 uNameTextColors[4];
 uniform vec3 uNameStrokeColors[4];
+uniform float uNameGizmoEnabled;
+uniform float uNameGizmoFrameActive[4];
+uniform float uNameGizmoButtonsActive[4];
+uniform float uNameGizmoButtonsReveal[4];
+uniform vec2 uNameGizmoHalf[4];
+#endif
+#ifdef USE_GARMENT_TESTO
 uniform sampler2D uTestoMask;
 uniform vec2 uTestoStampSize;
 uniform vec2 uTestoAnchorUv[4];
@@ -60,6 +68,8 @@ uniform float uTestoGizmoButtonsActive[4];
 uniform float uTestoGizmoButtonsReveal[4];
 uniform vec2 uTestoGizmoHalf[4];
 uniform float uTestoLineHeight[4];
+#endif
+#ifdef USE_GARMENT_NUMBER
 uniform sampler2D uNumberMask;
 uniform vec2 uNumberStampSize;
 uniform vec2 uNumberAnchorUv[4];
@@ -78,6 +88,8 @@ uniform float uNumberGizmoFrameActive[4];
 uniform float uNumberGizmoButtonsActive[4];
 uniform float uNumberGizmoButtonsReveal[4];
 uniform vec2 uNumberGizmoHalf[4];
+#endif
+#ifdef USE_GARMENT_LOGO
 uniform sampler2D uLogoStamp;
 uniform vec2 uLogoStampCellSize;
 uniform vec2 uLogoAnchorUv[4];
@@ -92,11 +104,8 @@ uniform float uLogoGizmoFrameActive[4];
 uniform float uLogoGizmoButtonsActive[4];
 uniform float uLogoGizmoButtonsReveal[4];
 uniform vec2 uLogoGizmoHalf[4];
-uniform float uNameGizmoEnabled;
-uniform float uNameGizmoFrameActive[4];
-uniform float uNameGizmoButtonsActive[4];
-uniform float uNameGizmoButtonsReveal[4];
-uniform vec2 uNameGizmoHalf[4];
+#endif
+#ifdef USE_GARMENT_TEXT
 uniform sampler2D uNameGizmoIcons;
 uniform float uNameGizmoHoverSlot;
 uniform float uNameGizmoHoverCorner;
@@ -104,6 +113,7 @@ uniform float uNameGizmoHoverScale;
 uniform vec3 uNameGizmoBtnFill;
 uniform vec3 uNameGizmoBtnFillActive;
 uniform vec3 uNameGizmoIconColor;
+#endif
 uniform sampler2D uPatternMask0;
 uniform sampler2D uPatternMask1;
 uniform vec3 uPatternColor0;
@@ -115,6 +125,7 @@ vec4 garmentPrintColor;
 vec3 garmentBaseAlbedo;
 float garmentPbrShade;
 
+#ifdef USE_GARMENT_TEXT
 vec4 garmentCompositeUiLayer( vec4 base, vec4 layer ) {
   base.rgb = layer.rgb * layer.a + base.rgb * ( 1.0 - layer.a );
   base.a = layer.a + base.a * ( 1.0 - layer.a );
@@ -153,13 +164,17 @@ vec2 garmentPrintToLocalPx( vec2 worldUv, vec2 anchor, float partRotation ) {
   vec2 deltaPx = ( worldUv - anchor ) * uPrintAtlasSize;
   return garmentPrintRotateLocalPx( deltaPx, partRotation );
 }
+#endif
 
+#ifdef USE_GARMENT_NAME
 vec2 garmentNameToStampUv( vec2 worldUv, vec2 anchor, float rotation, float placementRotation, float uploadRotation, float partRotation, float scale ) {
   vec2 localPx = garmentPrintToLocalPx( worldUv, anchor, partRotation );
   localPx = garmentPrintRotateLocalPx( localPx, rotation + placementRotation + uploadRotation ) / max( scale, 0.001 );
   return vec2( 0.5 ) + localPx / uNameStampSize;
 }
+#endif
 
+#ifdef USE_GARMENT_TESTO
 vec2 garmentTestoToStampUv( vec2 worldUv, vec2 anchor, float rotation, float placementRotation, float uploadRotation, float partRotation, float scale, float lineHeight ) {
   vec2 localPx = garmentPrintToLocalPx( worldUv, anchor, partRotation );
   localPx = garmentPrintRotateLocalPx( localPx, rotation + placementRotation + uploadRotation );
@@ -167,7 +182,9 @@ vec2 garmentTestoToStampUv( vec2 worldUv, vec2 anchor, float rotation, float pla
   localPx.y /= max( scale * lineHeight, 0.001 );
   return vec2( 0.5 ) + localPx / uTestoStampSize;
 }
+#endif
 
+#ifdef USE_GARMENT_NUMBER
 vec2 garmentNumberToStampUv( vec2 worldUv, vec2 anchor, float rotation, float placementRotation, float uploadRotation, float partRotation, float scale, float lineHeight ) {
   vec2 localPx = garmentPrintToLocalPx( worldUv, anchor, partRotation );
   localPx = garmentPrintRotateLocalPx( localPx, rotation + placementRotation + uploadRotation );
@@ -175,7 +192,9 @@ vec2 garmentNumberToStampUv( vec2 worldUv, vec2 anchor, float rotation, float pl
   localPx.y /= max( scale * lineHeight, 0.001 );
   return vec2( 0.5 ) + localPx / uNumberStampSize;
 }
+#endif
 
+#ifdef USE_GARMENT_LOGO
 vec2 garmentLogoToStampUv( vec2 worldUv, vec2 anchor, float rotation, float uploadRotation, float partRotation, float scale ) {
   vec2 localPx = garmentPrintToLocalPx( worldUv, anchor, partRotation );
   localPx = garmentPrintRotateLocalPx( localPx, rotation + uploadRotation ) / max( scale, 0.001 );
@@ -186,7 +205,9 @@ vec2 garmentLogoStampAtlasUv( vec2 stampUv, float slotIndex ) {
   vec2 cell = vec2( mod( slotIndex, 2.0 ), floor( slotIndex * 0.5 ) );
   return ( cell + stampUv ) * 0.5;
 }
+#endif
 
+#ifdef USE_GARMENT_TEXT
 vec2 garmentTextMaskFillUv( vec2 stampUv ) {
   return vec2( stampUv.x, stampUv.y * 0.5 );
 }
@@ -332,25 +353,27 @@ vec4 garmentGizmoButtonCell( sampler2D icons, vec2 localPx, vec2 center, float c
 }
 
 // Buttons sit at AABB corners in part-local px; icon size is fixed and does not follow scale.
+// Corners run in a fixed 4-iteration loop — see the note in garmentNameShaders.ts about
+// unrolled GLSL and slow ANGLE shader translation.
 vec4 garmentGizmoButtons( vec2 worldUv, vec2 anchor, float scale, vec2 halfPx, float gizmoRotation, float partRotation, float enabled, float reveal, float insidePart, sampler2D icons, float slotIndex ) {
   if ( enabled < 0.5 || reveal < 0.01 || insidePart < 0.5 ) return vec4( 0.0 );
   vec2 localPx = garmentGizmoFrameLocalPx( worldUv, anchor, gizmoRotation, partRotation );
   vec2 ext = halfPx * scale + vec2( GIZMO_BTN_OUTSET );
   float revealScale = mix( GIZMO_BTN_REVEAL_SCALE_MIN, 1.0, reveal );
 
-  vec4 c0 = garmentGizmoButtonCell( icons, localPx, vec2( -ext.x,  ext.y ), 0.0, garmentGizmoButtonHoverScale( slotIndex, 0.0 ) * revealScale );
-  vec4 c1 = garmentGizmoButtonCell( icons, localPx, vec2( -ext.x, -ext.y ), 1.0, garmentGizmoButtonHoverScale( slotIndex, 1.0 ) * revealScale );
-  vec4 c2 = garmentGizmoButtonCell( icons, localPx, vec2(  ext.x,  ext.y ), 2.0, garmentGizmoButtonHoverScale( slotIndex, 2.0 ) * revealScale );
-  vec4 c3 = garmentGizmoButtonCell( icons, localPx, vec2(  ext.x, -ext.y ), 3.0, garmentGizmoButtonHoverScale( slotIndex, 3.0 ) * revealScale );
-
   vec4 col = vec4( 0.0 );
-  col.rgb = c0.rgb * c0.a + col.rgb * ( 1.0 - c0.a ); col.a = c0.a + col.a * ( 1.0 - c0.a );
-  col.rgb = c1.rgb * c1.a + col.rgb * ( 1.0 - c1.a ); col.a = c1.a + col.a * ( 1.0 - c1.a );
-  col.rgb = c2.rgb * c2.a + col.rgb * ( 1.0 - c2.a ); col.a = c2.a + col.a * ( 1.0 - c2.a );
-  col.rgb = c3.rgb * c3.a + col.rgb * ( 1.0 - c3.a ); col.a = c3.a + col.a * ( 1.0 - c3.a );
+  for ( int corner = 0; corner < 4; corner ++ ) {
+    float cell = float( corner );
+    // Corner layout matches the icon atlas cells: 0 (-x,+y), 1 (-x,-y), 2 (+x,+y), 3 (+x,-y).
+    vec2 center = vec2( corner < 2 ? -ext.x : ext.x, mod( cell, 2.0 ) < 0.5 ? ext.y : -ext.y );
+    vec4 c = garmentGizmoButtonCell( icons, localPx, center, cell, garmentGizmoButtonHoverScale( slotIndex, cell ) * revealScale );
+    col.rgb = c.rgb * c.a + col.rgb * ( 1.0 - c.a );
+    col.a = c.a + col.a * ( 1.0 - c.a );
+  }
   col.a *= reveal;
   return col;
 }
+#endif
 
 #endif
 `;

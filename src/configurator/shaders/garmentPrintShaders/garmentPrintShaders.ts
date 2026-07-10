@@ -17,13 +17,21 @@ const garmentPrintMapFragment = /* glsl */ `
   printColor.rgb = layer1.rgb * layer1.a + printColor.rgb * ( 1.0 - layer1.a );
   printColor.a = layer1.a + printColor.a * ( 1.0 - layer1.a );
 
+#ifdef USE_GARMENT_LOGO
 ${garmentLogoMapFragment}
+#endif
 
+#ifdef USE_GARMENT_NAME
 ${garmentNameMapFragment}
+#endif
 
+#ifdef USE_GARMENT_TESTO
 ${garmentTestoMapFragment}
+#endif
 
+#ifdef USE_GARMENT_NUMBER
 ${garmentNumberMapFragment}
+#endif
 
   vec4 defaultDesign = texture2D( uDefaultLogos, vPrintUv );
   defaultDesign.a = step( 0.5, defaultDesign.a );

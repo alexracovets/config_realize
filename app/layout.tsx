@@ -11,6 +11,7 @@ import type { childrenType } from '@types';
 import { cn } from '@utils';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+
 const RootLayout = ({ children }: childrenType) => {
   return (
     <html

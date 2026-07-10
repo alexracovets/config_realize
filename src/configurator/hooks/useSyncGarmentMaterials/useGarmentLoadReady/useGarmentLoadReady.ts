@@ -2,7 +2,7 @@
 
 import { type RefObject, useCallback, useEffect, useRef } from 'react';
 
-import type { MeshStandardMaterial, Texture } from 'three';
+import type { Camera, MeshStandardMaterial, Object3D, Texture, WebGLRenderer } from 'three';
 
 import type { patternMaskPairType } from '@configurator/types';
 import type { designPatternItemType, garmentConfigType } from '@types';
@@ -31,6 +31,9 @@ type useGarmentLoadReadyOptionsType = {
   defaultPattern: designPatternItemType | null;
   hasMaterialsForParts: (partIds: readonly string[]) => boolean;
   getMaterials: (partId: string) => readonly MeshStandardMaterial[];
+  gl: WebGLRenderer;
+  scene: Object3D;
+  camera: Camera;
   bumpRevision: () => void;
   invalidate: () => void;
   isSceneTransitionLoading: boolean;
@@ -51,6 +54,9 @@ const useGarmentLoadReady = ({
   defaultPattern,
   hasMaterialsForParts,
   getMaterials,
+  gl,
+  scene,
+  camera,
   bumpRevision,
   invalidate,
   isSceneTransitionLoading,
@@ -132,8 +138,12 @@ const useGarmentLoadReady = ({
       cancelShaderUpgradeRef.current?.();
 
       cancelShaderUpgradeRef.current = compileGarmentShadersOverFrames({
+        product,
         parts: product.parts,
         getMaterials,
+        gl,
+        scene,
+        camera,
         invalidate,
         onComplete: () => {
           shaderUpgradePendingRef.current = false;
@@ -149,13 +159,16 @@ const useGarmentLoadReady = ({
     },
     [
       bumpRevision,
+      camera,
       cancelShaderUpgradeRef,
       finishSceneLoad,
       getMaterials,
+      gl,
       hydrateAppearanceRefsFromCache,
       invalidate,
-      product.parts,
+      product,
       reapplyAppearanceCore,
+      scene,
       shaderUpgradePendingRef,
     ],
   );
