@@ -83,7 +83,14 @@ const eslintConfig = defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [{ name: '@store', message: 'Atoms are presentational — pass data via props from organisms/molecules.' }],
+          paths: [
+            { name: '@store', message: 'Atoms are presentational — pass data via props from organisms/molecules.' },
+            {
+              name: '@shopify',
+              message:
+                "Atoms are presentational and must not import Shopify code. If ever needed, import the specific module (e.g. '@shopify/mapHomePageProductBusiness'), not the barrel.",
+            },
+          ],
           patterns: [
             {
               group: ['@configurator', '@configurator/*'],
@@ -121,7 +128,14 @@ const eslintConfig = defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          paths: [{ name: '@configurator', message: 'Molecules may only import types from @configurator/types.' }],
+          paths: [
+            { name: '@configurator', message: 'Molecules may only import types from @configurator/types.' },
+            {
+              name: '@shopify',
+              message:
+                "Import the specific module (e.g. '@shopify/mapHomePageProductBusiness'), not the '@shopify' barrel — the barrel re-exports Node-only code (node:crypto) that breaks non-Turbopack builds when pulled into client components.",
+            },
+          ],
           patterns: [
             {
               group: [

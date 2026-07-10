@@ -36,7 +36,12 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
         role="button"
         tabIndex={!canUpload || loading ? -1 : 0}
         onClick={openFilePicker}
-        onKeyDown={(e) => e.key === 'Enter' && openFilePicker()}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          // Space also scrolls the page by default on a focused non-native "button" — stop that.
+          e.preventDefault();
+          openFilePicker();
+        }}
         onMouseEnter={warmupOnIntent}
         onFocus={warmupOnIntent}
         onDragOver={(e) => {

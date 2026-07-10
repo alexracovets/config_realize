@@ -1,6 +1,9 @@
 import path from 'node:path';
 
 import type { NextConfig } from 'next';
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const withAnalyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
 
 /** Single ESM entry — prevents CJS + ESM duplicates that trigger window.__THREE__ warning. */
 const threeModulePath = './node_modules/three/build/three.module.js';
@@ -64,4 +67,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAnalyzer(nextConfig);

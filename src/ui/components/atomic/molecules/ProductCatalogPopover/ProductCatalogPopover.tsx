@@ -1,7 +1,7 @@
 'use client';
 
 import { AtomPopover, AtomPopoverContent, AtomPopoverTrigger, Button, Grid, Text } from '@atoms';
-import { mapHomePageProductBusiness } from '@shopify';
+import { mapHomePageProductBusiness } from '@shopify/mapHomePageProductBusiness';
 import { useConfiguratorCatalog } from '@providers/configuratorCatalogProvider';
 import { ProductCatalogOption } from '@molecules/ProductCatalogOption';
 import type { homePageCollectionType, productCatalogPopoverPropsType } from '@types';
