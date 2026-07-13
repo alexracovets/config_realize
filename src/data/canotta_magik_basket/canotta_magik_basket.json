@@ -6,13 +6,19 @@
     "width": 2048,
     "height": 840
   },
-  "preserveGltfMeshes": ["basketball_top_inside", "basketball_top_sweatband", "basketball_top_label"],
+  "preserveGltfMeshes": [
+    "basketball_top_inside",
+    "basketball_top_sweatband",
+    "basketball_top_label"
+  ],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "canotta_magik_basket_front",
-      "meshNames": ["basketball_top_front"],
+      "meshNames": [
+        "basketball_top_front"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5251,
@@ -33,7 +39,9 @@
       "name": "Retro",
       "label": "Retro",
       "id": "canotta_magik_basket_back",
-      "meshNames": ["basketball_top_back"],
+      "meshNames": [
+        "basketball_top_back"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0013,
@@ -54,7 +62,9 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "canotta_magik_basket_sleeve_left",
-      "meshNames": ["basketball_top_sleeve_left"],
+      "meshNames": [
+        "basketball_top_sleeve_left"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.481,
@@ -75,7 +85,9 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "canotta_magik_basket_sleeve_right",
-      "meshNames": ["basketball_top_sleeve_right"],
+      "meshNames": [
+        "basketball_top_sleeve_right"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5395,
@@ -96,7 +108,9 @@
       "name": "Collo",
       "label": "Collo",
       "id": "canotta_magik_basket_collar",
-      "meshNames": ["basketball_top_collar"],
+      "meshNames": [
+        "basketball_top_collar"
+      ],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -191,14 +205,16 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "testo": ["bottom_back"]
+        "testo": [
+          "bottom_back"
+        ]
       },
       "src": "/png/text_areas/t_shirt_basket/name/bottom.png"
     }
   ],
   "numberPositions": [
     {
-      "label": "Davanti",
+      "label": "Numero davanti centrale",
       "partId": "canotta_magik_basket_front",
       "uv": {
         "x": 0.365,
@@ -210,12 +226,14 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "testo": ["front_center"]
+        "testo": [
+          "front_center"
+        ]
       },
       "src": "/png/text_areas/t_shirt_basket/number/front_center.png"
     },
     {
-      "label": "Davanti sulla DX",
+      "label": "Numero lato cuore",
       "partId": "canotta_magik_basket_front",
       "uv": {
         "x": 0.31,
@@ -229,7 +247,7 @@
       "src": "/png/text_areas/t_shirt_basket/number/front_right.png"
     },
     {
-      "label": "Dietro",
+      "label": "Numero schiena",
       "partId": "canotta_magik_basket_back",
       "uv": {
         "x": 0.578,
@@ -257,7 +275,9 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "number": ["front_center"]
+        "number": [
+          "front_center"
+        ]
       },
       "src": "/png/text_areas/t_shirt_basket/text/front.png"
     },
@@ -274,7 +294,9 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "name": ["bottom_back"]
+        "name": [
+          "bottom_back"
+        ]
       },
       "src": "/png/text_areas/t_shirt_basket/text/back_bottom.png"
     },

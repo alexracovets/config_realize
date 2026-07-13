@@ -6,13 +6,19 @@
     "width": 2048,
     "height": 757
   },
-  "preserveGltfMeshes": ["crewneck_womans_inside", "crewneck_womans_inside_label", "crewneck_womans_sweatband"],
+  "preserveGltfMeshes": [
+    "crewneck_womans_inside",
+    "crewneck_womans_inside_label",
+    "crewneck_womans_sweatband"
+  ],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "sylla_pallavolo_front",
-      "meshNames": ["crewneck_womans_front"],
+      "meshNames": [
+        "crewneck_womans_front"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5713,
@@ -33,7 +39,9 @@
       "name": "Retro",
       "label": "Retro",
       "id": "sylla_pallavolo_back",
-      "meshNames": ["crewneck_womans_back"],
+      "meshNames": [
+        "crewneck_womans_back"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0012,
@@ -54,7 +62,9 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "sylla_pallavolo_sleeve_left",
-      "meshNames": ["crewneck_womans_sleeve_left"],
+      "meshNames": [
+        "crewneck_womans_sleeve_left"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.4403,
@@ -75,7 +85,9 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "sylla_pallavolo_sleeve_right",
-      "meshNames": ["crewneck_womans_sleeve_right"],
+      "meshNames": [
+        "crewneck_womans_sleeve_right"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3779,
@@ -96,7 +108,9 @@
       "name": "Collo",
       "label": "Collo",
       "id": "sylla_pallavolo_collar",
-      "meshNames": ["crewneck_womans_collar"],
+      "meshNames": [
+        "crewneck_womans_collar"
+      ],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -306,14 +320,16 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "testo": ["bottom_back"]
+        "testo": [
+          "bottom_back"
+        ]
       },
       "src": "/png/text_areas/t_shirt_wooman/name/bottom.png"
     }
   ],
   "numberPositions": [
     {
-      "label": "Davanti",
+      "label": "Numero davanti centrale",
       "partId": "sylla_pallavolo_front",
       "uv": {
         "x": 0.382,
@@ -325,12 +341,14 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "testo": ["front_center"]
+        "testo": [
+          "front_center"
+        ]
       },
       "src": "/png/text_areas/t_shirt_wooman/number/front_center.png"
     },
     {
-      "label": "Davanti sulla DX",
+      "label": "Numero lato cuore",
       "partId": "sylla_pallavolo_front",
       "uv": {
         "x": 0.327,
@@ -344,7 +362,7 @@
       "src": "/png/text_areas/t_shirt_wooman/number/front_right.png"
     },
     {
-      "label": "Dietro",
+      "label": "Numero schiena",
       "partId": "sylla_pallavolo_back",
       "uv": {
         "x": 0.6,
@@ -372,7 +390,9 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "number": ["front_center"]
+        "number": [
+          "front_center"
+        ]
       },
       "src": "/png/text_areas/t_shirt_wooman/text/front.png"
     },
@@ -389,7 +409,9 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "name": ["bottom_back"]
+        "name": [
+          "bottom_back"
+        ]
       },
       "src": "/png/text_areas/t_shirt_wooman/text/back_bottom.png"
     },

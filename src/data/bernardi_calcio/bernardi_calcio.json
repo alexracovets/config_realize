@@ -6,13 +6,19 @@
     "width": 2048,
     "height": 1129
   },
-  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
+  "preserveGltfMeshes": [
+    "model_inside",
+    "model_label",
+    "model_sweatband"
+  ],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "bernardi_calcio_front",
-      "meshNames": ["model_front"],
+      "meshNames": [
+        "model_front"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.6215,
@@ -33,7 +39,9 @@
       "name": "Retro",
       "label": "Retro",
       "id": "bernardi_calcio_back",
-      "meshNames": ["model_back"],
+      "meshNames": [
+        "model_back"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0019,
@@ -54,7 +62,9 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "bernardi_calcio_sleeve_left",
-      "meshNames": ["model_sleeve_left"],
+      "meshNames": [
+        "model_sleeve_left"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3319,
@@ -75,7 +85,9 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "bernardi_calcio_sleeve_right",
-      "meshNames": ["model_sleeve_right"],
+      "meshNames": [
+        "model_sleeve_right"
+      ],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3865,
@@ -96,7 +108,9 @@
       "name": "Collo",
       "label": "Collo",
       "id": "bernardi_calcio_collar",
-      "meshNames": ["model_collar"],
+      "meshNames": [
+        "model_collar"
+      ],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -307,13 +321,15 @@
       "id": "bottom_back",
       "src": "/png/text_areas/t_shirt/name/bottom.png",
       "conflicts": {
-        "testo": ["bottom_back"]
+        "testo": [
+          "bottom_back"
+        ]
       }
     }
   ],
   "numberPositions": [
     {
-      "label": "Davanti",
+      "label": "Numero davanti centrale",
       "partId": "bernardi_calcio_front",
       "uv": {
         "x": 0.5,
@@ -326,11 +342,13 @@
       "id": "front_center",
       "src": "/png/text_areas/t_shirt/number/front_center.png",
       "conflicts": {
-        "testo": ["front_center"]
+        "testo": [
+          "front_center"
+        ]
       }
     },
     {
-      "label": "Davanti sulla DX",
+      "label": "Numero lato cuore",
       "partId": "bernardi_calcio_front",
       "uv": {
         "x": 0.675,
@@ -344,7 +362,7 @@
       "src": "/png/text_areas/t_shirt/number/front_right.png"
     },
     {
-      "label": "Dietro",
+      "label": "Numero schiena",
       "partId": "bernardi_calcio_back",
       "uv": {
         "x": 0.5,
@@ -373,7 +391,9 @@
       "id": "front_center",
       "src": "/png/text_areas/t_shirt/text/front.png",
       "conflicts": {
-        "number": ["front_center"]
+        "number": [
+          "front_center"
+        ]
       }
     },
     {
@@ -390,7 +410,9 @@
       "id": "bottom_back",
       "src": "/png/text_areas/t_shirt/text/back_bottom.png",
       "conflicts": {
-        "name": ["bottom_back"]
+        "name": [
+          "bottom_back"
+        ]
       }
     },
     {
