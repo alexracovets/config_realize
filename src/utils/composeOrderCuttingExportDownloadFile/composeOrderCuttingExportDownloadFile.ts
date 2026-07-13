@@ -27,6 +27,12 @@ const composeOrderCuttingExportDownloadFile = async (file: orderCuttingExportDow
     return composeTextUvLayer(file.atlasWidth, file.atlasHeight, file.textLayers);
   }
 
+  // Files without a composeKind (e.g. uploaded logos) already point at a real image — nothing to compose,
+  // just surface it so the upload/blob-collection pipeline picks it up like the composed textures.
+  if (!file.composeKind) {
+    return file.downloadUrl || file.previewSrc || null;
+  }
+
   return null;
 };
 

@@ -41,21 +41,38 @@ const buildDownloadUrl = (origin: string, fileUrl: string, filename: string): st
   return url.toString();
 };
 
+/** The only formats react-pdf's <Image> can embed natively — anything else must be rasterized to PNG first. */
+const isPdfEmbeddableMime = (mime: string) => /image\/(?:png|jpe?g)/i.test(mime);
+
 /**
  * Fetches a hosted image and returns it as a data URL. react-pdf's remote <Image> loader detects
  * the format from the URL extension, which our Shopify CDN URLs break with their `?v=` suffix — so
- * we embed the bytes directly instead.
+ * we embed the bytes directly instead. react-pdf only renders PNG/JPEG, while the configurator's
+ * logo step accepts SVG/WebP/etc — those get rasterized to PNG via sharp before embedding.
  */
 const fetchImageAsDataUrl = async (url: string): Promise<string | null> => {
   try {
     const response = await fetch(url);
     if (!response.ok) return null;
     const buffer = Buffer.from(await response.arrayBuffer());
-    const mime = response.headers.get('content-type') ?? 'image/png';
-    return `data:${mime};base64,${buffer.toString('base64')}`;
+    const mime = response.headers.get('content-type')?.split(';')[0].trim() || 'image/png';
+
+    if (isPdfEmbeddableMime(mime)) {
+      return `data:${mime};base64,${buffer.toString('base64')}`;
+    }
+
+    const png = await sharp(buffer).png().toBuffer();
+    return `data:image/png;base64,${png.toString('base64')}`;
   } catch {
     return null;
   }
+};
+
+/** Extracts the real file extension from a hosted asset URL (stripping Shopify's `?v=` query), for building an accurate download filename. */
+const resolveDownloadFilenameExtension = (url: string): string => {
+  const pathname = url.split('?')[0] ?? url;
+  const match = /\.([a-z0-9]+)$/i.exec(pathname);
+  return match ? match[1].toLowerCase() : 'png';
 };
 
 /** Rasterizes the SVG shop logo to a PNG data URL — react-pdf's <Image> cannot render SVG. */
@@ -168,7 +185,7 @@ const generateOrderPdfs = async (context: orderPdfContextType): Promise<orderPdf
         .map(async (uv) => {
           const key = buildDownloadPreviewKey(product.cartItemId, uv.label);
           downloadPreviewByKey.set(key, await fetchImageAsDataUrl(uv.url));
-          downloadLinkByKey.set(key, buildDownloadUrl(context.appOrigin, uv.url, `${uv.label}.png`));
+          downloadLinkByKey.set(key, buildDownloadUrl(context.appOrigin, uv.url, `${uv.label}.${resolveDownloadFilenameExtension(uv.url)}`));
         }),
     ),
   );

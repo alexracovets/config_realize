@@ -4,6 +4,7 @@ import { convertEpsPsToDisplayUrl } from '@utils/logoFile/converters/ghostscript
 import { convertWithMagick } from '@utils/logoFile/converters/imagemagick';
 import { nativeFileToDisplayUrl } from '@utils/logoFile/converters/nativeImage';
 import { convertPdfToDisplayUrl } from '@utils/logoFile/converters/pdf';
+import { normalizeSvgFileToDisplayUrl } from '@utils/logoFile/converters/svg';
 import { convertTiffToDisplayUrl } from '@utils/logoFile/converters/tiff';
 import { findPdfOffset, getExtension, isAcceptedLogoFile } from '@utils/logoFile/detectFormat';
 import { LogoFileError } from '@utils/logoFile/logoFileError';
@@ -20,8 +21,12 @@ const logoFileToDisplayUrl = async (file: File): Promise<string> => {
   const buffer = await file.arrayBuffer();
   const bytes = new Uint8Array(buffer);
 
-  if (['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext)) {
+  if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) {
     return nativeFileToDisplayUrl(file);
+  }
+
+  if (ext === 'svg') {
+    return normalizeSvgFileToDisplayUrl(file);
   }
 
   if (ext === 'bmp') {
