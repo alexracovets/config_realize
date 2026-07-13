@@ -290,7 +290,6 @@ const float GIZMO_BTN_OUTSET = 16.0;
 const float GIZMO_FRAME_LINE_HALF = 2.0;
 const float GIZMO_DASH_PERIOD = 40.0;
 const float GIZMO_BTN_HOVER_SCALE_RANGE = 0.1;
-const float GIZMO_BTN_REVEAL_SCALE_MIN = 0.9;
 // Icon fill within each 1/4 atlas strip; must match GIZMO_ICON_CELL_FILL in useGizmoIconAtlas.ts.
 const float GIZMO_ICON_CELL_FILL = 0.62;
 const float GIZMO_ICON_CELL_INSET = ( 1.0 - GIZMO_ICON_CELL_FILL ) * 0.5;
@@ -314,20 +313,33 @@ float garmentGizmoButtonHoverScale( float slotIndex, float cornerIndex ) {
   return max( uNameGizmoHoverScale, 1.0 );
 }
 
-vec4 garmentGizmoButtonCell( sampler2D icons, vec2 localPx, vec2 center, float cell, float hoverScale ) {
+// Reveal is applied per component, not to the composited result: a flat white disc stays
+// perceptually visible on shaded fabric down to very low alpha (it flattens the shading), while
+// the dark icon/ring contrast dies proportionally to alpha — so a uniform fade always ends with
+// a lingering pale disc after the icon is long gone. Fading the fill on a slightly steeper curve
+// inverts that: the disc dissolves first and the dark outline fades out last, which reads as the
+// whole button disappearing together.
+//
+// Compositing is premultiplied throughout (converted to straight alpha at the end): blending
+// straight-alpha colors with the naive over formula lets a nearly-transparent fill's white RGB
+// bleed into the icon/ring color mid-fade, flashing the dark chrome white.
+vec4 garmentGizmoButtonCell( sampler2D icons, vec2 localPx, vec2 center, float cell, float hoverScale, float reveal ) {
   vec2 rel = ( localPx - center ) / max( hoverScale, 1.0 );
   float r = length( rel );
   float aa = garmentGizmoBorderAa( localPx );
   float outerR = GIZMO_BTN_HALF + GIZMO_FRAME_LINE_HALF + aa;
   if ( r > outerR ) return vec4( 0.0 );
 
+  float fillReveal = reveal * reveal;
   float activeMix = clamp( ( hoverScale - 1.0 ) / GIZMO_BTN_HOVER_SCALE_RANGE, 0.0, 1.0 );
   vec3 fillColor = mix( uNameGizmoBtnFill, uNameGizmoBtnFillActive, activeMix );
-  vec4 col = vec4( 0.0 );
+  vec3 accRgb = vec3( 0.0 );
+  float accA = 0.0;
 
   // Fill stops at the inner stroke edge so the full-width dash ring matches the text frame.
   if ( r < GIZMO_BTN_HALF - GIZMO_FRAME_LINE_HALF ) {
-    col = vec4( fillColor, 1.0 );
+    accRgb = fillColor * fillReveal;
+    accA = fillReveal;
     float innerR = GIZMO_BTN_HALF - GIZMO_FRAME_LINE_HALF;
     vec2 dInner = rel / ( 2.0 * innerR ) + 0.5;
     vec2 d = ( dInner - 0.5 ) / GIZMO_ICON_BTN_FILL + 0.5;
@@ -337,41 +349,45 @@ vec4 garmentGizmoButtonCell( sampler2D icons, vec2 localPx, vec2 center, float c
     );
     vec4 icon = texture2D( icons, iconUv );
     vec3 iconRgb = mix( uNameGizmoIconColor, vec3( 1.0 ), activeMix );
-    col.rgb = iconRgb * icon.a + col.rgb * ( 1.0 - icon.a );
-    col.a = icon.a + col.a * ( 1.0 - icon.a );
+    float iconA = icon.a * reveal;
+    accRgb = iconRgb * iconA + accRgb * ( 1.0 - iconA );
+    accA = iconA + accA * ( 1.0 - iconA );
   }
 
   float border = garmentGizmoStrokeAlpha( abs( r - GIZMO_BTN_HALF ), GIZMO_FRAME_LINE_HALF, aa );
   if ( border > 0.01 ) {
     float dash = garmentGizmoCircleDash( rel, GIZMO_BTN_HALF, GIZMO_DASH_PERIOD );
     vec3 borderCol = garmentGizmoDashColor( dash );
-    col.rgb = borderCol * border + col.rgb * ( 1.0 - border );
-    col.a = border + col.a * ( 1.0 - border );
+    // White dash segments share the fill's steeper curve (light pixels linger on light fabric);
+    // dark segments keep the linear curve so the outline stays readable while dissolving.
+    float borderA = border * mix( fillReveal, reveal, dash );
+    accRgb = borderCol * borderA + accRgb * ( 1.0 - borderA );
+    accA = borderA + accA * ( 1.0 - borderA );
   }
 
-  return col;
+  return vec4( accA > 0.0001 ? accRgb / accA : vec3( 0.0 ), accA );
 }
 
 // Buttons sit at AABB corners in part-local px; icon size is fixed and does not follow scale.
 // Corners run in a fixed 4-iteration loop — see the note in garmentNameShaders.ts about
 // unrolled GLSL and slow ANGLE shader translation.
 vec4 garmentGizmoButtons( vec2 worldUv, vec2 anchor, float scale, vec2 halfPx, float gizmoRotation, float partRotation, float enabled, float reveal, float insidePart, sampler2D icons, float slotIndex ) {
-  if ( enabled < 0.5 || reveal < 0.01 || insidePart < 0.5 ) return vec4( 0.0 );
+  if ( enabled < 0.5 || reveal < 0.05 || insidePart < 0.5 ) return vec4( 0.0 );
   vec2 localPx = garmentGizmoFrameLocalPx( worldUv, anchor, gizmoRotation, partRotation );
   vec2 ext = halfPx * scale + vec2( GIZMO_BTN_OUTSET );
-  float revealScale = mix( GIZMO_BTN_REVEAL_SCALE_MIN, 1.0, reveal );
 
-  vec4 col = vec4( 0.0 );
+  // Premultiplied accumulation, converted back to straight alpha at the end — see the cell note.
+  vec3 colRgb = vec3( 0.0 );
+  float colA = 0.0;
   for ( int corner = 0; corner < 4; corner ++ ) {
     float cell = float( corner );
     // Corner layout matches the icon atlas cells: 0 (-x,+y), 1 (-x,-y), 2 (+x,+y), 3 (+x,-y).
     vec2 center = vec2( corner < 2 ? -ext.x : ext.x, mod( cell, 2.0 ) < 0.5 ? ext.y : -ext.y );
-    vec4 c = garmentGizmoButtonCell( icons, localPx, center, cell, garmentGizmoButtonHoverScale( slotIndex, cell ) * revealScale );
-    col.rgb = c.rgb * c.a + col.rgb * ( 1.0 - c.a );
-    col.a = c.a + col.a * ( 1.0 - c.a );
+    vec4 c = garmentGizmoButtonCell( icons, localPx, center, cell, garmentGizmoButtonHoverScale( slotIndex, cell ), reveal );
+    colRgb = c.rgb * c.a + colRgb * ( 1.0 - c.a );
+    colA = c.a + colA * ( 1.0 - c.a );
   }
-  col.a *= reveal;
-  return col;
+  return vec4( colA > 0.0001 ? colRgb / colA : vec3( 0.0 ), colA );
 }
 #endif
 
@@ -382,7 +398,9 @@ const garmentGizmoLightsFragment = /* glsl */ `
 #ifdef USE_PRINT
   if ( garmentGizmoUiColor.a > 0.001 ) {
     vec3 fabricShaded = garmentBaseAlbedo * garmentPbrShade;
-    gl_FragColor.rgb = garmentGizmoUiColor.rgb * garmentGizmoUiColor.a + fabricShaded * ( 1.0 - garmentGizmoUiColor.a );
+    // garmentCompositeUiLayer accumulates straight-alpha layers into a premultiplied result,
+    // so blend it over the fabric without multiplying by alpha a second time.
+    gl_FragColor.rgb = garmentGizmoUiColor.rgb + fabricShaded * ( 1.0 - garmentGizmoUiColor.a );
   }
 #endif
 `;
