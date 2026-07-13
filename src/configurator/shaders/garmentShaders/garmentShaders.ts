@@ -285,8 +285,8 @@ vec2 garmentGizmoFrameLocalPx( vec2 worldUv, vec2 anchor, float gizmoRotation, f
 }
 
 // Fixed atlas-px chrome (NAME_GIZMO_* in nameStampConstants.ts). Independent of uNameScale.
-const float GIZMO_BTN_HALF = 24.0;
-const float GIZMO_BTN_OUTSET = 16.0;
+const float GIZMO_BTN_HALF = 12.0;
+const float GIZMO_BTN_OUTSET = 8.0;
 const float GIZMO_FRAME_LINE_HALF = 2.0;
 const float GIZMO_DASH_PERIOD = 40.0;
 const float GIZMO_BTN_HOVER_SCALE_RANGE = 0.1;
