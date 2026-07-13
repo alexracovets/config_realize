@@ -236,7 +236,9 @@
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
-    "strokeWidthMax": 20
+    "strokeWidthMax": 20,
+    "title": "Dove desideri inserire il nome?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "numberDefaults": {
     "text": "10",
@@ -251,7 +253,9 @@
     "lineHeight": 1.5,
     "lineHeightMin": 0.5,
     "lineHeightMax": 2,
-    "line_height_show": false
+    "line_height_show": false,
+    "title": "Dove desideri inserire il numero?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "testoDefaults": {
     "text": "TEAM",
@@ -270,7 +274,9 @@
     "letterSpacing": 0,
     "letterSpacingMin": -10,
     "letterSpacingMax": 40,
-    "letter_spacing_show": true
+    "letter_spacing_show": true,
+    "title": "Dove desideri inserire il testo?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "namePositions": [
     {
@@ -284,7 +290,8 @@
       "fontSize": 90,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "top_back"
+      "id": "top_back",
+      "src": "/png/text_areas/t_shirt_wooman/name/top.png"
     },
     {
       "label": "Nome schiena inferiore",
@@ -300,7 +307,8 @@
       "id": "bottom_back",
       "conflicts": {
         "testo": ["bottom_back"]
-      }
+      },
+      "src": "/png/text_areas/t_shirt_wooman/name/bottom.png"
     }
   ],
   "numberPositions": [
@@ -318,7 +326,8 @@
       "id": "front_center",
       "conflicts": {
         "testo": ["front_center"]
-      }
+      },
+      "src": "/png/text_areas/t_shirt_wooman/number/front_center.png"
     },
     {
       "label": "Davanti sulla DX",
@@ -331,7 +340,8 @@
       "fontSize": 70,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "front_right"
+      "id": "front_right",
+      "src": "/png/text_areas/t_shirt_wooman/number/front_right.png"
     },
     {
       "label": "Dietro",
@@ -344,7 +354,8 @@
       "fontSize": 200,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "back"
+      "id": "back",
+      "src": "/png/text_areas/t_shirt_wooman/number/back.png"
     }
   ],
   "testoPositions": [
@@ -362,7 +373,8 @@
       "id": "front_center",
       "conflicts": {
         "number": ["front_center"]
-      }
+      },
+      "src": "/png/text_areas/t_shirt_wooman/text/front.png"
     },
     {
       "label": "Nome schiena inferiore",
@@ -378,7 +390,8 @@
       "id": "bottom_back",
       "conflicts": {
         "name": ["bottom_back"]
-      }
+      },
+      "src": "/png/text_areas/t_shirt_wooman/text/back_bottom.png"
     },
     {
       "label": "Nome schiena superiore",
@@ -391,7 +404,8 @@
       "fontSize": 40,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "top_back"
+      "id": "top_back",
+      "src": "/png/text_areas/t_shirt_wooman/text/back_top.png"
     }
   ]
 }

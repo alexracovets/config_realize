@@ -77,6 +77,8 @@ interface textPositionConfigType {
   show_gizmo?: boolean;
   id?: string;
   conflicts?: printPositionConflictsConfigType;
+  /** Preview thumbnail shown in the position-picker modal card. */
+  src?: string;
 }
 
 interface textDefaultsConfigType {
@@ -97,6 +99,10 @@ interface textDefaultsConfigType {
   letterSpacingMin?: number;
   letterSpacingMax?: number;
   letter_spacing_show?: boolean;
+  /** Position-picker modal title; falls back to the step's default label when unset. */
+  title?: string;
+  /** Position-picker modal description; supports basic HTML (e.g. `<b>`). */
+  description?: string;
 }
 
 interface namePositionConfigType extends textPositionConfigType {

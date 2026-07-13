@@ -236,7 +236,9 @@
     "maxLength": 20,
     "fontSizeMin": 50,
     "fontSizeMax": 400,
-    "strokeWidthMax": 20
+    "strokeWidthMax": 20,
+    "title": "Dove desideri inserire il nome?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "numberDefaults": {
     "text": "10",
@@ -251,7 +253,9 @@
     "lineHeight": 1.5,
     "lineHeightMin": 0.5,
     "lineHeightMax": 2,
-    "line_height_show": false
+    "line_height_show": false,
+    "title": "Dove desideri inserire il numero?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "testoDefaults": {
     "text": "TEAM",
@@ -270,7 +274,9 @@
     "letterSpacing": 0,
     "letterSpacingMin": -10,
     "letterSpacingMax": 40,
-    "letter_spacing_show": true
+    "letter_spacing_show": true,
+    "title": "Dove desideri inserire il testo?",
+    "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
   "namePositions": [
     {
@@ -284,7 +290,8 @@
       "fontSize": 100,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "top_back"
+      "id": "top_back",
+      "src": "/png/text_areas/t_shirt/name/top.png"
     },
     {
       "label": "Nome schiena inferiore",
@@ -298,6 +305,7 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "bottom_back",
+      "src": "/png/text_areas/t_shirt/name/bottom.png",
       "conflicts": {
         "testo": ["bottom_back"]
       }
@@ -316,6 +324,7 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "front_center",
+      "src": "/png/text_areas/t_shirt/number/front_center.png",
       "conflicts": {
         "testo": ["front_center"]
       }
@@ -331,7 +340,8 @@
       "fontSize": 80,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "front_right"
+      "id": "front_right",
+      "src": "/png/text_areas/t_shirt/number/front_right.png"
     },
     {
       "label": "Dietro",
@@ -344,7 +354,8 @@
       "fontSize": 270,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "back"
+      "id": "back",
+      "src": "/png/text_areas/t_shirt/number/back.png"
     }
   ],
   "testoPositions": [
@@ -360,6 +371,7 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "front_center",
+      "src": "/png/text_areas/t_shirt/text/front.png",
       "conflicts": {
         "number": ["front_center"]
       }
@@ -376,6 +388,7 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "bottom_back",
+      "src": "/png/text_areas/t_shirt/text/back_bottom.png",
       "conflicts": {
         "name": ["bottom_back"]
       }
@@ -391,7 +404,8 @@
       "fontSize": 50,
       "show_frame": true,
       "show_gizmo": true,
-      "id": "top_back"
+      "id": "top_back",
+      "src": "/png/text_areas/t_shirt/text/back_top.png"
     }
   ]
 }

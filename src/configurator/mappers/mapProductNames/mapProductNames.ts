@@ -29,6 +29,7 @@ const mapProductNamePositions = (product: garmentConfigType): namePositionType[]
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a name position'), position.uv),
     rotation: position.rotation,
     fontSize: position.fontSize,
+    src: position.src,
     showFrame: position.show_frame ?? true,
     showGizmo: position.show_gizmo ?? position.interactive === true,
     interactive: position.interactive ?? true,

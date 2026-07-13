@@ -82,13 +82,26 @@ interface toggleControlPropsType {
 interface configurationPositionOptionType {
   key: string;
   label: string;
+  src?: string;
+  disabled?: boolean;
 }
 
 interface configurationPositionSelectPropsType {
   label: string;
+  title?: string;
+  description?: string;
   positions: configurationPositionOptionType[];
   onSelect: (positionKey: string) => void;
   placeholder?: string;
+}
+
+interface configurationPositionPickerModalPropsType {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description?: string;
+  positions: configurationPositionOptionType[];
+  onSelect: (positionKey: string) => void;
 }
 
 export type {
@@ -97,6 +110,7 @@ export type {
   colorTabVariantType,
   colorTabControlPropsType,
   configurationPositionOptionType,
+  configurationPositionPickerModalPropsType,
   configurationPositionSelectPropsType,
   fontSelectRowPropsType,
   hiddenLogoFileInputPropsType,

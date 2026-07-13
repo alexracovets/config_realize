@@ -65,6 +65,7 @@ export type {
   colorTabVariantType,
   colorTabControlPropsType,
   configurationPositionOptionType,
+  configurationPositionPickerModalPropsType,
   configurationPositionSelectPropsType,
   fontSelectRowPropsType,
   hiddenLogoFileInputPropsType,

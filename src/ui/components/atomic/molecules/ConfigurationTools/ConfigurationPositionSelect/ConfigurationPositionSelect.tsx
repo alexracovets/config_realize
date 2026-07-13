@@ -1,44 +1,49 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
-import { AtomSelect, Flex, Text } from '@atoms';
+import { Flex, SvgIcon, Text } from '@atoms';
+import { ConfigurationPositionPickerModal } from '@molecules/ConfigurationTools/ConfigurationPositionPickerModal';
 
 import { CONFIGURATOR_POSITION_SELECT_PLACEHOLDER } from '@constants';
 import type { configurationPositionSelectPropsType } from '@types';
 
-const PLACEHOLDER_VALUE = '__position_placeholder__';
-
 const ConfigurationPositionSelect = ({
   label,
+  title,
+  description,
   positions,
   onSelect,
   placeholder = CONFIGURATOR_POSITION_SELECT_PLACEHOLDER,
 }: configurationPositionSelectPropsType) => {
-  const [pickerKey, setPickerKey] = useState(0);
-  const placeholderOption = useMemo(() => ({ label: placeholder, value: PLACEHOLDER_VALUE, disabled: true }), [placeholder]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const hasSelectablePositions = positions.some((position) => !position.disabled);
 
-  const options = useMemo(
-    () => [placeholderOption, ...positions.map((position) => ({ label: position.label, value: position.key }))],
-    [placeholderOption, positions],
-  );
+  const handleSelect = (positionKey: string) => {
+    onSelect(positionKey);
+    setIsModalOpen(false);
+  };
 
   return (
     <Flex variant="configurator_part">
       <Text variant="configurator_control_label">{label}</Text>
-      <AtomSelect
-        key={pickerKey}
-        variant="position"
-        icon
-        disabled={positions.length === 0}
-        options={positions.length === 0 ? [placeholderOption] : options}
-        value={placeholderOption}
-        onChange={(option) => {
-          if (option.value === PLACEHOLDER_VALUE) return;
+      <button
+        type="button"
+        disabled={!hasSelectablePositions}
+        onClick={() => setIsModalOpen(true)}
+        className="cursor-pointer w-full h-10 flex items-center justify-between border border-input-border rounded-[8px] px-3 text-sm bg-white text-default disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span className="text-gray-30">{placeholder}</span>
+        <SvgIcon name="plus" className="size-4" />
+      </button>
 
-          onSelect(option.value);
-          setPickerKey((current) => current + 1);
-        }}
+      <ConfigurationPositionPickerModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        title={title ?? label}
+        description={description}
+        positions={positions}
+        onSelect={handleSelect}
       />
     </Flex>
   );

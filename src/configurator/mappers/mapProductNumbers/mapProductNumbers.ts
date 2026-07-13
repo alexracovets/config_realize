@@ -40,6 +40,7 @@ const mapProductNumberPositions = (product: garmentConfigType): numberPositionTy
     uv: resolveNumberLocalUvToAtlas(product, position.partId, position.uv),
     rotation: position.rotation,
     fontSize: position.fontSize,
+    src: position.src,
     lineHeight: position.line_height,
     showFrame: position.show_frame ?? true,
     showGizmo: position.show_gizmo ?? position.interactive === true,

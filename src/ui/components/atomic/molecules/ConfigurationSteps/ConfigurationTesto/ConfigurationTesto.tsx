@@ -165,13 +165,20 @@ const ConfigurationTesto = () => {
     return item ? { partId: item.partId, uv: item.uv } : null;
   }, []);
 
-  const { availablePositions, openItems, handleItemActivate, handleOpenItemsChange, handlePositionSelect } = useConfigurationPositionPicker({
+  const { openItems, handleItemActivate, handleOpenItemsChange, handlePositionSelect } = useConfigurationPositionPicker({
     positions,
     instances,
     onAddInstance: handleAddInstance,
     resolveFocusFromPosition,
     resolveFocusFromInstance,
   });
+
+  const pickerPositions = useMemo(() => {
+    const usedKeys = new Set(instances.map((instance) => instance.positionKey));
+    return positions
+      .filter((position) => position.interactive)
+      .map((position) => ({ key: position.key, label: position.label, src: position.src, disabled: usedKeys.has(position.key) }));
+  }, [instances, positions]);
 
   const items = useMemo(() => {
     // `limits` is only unset while positions haven't loaded yet — instances is empty then too,
@@ -198,7 +205,13 @@ const ConfigurationTesto = () => {
 
   return (
     <Flex key={product.path} variant="step_design" className="gap-3">
-      <ConfigurationPositionSelect label={CONFIGURATOR_TESTO_POSITION_SELECT_LABEL} positions={availablePositions} onSelect={handlePositionSelect} />
+      <ConfigurationPositionSelect
+        label={CONFIGURATOR_TESTO_POSITION_SELECT_LABEL}
+        title={testoDefaults.title}
+        description={testoDefaults.description}
+        positions={pickerPositions}
+        onSelect={handlePositionSelect}
+      />
 
       {instances.length > 0 && (
         <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} onItemActivate={handleItemActivate} multiple className="gap-2" />

@@ -12,7 +12,7 @@ type textPrintPositionType = {
   conflicts?: printPositionConflictsConfigType;
   partId: string;
   uv: uvPointType;
-} & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize'> &
+} & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize' | 'src'> &
   mappedGizmoFlagsType;
 
 type textPrintInstanceType = {

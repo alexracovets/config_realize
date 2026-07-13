@@ -1,5 +1,6 @@
 export { ConfigurationLogo } from '../ConfigurationSteps';
 export { ColorTabControl } from './ColorTabControl';
+export { ConfigurationPositionPickerModal } from './ConfigurationPositionPickerModal';
 export { ConfigurationPositionSelect } from './ConfigurationPositionSelect';
 export { DefaultBrandLogoPlaceholder } from './DefaultBrandLogoPlaceholder';
 export { PartColorSwitch } from './PartColorSwitch';

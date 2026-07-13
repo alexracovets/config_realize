@@ -6,6 +6,12 @@ import { ACESFilmicToneMapping } from 'three';
 import { useConfiguratorSceneLoad } from '@store';
 import { Suspense, useState } from 'react';
 
+// A drag started over selected HTML text (e.g. after a triple-click) hijacks pointer moves as a
+// text-selection drag instead of orbit-controls input. Clearing the selection on canvas hover prevents this.
+const clearTextSelection = () => {
+  window.getSelection()?.removeAllRanges();
+};
+
 const ConfiguratorCanvas = () => {
   const [canvasKey, setCanvasKey] = useState(0);
   const sceneRouteKey = useConfiguratorSceneLoad((state) => state.sceneRouteKey);
@@ -19,6 +25,8 @@ const ConfiguratorCanvas = () => {
       camera={{ position: [0, 0, 3], fov: 45 }}
       style={{ width: '100%', height: '100%' }}
       frameloop={useContinuousFrameLoop ? 'always' : 'demand'}
+      onPointerEnter={clearTextSelection}
+      onPointerDown={clearTextSelection}
       gl={{
         alpha: true,
         antialias: true,

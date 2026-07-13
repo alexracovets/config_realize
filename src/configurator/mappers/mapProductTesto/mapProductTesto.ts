@@ -40,6 +40,7 @@ const mapProductTestoPositions = (product: garmentConfigType): testoPositionType
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a testo position'), position.uv),
     rotation: position.rotation,
     fontSize: position.fontSize,
+    src: position.src,
     lineHeight: position.line_height,
     letterSpacing: position.letter_spacing,
     showFrame: position.show_frame ?? true,
