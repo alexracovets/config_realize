@@ -33,6 +33,7 @@ export type {
   buildNameGizmoElementsInputType,
   buildNumberGizmoElementsInputType,
   buildTestoGizmoElementsInputType,
+  fontSizeLimitsType,
   gizmoButtonHitType,
   gizmoButtonHoverTargetType,
   gizmoHandleKindType,

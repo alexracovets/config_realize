@@ -1,6 +1,6 @@
 import type { configuratorStepValueType } from '@configurator/types';
 import { buildPatternColors } from '@configurator/hooks/useSyncGarmentMaterials/buildPatternColors';
-import { mapProductDesigns, resolveGradientColors, resolvePartUvBounds } from '@configurator/mappers';
+import { createPrintUnit, mapProductDesigns, resolveGradientColors, resolvePartUvBounds, resolvePrintCmScale } from '@configurator/mappers';
 import { PRINT_UPLOAD_ROTATION_DEG } from '@configurator/constants';
 import { CONFIGURATOR_STEP_META, ORDER_CUTTING_EXPORT_DATA_NOT_SPECIFIED } from '@constants';
 import type {
@@ -14,6 +14,8 @@ import type {
   orderCuttingExportStepDetailParamType,
   orderCuttingExportStepDetailType,
   orderCuttingExportTextLayerSpecType,
+  printCmScaleType,
+  printReferenceCmType,
   testoInstanceType,
   uvPointType,
 } from '@types';
@@ -71,20 +73,26 @@ const buildGradientStepDetails = (configuration: cartItemConfigurationType, mode
       };
     });
 
-const buildTextInstancesDetails = (instances: garmentTextRenderInstanceType[], model: garmentConfigType): orderCuttingExportStepDetailType[] =>
+const buildTextInstancesDetails = (
+  instances: garmentTextRenderInstanceType[],
+  model: garmentConfigType,
+  cmScale: printCmScaleType | null,
+): orderCuttingExportStepDetailType[] =>
   instances
     .filter((instance) => instance.text.trim())
     .map((instance) => {
       const lineHeight = (instance as numberInstanceType).lineHeight;
       const letterSpacing = (instance as testoInstanceType).letterSpacing;
+      const unitX = createPrintUnit(cmScale?.cmPerPxHorizontal);
+      const unitY = createPrintUnit(cmScale?.cmPerPxVertical);
       const params = [
         { label: 'Testo', value: instance.text.trim() },
         { label: 'Font', value: instance.font },
         { label: 'Colore testo', value: instance.textColor },
-        { label: 'Corpo', value: `${Math.round(instance.fontSize)}px` },
-        instance.strokeWidth > 0 ? { label: 'Contorno', value: `${instance.strokeColor} · ${instance.strokeWidth}px` } : null,
+        { label: 'Corpo', value: unitY.formatPx(instance.fontSize) },
+        instance.strokeWidth > 0 ? { label: 'Contorno', value: `${instance.strokeColor} · ${unitY.formatPx(instance.strokeWidth)}` } : null,
         typeof lineHeight === 'number' ? { label: 'Interlinea', value: `${lineHeight}` } : null,
-        typeof letterSpacing === 'number' ? { label: 'Spaziatura', value: `${letterSpacing}` } : null,
+        typeof letterSpacing === 'number' ? { label: 'Spaziatura', value: unitX.formatPx(letterSpacing) } : null,
         { label: 'Parte', value: resolvePartLabel(model, instance.partId) },
         { label: 'Posizione', value: formatUv(instance.uv) },
         { label: 'Rotazione', value: formatDegrees(instance.rotation + (instance.placementRotation ?? 0)) },
@@ -292,6 +300,7 @@ const buildStep = (
   key: configuratorStepValueType,
   configuration: cartItemConfigurationType,
   model: garmentConfigType,
+  cmScale: printCmScaleType | null,
 ): orderCuttingExportConfigurationStepType => {
   const meta = CONFIGURATOR_STEP_META.find((item) => item.value === key);
   const title = meta?.label ?? key;
@@ -336,7 +345,7 @@ const buildStep = (
       };
     }
     case 'name': {
-      const details = buildTextInstancesDetails(configuration.name.instances, model);
+      const details = buildTextInstancesDetails(configuration.name.instances, model, cmScale);
       return {
         step,
         key,
@@ -348,7 +357,7 @@ const buildStep = (
       };
     }
     case 'number': {
-      const details = buildTextInstancesDetails(configuration.number.instances, model);
+      const details = buildTextInstancesDetails(configuration.number.instances, model, cmScale);
       return {
         step,
         key,
@@ -360,7 +369,7 @@ const buildStep = (
       };
     }
     case 'testo': {
-      const details = buildTextInstancesDetails(configuration.testo.instances, model);
+      const details = buildTextInstancesDetails(configuration.testo.instances, model, cmScale);
       return {
         step,
         key,
@@ -413,7 +422,14 @@ const buildStep = (
   }
 };
 
-const buildOrderCuttingExportSteps = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportConfigurationStepType[] =>
-  CONFIGURATOR_STEP_META.filter((meta) => !model.hiddenSteps?.includes(meta.value)).map((meta) => buildStep(meta.value, configuration, model));
+const buildOrderCuttingExportSteps = (
+  configuration: cartItemConfigurationType,
+  model: garmentConfigType,
+  printReferenceCm?: printReferenceCmType | null,
+): orderCuttingExportConfigurationStepType[] => {
+  const cmScale = resolvePrintCmScale(model, printReferenceCm);
+
+  return CONFIGURATOR_STEP_META.filter((meta) => !model.hiddenSteps?.includes(meta.value)).map((meta) => buildStep(meta.value, configuration, model, cmScale));
+};
 
 export { buildOrderCuttingExportSteps };

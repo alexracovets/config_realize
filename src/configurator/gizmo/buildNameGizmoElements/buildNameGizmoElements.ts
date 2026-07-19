@@ -11,7 +11,7 @@ import {
 const measureCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
 const measureCtx = measureCanvas?.getContext('2d') ?? null;
 
-const buildNameGizmoElements = ({ product, instances, fontSizeMin, fontSizeMax }: buildNameGizmoElementsInputType): printGizmoElementType[] => {
+const buildNameGizmoElements = ({ product, instances, resolveFontSizeLimits }: buildNameGizmoElementsInputType): printGizmoElementType[] => {
   const partsById = Object.fromEntries(product.parts.map((part) => [part.id, part]));
   const gizmoRotation = resolveProductGizmoRotation(product);
 
@@ -28,6 +28,7 @@ const buildNameGizmoElements = ({ product, instances, fontSizeMin, fontSizeMax }
     if (!rawHalf) return [];
 
     const half = resolveTextGizmoHalf(rawHalf, instance, gizmoRotation);
+    const { min: fontSizeMin, max: fontSizeMax } = resolveFontSizeLimits(instance);
 
     return [
       {

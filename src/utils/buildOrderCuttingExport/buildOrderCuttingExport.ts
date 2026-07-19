@@ -70,7 +70,7 @@ const buildOrderCuttingExport = ({
         width: model?.printAtlas?.width ?? 2048,
         height: model?.printAtlas?.height ?? 2048,
       },
-      steps: configuration && model ? buildOrderCuttingExportSteps(configuration, model) : [],
+      steps: configuration && model ? buildOrderCuttingExportSteps(configuration, model, product.business.printReferenceCm) : [],
     };
   }),
 });

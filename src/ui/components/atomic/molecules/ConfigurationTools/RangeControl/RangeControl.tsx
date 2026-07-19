@@ -7,7 +7,7 @@ import type { rangeControlPropsType } from '@types';
 
 const clamp = (v: number, safeMin: number, safeMax: number) => Math.min(Math.max(v, safeMin), safeMax);
 
-const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, unit = '', formatValue }: rangeControlPropsType) => {
+const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, step = 1, unit = '', formatValue }: rangeControlPropsType) => {
   const safeMin = Math.min(min, max);
   const safeMax = Math.max(min, max);
 
@@ -37,6 +37,7 @@ const RangeControl = ({ label, value, onChange, onCommit, min = 0, max = 100, un
         value={[localValue]}
         min={safeMin}
         max={safeMax}
+        step={step}
         variant="default"
         onValueChange={(values) => handleChange(Array.isArray(values) ? (values[0] ?? safeMin) : values)}
         onValueCommitted={(committedValue) => {

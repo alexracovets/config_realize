@@ -3,6 +3,11 @@ import type { uvPointType } from '@types';
 type gizmoHandleKindType = 'duplicate' | 'delete' | 'rotate' | 'scale';
 type printGizmoElementKindType = 'name' | 'number' | 'testo' | 'logo';
 
+interface fontSizeLimitsType {
+  min: number;
+  max: number;
+}
+
 interface printGizmoElementType {
   kind: printGizmoElementKindType;
   id: string;
@@ -22,4 +27,4 @@ interface printGizmoElementType {
   scaleMax?: number;
 }
 
-export type { gizmoHandleKindType, printGizmoElementKindType, printGizmoElementType };
+export type { fontSizeLimitsType, gizmoHandleKindType, printGizmoElementKindType, printGizmoElementType };

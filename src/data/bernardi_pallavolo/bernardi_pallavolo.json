@@ -6,19 +6,13 @@
     "width": 2048,
     "height": 1129
   },
-  "preserveGltfMeshes": [
-    "model_inside",
-    "model_label",
-    "model_sweatband"
-  ],
+  "preserveGltfMeshes": ["model_inside", "model_label", "model_sweatband"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "bernardi_pallavolo_front",
-      "meshNames": [
-        "model_front"
-      ],
+      "meshNames": ["model_front"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.6215,
@@ -39,9 +33,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "bernardi_pallavolo_back",
-      "meshNames": [
-        "model_back"
-      ],
+      "meshNames": ["model_back"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0019,
@@ -62,9 +54,7 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "bernardi_pallavolo_sleeve_left",
-      "meshNames": [
-        "model_sleeve_left"
-      ],
+      "meshNames": ["model_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3319,
@@ -85,9 +75,7 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "bernardi_pallavolo_sleeve_right",
-      "meshNames": [
-        "model_sleeve_right"
-      ],
+      "meshNames": ["model_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.3865,
@@ -108,9 +96,7 @@
       "name": "Collo",
       "label": "Collo",
       "id": "bernardi_pallavolo_collar",
-      "meshNames": [
-        "model_collar"
-      ],
+      "meshNames": ["model_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -248,9 +234,6 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20,
     "title": "Dove desideri inserire il nome?",
     "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
@@ -261,9 +244,6 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 2,
-    "fontSizeMin": 50,
-    "fontSizeMax": 600,
-    "strokeWidthMax": 20,
     "lineHeight": 1.5,
     "lineHeightMin": 0.5,
     "lineHeightMax": 2,
@@ -278,16 +258,11 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20,
     "lineHeight": 1,
     "lineHeightMin": 1,
     "lineHeightMax": 2,
     "line_height_show": true,
     "letterSpacing": 0,
-    "letterSpacingMin": -10,
-    "letterSpacingMax": 40,
     "letter_spacing_show": true,
     "title": "Dove desideri inserire il testo?",
     "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
@@ -305,7 +280,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "top_back",
-      "src": "/png/text_areas/t_shirt/name/top.png"
+      "src": "/png/text_areas/t_shirt/name/top.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 6,
+      "widthMinCm": 1,
+      "widthMaxCm": 35
     },
     {
       "label": "Nome schiena inferiore",
@@ -321,10 +300,12 @@
       "id": "bottom_back",
       "src": "/png/text_areas/t_shirt/name/bottom.png",
       "conflicts": {
-        "testo": [
-          "bottom_back"
-        ]
-      }
+        "testo": ["bottom_back"]
+      },
+      "heightMinCm": 1,
+      "heightMaxCm": 6,
+      "widthMinCm": 1,
+      "widthMaxCm": 35
     }
   ],
   "numberPositions": [
@@ -342,10 +323,12 @@
       "id": "front_center",
       "src": "/png/text_areas/t_shirt/number/front_center.png",
       "conflicts": {
-        "testo": [
-          "front_center"
-        ]
-      }
+        "testo": ["front_center"]
+      },
+      "heightMaxCm": 10,
+      "heightMinCm": 1,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Numero lato cuore",
@@ -359,7 +342,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "front_right",
-      "src": "/png/text_areas/t_shirt/number/front_right.png"
+      "src": "/png/text_areas/t_shirt/number/front_right.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Numero schiena",
@@ -373,7 +360,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "back",
-      "src": "/png/text_areas/t_shirt/number/back.png"
+      "src": "/png/text_areas/t_shirt/number/back.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     }
   ],
   "testoPositions": [
@@ -391,10 +382,12 @@
       "id": "front_center",
       "src": "/png/text_areas/t_shirt/text/front.png",
       "conflicts": {
-        "number": [
-          "front_center"
-        ]
-      }
+        "number": ["front_center"]
+      },
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     },
     {
       "label": "Nome schiena inferiore",
@@ -410,10 +403,12 @@
       "id": "bottom_back",
       "src": "/png/text_areas/t_shirt/text/back_bottom.png",
       "conflicts": {
-        "name": [
-          "bottom_back"
-        ]
-      }
+        "name": ["bottom_back"]
+      },
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     },
     {
       "label": "Nome schiena superiore",
@@ -427,7 +422,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "top_back",
-      "src": "/png/text_areas/t_shirt/text/back_top.png"
+      "src": "/png/text_areas/t_shirt/text/back_top.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     }
   ]
 }

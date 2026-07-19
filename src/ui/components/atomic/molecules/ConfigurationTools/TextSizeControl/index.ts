@@ -1,0 +1,1 @@
+export { TextSizeControl } from './TextSizeControl';

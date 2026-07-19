@@ -1,6 +1,6 @@
 'use client';
 
-import type { PrintPlacementInstance } from '@configurator/types';
+import type { fontSizeLimitsType, PrintPlacementInstance } from '@configurator/types';
 import {
   buildLogoGizmoElements,
   buildNameGizmoElements,
@@ -8,13 +8,15 @@ import {
   buildPrintablePartMeshes,
   buildTestoGizmoElements,
 } from '@configurator/gizmo';
+import type { nameInstanceType, numberInstanceType, testoInstanceType } from '@types';
 import { useGizmoButtonHover, useGizmoSelection, usePrintPlacementMigration } from '@configurator/hooks';
+import { resolvePrintCmScale } from '@configurator/mappers';
 import { PrintGizmoInstance } from '@configurator/runtime';
 import { repairPrintInstancePlacement, resolvePrintAtlasSize } from '@configurator/utils';
 import {
-  resolveNameLimits,
-  resolveNumberLimits,
-  resolveTestoLimits,
+  resolveNamePositionLimits,
+  resolveNumberPositionLimits,
+  resolveTestoPositionLimits,
   useConfigurationControl,
   useConfiguratorProduct,
   useGarmentLogo,
@@ -33,18 +35,21 @@ const PrintGizmoLayer = memo(() => {
   const activeStep = useConfigurationControl((state) => state.activeStep);
   const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
 
+  const namePositions = useGarmentName((state) => state.positions);
   const nameInstances = useGarmentName((state) => state.instances);
   const nameSelectedInstanceId = useGarmentName((state) => state.selectedInstanceId);
   const setNameSelectedInstance = useGarmentName((state) => state.setSelectedInstance);
   const clearNameSelectedInstance = useGarmentName((state) => state.clearSelectedInstance);
   const bringNameInstanceToFront = useGarmentName((state) => state.bringInstanceToFront);
 
+  const numberPositions = useGarmentNumber((state) => state.positions);
   const numberInstances = useGarmentNumber((state) => state.instances);
   const numberSelectedInstanceId = useGarmentNumber((state) => state.selectedInstanceId);
   const setNumberSelectedInstance = useGarmentNumber((state) => state.setSelectedInstance);
   const clearNumberSelectedInstance = useGarmentNumber((state) => state.clearSelectedInstance);
   const bringNumberInstanceToFront = useGarmentNumber((state) => state.bringInstanceToFront);
 
+  const testoPositions = useGarmentTesto((state) => state.positions);
   const testoInstances = useGarmentTesto((state) => state.instances);
   const testoSelectedInstanceId = useGarmentTesto((state) => state.selectedInstanceId);
   const setTestoSelectedInstance = useGarmentTesto((state) => state.setSelectedInstance);
@@ -106,9 +111,42 @@ const PrintGizmoLayer = memo(() => {
     migratePlacementRotation: false,
   });
 
-  const nameLimits = useMemo(() => (product.nameDefaults ? resolveNameLimits(product) : null), [product]);
-  const numberLimits = useMemo(() => (product.numberDefaults ? resolveNumberLimits(product) : null), [product]);
-  const testoLimits = useMemo(() => (product.testoDefaults ? resolveTestoLimits(product) : null), [product]);
+  const printReferenceCm = useConfiguratorProduct((state) => state.business.printReferenceCm);
+  const cmScale = useMemo(() => resolvePrintCmScale(product, printReferenceCm), [printReferenceCm, product]);
+
+  const namePositionsByKey = useMemo(() => new Map(namePositions.map((position) => [position.key, position])), [namePositions]);
+  const numberPositionsByKey = useMemo(() => new Map(numberPositions.map((position) => [position.key, position])), [numberPositions]);
+  const testoPositionsByKey = useMemo(() => new Map(testoPositions.map((position) => [position.key, position])), [testoPositions]);
+
+  const resolveNameFontSizeLimits = useCallback(
+    (instance: nameInstanceType): fontSizeLimitsType => {
+      const position = namePositionsByKey.get(instance.positionKey);
+      if (!position) return { min: 0, max: Infinity };
+      const limits = resolveNamePositionLimits(product, position, cmScale);
+      return { min: limits.heightMin, max: limits.heightMax };
+    },
+    [cmScale, namePositionsByKey, product],
+  );
+
+  const resolveNumberFontSizeLimits = useCallback(
+    (instance: numberInstanceType): fontSizeLimitsType => {
+      const position = numberPositionsByKey.get(instance.positionKey);
+      if (!position) return { min: 0, max: Infinity };
+      const limits = resolveNumberPositionLimits(product, position, cmScale);
+      return { min: limits.heightMin, max: limits.heightMax };
+    },
+    [cmScale, numberPositionsByKey, product],
+  );
+
+  const resolveTestoFontSizeLimits = useCallback(
+    (instance: testoInstanceType): fontSizeLimitsType => {
+      const position = testoPositionsByKey.get(instance.positionKey);
+      if (!position) return { min: 0, max: Infinity };
+      const limits = resolveTestoPositionLimits(product, position, cmScale);
+      return { min: limits.heightMin, max: limits.heightMax };
+    },
+    [cmScale, product, testoPositionsByKey],
+  );
 
   const gizmoStep = !isGizmoVisible
     ? null
@@ -142,29 +180,14 @@ const PrintGizmoLayer = memo(() => {
   const elements = useMemo(() => {
     if (!isGizmoVisible) return [];
 
-    if (activeStep === NAME_STEP && nameLimits) {
-      return buildNameGizmoElements({
-        product,
-        instances: nameInstancesForGizmo,
-        fontSizeMin: nameLimits.fontSizeMin,
-        fontSizeMax: nameLimits.fontSizeMax,
-      });
+    if (activeStep === NAME_STEP) {
+      return buildNameGizmoElements({ product, instances: nameInstancesForGizmo, resolveFontSizeLimits: resolveNameFontSizeLimits });
     }
-    if (activeStep === NUMBER_STEP && numberLimits) {
-      return buildNumberGizmoElements({
-        product,
-        instances: numberInstancesForGizmo,
-        fontSizeMin: numberLimits.fontSizeMin,
-        fontSizeMax: numberLimits.fontSizeMax,
-      });
+    if (activeStep === NUMBER_STEP) {
+      return buildNumberGizmoElements({ product, instances: numberInstancesForGizmo, resolveFontSizeLimits: resolveNumberFontSizeLimits });
     }
-    if (activeStep === TESTO_STEP && testoLimits) {
-      return buildTestoGizmoElements({
-        product,
-        instances: testoInstancesForGizmo,
-        fontSizeMin: testoLimits.fontSizeMin,
-        fontSizeMax: testoLimits.fontSizeMax,
-      });
+    if (activeStep === TESTO_STEP) {
+      return buildTestoGizmoElements({ product, instances: testoInstancesForGizmo, resolveFontSizeLimits: resolveTestoFontSizeLimits });
     }
     if (activeStep === LOGO_STEP) {
       return buildLogoGizmoElements({ product, instances: logoInstancesForGizmo });
@@ -175,12 +198,12 @@ const PrintGizmoLayer = memo(() => {
     isGizmoVisible,
     logoInstancesForGizmo,
     nameInstancesForGizmo,
-    nameLimits,
     numberInstancesForGizmo,
-    numberLimits,
     product,
+    resolveNameFontSizeLimits,
+    resolveNumberFontSizeLimits,
+    resolveTestoFontSizeLimits,
     testoInstancesForGizmo,
-    testoLimits,
   ]);
 
   const selectedInstanceId =

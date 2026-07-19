@@ -184,10 +184,7 @@
     "textColor": "#000000",
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
-    "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20
+    "maxLength": 20
   },
   "numberDefaults": {
     "text": "10",
@@ -196,9 +193,6 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 2,
-    "fontSizeMin": 50,
-    "fontSizeMax": 600,
-    "strokeWidthMax": 20,
     "lineHeight": 1.5,
     "lineHeightMin": 0.5,
     "lineHeightMax": 2,
@@ -213,16 +207,11 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20,
     "lineHeight": 1,
     "lineHeightMin": 1,
     "lineHeightMax": 2,
     "line_height_show": true,
     "letterSpacing": 0,
-    "letterSpacingMin": -10,
-    "letterSpacingMax": 40,
     "letter_spacing_show": true,
     "title": "Dove desideri inserire il testo?",
     "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
@@ -241,7 +230,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "right-bottom",
-      "src": "/png/text_areas/shorts/number/left_bottom.png"
+      "src": "/png/text_areas/shorts/number/left_bottom.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Destra superiore",
@@ -255,7 +248,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "right-top",
-      "src": "/png/text_areas/shorts/number/left_top.png"
+      "src": "/png/text_areas/shorts/number/left_top.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Dietro",
@@ -272,7 +269,11 @@
       "src": "/png/text_areas/shorts/number/left_center.png",
       "conflicts": {
         "testo": ["right"]
-      }
+      },
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Davanti",
@@ -286,7 +287,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "left-top",
-      "src": "/png/text_areas/shorts/number/right.png"
+      "src": "/png/text_areas/shorts/number/right.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     }
   ],
   "testoPositions": [
@@ -305,7 +310,11 @@
         "number": ["right-center"]
       },
       "id": "right",
-      "src": "/png/text_areas/shorts/text/left.png"
+      "src": "/png/text_areas/shorts/text/left.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     },
     {
       "label": "Sinistra",
@@ -319,7 +328,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "left",
-      "src": "/png/text_areas/shorts/text/right.png"
+      "src": "/png/text_areas/shorts/text/right.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     }
   ]
 }

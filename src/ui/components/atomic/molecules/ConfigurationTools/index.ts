@@ -14,3 +14,4 @@ export { HiddenLogoFileInput, LogoUpload } from './LogoUpload';
 export { ColorControl } from './ColorControl';
 export { PatternLayerColorControl } from './PatternLayerColorControl';
 export { RangeControl } from './RangeControl';
+export { TextSizeControl } from './TextSizeControl';

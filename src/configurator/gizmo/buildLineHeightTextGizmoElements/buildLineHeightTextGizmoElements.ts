@@ -1,4 +1,4 @@
-import type { printGizmoElementKindType, printGizmoElementType } from '@configurator/types';
+import type { fontSizeLimitsType, printGizmoElementKindType, printGizmoElementType } from '@configurator/types';
 import type { garmentConfigType, numberInstanceType, testoInstanceType } from '@types';
 import { NAME_REFERENCE_FONT_SIZE, NAME_SLOT_COUNT } from '@configurator/constants';
 import {
@@ -13,21 +13,19 @@ import {
 const measureCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
 const measureCtx = measureCanvas?.getContext('2d') ?? null;
 
-interface BuildLineHeightTextGizmoElementsInput {
+interface BuildLineHeightTextGizmoElementsInput<T extends numberInstanceType | testoInstanceType> {
   kind: Extract<printGizmoElementKindType, 'number' | 'testo'>;
   product: garmentConfigType;
-  instances: numberInstanceType[] | testoInstanceType[];
-  fontSizeMin: number;
-  fontSizeMax: number;
+  instances: T[];
+  resolveFontSizeLimits: (instance: T) => fontSizeLimitsType;
 }
 
-const buildLineHeightTextGizmoElements = ({
+const buildLineHeightTextGizmoElements = <T extends numberInstanceType | testoInstanceType>({
   kind,
   product,
   instances,
-  fontSizeMin,
-  fontSizeMax,
-}: BuildLineHeightTextGizmoElementsInput): printGizmoElementType[] => {
+  resolveFontSizeLimits,
+}: BuildLineHeightTextGizmoElementsInput<T>): printGizmoElementType[] => {
   const partsById = Object.fromEntries(product.parts.map((part) => [part.id, part]));
   const gizmoRotation = resolveProductGizmoRotation(product);
 
@@ -44,6 +42,7 @@ const buildLineHeightTextGizmoElements = ({
     if (!rawHalf) return [];
 
     const half = resolveTextGizmoHalf(rawHalf, instance, gizmoRotation);
+    const { min: fontSizeMin, max: fontSizeMax } = resolveFontSizeLimits(instance);
 
     return [
       {

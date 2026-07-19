@@ -3,15 +3,14 @@
 import type { configurationPositionPickerInstanceType, testoPartFormPropsType, testoPositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_TESTO_POSITION_SELECT_LABEL } from '@constants';
-import { useConfigurationPositionPicker, usePrintCmScale } from '@hooks';
-import { formatPxAsCm } from '@utils';
-import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
+import { useConfigurationPositionPicker, usePrintCmScale, usePrintUnits } from '@hooks';
+import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl, TextSizeControl } from '@molecules/ConfigurationTools';
 import {
   createTestoInstance,
   resolveTestoDefaults,
   resolveTestoLetterSpacingShow,
-  resolveTestoLimits,
   resolveTestoLineHeightShow,
+  resolveTestoPositionLimits,
   useConfiguratorProduct,
   useGarmentTesto,
 } from '@store';
@@ -31,9 +30,7 @@ const TestoPartForm = ({ instanceId, limits, placeholder, lineHeightShow, letter
   const previewLineHeight = previewPatch?.lineHeight;
   const previewLetterSpacing = previewPatch?.letterSpacing;
 
-  const cmScale = usePrintCmScale();
-  const formatCmY = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxY) : undefined;
-  const formatCmX = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxX) : undefined;
+  const { x: unitX, y: unitY } = usePrintUnits();
 
   const commit = useCallback(
     (patch: Parameters<typeof updateInstance>[1]) => {
@@ -84,15 +81,18 @@ const TestoPartForm = ({ instanceId, limits, placeholder, lineHeightShow, letter
         onPreviewStrokeColor={(strokeColor) => setPreview(instanceId, { strokeColor })}
       />
 
-      <RangeControl
-        label="Dimensione testo"
-        value={previewFontSize ?? instance.fontSize}
-        onChange={(fontSize) => setPreview(instanceId, { fontSize })}
-        onCommit={commitFromPreview}
-        min={limits.fontSizeMin}
-        max={limits.fontSizeMax}
-        unit="px"
-        formatValue={formatCmY}
+      <TextSizeControl
+        text={previewText ?? instance.text}
+        font={instance.font}
+        letterSpacing={previewLetterSpacing ?? instance.letterSpacing}
+        lineHeight={previewLineHeight ?? instance.lineHeight}
+        fontSize={previewFontSize ?? instance.fontSize}
+        heightMin={limits.heightMin}
+        heightMax={limits.heightMax}
+        widthMin={limits.widthMin}
+        widthMax={limits.widthMax}
+        onPreviewFontSize={(fontSize) => setPreview(instanceId, { fontSize })}
+        onCommitFontSize={commitFromPreview}
       />
 
       {lineHeightShow && (
@@ -110,25 +110,25 @@ const TestoPartForm = ({ instanceId, limits, placeholder, lineHeightShow, letter
       {letterSpacingShow && (
         <RangeControl
           label="Spaziatura lettere"
-          value={previewLetterSpacing ?? instance.letterSpacing ?? 0}
-          onChange={(letterSpacing) => setPreview(instanceId, { letterSpacing })}
+          value={unitX.toUnit(previewLetterSpacing ?? instance.letterSpacing ?? 0)}
+          onChange={(letterSpacing) => setPreview(instanceId, { letterSpacing: unitX.toPx(letterSpacing) })}
           onCommit={commitFromPreview}
-          min={limits.letterSpacingMin}
-          max={limits.letterSpacingMax}
-          unit="px"
-          formatValue={formatCmX}
+          min={unitX.toUnit(limits.letterSpacingMin)}
+          max={unitX.toUnit(limits.letterSpacingMax)}
+          step={unitX.step}
+          formatValue={unitX.formatUnit}
         />
       )}
 
       <RangeControl
         label="Spessore contorno"
-        value={previewStrokeWidth ?? instance.strokeWidth}
-        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth })}
+        value={unitY.toUnit(previewStrokeWidth ?? instance.strokeWidth)}
+        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth: unitY.toPx(strokeWidth) })}
         onCommit={commitFromPreview}
         min={0}
-        max={limits.strokeWidthMax}
-        unit="px"
-        formatValue={formatCmY}
+        max={unitY.toUnit(limits.strokeWidthMax)}
+        step={unitY.step}
+        formatValue={unitY.formatUnit}
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>
@@ -141,13 +141,17 @@ const TestoPartForm = ({ instanceId, limits, placeholder, lineHeightShow, letter
 
 const ConfigurationTesto = () => {
   const product = useConfiguratorProduct((state) => state.product);
+  const cmScale = usePrintCmScale();
   const positions = useGarmentTesto((state) => state.positions);
   const instances = useGarmentTesto((state) => state.instances);
   const addInstance = useGarmentTesto((state) => state.addInstance);
   const removeInstance = useGarmentTesto((state) => state.removeInstance);
 
   const testoDefaults = useMemo(() => (positions.length > 0 ? resolveTestoDefaults(product) : null), [positions.length, product]);
-  const limits = useMemo(() => (positions.length > 0 ? resolveTestoLimits(product) : null), [positions.length, product]);
+  const limitsByPositionKey = useMemo(() => {
+    if (positions.length === 0) return null;
+    return new Map(positions.map((position) => [position.key, resolveTestoPositionLimits(product, position, cmScale)]));
+  }, [cmScale, positions, product]);
   const lineHeightShow = useMemo(() => (positions.length > 0 ? resolveTestoLineHeightShow(product) : false), [positions.length, product]);
   const letterSpacingShow = useMemo(() => (positions.length > 0 ? resolveTestoLetterSpacingShow(product) : false), [positions.length, product]);
 
@@ -181,27 +185,32 @@ const ConfigurationTesto = () => {
   }, [instances, positions]);
 
   const items = useMemo(() => {
-    // `limits` is only unset while positions haven't loaded yet — instances is empty then too,
-    // so this never actually renders a TestoPartForm without limits.
-    if (!limits) return [];
+    if (!limitsByPositionKey) return [];
 
-    return instances.map((instance) => ({
-      value: instance.id,
-      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-      content: (
-        <TestoPartForm
-          instanceId={instance.id}
-          limits={limits}
-          placeholder={testoDefaults?.text ?? ''}
-          lineHeightShow={lineHeightShow}
-          letterSpacingShow={letterSpacingShow}
-        />
-      ),
-      onDelete: () => removeInstance(instance.id),
-    }));
-  }, [instances, letterSpacingShow, limits, lineHeightShow, removeInstance, testoDefaults?.text]);
+    return instances.flatMap((instance) => {
+      const limits = limitsByPositionKey.get(instance.positionKey);
+      if (!limits) return [];
 
-  if (positions.length === 0 || !limits || !testoDefaults) return null;
+      return [
+        {
+          value: instance.id,
+          trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+          content: (
+            <TestoPartForm
+              instanceId={instance.id}
+              limits={limits}
+              placeholder={testoDefaults?.text ?? ''}
+              lineHeightShow={lineHeightShow}
+              letterSpacingShow={letterSpacingShow}
+            />
+          ),
+          onDelete: () => removeInstance(instance.id),
+        },
+      ];
+    });
+  }, [instances, letterSpacingShow, limitsByPositionKey, lineHeightShow, removeInstance, testoDefaults?.text]);
+
+  if (positions.length === 0 || !limitsByPositionKey || !testoDefaults) return null;
 
   return (
     <Flex key={product.path} variant="step_design" className="gap-3">

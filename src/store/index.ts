@@ -17,15 +17,15 @@ export {
   mapProductNamePositions,
   resolveInstancesForRender,
   resolveNameDefaults,
-  resolveNameLimits,
+  resolveNamePositionLimits,
   useGarmentName,
 } from './useGarmentName';
 export {
   createNumberInstance,
   resolveNumberDefaults,
   resolveNumberInstancesForRender,
-  resolveNumberLimits,
   resolveNumberLineHeightShow,
+  resolveNumberPositionLimits,
   sanitizeNumberText,
   NUMBER_MAX_LENGTH,
   useGarmentNumber,
@@ -36,8 +36,8 @@ export {
   resolveTestoDefaults,
   resolveTestoInstancesForRender,
   resolveTestoLetterSpacingShow,
-  resolveTestoLimits,
   resolveTestoLineHeightShow,
+  resolveTestoPositionLimits,
   useGarmentTesto,
 } from './useGarmentTesto';
 export { resolveLogoInstancesForRender, useGarmentLogo } from './useGarmentLogo';

@@ -1,3 +1,4 @@
+import type { fontSizeLimitsType } from '@configurator/types';
 import type { garmentConfigType, logoInstanceType, nameInstanceType, numberInstanceType, testoInstanceType } from '@types';
 
 interface buildLogoGizmoElementsInputType {
@@ -8,22 +9,19 @@ interface buildLogoGizmoElementsInputType {
 interface buildNameGizmoElementsInputType {
   product: garmentConfigType;
   instances: nameInstanceType[];
-  fontSizeMin: number;
-  fontSizeMax: number;
+  resolveFontSizeLimits: (instance: nameInstanceType) => fontSizeLimitsType;
 }
 
 interface buildNumberGizmoElementsInputType {
   product: garmentConfigType;
   instances: numberInstanceType[];
-  fontSizeMin: number;
-  fontSizeMax: number;
+  resolveFontSizeLimits: (instance: numberInstanceType) => fontSizeLimitsType;
 }
 
 interface buildTestoGizmoElementsInputType {
   product: garmentConfigType;
   instances: testoInstanceType[];
-  fontSizeMin: number;
-  fontSizeMax: number;
+  resolveFontSizeLimits: (instance: testoInstanceType) => fontSizeLimitsType;
 }
 
 export type { buildLogoGizmoElementsInputType, buildNameGizmoElementsInputType, buildNumberGizmoElementsInputType, buildTestoGizmoElementsInputType };

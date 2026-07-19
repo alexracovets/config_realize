@@ -1,2 +1,11 @@
-export { formatPxAsCm, resolvePrintCmScale } from './resolvePrintCmScale';
-export type { printCmScaleType } from './resolvePrintCmScale';
+export {
+  cmToPx,
+  createPrintUnit,
+  DEFAULT_PRINT_REFERENCE_CM,
+  formatCm,
+  formatPxAsCm,
+  pxToCm,
+  resolveCmLimitPx,
+  resolvePrintCmScale,
+} from './resolvePrintCmScale';
+export type { printCmScaleType, printUnitType } from './resolvePrintCmScale';

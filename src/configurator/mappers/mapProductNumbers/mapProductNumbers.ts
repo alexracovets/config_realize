@@ -1,9 +1,25 @@
-import type { garmentConfigType, numberInstanceType, numberLimitsType, numberPositionType, textDefaultsConfigType, uvPointType } from '@types';
-import { resolveGarmentPart, resolvePrintLocalUvToAtlas } from '@configurator/mappers';
+import type {
+  garmentConfigType,
+  numberInstanceType,
+  numberLimitsType,
+  numberPositionType,
+  printCmScaleType,
+  textDefaultsConfigType,
+  uvPointType,
+} from '@types';
+import {
+  resolveCmLimitPx,
+  resolveGarmentPart,
+  resolvePrintLocalUvToAtlas,
+  resolveTextPrintPositionLimits,
+  TEXT_PRINT_MIN_CM,
+  TEXT_PRINT_UNBOUNDED_CM,
+} from '@configurator/mappers';
 const NUMBER_MAX_LENGTH = 2;
 const NUMBER_DEFAULT_LINE_HEIGHT = 1.5;
 
-// numberPositions UV is 0..1 inside the part; shader expects print-atlas coordinates.
+const NUMBER_LIMITS_FALLBACK_CM = { heightMinCm: TEXT_PRINT_MIN_CM, heightMaxCm: 27, widthMinCm: TEXT_PRINT_MIN_CM, widthMaxCm: TEXT_PRINT_UNBOUNDED_CM };
+
 const resolveNumberLocalUvToAtlas = (product: garmentConfigType, partId: string, localUv: uvPointType): uvPointType =>
   resolvePrintLocalUvToAtlas(resolveGarmentPart(product, partId, 'a number position'), localUv);
 
@@ -17,14 +33,17 @@ const resolveNumberDefaults = (product: garmentConfigType): textDefaultsConfigTy
 
 const resolveNumberLineHeightShow = (product: garmentConfigType) => resolveNumberDefaults(product).line_height_show ?? false;
 
-const resolveNumberLimits = (product: garmentConfigType): numberLimitsType => {
+const resolveNumberPositionLimits = (product: garmentConfigType, position: numberPositionType, cmScale?: printCmScaleType | null): numberLimitsType => {
   const defaults = resolveNumberDefaults(product);
+  const { heightMin, heightMax, widthMin, widthMax } = resolveTextPrintPositionLimits(position, cmScale, NUMBER_LIMITS_FALLBACK_CM);
 
   return {
     maxLength: NUMBER_MAX_LENGTH,
-    fontSizeMin: defaults.fontSizeMin ?? 50,
-    fontSizeMax: defaults.fontSizeMax ?? 500,
-    strokeWidthMax: defaults.strokeWidthMax ?? 20,
+    heightMin,
+    heightMax,
+    widthMin,
+    widthMax,
+    strokeWidthMax: resolveCmLimitPx(defaults.strokeWidthMaxCm, defaults.strokeWidthMax ?? 20, cmScale?.cmPerPxVertical),
     lineHeightMin: defaults.lineHeightMin ?? 0.5,
     lineHeightMax: defaults.lineHeightMax ?? 2,
   };
@@ -42,6 +61,10 @@ const mapProductNumberPositions = (product: garmentConfigType): numberPositionTy
     fontSize: position.fontSize,
     src: position.src,
     lineHeight: position.line_height,
+    heightMinCm: position.heightMinCm,
+    heightMaxCm: position.heightMaxCm,
+    widthMinCm: position.widthMinCm,
+    widthMaxCm: position.widthMaxCm,
     showFrame: position.show_frame ?? true,
     showGizmo: position.show_gizmo ?? position.interactive === true,
     interactive: position.interactive ?? true,
@@ -76,9 +99,9 @@ export {
   createNumberInstance,
   mapProductNumberPositions,
   resolveNumberDefaults,
-  resolveNumberLimits,
   resolveNumberLineHeightShow,
   resolveNumberLocalUvToAtlas,
+  resolveNumberPositionLimits,
   sanitizeNumberText,
   NUMBER_DEFAULT_LINE_HEIGHT,
   NUMBER_MAX_LENGTH,

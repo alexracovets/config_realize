@@ -1,7 +1,9 @@
-import type { garmentConfigType, testoInstanceType, testoLimitsType, testoPositionType, textDefaultsConfigType } from '@types';
-import { resolveGarmentPart, resolvePrintLocalUvToAtlas } from '@configurator/mappers';
+import type { garmentConfigType, printCmScaleType, testoInstanceType, testoLimitsType, testoPositionType, textDefaultsConfigType } from '@types';
+import { resolveCmLimitPx, resolveGarmentPart, resolvePrintLocalUvToAtlas, resolveTextPrintPositionLimits, TEXT_PRINT_MIN_CM } from '@configurator/mappers';
 const TESTO_DEFAULT_LINE_HEIGHT = 1.5;
 const TESTO_DEFAULT_LETTER_SPACING = 0;
+
+const TESTO_LIMITS_FALLBACK_CM = { heightMinCm: TEXT_PRINT_MIN_CM, heightMaxCm: 2, widthMinCm: TEXT_PRINT_MIN_CM, widthMaxCm: 25 };
 
 const resolveTestoDefaults = (product: garmentConfigType): textDefaultsConfigType => {
   if (!product.testoDefaults) {
@@ -15,18 +17,21 @@ const resolveTestoLineHeightShow = (product: garmentConfigType) => resolveTestoD
 
 const resolveTestoLetterSpacingShow = (product: garmentConfigType) => resolveTestoDefaults(product).letter_spacing_show ?? true;
 
-const resolveTestoLimits = (product: garmentConfigType): testoLimitsType => {
+const resolveTestoPositionLimits = (product: garmentConfigType, position: testoPositionType, cmScale?: printCmScaleType | null): testoLimitsType => {
   const defaults = resolveTestoDefaults(product);
+  const { heightMin, heightMax, widthMin, widthMax } = resolveTextPrintPositionLimits(position, cmScale, TESTO_LIMITS_FALLBACK_CM);
 
   return {
     maxLength: defaults.maxLength ?? 20,
-    fontSizeMin: defaults.fontSizeMin ?? 50,
-    fontSizeMax: defaults.fontSizeMax ?? 400,
-    strokeWidthMax: defaults.strokeWidthMax ?? 20,
+    heightMin,
+    heightMax,
+    widthMin,
+    widthMax,
+    strokeWidthMax: resolveCmLimitPx(defaults.strokeWidthMaxCm, defaults.strokeWidthMax ?? 20, cmScale?.cmPerPxVertical),
     lineHeightMin: defaults.lineHeightMin ?? 0.5,
     lineHeightMax: defaults.lineHeightMax ?? 2,
-    letterSpacingMin: defaults.letterSpacingMin ?? -20,
-    letterSpacingMax: defaults.letterSpacingMax ?? 80,
+    letterSpacingMin: resolveCmLimitPx(defaults.letterSpacingMinCm, defaults.letterSpacingMin ?? -20, cmScale?.cmPerPxHorizontal),
+    letterSpacingMax: resolveCmLimitPx(defaults.letterSpacingMaxCm, defaults.letterSpacingMax ?? 80, cmScale?.cmPerPxHorizontal),
   };
 };
 
@@ -43,6 +48,10 @@ const mapProductTestoPositions = (product: garmentConfigType): testoPositionType
     src: position.src,
     lineHeight: position.line_height,
     letterSpacing: position.letter_spacing,
+    heightMinCm: position.heightMinCm,
+    heightMaxCm: position.heightMaxCm,
+    widthMinCm: position.widthMinCm,
+    widthMaxCm: position.widthMaxCm,
     showFrame: position.show_frame ?? true,
     showGizmo: position.show_gizmo ?? position.interactive === true,
     interactive: position.interactive ?? true,
@@ -77,8 +86,8 @@ export {
   mapProductTestoPositions,
   resolveTestoDefaults,
   resolveTestoLetterSpacingShow,
-  resolveTestoLimits,
   resolveTestoLineHeightShow,
+  resolveTestoPositionLimits,
   TESTO_DEFAULT_LETTER_SPACING,
   TESTO_DEFAULT_LINE_HEIGHT,
 };

@@ -3,14 +3,13 @@
 import type { configurationPositionPickerInstanceType, numberPartFormPropsType, numberPositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL } from '@constants';
-import { useConfigurationPositionPicker, usePrintCmScale } from '@hooks';
-import { formatPxAsCm } from '@utils';
-import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
+import { useConfigurationPositionPicker, usePrintCmScale, usePrintUnits } from '@hooks';
+import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl, TextSizeControl } from '@molecules/ConfigurationTools';
 import {
   createNumberInstance,
   resolveNumberDefaults,
-  resolveNumberLimits,
   resolveNumberLineHeightShow,
+  resolveNumberPositionLimits,
   sanitizeNumberText,
   useConfiguratorProduct,
   useGarmentNumber,
@@ -34,8 +33,7 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
   const previewStrokeWidth = previewPatch?.strokeWidth;
   const previewLineHeight = previewPatch?.lineHeight;
 
-  const cmScale = usePrintCmScale();
-  const formatCmY = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxY) : undefined;
+  const { y: unitY } = usePrintUnits();
 
   const commit = useCallback(
     (patch: Parameters<typeof updateInstance>[1]) => {
@@ -88,15 +86,16 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
         onPreviewStrokeColor={(strokeColor) => setPreview(instanceId, { strokeColor })}
       />
 
-      <RangeControl
-        label="Dimensione testo"
-        value={previewFontSize ?? instance.fontSize}
-        onChange={(fontSize) => setPreview(instanceId, { fontSize })}
-        onCommit={commitFromPreview}
-        min={limits.fontSizeMin}
-        max={limits.fontSizeMax}
-        unit="px"
-        formatValue={formatCmY}
+      <TextSizeControl
+        text={sharedPreviewText ?? previewText ?? instance.text}
+        font={instance.font}
+        fontSize={previewFontSize ?? instance.fontSize}
+        heightMin={limits.heightMin}
+        heightMax={limits.heightMax}
+        widthMin={limits.widthMin}
+        widthMax={limits.widthMax}
+        onPreviewFontSize={(fontSize) => setPreview(instanceId, { fontSize })}
+        onCommitFontSize={commitFromPreview}
       />
 
       {lineHeightShow && (
@@ -113,13 +112,13 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
 
       <RangeControl
         label="Spessore contorno"
-        value={previewStrokeWidth ?? instance.strokeWidth}
-        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth })}
+        value={unitY.toUnit(previewStrokeWidth ?? instance.strokeWidth)}
+        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth: unitY.toPx(strokeWidth) })}
         onCommit={commitFromPreview}
         min={0}
-        max={limits.strokeWidthMax}
-        unit="px"
-        formatValue={formatCmY}
+        max={unitY.toUnit(limits.strokeWidthMax)}
+        step={unitY.step}
+        formatValue={unitY.formatUnit}
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>
@@ -132,13 +131,17 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
 
 const ConfigurationNumbers = () => {
   const product = useConfiguratorProduct((state) => state.product);
+  const cmScale = usePrintCmScale();
   const positions = useGarmentNumber((state) => state.positions);
   const instances = useGarmentNumber((state) => state.instances);
   const addInstance = useGarmentNumber((state) => state.addInstance);
   const removeInstance = useGarmentNumber((state) => state.removeInstance);
 
   const numberDefaults = useMemo(() => (positions.length > 0 ? resolveNumberDefaults(product) : null), [positions.length, product]);
-  const limits = useMemo(() => (positions.length > 0 ? resolveNumberLimits(product) : null), [positions.length, product]);
+  const limitsByPositionKey = useMemo(() => {
+    if (positions.length === 0) return null;
+    return new Map(positions.map((position) => [position.key, resolveNumberPositionLimits(product, position, cmScale)]));
+  }, [cmScale, positions, product]);
   const lineHeightShow = useMemo(() => (positions.length > 0 ? resolveNumberLineHeightShow(product) : false), [positions.length, product]);
 
   const handleAddInstance = useCallback(
@@ -171,19 +174,24 @@ const ConfigurationNumbers = () => {
   }, [instances, positions]);
 
   const items = useMemo(() => {
-    // `limits` is only unset while positions haven't loaded yet — instances is empty then too,
-    // so this never actually renders a NumberPartForm without limits.
-    if (!limits) return [];
+    if (!limitsByPositionKey) return [];
 
-    return instances.map((instance) => ({
-      value: instance.id,
-      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-      content: <NumberPartForm instanceId={instance.id} limits={limits} placeholder={numberDefaults?.text ?? '00'} lineHeightShow={lineHeightShow} />,
-      onDelete: () => removeInstance(instance.id),
-    }));
-  }, [instances, limits, lineHeightShow, numberDefaults?.text, removeInstance]);
+    return instances.flatMap((instance) => {
+      const limits = limitsByPositionKey.get(instance.positionKey);
+      if (!limits) return [];
 
-  if (positions.length === 0 || !limits || !numberDefaults) return null;
+      return [
+        {
+          value: instance.id,
+          trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+          content: <NumberPartForm instanceId={instance.id} limits={limits} placeholder={numberDefaults?.text ?? '00'} lineHeightShow={lineHeightShow} />,
+          onDelete: () => removeInstance(instance.id),
+        },
+      ];
+    });
+  }, [instances, limitsByPositionKey, lineHeightShow, numberDefaults?.text, removeInstance]);
+
+  if (positions.length === 0 || !limitsByPositionKey || !numberDefaults) return null;
 
   return (
     <Flex key={product.path} variant="step_design" className="gap-3">

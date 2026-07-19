@@ -3,10 +3,9 @@
 import type { configurationPositionPickerInstanceType, namePartFormPropsType, namePositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NAME_POSITION_SELECT_LABEL } from '@constants';
-import { useConfigurationPositionPicker, usePrintCmScale } from '@hooks';
-import { formatPxAsCm } from '@utils';
-import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl } from '@molecules/ConfigurationTools';
-import { createNameInstance, resolveNameDefaults, resolveNameLimits, useConfiguratorProduct, useGarmentName } from '@store';
+import { useConfigurationPositionPicker, usePrintCmScale, usePrintUnits } from '@hooks';
+import { ColorTabControl, ConfigurationPositionSelect, FontSelectRow, PartColorSwitch, RangeControl, TextSizeControl } from '@molecules/ConfigurationTools';
+import { createNameInstance, resolveNameDefaults, resolveNamePositionLimits, useConfiguratorProduct, useGarmentName } from '@store';
 import { useCallback, useMemo } from 'react';
 const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType) => {
   const instance = useGarmentName((state) => state.instances.find((item) => item.id === instanceId));
@@ -25,8 +24,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
   const previewFontSize = previewPatch?.fontSize;
   const previewStrokeWidth = previewPatch?.strokeWidth;
 
-  const cmScale = usePrintCmScale();
-  const formatCmY = cmScale ? (value: number) => formatPxAsCm(value, cmScale.cmPerPxY) : undefined;
+  const { y: unitY } = usePrintUnits();
 
   const commit = useCallback(
     (patch: Parameters<typeof updateInstance>[1]) => {
@@ -77,26 +75,27 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
         onPreviewStrokeColor={(strokeColor) => setPreview(instanceId, { strokeColor })}
       />
 
-      <RangeControl
-        label="Dimensione testo"
-        value={previewFontSize ?? instance.fontSize}
-        onChange={(fontSize) => setPreview(instanceId, { fontSize })}
-        onCommit={commitFromPreview}
-        min={limits.fontSizeMin}
-        max={limits.fontSizeMax}
-        unit="px"
-        formatValue={formatCmY}
+      <TextSizeControl
+        text={sharedPreviewText ?? previewText ?? instance.text}
+        font={instance.font}
+        fontSize={previewFontSize ?? instance.fontSize}
+        heightMin={limits.heightMin}
+        heightMax={limits.heightMax}
+        widthMin={limits.widthMin}
+        widthMax={limits.widthMax}
+        onPreviewFontSize={(fontSize) => setPreview(instanceId, { fontSize })}
+        onCommitFontSize={commitFromPreview}
       />
 
       <RangeControl
         label="Spessore contorno"
-        value={previewStrokeWidth ?? instance.strokeWidth}
-        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth })}
+        value={unitY.toUnit(previewStrokeWidth ?? instance.strokeWidth)}
+        onChange={(strokeWidth) => setPreview(instanceId, { strokeWidth: unitY.toPx(strokeWidth) })}
         onCommit={commitFromPreview}
         min={0}
-        max={limits.strokeWidthMax}
-        unit="px"
-        formatValue={formatCmY}
+        max={unitY.toUnit(limits.strokeWidthMax)}
+        step={unitY.step}
+        formatValue={unitY.formatUnit}
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>
@@ -109,13 +108,18 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
 
 const ConfigurationNaming = () => {
   const product = useConfiguratorProduct((state) => state.product);
+  const cmScale = usePrintCmScale();
   const positions = useGarmentName((state) => state.positions);
   const instances = useGarmentName((state) => state.instances);
   const addInstance = useGarmentName((state) => state.addInstance);
   const removeInstance = useGarmentName((state) => state.removeInstance);
 
   const nameDefaults = useMemo(() => (positions.length > 0 ? resolveNameDefaults(product) : null), [positions.length, product]);
-  const limits = useMemo(() => (positions.length > 0 ? resolveNameLimits(product) : null), [positions.length, product]);
+
+  const limitsByPositionKey = useMemo(() => {
+    if (positions.length === 0) return null;
+    return new Map(positions.map((position) => [position.key, resolveNamePositionLimits(product, position, cmScale)]));
+  }, [cmScale, positions, product]);
 
   const handleAddInstance = useCallback(
     (position: namePositionType, instanceId: string) => {
@@ -147,17 +151,24 @@ const ConfigurationNaming = () => {
   }, [instances, positions]);
 
   const items = useMemo(() => {
-    if (!limits) return [];
+    if (!limitsByPositionKey) return [];
 
-    return instances.map((instance) => ({
-      value: instance.id,
-      trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
-      content: <NamePartForm instanceId={instance.id} limits={limits} placeholder={nameDefaults?.text ?? ''} />,
-      onDelete: () => removeInstance(instance.id),
-    }));
-  }, [instances, limits, nameDefaults?.text, removeInstance]);
+    return instances.flatMap((instance) => {
+      const limits = limitsByPositionKey.get(instance.positionKey);
+      if (!limits) return [];
 
-  if (positions.length === 0 || !limits || !nameDefaults) return null;
+      return [
+        {
+          value: instance.id,
+          trigger: <PartColorSwitch color={instance.textColor} label={instance.label} />,
+          content: <NamePartForm instanceId={instance.id} limits={limits} placeholder={nameDefaults?.text ?? ''} />,
+          onDelete: () => removeInstance(instance.id),
+        },
+      ];
+    });
+  }, [instances, limitsByPositionKey, nameDefaults?.text, removeInstance]);
+
+  if (positions.length === 0 || !limitsByPositionKey || !nameDefaults) return null;
 
   return (
     <Flex key={product.path} variant="step_design" className="gap-3">

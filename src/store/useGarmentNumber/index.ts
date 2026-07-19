@@ -4,8 +4,8 @@ export {
   createNumberInstance,
   mapProductNumberPositions,
   resolveNumberDefaults,
-  resolveNumberLimits,
   resolveNumberLineHeightShow,
+  resolveNumberPositionLimits,
   sanitizeNumberText,
   NUMBER_MAX_LENGTH,
 } from './mapProductNumbers';

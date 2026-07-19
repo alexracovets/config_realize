@@ -2,18 +2,18 @@
 
 import type { logoEditPanelPropsType } from '@types';
 import { AtomImage, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
-import { useStepLogo } from '@hooks';
+import { useLogoSizeCm, useStepLogo } from '@hooks';
 import { RangeControl } from '@molecules/ConfigurationTools/RangeControl';
 const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: logoEditPanelPropsType) => {
   const part = useStepLogo((state) => state.parts.find((item) => item.id === partId));
   const updatePart = useStepLogo((state) => state.updatePart);
 
+  const size = useLogoSizeCm(part ?? { scale: 1, naturalWidth: 1, naturalHeight: 1 });
+
   if (!part || part.isDefault) return null;
 
   const opacity = part.opacity ?? 1;
   const opacityPercent = Math.round(opacity * 100);
-  const scale = part.scale ?? 1;
-  const scalePercent = Math.round(scale * 100);
 
   return (
     <Flex className="w-full flex-col items-start justify-start gap-5">
@@ -36,7 +36,24 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
         <AtomImage src={part.src} alt={part.fileName} width={24} height={24} className="object-contain shrink-0" />
         <Text className="text-[16px] leading-[20px] font-semibold text-black-10 tracking-wide line-clamp-2 text-left">{part.fileName}</Text>
       </Button>
-      <RangeControl label="Dimensione" value={scalePercent} onChange={(value) => updatePart(part.id, { scale: value / 100 })} min={25} max={300} unit="%" />
+      <RangeControl
+        label="Altezza"
+        value={size.heightCm}
+        onChange={(heightCm) => updatePart(part.id, { scale: size.scaleFromHeightCm(heightCm) })}
+        min={size.heightMinCm}
+        max={size.heightMaxCm}
+        step={size.step}
+        formatValue={(value) => `${value.toFixed(1)} cm`}
+      />
+      <RangeControl
+        label="Larghezza"
+        value={size.widthCm}
+        onChange={(widthCm) => updatePart(part.id, { scale: size.scaleFromWidthCm(widthCm) })}
+        min={size.widthMinCm}
+        max={size.widthMaxCm}
+        step={size.step}
+        formatValue={(value) => `${value.toFixed(1)} cm`}
+      />
       <RangeControl label="Rotazione" value={part.rotation} onChange={(rotation) => updatePart(part.id, { rotation })} min={0} max={360} unit="°" />
       <RangeControl label="Trasparenza" value={opacityPercent} onChange={(value) => updatePart(part.id, { opacity: value / 100 })} min={0} max={100} unit="%" />
     </Flex>

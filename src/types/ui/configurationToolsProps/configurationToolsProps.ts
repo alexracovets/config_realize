@@ -64,9 +64,24 @@ interface rangeControlPropsType {
   onCommit?: (value: number) => void;
   min?: number;
   max?: number;
+  step?: number;
   unit?: string;
   /** Overrides the `{value}{unit}` label rendering — used to display slider values converted to another unit (e.g. cm). */
   formatValue?: (value: number) => string;
+}
+
+interface textSizeControlPropsType {
+  text: string;
+  font: string;
+  letterSpacing?: number;
+  lineHeight?: number;
+  fontSize: number;
+  heightMin: number;
+  heightMax: number;
+  widthMin: number;
+  widthMax: number;
+  onPreviewFontSize: (fontSize: number) => void;
+  onCommitFontSize: () => void;
 }
 
 interface shadingControlPropsType {
@@ -120,5 +135,6 @@ export type {
   partColorSwitchPropsType,
   rangeControlPropsType,
   shadingControlPropsType,
+  textSizeControlPropsType,
   toggleControlPropsType,
 };

@@ -4,7 +4,7 @@ export type {
   buildNumberGizmoElementsInputType,
   buildTestoGizmoElementsInputType,
 } from './buildGizmoElements';
-export type { gizmoHandleKindType, printGizmoElementKindType, printGizmoElementType } from './gizmo';
+export type { fontSizeLimitsType, gizmoHandleKindType, printGizmoElementKindType, printGizmoElementType } from './gizmo';
 export type {
   gizmoButtonHitType,
   gizmoButtonHoverTargetType,

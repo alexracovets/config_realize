@@ -26,7 +26,12 @@ const normalizeSvgFileToDisplayUrl = async (file: File): Promise<string> => {
     return nativeFileToDisplayUrl(file);
   }
 
-  const viewBox = root.getAttribute('viewBox')?.trim().split(/[\s,]+/).map(Number) ?? [];
+  const viewBox =
+    root
+      .getAttribute('viewBox')
+      ?.trim()
+      .split(/[\s,]+/)
+      .map(Number) ?? [];
   const [, , viewBoxWidth, viewBoxHeight] = viewBox;
   const hasViewBox = viewBox.length === 4 && viewBoxWidth! > 0 && viewBoxHeight! > 0;
 

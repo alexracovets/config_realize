@@ -26,6 +26,11 @@ interface printReferenceCmType {
   widthCm: number;
 }
 
+interface printCmScaleType {
+  cmPerPxHorizontal: number;
+  cmPerPxVertical: number;
+}
+
 interface partGradientConfigType {
   reversed: boolean;
   rotation: number;
@@ -79,6 +84,10 @@ interface textPositionConfigType {
   conflicts?: printPositionConflictsConfigType;
   /** Preview thumbnail shown in the position-picker modal card. */
   src?: string;
+  heightMinCm?: number;
+  heightMaxCm?: number;
+  widthMinCm?: number;
+  widthMaxCm?: number;
 }
 
 interface textDefaultsConfigType {
@@ -88,9 +97,8 @@ interface textDefaultsConfigType {
   strokeColor: string;
   strokeWidth: number;
   maxLength?: number;
-  fontSizeMin?: number;
-  fontSizeMax?: number;
   strokeWidthMax?: number;
+  strokeWidthMaxCm?: number;
   lineHeight?: number;
   lineHeightMin?: number;
   lineHeightMax?: number;
@@ -98,6 +106,8 @@ interface textDefaultsConfigType {
   letterSpacing?: number;
   letterSpacingMin?: number;
   letterSpacingMax?: number;
+  letterSpacingMinCm?: number;
+  letterSpacingMaxCm?: number;
   letter_spacing_show?: boolean;
   /** Position-picker modal title; falls back to the step's default label when unset. */
   title?: string;
@@ -208,6 +218,7 @@ export type {
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,
+  printCmScaleType,
   printReferenceCmType,
   styleConfigType,
   textDefaultsConfigType,

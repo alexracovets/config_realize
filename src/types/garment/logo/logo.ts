@@ -26,7 +26,7 @@ interface logoPreviewType {
 
 type stepLogoPartStateType = Pick<
   logoInstanceType,
-  'id' | 'positionKey' | 'label' | 'uv' | 'rotation' | 'opacity' | 'scale' | 'src' | 'fileName' | 'isDefault'
+  'id' | 'positionKey' | 'label' | 'uv' | 'rotation' | 'opacity' | 'scale' | 'src' | 'fileName' | 'isDefault' | 'naturalWidth' | 'naturalHeight'
 > & {
   baseScale: number;
   visible: boolean;

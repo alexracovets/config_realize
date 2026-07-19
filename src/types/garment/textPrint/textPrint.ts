@@ -12,7 +12,7 @@ type textPrintPositionType = {
   conflicts?: printPositionConflictsConfigType;
   partId: string;
   uv: uvPointType;
-} & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize' | 'src'> &
+} & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize' | 'src' | 'heightMinCm' | 'heightMaxCm' | 'widthMinCm' | 'widthMaxCm'> &
   mappedGizmoFlagsType;
 
 type textPrintInstanceType = {
@@ -28,7 +28,14 @@ type textPrintPreviewType<T extends textPrintInstanceType = textPrintInstanceTyp
   patch: Partial<Pick<T, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth'>>;
 };
 
-type textPrintLimitsType = Required<Pick<textDefaultsConfigType, 'maxLength' | 'fontSizeMin' | 'fontSizeMax' | 'strokeWidthMax'>>;
+interface textPrintLimitsType {
+  maxLength: number;
+  heightMin: number;
+  heightMax: number;
+  widthMin: number;
+  widthMax: number;
+  strokeWidthMax: number;
+}
 
 type namePositionType = textPrintPositionType;
 type nameInstanceType = textPrintInstanceType;
@@ -41,7 +48,7 @@ type numberPreviewType = {
   instanceId: string;
   patch: Partial<Pick<numberInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight'>>;
 };
-type numberLimitsType = textPrintLimitsType & Required<Pick<textDefaultsConfigType, 'lineHeightMin' | 'lineHeightMax'>>;
+type numberLimitsType = textPrintLimitsType & { lineHeightMin: number; lineHeightMax: number };
 
 type testoPositionType = textPrintPositionType & { lineHeight?: number; letterSpacing?: number };
 type testoInstanceType = textPrintInstanceType & { lineHeight: number; letterSpacing: number };
@@ -49,8 +56,12 @@ type testoPreviewType = {
   instanceId: string;
   patch: Partial<Pick<testoInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight' | 'letterSpacing'>>;
 };
-type testoLimitsType = textPrintLimitsType &
-  Required<Pick<textDefaultsConfigType, 'lineHeightMin' | 'lineHeightMax' | 'letterSpacingMin' | 'letterSpacingMax'>>;
+type testoLimitsType = textPrintLimitsType & {
+  lineHeightMin: number;
+  lineHeightMax: number;
+  letterSpacingMin: number;
+  letterSpacingMax: number;
+};
 
 type garmentTextRenderInstanceType = nameInstanceType | numberInstanceType | testoInstanceType;
 

@@ -18,6 +18,8 @@ const mapInstanceToPart = (instance: logoInstanceType): stepLogoPartStateType =>
   fileName: instance.fileName,
   visible: true,
   isDefault: instance.isDefault,
+  naturalWidth: instance.naturalWidth,
+  naturalHeight: instance.naturalHeight,
 });
 
 const mapPositionToStep = (position: {

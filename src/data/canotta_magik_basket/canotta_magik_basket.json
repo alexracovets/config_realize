@@ -6,19 +6,13 @@
     "width": 2048,
     "height": 840
   },
-  "preserveGltfMeshes": [
-    "basketball_top_inside",
-    "basketball_top_sweatband",
-    "basketball_top_label"
-  ],
+  "preserveGltfMeshes": ["basketball_top_inside", "basketball_top_sweatband", "basketball_top_label"],
   "parts": [
     {
       "name": "Davanti",
       "label": "Davanti",
       "id": "canotta_magik_basket_front",
-      "meshNames": [
-        "basketball_top_front"
-      ],
+      "meshNames": ["basketball_top_front"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5251,
@@ -39,9 +33,7 @@
       "name": "Retro",
       "label": "Retro",
       "id": "canotta_magik_basket_back",
-      "meshNames": [
-        "basketball_top_back"
-      ],
+      "meshNames": ["basketball_top_back"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.0013,
@@ -62,9 +54,7 @@
       "name": "Manica 1",
       "label": "Manica 1",
       "id": "canotta_magik_basket_sleeve_left",
-      "meshNames": [
-        "basketball_top_sleeve_left"
-      ],
+      "meshNames": ["basketball_top_sleeve_left"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.481,
@@ -85,9 +75,7 @@
       "name": "Manica 2",
       "label": "Manica 2",
       "id": "canotta_magik_basket_sleeve_right",
-      "meshNames": [
-        "basketball_top_sleeve_right"
-      ],
+      "meshNames": ["basketball_top_sleeve_right"],
       "renderOrder": 1,
       "uvBounds": {
         "minX": 0.5395,
@@ -108,9 +96,7 @@
       "name": "Collo",
       "label": "Collo",
       "id": "canotta_magik_basket_collar",
-      "meshNames": [
-        "basketball_top_collar"
-      ],
+      "meshNames": ["basketball_top_collar"],
       "renderOrder": 1,
       "colorOnly": true
     }
@@ -133,9 +119,6 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20,
     "title": "Dove desideri inserire il nome?",
     "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
   },
@@ -146,9 +129,6 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 2,
-    "fontSizeMin": 50,
-    "fontSizeMax": 600,
-    "strokeWidthMax": 20,
     "lineHeight": 1.5,
     "lineHeightMin": 0.5,
     "lineHeightMax": 2,
@@ -163,16 +143,11 @@
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
     "maxLength": 20,
-    "fontSizeMin": 50,
-    "fontSizeMax": 400,
-    "strokeWidthMax": 20,
     "lineHeight": 1,
     "lineHeightMin": 1,
     "lineHeightMax": 2,
     "line_height_show": true,
     "letterSpacing": 0,
-    "letterSpacingMin": -10,
-    "letterSpacingMax": 40,
     "letter_spacing_show": true,
     "title": "Dove desideri inserire il testo?",
     "description": "Scegli una posizione standard o fai clic sul <b>prodotto</b> per scegliere una posizione individuale"
@@ -190,7 +165,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "top_back",
-      "src": "/png/text_areas/t_shirt_basket/name/top.png"
+      "src": "/png/text_areas/t_shirt_basket/name/top.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 6,
+      "widthMinCm": 1,
+      "widthMaxCm": 35
     },
     {
       "label": "Nome schiena inferiore",
@@ -205,11 +184,13 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "testo": [
-          "bottom_back"
-        ]
+        "testo": ["bottom_back"]
       },
-      "src": "/png/text_areas/t_shirt_basket/name/bottom.png"
+      "src": "/png/text_areas/t_shirt_basket/name/bottom.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 6,
+      "widthMinCm": 1,
+      "widthMaxCm": 35
     }
   ],
   "numberPositions": [
@@ -226,11 +207,13 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "testo": [
-          "front_center"
-        ]
+        "testo": ["front_center"]
       },
-      "src": "/png/text_areas/t_shirt_basket/number/front_center.png"
+      "src": "/png/text_areas/t_shirt_basket/number/front_center.png",
+      "heightMaxCm": 10,
+      "heightMinCm": 1,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Numero lato cuore",
@@ -244,7 +227,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "front_right",
-      "src": "/png/text_areas/t_shirt_basket/number/front_right.png"
+      "src": "/png/text_areas/t_shirt_basket/number/front_right.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     },
     {
       "label": "Numero schiena",
@@ -258,7 +245,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "back",
-      "src": "/png/text_areas/t_shirt_basket/number/back.png"
+      "src": "/png/text_areas/t_shirt_basket/number/back.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 27,
+      "widthMinCm": 1,
+      "widthMaxCm": 200
     }
   ],
   "testoPositions": [
@@ -275,11 +266,13 @@
       "show_gizmo": true,
       "id": "front_center",
       "conflicts": {
-        "number": [
-          "front_center"
-        ]
+        "number": ["front_center"]
       },
-      "src": "/png/text_areas/t_shirt_basket/text/front.png"
+      "src": "/png/text_areas/t_shirt_basket/text/front.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     },
     {
       "label": "Nome schiena inferiore",
@@ -294,11 +287,13 @@
       "show_gizmo": true,
       "id": "bottom_back",
       "conflicts": {
-        "name": [
-          "bottom_back"
-        ]
+        "name": ["bottom_back"]
       },
-      "src": "/png/text_areas/t_shirt_basket/text/back_bottom.png"
+      "src": "/png/text_areas/t_shirt_basket/text/back_bottom.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     },
     {
       "label": "Nome schiena superiore",
@@ -312,7 +307,11 @@
       "show_frame": true,
       "show_gizmo": true,
       "id": "top_back",
-      "src": "/png/text_areas/t_shirt_basket/text/back_top.png"
+      "src": "/png/text_areas/t_shirt_basket/text/back_top.png",
+      "heightMinCm": 1,
+      "heightMaxCm": 2,
+      "widthMinCm": 1,
+      "widthMaxCm": 25
     }
   ]
 }

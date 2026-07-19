@@ -1,5 +1,5 @@
-import type { garmentConfigType, nameInstanceType, nameLimitsType, namePositionType, textDefaultsConfigType } from '@types';
-import { resolveGarmentPart, resolvePrintLocalUvToAtlas } from '@configurator/mappers';
+import type { garmentConfigType, nameInstanceType, nameLimitsType, namePositionType, printCmScaleType, textDefaultsConfigType } from '@types';
+import { resolveCmLimitPx, resolveGarmentPart, resolvePrintLocalUvToAtlas, resolveTextPrintPositionLimits, TEXT_PRINT_MIN_CM } from '@configurator/mappers';
 const resolveNameDefaults = (product: garmentConfigType): textDefaultsConfigType => {
   if (!product.nameDefaults) {
     throw new Error(`Product "${product.path}" defines namePositions but is missing nameDefaults.`);
@@ -8,14 +8,19 @@ const resolveNameDefaults = (product: garmentConfigType): textDefaultsConfigType
   return product.nameDefaults;
 };
 
-const resolveNameLimits = (product: garmentConfigType): nameLimitsType => {
+const NAME_LIMITS_FALLBACK_CM = { heightMinCm: TEXT_PRINT_MIN_CM, heightMaxCm: 6, widthMinCm: TEXT_PRINT_MIN_CM, widthMaxCm: 35 };
+
+const resolveNamePositionLimits = (product: garmentConfigType, position: namePositionType, cmScale?: printCmScaleType | null): nameLimitsType => {
   const defaults = resolveNameDefaults(product);
+  const { heightMin, heightMax, widthMin, widthMax } = resolveTextPrintPositionLimits(position, cmScale, NAME_LIMITS_FALLBACK_CM);
 
   return {
     maxLength: defaults.maxLength ?? 20,
-    fontSizeMin: defaults.fontSizeMin ?? 50,
-    fontSizeMax: defaults.fontSizeMax ?? 400,
-    strokeWidthMax: defaults.strokeWidthMax ?? 20,
+    heightMin,
+    heightMax,
+    widthMin,
+    widthMax,
+    strokeWidthMax: resolveCmLimitPx(defaults.strokeWidthMaxCm, defaults.strokeWidthMax ?? 20, cmScale?.cmPerPxVertical),
   };
 };
 
@@ -30,6 +35,10 @@ const mapProductNamePositions = (product: garmentConfigType): namePositionType[]
     rotation: position.rotation,
     fontSize: position.fontSize,
     src: position.src,
+    heightMinCm: position.heightMinCm,
+    heightMaxCm: position.heightMaxCm,
+    widthMinCm: position.widthMinCm,
+    widthMaxCm: position.widthMaxCm,
     showFrame: position.show_frame ?? true,
     showGizmo: position.show_gizmo ?? position.interactive === true,
     interactive: position.interactive ?? true,
@@ -57,4 +66,4 @@ const createNameInstance = (product: garmentConfigType, position: namePositionTy
   };
 };
 
-export { createNameInstance, mapProductNamePositions, resolveNameDefaults, resolveNameLimits };
+export { createNameInstance, mapProductNamePositions, resolveNameDefaults, resolveNamePositionLimits };

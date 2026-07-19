@@ -75,6 +75,7 @@ export type {
   partColorSwitchPropsType,
   rangeControlPropsType,
   shadingControlPropsType,
+  textSizeControlPropsType,
   toggleControlPropsType,
 } from './configurationToolsProps';
 export type {

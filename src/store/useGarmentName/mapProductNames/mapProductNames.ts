@@ -1,1 +1,1 @@
-export { createNameInstance, mapProductNamePositions, resolveNameDefaults, resolveNameLimits } from '@configurator/mappers';
+export { createNameInstance, mapProductNamePositions, resolveNameDefaults, resolveNamePositionLimits } from '@configurator/mappers';
