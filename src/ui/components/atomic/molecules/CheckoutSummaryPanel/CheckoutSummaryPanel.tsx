@@ -23,9 +23,9 @@ const CheckoutSummaryPanel = () => {
   const deliveryTimeline = useMemo(() => getCheckoutDeliveryTimeline(), []);
 
   return (
-    <AtomCard className="sticky top-6 w-full max-w-[360px] justify-self-end border-0 bg-[#E8E8E8] py-6 ring-0 [--card-spacing:--spacing(6)]">
+    <AtomCard className="sticky top-0 right-0 mt-9 h-[calc(100%-(--spacing(9)))] w-full max-w-[400px] justify-self-end bg-[#E5E5E5] ring-0">
       <AtomCardHeader className="pb-0">
-        <AtomCardTitle className="text-[24px] font-semibold leading-none text-base-black">{CHECKOUT_SUMMARY_TITLE}</AtomCardTitle>
+        <AtomCardTitle className="text-[32px] font-semibold leading-none tracking-[-1px] text-base-black">{CHECKOUT_SUMMARY_TITLE}</AtomCardTitle>
       </AtomCardHeader>
 
       <AtomCardContent className="flex flex-col gap-6">
