@@ -41,11 +41,11 @@ const variantText = cva('font-inter font-[400] leading-none', {
   },
 });
 
-const Text = ({ className, variant, asChild = false, children, ...props }: textPropsType) => {
+const Text = ({ className, variant, asChild = false, children, ref, ...props }: textPropsType) => {
   const Comp = asChild ? Slot : 'p';
 
   return (
-    <Comp data-slot="text" className={cn(variantText({ variant, className }))} {...props}>
+    <Comp ref={ref as never} data-slot="text" className={cn(variantText({ variant, className }))} {...props}>
       {children}
     </Comp>
   );

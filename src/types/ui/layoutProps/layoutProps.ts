@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, Ref } from 'react';
 
 import type { boxVariantType, childrenType, flexVariantType, gridVariantType, textVariantType } from '@types';
 
@@ -33,6 +33,7 @@ type textPropsType = childrenType & {
   style?: CSSProperties;
   className?: string;
   asChild?: boolean;
+  ref?: Ref<HTMLElement>;
 };
 
 type defaultPagesTemplatePropsType = childrenType & {
