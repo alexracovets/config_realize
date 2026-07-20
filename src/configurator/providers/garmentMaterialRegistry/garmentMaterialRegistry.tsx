@@ -7,6 +7,11 @@ import type { MeshStandardMaterial } from 'three';
 
 const GarmentMaterialRegistryContext = createContext<garmentMaterialRegistryValueType | null>(null);
 
+// Temporary diagnostics for the production-only registry miss. Remove once fixed.
+// A differing contextId between provider and consumer means the module was evaluated twice.
+const garmentMaterialRegistryContextId = Math.random().toString(36).slice(2, 8);
+let registryProviderMountCount = 0;
+
 const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNode }) => {
   const materialsRef = useRef<Map<string, Set<MeshStandardMaterial>>>(new Map());
   const revisionRef = useRef(0);
@@ -70,6 +75,15 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
     notifyMaterials();
   }, [notifyMaterials]);
 
+  // Temporary diagnostics for the production-only registry miss. Remove once fixed.
+  useEffect(() => {
+    registryProviderMountCount += 1;
+    console.info('[registry-provider-mounted]', {
+      mounts: registryProviderMountCount,
+      contextId: garmentMaterialRegistryContextId,
+    });
+  }, []);
+
   useEffect(() => {
     return () => {
       if (notifyFrameRef.current != null) {
@@ -96,7 +110,15 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
 
 const useGarmentMaterialRegistry = (): garmentMaterialRegistryValueType => {
   const context = useContext(GarmentMaterialRegistryContext);
-  if (!context) throw new Error('useGarmentMaterialRegistry must be used within GarmentMaterialRegistryProvider');
+  if (!context) {
+    // Temporary diagnostics for the production-only registry miss. Remove once fixed.
+    console.error('[registry-miss]', {
+      providerMounts: registryProviderMountCount,
+      contextId: garmentMaterialRegistryContextId,
+      stack: new Error().stack,
+    });
+    throw new Error('useGarmentMaterialRegistry must be used within GarmentMaterialRegistryProvider');
+  }
   return context;
 };
 
