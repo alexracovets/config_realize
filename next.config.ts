@@ -14,8 +14,6 @@ const threeExamplesWebpackAlias = path.join(process.cwd(), 'node_modules/three/e
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   reactCompiler: true,
-  // Temporary: readable stack traces while diagnosing the registry crash. Remove once fixed.
-  productionBrowserSourceMaps: true,
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
   experimental: {
     optimizePackageImports: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
