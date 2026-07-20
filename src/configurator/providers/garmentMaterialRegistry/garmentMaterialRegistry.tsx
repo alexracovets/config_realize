@@ -7,7 +7,15 @@ import type { MeshStandardMaterial } from 'three';
 
 const GarmentMaterialRegistryContext = createContext<garmentMaterialRegistryValueType | null>(null);
 
+// Temporary diagnostics for the production-only registry miss. Keep until the fix is confirmed on prod.
+const garmentMaterialRegistryContextId = Math.random().toString(36).slice(2, 8);
+let registryProviderMountCount = 0;
+
 const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNode }) => {
+  // Temporary diagnostics: a render logged without a following mount means the
+  // provider rendered but never committed (e.g. its subtree suspended).
+  console.info('[registry-provider-render]', { contextId: garmentMaterialRegistryContextId });
+
   const materialsRef = useRef<Map<string, Set<MeshStandardMaterial>>>(new Map());
   const revisionRef = useRef(0);
   const listenersRef = useRef(new Set<() => void>());
@@ -70,6 +78,15 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
     notifyMaterials();
   }, [notifyMaterials]);
 
+  // Temporary diagnostics.
+  useEffect(() => {
+    registryProviderMountCount += 1;
+    console.info('[registry-provider-mounted]', {
+      mounts: registryProviderMountCount,
+      contextId: garmentMaterialRegistryContextId,
+    });
+  }, []);
+
   useEffect(() => {
     return () => {
       if (notifyFrameRef.current != null) {
@@ -96,7 +113,15 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
 
 const useGarmentMaterialRegistry = (): garmentMaterialRegistryValueType => {
   const context = useContext(GarmentMaterialRegistryContext);
-  if (!context) throw new Error('useGarmentMaterialRegistry must be used within GarmentMaterialRegistryProvider');
+  if (!context) {
+    // Temporary diagnostics. Keep until the fix is confirmed on prod.
+    console.error('[registry-miss]', {
+      providerMounts: registryProviderMountCount,
+      contextId: garmentMaterialRegistryContextId,
+      stack: new Error().stack,
+    });
+    throw new Error('useGarmentMaterialRegistry must be used within GarmentMaterialRegistryProvider');
+  }
   return context;
 };
 
