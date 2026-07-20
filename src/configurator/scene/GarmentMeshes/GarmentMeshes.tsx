@@ -1,7 +1,13 @@
 'use client';
 
 import type { Object3D } from 'three';
-import { GarmentPartMesh, PreserveGltfMesh, resolvePreserveMeshes, StaticGltfMesh, useGltfScene, useStaggeredMeshMount } from '@configurator/scene';
+// Direct module paths, not the '@configurator/scene' barrel — see GarmentModel.tsx.
+import { GarmentPartMesh } from '@configurator/scene/GarmentPartMesh';
+import { PreserveGltfMesh } from '@configurator/scene/PreserveGltfMesh';
+import { StaticGltfMesh } from '@configurator/scene/StaticGltfMesh';
+import { useGltfScene } from '@configurator/scene/GltfSceneProvider';
+import { resolvePreserveMeshes } from '@configurator/scene/meshHelpers';
+import { useStaggeredMeshMount } from '@configurator/scene/useStaggeredMeshMount';
 import { resolveModelUrl } from '@configurator/utils';
 import { useConfiguratorProduct } from '@store';
 import { useCallback, useMemo } from 'react';

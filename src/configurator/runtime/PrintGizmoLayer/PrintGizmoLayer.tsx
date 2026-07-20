@@ -12,7 +12,7 @@ import type { nameInstanceType, numberInstanceType, testoInstanceType } from '@t
 import { useGizmoButtonHover, useGizmoSelection, usePrintPlacementMigration, usePrintPositionRelationSync } from '@configurator/hooks';
 import { registerPrintRelationE2eDebug } from '@configurator/hooks/registerPrintRelationE2eDebug';
 import { resolvePrintCmScale } from '@configurator/mappers';
-import { PrintGizmoInstance } from '@configurator/runtime';
+import { PrintGizmoInstance } from '@configurator/runtime/PrintGizmoLayer/PrintGizmoInstance';
 import { repairPrintInstancePlacement, resolvePrintAtlasSize } from '@configurator/utils';
 import {
   resolveNamePositionLimits,
