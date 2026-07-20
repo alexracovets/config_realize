@@ -1,3 +1,4 @@
+export { CanvasButtons } from './CanvasButtons';
 export { ProductFlipCard } from './ProductFlipCard';
 export { AtomTabsSlidingList, atomTabsSlidingListVariants } from './AtomTabsSlidingList';
 export { ConfiguratorStepTabs } from './ConfiguratorStepTabs';

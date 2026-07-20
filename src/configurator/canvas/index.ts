@@ -6,3 +6,5 @@ export { getConfiguratorCameraFocusState, requestConfiguratorCameraFocus, subscr
 export type { configuratorCameraFocusTargetType, configuratorCameraFocusViewModeType } from './cameraFocus';
 export { useOrbitCameraFocus } from './useOrbitCameraFocus';
 export { orbitControlsRef, registerAsideOrbitGuard, setGizmoDragging, syncOrbitControlsEnabled } from './orbitGuard';
+export { cameraBridge, registerCameraBridgeHandlers } from './cameraBridge';
+export type { cameraBridgeDirectionType } from './cameraBridge';

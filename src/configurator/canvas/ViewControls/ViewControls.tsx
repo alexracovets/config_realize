@@ -2,6 +2,7 @@
 
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { orbitControlsRef, syncOrbitControlsEnabled, useOrbitCameraFocus } from '@configurator/canvas';
+import { registerCameraBridgeHandlers } from '@configurator/canvas/cameraBridge';
 import {
   applyOrbitZoomAroundPoint,
   clampOrbitCameraOutsideGarment,
@@ -25,6 +26,13 @@ const ZOOM_WHEEL_SENSITIVITY = 0.0016;
 const ZOOM_DAMPING_FACTOR = 0.1;
 const ZOOM_MAX_PENDING_LOG = 0.6;
 const ZOOM_SETTLE_EPSILON = 1e-3;
+const BUTTON_ZOOM_STEP_LOG = 0.22;
+const BUTTON_ROTATE_STEP = Math.PI / 4;
+const BUTTON_ROTATE_HOLD_SPEED = Math.PI / 1.2;
+const BUTTON_ROTATE_SMOOTHING = 7;
+const BUTTON_ROTATE_SETTLE_EPSILON = 1e-4;
+const BUTTON_ROTATE_MAX_DELTA = 1 / 30;
+const Y_AXIS = new Vector3(0, 1, 0);
 
 const ViewControls = () => {
   const isClampingRef = useRef(false);
@@ -210,6 +218,70 @@ const ViewControls = () => {
     controls.update();
     invalidate();
   });
+
+  const holdRotateDirectionRef = useRef(0);
+  const pendingRotateRef = useRef(0);
+  const rotateOffsetRef = useRef(new Vector3());
+
+  const rotateByAngle = useCallback(
+    (angle: number) => {
+      if (!controls) return;
+
+      const offset = rotateOffsetRef.current;
+      offset.copy(camera.position).sub(controls.target);
+      offset.applyAxisAngle(Y_AXIS, angle);
+      camera.position.copy(controls.target).add(offset);
+      controls.update();
+      clampOrbitCameraOutsideGarment({ camera, controls, scene });
+      invalidate();
+    },
+    [camera, controls, scene, invalidate],
+  );
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, BUTTON_ROTATE_MAX_DELTA);
+
+    const holdDirection = holdRotateDirectionRef.current;
+    if (holdDirection !== 0) {
+      rotateByAngle(holdDirection * BUTTON_ROTATE_HOLD_SPEED * dt);
+    }
+
+    const pending = pendingRotateRef.current;
+    if (Math.abs(pending) < BUTTON_ROTATE_SETTLE_EPSILON) {
+      if (pending !== 0) pendingRotateRef.current = 0;
+      return;
+    }
+
+    const step = pending * (1 - Math.exp(-BUTTON_ROTATE_SMOOTHING * dt));
+    pendingRotateRef.current = pending - step;
+    rotateByAngle(step);
+  });
+
+  useEffect(() => {
+    return registerCameraBridgeHandlers({
+      rotate: (direction) => {
+        if (holdRotateDirectionRef.current !== 0) return;
+        pendingRotateRef.current += direction * BUTTON_ROTATE_STEP;
+        invalidate();
+      },
+      zoom: (direction) => {
+        pendingZoomRef.current = Math.min(
+          ZOOM_MAX_PENDING_LOG,
+          Math.max(-ZOOM_MAX_PENDING_LOG, pendingZoomRef.current - direction * BUTTON_ZOOM_STEP_LOG),
+        );
+        if (controls) zoomFocusRef.current.copy(controls.target);
+        invalidate();
+      },
+      startRotate: (direction) => {
+        pendingRotateRef.current = 0;
+        holdRotateDirectionRef.current = direction;
+        invalidate();
+      },
+      stopRotate: () => {
+        holdRotateDirectionRef.current = 0;
+      },
+    });
+  }, [controls, invalidate, rotateByAngle]);
 
   return (
     <OrbitControls

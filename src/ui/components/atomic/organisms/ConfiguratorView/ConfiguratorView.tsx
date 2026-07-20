@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import { cameraBridge } from '@configurator/canvas';
+import { CanvasButtons } from '@molecules';
 import { Configurator } from '@organisms/Configurator';
 import { ConfiguratorCanvasLoader } from '@organisms/ConfiguratorCanvasLoader';
 import { useConfiguratorSceneLoad } from '@store';
-import { useEffect, useState } from 'react';
 
 const INITIAL_SCENE_WATCHDOG_MS = 8_000;
 const SCENE_TRANSITION_WATCHDOG_MS = 8_000;
@@ -77,6 +80,7 @@ const ConfiguratorView = () => {
     <div className="relative h-full min-h-0 min-w-0 w-full">
       {canMountCanvas ? <Configurator /> : null}
       <ConfiguratorCanvasLoader />
+      <CanvasButtons camera={cameraBridge} />
     </div>
   );
 };
