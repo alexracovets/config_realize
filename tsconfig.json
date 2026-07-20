@@ -68,6 +68,7 @@
       "@configurator/constants": ["./src/configurator/constants"],
       "@configurator/mappers": ["./src/configurator/mappers"],
       "@configurator/providers": ["./src/configurator/providers"],
+      "@configurator/providers/*": ["./src/configurator/providers/*"],
       "@shopify": ["./src/shopify"],
       "@shopify/*": ["./src/shopify/*"]
     }
