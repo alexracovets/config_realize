@@ -103,7 +103,8 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
       };
 
       if (el.kind === 'name' || el.kind === 'number' || el.kind === 'testo') {
-        const garmentStore = el.kind === 'name' ? useGarmentName : el.kind === 'number' ? useGarmentNumber : useGarmentTesto;
+        const leaderKind = el.kind;
+        const garmentStore = leaderKind === 'name' ? useGarmentName : leaderKind === 'number' ? useGarmentNumber : useGarmentTesto;
         const instance = garmentStore.getState().instances.find((item) => item.id === el.id);
         if (!instance) return;
 
@@ -140,7 +141,7 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
               partId: move.partId,
             });
             const moved = garmentStore.getState().instances.find((item) => item.id === el.id);
-            if (moved) syncPrintPositionRelationsForLeader(el.kind, moved);
+            if (moved) syncPrintPositionRelationsForLeader(leaderKind, moved);
           } else if (mode === 'rotate') {
             const partRotation = resolvePrintRotation(ctx.current.printableParts, hit.partId, el.partRotation);
             const local = toPrintLocalPx(hit.uv, centerUv, ctx.current.atlasSize, partRotation, 0);
@@ -149,7 +150,7 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
             didChange = true;
             garmentStore.getState().updateInstance(el.id, { rotation: startRotation + deltaDeg });
             const rotated = garmentStore.getState().instances.find((item) => item.id === el.id);
-            if (rotated) syncPrintPositionRelationsForLeader(el.kind, rotated);
+            if (rotated) syncPrintPositionRelationsForLeader(leaderKind, rotated);
           } else {
             const partRotation = resolvePrintRotation(ctx.current.printableParts, hit.partId, el.partRotation);
             const local = toPrintLocalPx(hit.uv, centerUv, ctx.current.atlasSize, partRotation, 0);
@@ -159,7 +160,7 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
             didChange = true;
             garmentStore.getState().updateInstance(el.id, { fontSize: next });
             const scaled = garmentStore.getState().instances.find((item) => item.id === el.id);
-            if (scaled) syncPrintPositionRelationsForLeader(el.kind, scaled);
+            if (scaled) syncPrintPositionRelationsForLeader(leaderKind, scaled);
           }
 
           const latest = garmentStore.getState().instances.find((item) => item.id === el.id);
