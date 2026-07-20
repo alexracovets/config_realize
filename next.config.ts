@@ -13,7 +13,10 @@ const threeExamplesWebpackAlias = path.join(process.cwd(), 'node_modules/three/e
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
-  reactCompiler: true,
+  // Temporarily disabled to isolate a production-only "useGarmentMaterialRegistry
+  // must be used within GarmentMaterialRegistryProvider" crash that does not
+  // reproduce in dev. Re-enable once the cause is confirmed.
+  reactCompiler: false,
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
   experimental: {
     optimizePackageImports: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
