@@ -5,9 +5,25 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { garmentMaterialRegistryValueType } from '@configurator/types';
 import type { MeshStandardMaterial } from 'three';
 
-const GarmentMaterialRegistryContext = createContext<garmentMaterialRegistryValueType | null>(null);
+// This module is reachable through two different specifiers ('@configurator' via the
+// bootstrap/canvas barrels, and '@configurator/providers' from the scene tree). The
+// production bundler instantiates it once per entry point, which yields two distinct
+// createContext objects: the provider writes to one, consumers read the other, and the
+// consumer throws. Pinning the context on globalThis keeps every copy on one instance.
+const GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY = Symbol.for('configurator.garmentMaterialRegistryContext');
 
-// Temporary diagnostics for the production-only registry miss. Keep until the fix is confirmed on prod.
+type registryContextGlobalType = typeof globalThis & {
+  [GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY]?: React.Context<garmentMaterialRegistryValueType | null>;
+};
+
+const registryContextGlobal = globalThis as registryContextGlobalType;
+
+const GarmentMaterialRegistryContext =
+  registryContextGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] ??
+  (registryContextGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] = createContext<garmentMaterialRegistryValueType | null>(null));
+
+// Temporary diagnostics. Keep until the fix is confirmed on prod.
+// contextId is per module copy; sharedContext tells whether this copy reused the global one.
 const garmentMaterialRegistryContextId = Math.random().toString(36).slice(2, 8);
 let registryProviderMountCount = 0;
 
