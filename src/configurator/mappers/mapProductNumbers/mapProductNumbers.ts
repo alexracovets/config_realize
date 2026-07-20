@@ -54,6 +54,7 @@ const mapProductNumberPositions = (product: garmentConfigType): numberPositionTy
     key: `number-pos-${index}`,
     positionId: position.id,
     conflicts: position.conflicts,
+    relation: position.relation,
     label: position.label,
     partId: resolveGarmentPart(product, position.partId, 'a number position').id,
     uv: resolveNumberLocalUvToAtlas(product, position.partId, position.uv),

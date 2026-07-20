@@ -29,6 +29,7 @@ const mapProductNamePositions = (product: garmentConfigType): namePositionType[]
     key: `name-pos-${index}`,
     positionId: position.id,
     conflicts: position.conflicts,
+    relation: position.relation,
     label: position.label,
     partId: position.partId,
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a name position'), position.uv),

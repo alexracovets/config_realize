@@ -13,6 +13,7 @@ import {
   toPrintLocalPx,
 } from '@configurator/gizmo';
 import { useGizmoPointerContext } from '@configurator/hooks/useGizmoPointerContext';
+import { syncPrintPositionRelationsForLeader } from '@configurator/hooks/syncPrintPositionRelations';
 import { useConfiguratorProduct, useGarmentLogo, useGarmentName, useGarmentNumber, useGarmentTesto } from '@store';
 import { useEffect, useRef } from 'react';
 type DragMode = 'move' | 'rotate' | 'scale';
@@ -138,6 +139,8 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
               uv: move.uv,
               partId: move.partId,
             });
+            const moved = garmentStore.getState().instances.find((item) => item.id === el.id);
+            if (moved) syncPrintPositionRelationsForLeader(el.kind, moved);
           } else if (mode === 'rotate') {
             const partRotation = resolvePrintRotation(ctx.current.printableParts, hit.partId, el.partRotation);
             const local = toPrintLocalPx(hit.uv, centerUv, ctx.current.atlasSize, partRotation, 0);
@@ -145,6 +148,8 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
             const deltaDeg = ((angle - startAngle) * 180) / Math.PI;
             didChange = true;
             garmentStore.getState().updateInstance(el.id, { rotation: startRotation + deltaDeg });
+            const rotated = garmentStore.getState().instances.find((item) => item.id === el.id);
+            if (rotated) syncPrintPositionRelationsForLeader(el.kind, rotated);
           } else {
             const partRotation = resolvePrintRotation(ctx.current.printableParts, hit.partId, el.partRotation);
             const local = toPrintLocalPx(hit.uv, centerUv, ctx.current.atlasSize, partRotation, 0);
@@ -153,6 +158,8 @@ const usePrintGizmoDrag = ({ element, elements, printableParts, atlasSize, gizmo
             const next = Math.min(el.fontSizeMax ?? Infinity, Math.max(el.fontSizeMin ?? 0, Math.round(startFontSize * ratio)));
             didChange = true;
             garmentStore.getState().updateInstance(el.id, { fontSize: next });
+            const scaled = garmentStore.getState().instances.find((item) => item.id === el.id);
+            if (scaled) syncPrintPositionRelationsForLeader(el.kind, scaled);
           }
 
           const latest = garmentStore.getState().instances.find((item) => item.id === el.id);

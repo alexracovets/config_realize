@@ -4,8 +4,13 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { requestConfiguratorCameraFocus } from '@configurator';
 import type { configuratorCameraFocusTargetType } from '@configurator';
+import {
+  syncPrintPositionRelationsForFollower,
+  syncPrintPositionRelationsForLeader,
+} from '@configurator/hooks/syncPrintPositionRelations';
 import type { configurationPositionPickerInstanceType, configurationPositionPickerPositionType } from '@types';
 import { resolvePrintPositionConflicts } from '@store/resolvePrintPositionConflicts';
+import { useGarmentName, useGarmentNumber, useGarmentTesto } from '@store';
 
 interface useConfigurationPositionPickerParamsType<TPosition extends configurationPositionPickerPositionType> {
   positions: TPosition[];
@@ -61,6 +66,15 @@ const useConfigurationPositionPicker = <TPosition extends configurationPositionP
       nextInstanceIdRef.current += 1;
       const instanceId = `${position.key}_${nextInstanceIdRef.current}`;
       onAddInstance(position, instanceId);
+      syncPrintPositionRelationsForFollower(instanceId);
+
+      const nameLeader = useGarmentName.getState().instances.find((instance) => instance.id === instanceId);
+      const numberLeader = useGarmentNumber.getState().instances.find((instance) => instance.id === instanceId);
+      const testoLeader = useGarmentTesto.getState().instances.find((instance) => instance.id === instanceId);
+      if (nameLeader) syncPrintPositionRelationsForLeader('name', nameLeader);
+      if (numberLeader) syncPrintPositionRelationsForLeader('number', numberLeader);
+      if (testoLeader) syncPrintPositionRelationsForLeader('testo', testoLeader);
+
       focusFromPosition(position);
       setOpenItems((current) => [...current, instanceId]);
     },

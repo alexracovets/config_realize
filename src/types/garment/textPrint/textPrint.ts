@@ -1,4 +1,4 @@
-import type { printPositionConflictsConfigType, textDefaultsConfigType, textPositionConfigType, uvPointType } from '@types';
+import type { printPositionConflictsConfigType, printPositionRelationConfigType, textDefaultsConfigType, textPositionConfigType, uvPointType } from '@types';
 
 interface mappedGizmoFlagsType {
   showFrame: boolean;
@@ -10,6 +10,7 @@ type textPrintPositionType = {
   key: string;
   positionId?: string;
   conflicts?: printPositionConflictsConfigType;
+  relation?: printPositionRelationConfigType;
   partId: string;
   uv: uvPointType;
 } & Pick<textPositionConfigType, 'label' | 'rotation' | 'fontSize' | 'src' | 'heightMinCm' | 'heightMaxCm' | 'widthMinCm' | 'widthMaxCm'> &
@@ -25,7 +26,7 @@ type textPrintInstanceType = {
 
 type textPrintPreviewType<T extends textPrintInstanceType = textPrintInstanceType> = {
   instanceId: string;
-  patch: Partial<Pick<T, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth'>>;
+  patch: Partial<Pick<T, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'uv' | 'partId'>>;
 };
 
 interface textPrintLimitsType {
@@ -46,7 +47,7 @@ type numberPositionType = textPrintPositionType & { lineHeight?: number };
 type numberInstanceType = textPrintInstanceType & { lineHeight: number };
 type numberPreviewType = {
   instanceId: string;
-  patch: Partial<Pick<numberInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight'>>;
+  patch: Partial<Pick<numberInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight' | 'uv' | 'partId'>>;
 };
 type numberLimitsType = textPrintLimitsType & { lineHeightMin: number; lineHeightMax: number };
 
@@ -54,7 +55,7 @@ type testoPositionType = textPrintPositionType & { lineHeight?: number; letterSp
 type testoInstanceType = textPrintInstanceType & { lineHeight: number; letterSpacing: number };
 type testoPreviewType = {
   instanceId: string;
-  patch: Partial<Pick<testoInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight' | 'letterSpacing'>>;
+  patch: Partial<Pick<testoInstanceType, 'text' | 'textColor' | 'strokeColor' | 'fontSize' | 'strokeWidth' | 'lineHeight' | 'letterSpacing' | 'uv' | 'partId'>>;
 };
 type testoLimitsType = textPrintLimitsType & {
   lineHeightMin: number;
@@ -80,4 +81,5 @@ export type {
   testoLimitsType,
   testoPositionType,
   testoPreviewType,
+  textPrintPositionType,
 };

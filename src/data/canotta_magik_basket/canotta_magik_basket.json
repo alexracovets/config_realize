@@ -308,6 +308,13 @@
       "show_gizmo": true,
       "id": "top_back",
       "src": "/png/text_areas/t_shirt_basket/text/back_top.png",
+      "relation": {
+        "x": "center",
+        "y": "top",
+        "items": {
+          "name": ["top_back"]
+        }
+      },
       "heightMinCm": 1,
       "heightMaxCm": 2,
       "widthMinCm": 1,

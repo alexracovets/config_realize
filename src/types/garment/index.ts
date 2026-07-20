@@ -13,6 +13,7 @@ export type {
   testoLimitsType,
   testoPositionType,
   testoPreviewType,
+  textPrintPositionType,
 } from './textPrint';
 export type { logoInstanceType, logoPositionType, logoPreviewType, stepLogoPartStateType, stepLogoPositionStateType, stepLogoStoreViewType } from './logo';
 export type { partGradientType } from './gradient';

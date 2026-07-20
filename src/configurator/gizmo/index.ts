@@ -16,4 +16,4 @@ export { getGizmoButtonReveal, getGizmoButtonsRevealUniforms, setGizmoButtonsRev
 export { GIZMO_CORNERS, getGizmoHoverCursor, hitTestGizmoButton, hitTestGizmoFrame } from './hitTestGizmoButton';
 export { buildPrintablePartMeshes, raycastGizmoUv, raycastPrintUv, resolveGizmoPointerTarget, toLocalPx } from './resolveGizmoPointerTarget';
 export { resolvePrintDragMove } from './printDragMove';
-export { toPrintLocalPx } from './printLocalSpace';
+export { fromPrintLocalPx, toPrintLocalPx } from './printLocalSpace';

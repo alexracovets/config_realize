@@ -40,6 +40,7 @@ const mapProductTestoPositions = (product: garmentConfigType): testoPositionType
     key: `testo-pos-${index}`,
     positionId: position.id,
     conflicts: position.conflicts,
+    relation: position.relation,
     label: position.label,
     partId: position.partId,
     uv: resolvePrintLocalUvToAtlas(resolveGarmentPart(product, position.partId, 'a testo position'), position.uv),

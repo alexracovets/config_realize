@@ -18,4 +18,19 @@ const toPrintLocalPx = (
   return rotateLocalPx(partLocal.x, partLocal.y, elementRotationDeg);
 };
 
-export { rotateLocalPx, toPrintLocalPx };
+const fromPrintLocalPx = (
+  local: { x: number; y: number },
+  anchor: { x: number; y: number },
+  atlasSize: { width: number; height: number },
+  partRotationDeg: number,
+  elementRotationDeg: number,
+) => {
+  const partLocal = rotateLocalPx(local.x, local.y, -elementRotationDeg);
+  const delta = rotateLocalPx(partLocal.x, partLocal.y, -partRotationDeg);
+  return {
+    x: anchor.x + delta.x / atlasSize.width,
+    y: anchor.y + delta.y / atlasSize.height,
+  };
+};
+
+export { fromPrintLocalPx, rotateLocalPx, toPrintLocalPx };

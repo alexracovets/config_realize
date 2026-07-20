@@ -70,6 +70,22 @@ interface printPositionConflictsConfigType {
   text?: string[];
 }
 
+type printPositionRelationAxisXType = 'left' | 'center' | 'right';
+type printPositionRelationAxisYType = 'top' | 'center' | 'bottom';
+
+interface printPositionRelationItemsConfigType {
+  name?: string[];
+  number?: string[];
+  testo?: string[];
+}
+
+/** Binds this position to another print frame edge (e.g. testo → top-center of name). */
+interface printPositionRelationConfigType {
+  x: printPositionRelationAxisXType;
+  y: printPositionRelationAxisYType;
+  items: printPositionRelationItemsConfigType;
+}
+
 interface textPositionConfigType {
   label: string;
   uv: uvPointType;
@@ -82,6 +98,7 @@ interface textPositionConfigType {
   show_gizmo?: boolean;
   id?: string;
   conflicts?: printPositionConflictsConfigType;
+  relation?: printPositionRelationConfigType;
   /** Preview thumbnail shown in the position-picker modal card. */
   src?: string;
   heightMinCm?: number;
@@ -215,6 +232,10 @@ export type {
   partGradientConfigType,
   patternConfigType,
   printPositionConflictsConfigType,
+  printPositionRelationAxisXType,
+  printPositionRelationAxisYType,
+  printPositionRelationConfigType,
+  printPositionRelationItemsConfigType,
   preserveGltfMeshConfigType,
   preserveGltfMeshEntryConfigType,
   printAtlasConfigType,

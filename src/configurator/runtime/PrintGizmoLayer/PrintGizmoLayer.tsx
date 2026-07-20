@@ -9,7 +9,8 @@ import {
   buildTestoGizmoElements,
 } from '@configurator/gizmo';
 import type { nameInstanceType, numberInstanceType, testoInstanceType } from '@types';
-import { useGizmoButtonHover, useGizmoSelection, usePrintPlacementMigration } from '@configurator/hooks';
+import { useGizmoButtonHover, useGizmoSelection, usePrintPlacementMigration, usePrintPositionRelationSync } from '@configurator/hooks';
+import { registerPrintRelationE2eDebug } from '@configurator/hooks/registerPrintRelationE2eDebug';
 import { resolvePrintCmScale } from '@configurator/mappers';
 import { PrintGizmoInstance } from '@configurator/runtime';
 import { repairPrintInstancePlacement, resolvePrintAtlasSize } from '@configurator/utils';
@@ -33,6 +34,8 @@ const LOGO_STEP = 7;
 const PrintGizmoLayer = memo(() => {
   const product = useConfiguratorProduct((state) => state.product);
   const activeStep = useConfigurationControl((state) => state.activeStep);
+  usePrintPositionRelationSync();
+  useEffect(() => registerPrintRelationE2eDebug(), []);
   const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
 
   const namePositions = useGarmentName((state) => state.positions);
