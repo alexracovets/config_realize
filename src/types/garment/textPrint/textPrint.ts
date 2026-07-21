@@ -19,7 +19,7 @@ type textPrintPositionType = {
 type textPrintInstanceType = {
   id: string;
   positionKey: string;
-  /** Position default orientation; affects text only, not gizmo. */
+
   placementRotation?: number;
 } & Pick<textDefaultsConfigType, 'text' | 'font' | 'textColor' | 'strokeColor' | 'strokeWidth'> &
   Pick<textPrintPositionType, 'label' | 'partId' | 'uv' | 'rotation' | 'fontSize' | 'showFrame' | 'showGizmo'>;

@@ -22,7 +22,6 @@ const CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS = 120_000;
 
 const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
 
-/** Converts a captured canvas preview (data: URL) to a Blob so it can be uploaded to Shopify Files. */
 const dataUrlToBlob = async (dataUrl: string): Promise<Blob | null> => {
   if (!dataUrl.startsWith('data:')) return null;
   try {
@@ -32,7 +31,6 @@ const dataUrlToBlob = async (dataUrl: string): Promise<Blob | null> => {
   }
 };
 
-/** Uploads each product's captured preview screenshot and returns the hosted URL keyed by cartItemId. */
 const uploadProductPreviews = async (previews: Record<string, string>): Promise<Record<string, string>> => {
   const items: checkoutAssetUploadItemType[] = [];
 
@@ -61,7 +59,6 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
     const { products } = checkoutStore;
     const { configurations } = cartStore;
 
-    // Both PDFs must reference the same order number and date.
     const orderMeta = window.__checkoutE2e?.orderMeta ?? {
       orderNumber: createCheckoutOrderNumber(),
       orderDate: formatCheckoutOrderDate(),
@@ -74,9 +71,6 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
       orderDate: orderMeta.orderDate,
     });
 
-    // Compose the UV textures (three.js/canvas — browser-only). The PDFs themselves are rendered
-    // server-side in the orders/create webhook from the config.json + real order data, so the
-    // client only needs to produce and host the image assets the server will embed.
     const uvBlobs = await collectOrderCuttingExportUvBlobs(cuttingExportData);
 
     const uvUrlById = await uploadCheckoutAssetsDirect(
@@ -95,9 +89,6 @@ const collectCheckoutAssetAttributes = async (): Promise<checkoutLineAttributeTy
 
     const previewUrls = await uploadProductPreviews(cartStore.previews);
 
-    // Single JSON snapshot of the whole order (every product's full configuration, business data,
-    // preview + UV texture URLs). Uploaded as a file and referenced via one short `_config_url`
-    // cart attribute; the webhook rebuilds both PDFs from it once the real order exists.
     const configExport = buildCheckoutConfigExport({
       products,
       configurations,
@@ -145,7 +136,6 @@ const useSubmitCheckout = () => {
         throw new Error('Nessun prodotto da ordinare.');
       }
 
-      // Never let asset generation block the checkout indefinitely — proceed without attachments.
       payload.attributes = await withTimeout(collectCheckoutAssetAttributes(), CHECKOUT_ASSET_COLLECTION_TIMEOUT_MS, 'Checkout asset collection').catch(
         (assetError: unknown) => {
           console.error('Checkout asset collection failed', assetError);

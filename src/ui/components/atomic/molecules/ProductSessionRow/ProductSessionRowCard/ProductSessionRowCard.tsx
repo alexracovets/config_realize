@@ -8,7 +8,7 @@ import { cn } from '@utils';
 import { PRODUCT_SESSION_ROW_CARD_WIDTH_PX, PRODUCT_SESSION_ROW_PREVIEW_SIZE_PX } from '@molecules/ProductSessionRow/productSessionRowConstants';
 
 type productSessionRowCardPropsType = Pick<productSessionRowPropsType, 'name' | 'previewSrc' | 'active' | 'onSelect' | 'onRemove'> & {
-  /** Anchor card: collapsed only. Portal card: details stay mounted and animate via isExpanded. */
+
   variant: 'anchor' | 'portal';
   isExpanded: boolean;
   isPreviewLoaded: boolean;

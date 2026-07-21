@@ -22,7 +22,7 @@ import type {
 
 const formatPercent = (value: number): string => `${Math.round(value * 100)}%`;
 
-const formatDegrees = (value: number): string => `${Math.round(value)}°`;
+const formatDegrees = (value: number): string => `${Math.round(value)}Â°`;
 
 const formatUv = (uv: uvPointType): string => `UV (${uv.x.toFixed(3)}, ${uv.y.toFixed(3)})`;
 
@@ -42,7 +42,7 @@ const resolvePatternIndex = (activePatternKey: string | null): number => {
 const buildColorStepDetails = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportStepDetailType[] =>
   model.parts.map((part) => ({
     label: part.label || part.name,
-    value: configuration.color.byPart[part.id] ?? configuration.color.byPart[part.name] ?? '—',
+    value: configuration.color.byPart[part.id] ?? configuration.color.byPart[part.name] ?? 'â€”',
   }));
 
 const hasEnabledGradient = (configuration: cartItemConfigurationType): boolean =>
@@ -57,17 +57,17 @@ const buildGradientStepDetails = (configuration: cartItemConfigurationType, mode
         return { label: part.label || part.name, value: ORDER_CUTTING_EXPORT_DATA_NOT_SPECIFIED };
       }
 
-      const baseColor = configuration.color.byPart[part.id] ?? configuration.color.byPart[part.name] ?? '—';
+      const baseColor = configuration.color.byPart[part.id] ?? configuration.color.byPart[part.name] ?? 'â€”';
 
       return {
         label: part.label || part.name,
-        value: `${baseColor} → ${gradient.color2}`,
+        value: `${baseColor} â†’ ${gradient.color2}`,
         params: [
-          { label: 'Colore', value: `${baseColor} → ${gradient.color2}` },
+          { label: 'Colore', value: `${baseColor} â†’ ${gradient.color2}` },
           { label: 'Rotazione', value: formatDegrees(gradient.rotation) },
           { label: 'Posizione', value: formatPercent(gradient.position) },
           { label: 'Morbidezza', value: formatPercent(gradient.softness) },
-          { label: 'Opacità', value: formatPercent(gradient.opacity) },
+          { label: 'OpacitÃ ', value: formatPercent(gradient.opacity) },
           { label: 'Direzione', value: gradient.reversed ? 'Invertita' : 'Normale' },
         ],
       };
@@ -90,7 +90,7 @@ const buildTextInstancesDetails = (
         { label: 'Font', value: instance.font },
         { label: 'Colore testo', value: instance.textColor },
         { label: 'Corpo', value: unitY.formatPx(instance.fontSize) },
-        instance.strokeWidth > 0 ? { label: 'Contorno', value: `${instance.strokeColor} · ${unitY.formatPx(instance.strokeWidth)}` } : null,
+        instance.strokeWidth > 0 ? { label: 'Contorno', value: `${instance.strokeColor} Â· ${unitY.formatPx(instance.strokeWidth)}` } : null,
         typeof lineHeight === 'number' ? { label: 'Interlinea', value: `${lineHeight}` } : null,
         typeof letterSpacing === 'number' ? { label: 'Spaziatura', value: unitX.formatPx(letterSpacing) } : null,
         { label: 'Parte', value: resolvePartLabel(model, instance.partId) },
@@ -286,7 +286,7 @@ const buildDesignStepDetails = (configuration: cartItemConfigurationType, model:
 
   const details: orderCuttingExportStepDetailType[] = [
     { label: 'Design', value: pattern.name },
-    { label: 'Opacità pattern', value: `${Math.round(configuration.design.designOpacity * 100)}%` },
+    { label: 'OpacitÃ  pattern', value: `${Math.round(configuration.design.designOpacity * 100)}%` },
   ];
 
   Object.entries(configuration.design.designLayerColors).forEach(([layerIndex, color]) => {
@@ -389,8 +389,8 @@ const buildStep = (
           { label: 'Posizione', value: formatUv(instance.uv) },
           { label: 'Scala', value: formatPercent(instance.scale) },
           { label: 'Rotazione', value: formatDegrees(instance.rotation + instance.uploadRotation) },
-          { label: 'Opacità', value: formatPercent(instance.opacity) },
-          instance.naturalWidth > 0 ? { label: 'File originale', value: `${instance.naturalWidth}×${instance.naturalHeight}px` } : null,
+          { label: 'OpacitÃ ', value: formatPercent(instance.opacity) },
+          instance.naturalWidth > 0 ? { label: 'File originale', value: `${instance.naturalWidth}Ã—${instance.naturalHeight}px` } : null,
         ].filter((param): param is orderCuttingExportStepDetailParamType => param !== null);
 
         return {

@@ -55,7 +55,6 @@ const ADMIN_PRODUCTS_LOOKUP_QUERY = `#graphql
   }
 `;
 
-/** Single field selection reused by every Storefront query — add new fields once here, not per-query. */
 const STOREFRONT_PRODUCT_FIELDS = `#graphql
   id
   title
@@ -109,7 +108,6 @@ type adminProductsLookupResponseType = {
   };
 };
 
-/** Base (non-metafield) fields shared by every Storefront node — kept in one place alongside `STOREFRONT_PRODUCT_FIELDS`. */
 type storefrontProductBaseNodeType = {
   id: string;
   title: string;
@@ -135,11 +133,6 @@ type storefrontProductsLookupResponseType = {
   };
 };
 
-/**
- * Reshapes a Storefront node into the Admin-shaped `shopifyProductBusinessNodeType`.
- * Metafields (`sizeChartMetafieldsNodeType` and beyond) pass through via spread — adding a new
- * metafield only needs `STOREFRONT_PRODUCT_FIELDS` + the shared node type, not a new line here.
- */
 const mapStorefrontProductNode = ({ priceRange, ...node }: storefrontProductNodeType): shopifyProductBusinessNodeType => ({
   ...node,
   priceRangeV2: {
@@ -175,10 +168,6 @@ const findStorefrontProductByModelId = async (modelId: string): Promise<shopifyP
   return node ? mapStorefrontProductNode(node) : null;
 };
 
-/**
- * Resolves a configurator product from the URL slug (`/:slug`).
- * Tries Shopify product handle first, then `custom.id` metafield (model id).
- */
 const fetchConfiguratorProductByHandle = async (slug: string): Promise<configuratorProductHydrationType | null> => {
   const normalizedSlug = slug.trim();
   if (!normalizedSlug) return null;

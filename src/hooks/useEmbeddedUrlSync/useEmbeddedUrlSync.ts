@@ -28,8 +28,6 @@ const useEmbeddedUrlSync = (): void => {
       return;
     }
 
-    // In-app-only routes (e.g. the internal checkout/summary view) must not be mirrored
-    // to the host URL — the theme would treat `/checkout` as the real Shopify checkout.
     if (isInternalAppPath(pathname)) {
       return;
     }

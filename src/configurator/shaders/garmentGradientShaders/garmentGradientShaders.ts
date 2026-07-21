@@ -1,4 +1,4 @@
-const garmentGradientMapFragment = /* glsl */ `
+const garmentGradientMapFragment =  `
 #ifdef USE_GRADIENT
   garmentBaseAlbedo = diffuseColor.rgb;
   vec2 partUv = ( vPrintUv - uPartUvBounds.xy ) / ( uPartUvBounds.zw - uPartUvBounds.xy );

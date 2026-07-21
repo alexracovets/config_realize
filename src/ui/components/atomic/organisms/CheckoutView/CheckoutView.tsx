@@ -13,8 +13,6 @@ const CheckoutView = () => {
   const products = useCheckout((state) => state.products);
   const activeItem = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId) ?? state.items[0]);
 
-  // Empty cart (e.g. checkout page refreshed → in-memory cart reset to the bootstrap placeholder,
-  // which is filtered out of `products`). Show an empty state instead of a mock order line.
   if (products.length === 0) {
     return (
       <Flex className="min-h-[60vh] w-full flex-col items-center justify-center gap-6 text-center">

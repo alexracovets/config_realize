@@ -1,7 +1,7 @@
 'use client';
 
 import type { staticGltfMeshPropsType } from '@configurator/types';
-// Direct module path, not the '@configurator/scene' barrel — see GarmentModel.tsx.
+
 import { applyStaticColor, disposeMeshResources, tagGarmentMeshes } from '@configurator/scene/meshHelpers';
 import { DEFAULT_COLOR } from '@store';
 import { memo, useEffect, useMemo } from 'react';

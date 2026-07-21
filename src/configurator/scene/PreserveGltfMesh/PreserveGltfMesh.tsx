@@ -1,7 +1,7 @@
 'use client';
 
 import type { preserveGltfMeshPropsType } from '@configurator/types';
-// Direct module path, not the '@configurator/scene' barrel — see GarmentModel.tsx.
+
 import { biasInsideShellDepth, disposeMeshResources, tagGarmentMeshes } from '@configurator/scene/meshHelpers';
 import { memo, useEffect, useMemo } from 'react';
 const PreserveGltfMesh = memo(({ meshName, node, renderOrder = 0 }: preserveGltfMeshPropsType) => {

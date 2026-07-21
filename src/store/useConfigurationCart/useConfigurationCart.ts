@@ -73,8 +73,6 @@ const useConfigurationCart = createSingletonStore<ConfigurationCartState>('useCo
 
     void activateCartItem(get, item.id);
 
-    // Catalog picks carry only placeholder business — lazily fetch the full Shopify business
-    // (size chart + printReferenceCm) so the Info modal and cm print sizes work for added products.
     void enrichCartItemBusiness(get, set, item.id);
   },
 

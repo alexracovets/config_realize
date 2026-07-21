@@ -51,10 +51,6 @@ const parseSizeChartTable = (json: string): modalInfoTablePartType | null => {
   }
 };
 
-/**
- * Builds the "Tabella taglie" tab content from per-product Shopify metafields.
- * Returns `null` when the product has no `custom.tabella_taglie_table` value, so callers fall back to the static default.
- */
 const mapSizeChartContent = (node: sizeChartMetafieldsNodeType): modalInfoTabType | null => {
   const tableValue = node.tableMetafield?.value;
   if (!tableValue) return null;

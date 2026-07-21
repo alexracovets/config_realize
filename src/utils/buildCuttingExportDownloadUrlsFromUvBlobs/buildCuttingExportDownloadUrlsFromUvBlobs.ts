@@ -9,7 +9,6 @@ const blobToDataUrl = (blob: Blob): Promise<string> =>
     reader.readAsDataURL(blob);
   });
 
-/** Builds embeddable download URLs for the cutting PDF from composed UV blobs (same blobs uploaded to Shopify). */
 const buildCuttingExportDownloadUrlsFromUvBlobs = async (uvBlobs: uvExportBlobType[]): Promise<cuttingExportDownloadUrlEntryType[]> =>
   Promise.all(
     uvBlobs.map(async (uv) => ({

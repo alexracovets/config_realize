@@ -1,6 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-/** Verifies the `X-Shopify-Hmac-Sha256` header against the raw request body. */
 const verifyShopifyWebhookSignature = (rawBody: string, receivedHmac: string | null, secret: string): boolean => {
   if (!receivedHmac) return false;
 

@@ -195,7 +195,6 @@ const useGarmentLoadReady = ({
       });
     };
 
-    // Keep the initial loader visible until shader compilation finishes.
     runShaderUpgrade(completeInitialLoad);
   }, [finishSceneLoad, hydrateAppearanceRefsFromCache, initialLoadCompletedRef, isGarmentAppearanceReady, markInitialSceneLoaded, runShaderUpgrade]);
 

@@ -6,8 +6,6 @@ import type { CSSProperties, ImgHTMLAttributes } from 'react';
 import { cn } from '@utils';
 import type { atomImagePropsType } from '@types';
 
-// Transparent 1x1 GIF. Used instead of an empty src="" which makes the browser
-// re-request the current document (in an embedded iframe this re-downloads the whole app).
 const EMPTY_IMAGE_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 const variantAtomImage = cva('', {
@@ -44,8 +42,7 @@ const AtomImage = ({
   const imageStyle: CSSProperties = useFill ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit } : (style ?? {});
 
   const imageElement = (
-    // Native img: data/blob URLs, arbitrary external src, and fill layout without next/image loader.
-    // eslint-disable-next-line @next/next/no-img-element
+
     <img
       src={src || EMPTY_IMAGE_SRC}
       alt={alt || 'image'}

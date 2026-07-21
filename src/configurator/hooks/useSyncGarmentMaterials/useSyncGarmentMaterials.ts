@@ -8,7 +8,7 @@ import { useGarmentMaterialRegistry, useMaterialRegistryRevision } from '@config
 import { useFrame, useThree } from '@react-three/fiber';
 import { useConfigurationCart, useConfiguratorSceneLoad, useGarmentDesign } from '@store';
 import { useCallback, useEffect, useLayoutEffect } from 'react';
-/** Syncs store colors, design, and textures onto garment materials (R3F side-effect hook). */
+
 const useSyncGarmentMaterials = () => {
   const refs = useSyncGarmentMaterialsRefs();
   const { pendingFrameReapplyRef, lastPendingReapplyRef, sceneLoadRefs } = refs;

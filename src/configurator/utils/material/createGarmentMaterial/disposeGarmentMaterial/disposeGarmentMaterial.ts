@@ -1,6 +1,5 @@
 import type { MeshStandardMaterial } from 'three';
 
-/** Detach shared GLTF texture refs before disposing a cloned garment material. */
 const detachGarmentMaterialMaps = (material: MeshStandardMaterial) => {
   material.map = null;
   material.normalMap = null;

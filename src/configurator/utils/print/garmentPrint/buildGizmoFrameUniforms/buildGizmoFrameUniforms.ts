@@ -5,8 +5,6 @@ import { measureNameGizmoHalf, resolveTextGizmoHalf, resolveTextGizmoMeasureOpti
 const measureCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
 const measureCtx = measureCanvas?.getContext('2d') ?? null;
 
-// Builds the per-slot selection-frame half sizes for one garment part. Slot indexing matches
-// buildNameStyleUniforms so each frame lines up with the name rendered in that slot.
 const buildGizmoFrameUniforms = (
   instances: garmentTextRenderInstanceType[],
   meshPartId: string,

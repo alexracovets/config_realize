@@ -19,7 +19,6 @@ const GARMENT_SHADER_VERSION = 'garment-print-v93-gated-looped-slots';
 
 const garmentPrintFragmentPars = garmentFragmentUvPars.replace('#include <uv_pars_fragment>\n', '');
 
-/** Feature-gate defines injected before the fragment shader — keeps unused text/logo features out of the compiled program entirely. */
 const buildGarmentFeatureDefines = (features: garmentPrintFeatureFlagsType): string =>
   [
     features.useName && '#define USE_GARMENT_NAME',
@@ -82,7 +81,6 @@ const configureGarmentShader = (material: MeshStandardMaterial, features: garmen
   material.customProgramCacheKey = () => buildGarmentProgramCacheKey(material);
 };
 
-/** Clone GLTF material — native PBR maps stay intact; print shader added on upgrade. */
 const createGarmentMaterial = (source: MeshStandardMaterial | null | undefined): MeshStandardMaterial => {
   const material = source ? source.clone() : new MeshStandardMaterial({ color: 0xffffff });
 

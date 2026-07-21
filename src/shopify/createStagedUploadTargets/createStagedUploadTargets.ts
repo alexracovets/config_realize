@@ -27,7 +27,6 @@ type stagedUploadsCreateResponseType = {
   };
 };
 
-/** Mints one or more Shopify staged-upload targets (Admin API only; binaries upload client-side). */
 const createStagedUploadTargets = async (files: stagedUploadFileInputType[]): Promise<stagedUploadTargetType[]> => {
   if (!files.length) return [];
 

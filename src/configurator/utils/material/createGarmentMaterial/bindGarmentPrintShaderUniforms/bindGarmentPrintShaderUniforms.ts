@@ -20,7 +20,6 @@ type GarmentGradientState = {
   enabled: boolean;
 };
 
-/** Registers print/gizmo shader uniforms and links them on material.userData for runtime updates. */
 const bindGarmentPrintShaderUniforms = (
   material: MeshStandardMaterial,
   shader: WebGLProgramParametersWithUniforms,

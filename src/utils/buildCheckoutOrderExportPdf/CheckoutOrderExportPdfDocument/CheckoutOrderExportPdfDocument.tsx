@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text -- @react-pdf/renderer's Image is not a DOM element and has no alt prop */
 import { Document, Image, Page, Path, StyleSheet, Svg, Text, View } from '@react-pdf/renderer';
 
 import type { checkoutOrderExportLineType, checkoutOrderExportType } from '@types';
@@ -19,9 +18,9 @@ import {
 import { priceFormat } from '@utils/priceFormat';
 
 type checkoutOrderExportPdfImagesType = {
-  /** PNG data URL of the shop logo, pre-rasterized from SVG. */
+
   logoSrc: string | null;
-  /** Rasterized line previews keyed by the original `previewSrc`. */
+
   previewBySrc: Map<string, string | null>;
 };
 
@@ -261,7 +260,7 @@ const CheckoutOrderExportPdfDocument = ({ exportData, images }: checkoutOrderExp
           </View>
           <View style={styles.footerDivider} />
           <Text style={styles.copyright}>
-            {CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX} © {currentYear} · {CHECKOUT_ORDER_EXPORT_WEBSITE} · {CHECKOUT_ORDER_EXPORT_EMAIL}
+            {CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX} Â© {currentYear} Â· {CHECKOUT_ORDER_EXPORT_WEBSITE} Â· {CHECKOUT_ORDER_EXPORT_EMAIL}
           </Text>
         </View>
         <Text style={styles.pageNumber} fixed render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />

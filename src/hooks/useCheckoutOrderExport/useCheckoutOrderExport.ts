@@ -5,7 +5,6 @@ import { useMemo, useRef } from 'react';
 import { useCheckout, useConfigurationCart } from '@store';
 import { buildCheckoutOrderExport } from '@utils';
 
-/** Keeps the hidden order-export document in sync with checkout state for PDF capture on submit. */
 const useCheckoutOrderExport = () => {
   const products = useCheckout((state) => state.products);
   const cartItems = useConfigurationCart((state) => state.items);

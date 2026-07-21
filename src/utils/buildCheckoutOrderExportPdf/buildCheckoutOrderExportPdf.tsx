@@ -18,7 +18,6 @@ const prepareCheckoutOrderExportPdfImages = async (exportData: checkoutOrderExpo
   return { logoSrc, previewBySrc };
 };
 
-/** Renders the order-confirmation PDF (vector text, selectable, auto-paginated) from checkout export data. */
 const buildCheckoutOrderExportPdfBlob = async (exportData: checkoutOrderExportType): Promise<Blob> => {
   const images = await prepareCheckoutOrderExportPdfImages(exportData);
   return pdf(<CheckoutOrderExportPdfDocument exportData={exportData} images={images} />).toBlob();

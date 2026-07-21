@@ -38,15 +38,10 @@ const fetchClientCredentialsToken = async (storeDomain: string, clientId: string
 };
 
 type resolveShopifyAdminAccessTokenOptionsType = {
-  /** Bypasses the in-memory cache; used to recover from a 401 with a possibly-stale cached token. */
+
   forceRefresh?: boolean;
 };
 
-/**
- * Resolves an Admin API access token. Prefers the self-refreshing `client_credentials` flow
- * (SHOPIFY_ADMIN_CLIENT_ID/SHOPIFY_ADMIN_CLIENT_SECRET) since Dev Dashboard tokens expire after
- * ~24h; falls back to a static SHOPIFY_ADMIN_ACCESS_TOKEN (classic custom-app token, no expiry).
- */
 const resolveShopifyAdminAccessToken = async (options: resolveShopifyAdminAccessTokenOptionsType = {}): Promise<string> => {
   const clientId = getShopifyAdminClientId();
   const clientSecret = getShopifyAdminClientSecret();

@@ -59,7 +59,6 @@ const postEmbeddedCheckoutRedirect = (url: string): void => {
   );
 };
 
-/** Navigates to Shopify checkout; in embedded mode asks the theme and uses target=_top as fallback. */
 const redirectToShopifyCheckout = (checkoutUrl: string): void => {
   if (isEmbeddedSession() && window.parent !== window) {
     postEmbeddedCheckoutRedirect(checkoutUrl);

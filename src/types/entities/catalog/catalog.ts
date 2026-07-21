@@ -5,7 +5,7 @@ interface configuratorCatalogProductPickType {
   slug: string;
   modelId: modelIdType;
   business?: garmentBusinessType;
-  /** Shopify catalog image (featured / view_image) shown in the add-product design modal. */
+
   catalogPreviewSrc?: string | null;
 }
 

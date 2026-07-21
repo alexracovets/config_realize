@@ -3,7 +3,6 @@
 import { useOrderCuttingExport } from '@hooks';
 import { OrderCuttingExportDocument } from '@molecules/OrderCuttingExportPreview/OrderCuttingExportDocument';
 
-/** Offscreen cutting-pattern document captured by `useSubmitCheckout` when the customer clicks Prosegui. */
 const OrderCuttingExport = () => {
   const { documentRef, exportData } = useOrderCuttingExport();
 

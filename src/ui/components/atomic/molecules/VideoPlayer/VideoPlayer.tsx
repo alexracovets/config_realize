@@ -149,7 +149,7 @@ const VideoPlayer = ({
             className="absolute inset-0 z-10 cursor-pointer"
             role="button"
             tabIndex={0}
-            aria-label="Відтворити відео"
+            aria-label="Ð’Ñ–Ð´Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð²Ñ–Ð´ÐµÐ¾"
             onClick={handlePreviewClick}
             onKeyDown={handlePreviewKeyDown}
           >

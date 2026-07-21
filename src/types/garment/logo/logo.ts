@@ -14,7 +14,7 @@ type logoInstanceType = {
   fileName: string;
   naturalWidth: number;
   naturalHeight: number;
-  /** Baked upload orientation correction; does not affect gizmo rotation. */
+
   uploadRotation: number;
   opacity: number;
 } & Pick<logoPositionType, 'label' | 'partId' | 'uv' | 'rotation' | 'scale' | 'isDefault' | 'showFrame' | 'showGizmo'>;

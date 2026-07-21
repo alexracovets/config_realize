@@ -159,7 +159,6 @@ const mixRgb = (a: rgbColorType, b: rgbColorType, t: number): rgbColorType => ({
   b: a.b + (b.b - a.b) * t,
 });
 
-/** CPU port of `garmentGradientMask` from the garment fragment shader. */
 const buildGradientColorResolver = (part: garmentColorAtlasPartType, atlasWidth: number, atlasHeight: number): pixelColorResolverType => {
   const baseColor = hexToRgb(part.color);
   const gradient = part.gradient;

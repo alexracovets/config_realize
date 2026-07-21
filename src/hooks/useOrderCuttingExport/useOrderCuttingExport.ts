@@ -7,7 +7,6 @@ import { buildOrderCuttingExport, formatCheckoutOrderDate } from '@utils';
 
 const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.random() * 9_000_000_000)}`;
 
-/** Keeps the hidden cutting-export document in sync with checkout state for PDF capture on submit. */
 const useOrderCuttingExport = () => {
   const products = useCheckout((state) => state.products);
   const configurations = useConfigurationCart((state) => state.configurations);

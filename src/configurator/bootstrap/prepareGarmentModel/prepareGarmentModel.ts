@@ -30,7 +30,7 @@ const preloadGarmentLogoSources = async (configuration?: cartItemConfigurationTy
     try {
       await loadCachedImage(instance.src);
     } catch {
-      /* optional user uploads */
+
     }
 
     await yieldToMain();
@@ -70,14 +70,12 @@ const preloadGarmentDesignTextures = async (product: garmentConfigType, configur
   });
 };
 
-/** Start network + GLTF parse without blocking route activation. */
 const beginGarmentModelWarmup = (product: garmentConfigType) => {
   const modelUrl = resolveModelUrl(product);
   warmProductModelFile(product, { priority: 'high' });
   preloadGarmentGltfEager(modelUrl);
 };
 
-/** Eager network warm-up + GLTF parse + design/logo textures for catalog hover / background prepare. */
 const prepareGarmentModel = async (product: garmentConfigType, options?: prepareGarmentModelOptionsType): Promise<void> => {
   const modelUrl = resolveModelUrl(product);
 
@@ -90,7 +88,6 @@ const prepareGarmentModel = async (product: garmentConfigType, options?: prepare
   await yieldToMain();
 };
 
-/** Returns whether the garment GLB for this product is already in the R3F GLTF cache. */
 const isGarmentModelReadyForProduct = (product: garmentConfigType): boolean => isGltfModelReady(resolveModelUrl(product));
 
 export { beginGarmentModelWarmup, isGarmentModelReadyForProduct, prepareGarmentModel };

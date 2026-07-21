@@ -11,7 +11,6 @@ import { useConfiguratorSceneLoad } from '@store';
 const INITIAL_SCENE_WATCHDOG_MS = 8_000;
 const SCENE_TRANSITION_WATCHDOG_MS = 8_000;
 
-/** Let the initial loader paint before WebGL and GLTF parsing start. */
 const useDeferredCanvasMount = (enabled: boolean) => {
   const [canMountCanvas, setCanMountCanvas] = useState(false);
 

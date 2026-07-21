@@ -1,6 +1,5 @@
 let isSuppressed = false;
 
-/** @react-three/fiber 9.x still uses THREE.Clock until v10. */
 const suppressThreeClockDeprecation = () => {
   if (isSuppressed || typeof console === 'undefined') return;
   isSuppressed = true;

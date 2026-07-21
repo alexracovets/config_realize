@@ -180,7 +180,6 @@ interface ResolveOrbitFocusPoseInput {
   viewMode?: 'part' | 'surface';
 }
 
-/** Head-on orbit pose: camera looks straight at the surface point from outside the garment. */
 const resolveOrbitFocusPose = (
   {
     scene,

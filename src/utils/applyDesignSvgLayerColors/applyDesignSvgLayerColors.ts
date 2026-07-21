@@ -17,7 +17,6 @@ const applyFillToShapes = (container: Element, color: string) => {
   });
 };
 
-/** Tint shared `/svg/design` preview layers (`color1`, `color2`) to match pattern part colors. */
 const applyDesignSvgLayerColors = (svgText: string, layerColors: string[]): string => {
   if (typeof DOMParser === 'undefined' || typeof XMLSerializer === 'undefined') {
     return svgText;

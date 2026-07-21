@@ -6,7 +6,6 @@ import { useCheckoutOrderExport } from '@hooks';
 import { registerCheckoutE2eDebug } from '@store/useCheckout/registerCheckoutE2eDebug';
 import { CheckoutOrderExportDocument } from '@molecules/CheckoutOrderExport/CheckoutOrderExportDocument';
 
-/** Offscreen order-confirmation document captured by `useSubmitCheckout` when the customer clicks Prosegui. */
 const CheckoutOrderExport = () => {
   const { documentRef, exportData } = useCheckoutOrderExport();
 

@@ -29,7 +29,6 @@ type orderMetafieldInputType = {
   value: string;
 };
 
-/** Sets one or more `configurator.*` metafields on a Shopify order via the Admin API. */
 const setOrderMetafields = async (orderId: string, fields: orderMetafieldInputType[]): Promise<void> => {
   if (!fields.length) return;
 

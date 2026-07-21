@@ -42,7 +42,6 @@ const NUMBER_STEP = 5;
 const TESTO_STEP = 6;
 const LOGO_STEP = 7;
 
-/** Shared gizmo frame, hover, and button-reveal uniforms for text print kinds. */
 const useGarmentTextGizmoUniforms = () => {
   const product = useConfiguratorProduct((state) => state.product);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);

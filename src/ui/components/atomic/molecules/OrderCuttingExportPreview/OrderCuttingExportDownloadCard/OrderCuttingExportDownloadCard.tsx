@@ -111,7 +111,7 @@ const OrderCuttingExportDownloadCard = ({ cartItemId, file }: orderCuttingExport
       }}
     >
       <div className="cutting-export__download-preview-frame">
-        {showLoading ? <span className="cutting-export__download-loading">Composizione UV…</span> : null}
+        {showLoading ? <span className="cutting-export__download-loading">Composizione UVâ€¦</span> : null}
         {!showLoading && previewUrl ? (
           <AtomImage
             src={previewUrl}

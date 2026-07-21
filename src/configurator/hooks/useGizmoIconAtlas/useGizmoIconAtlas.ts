@@ -9,8 +9,6 @@ import { MdOutlineCropRotate } from 'react-icons/md';
 import type { IconType } from 'react-icons';
 import { CanvasTexture, LinearFilter, LinearMipmapLinearFilter, SRGBColorSpace, type Texture } from 'three';
 
-// Single horizontal atlas with the four tool icons, in this order. The garment shader samples a cell
-// per frame corner so the buttons are painted onto the fabric exactly like the selection frame.
 const GIZMO_ICONS = [
   { kind: 'duplicate', Icon: GoCopy },
   { kind: 'delete', Icon: FaRegTrashAlt },
@@ -18,13 +16,12 @@ const GIZMO_ICONS = [
   { kind: 'scale', Icon: IoResizeOutline },
 ] as const satisfies ReadonlyArray<{ kind: string; Icon: IconType }>;
 
-// Keep in sync with GIZMO_ICON_CELL_FILL in garmentShaders.ts (icon inset within each atlas cell).
 const GIZMO_ICON_CELL_FILL = 0.62;
 const ATLAS_DPI = 4;
 const CELL = Math.round(120 * ATLAS_DPI);
 const ICON_SIZE = Math.round(CELL * GIZMO_ICON_CELL_FILL);
 const ICON_COLOR = '#1a1a1a';
-// UV print space is rotated vs screen; bake icons 90° so they read upright on the garment.
+
 const ICON_ROTATION = Math.PI / 2;
 
 const loadSvgImage = (svg: string): Promise<HTMLImageElement> =>

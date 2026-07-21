@@ -2,9 +2,8 @@ import type { printReferenceCmType } from '@types';
 
 import type { sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
 
-/** Size chart column whose header (or id) marks the reference L size. */
 const REFERENCE_SIZE = 'L';
-/** Size chart row that provides the body height. */
+
 const HEIGHT_ROW_LABEL = 'ALTEZZA';
 
 type sizeChartTableColumnJsonType = {
@@ -30,11 +29,6 @@ const toNumber = (value: string | number | undefined): number | null => {
 
 const normalize = (value: string): string => value.trim().toUpperCase();
 
-/**
- * Extracts the L-size body height (ALTEZZA) and width (TORACE/VITA) in cm from the raw
- * `custom.tabella_taglie_table` metafield, used to convert print-atlas pixels into centimetres.
- * Returns `null` when the table is missing, malformed, or lacks the L column / required rows.
- */
 const resolveSizeReferenceCm = (node: sizeChartMetafieldsNodeType): printReferenceCmType | null => {
   const raw = node.tableMetafield?.value;
   if (!raw) return null;

@@ -18,11 +18,10 @@ interface printAtlasConfigType {
   height: number;
 }
 
-/** Real-world garment measurements (cm) used to convert print-atlas pixels into centimetres. Sourced from the L column of the Shopify size chart. */
 interface printReferenceCmType {
-  /** Body height in cm (size chart "ALTEZZA" row, L column). */
+
   heightCm: number;
-  /** Body width in cm (size chart "TORACE"/"VITA" row, L column). */
+
   widthCm: number;
 }
 
@@ -48,7 +47,7 @@ interface garmentPartConfigType {
   uvBounds?: uvBoundsType;
   printRotation?: number;
   gradient?: partGradientConfigType;
-  /** Solid color only — excluded from design, gradient, and pattern layers. */
+
   colorOnly?: boolean;
 }
 
@@ -66,7 +65,7 @@ interface printPositionConflictsConfigType {
   name?: string[];
   number?: string[];
   testo?: string[];
-  /** @deprecated Legacy JSON key — use `testo`. */
+
   text?: string[];
 }
 
@@ -79,7 +78,6 @@ interface printPositionRelationItemsConfigType {
   testo?: string[];
 }
 
-/** Binds this position to another print frame edge (e.g. testo → top-center of name). */
 interface printPositionRelationConfigType {
   x: printPositionRelationAxisXType;
   y: printPositionRelationAxisYType;
@@ -99,7 +97,7 @@ interface textPositionConfigType {
   id?: string;
   conflicts?: printPositionConflictsConfigType;
   relation?: printPositionRelationConfigType;
-  /** Preview thumbnail shown in the position-picker modal card. */
+
   src?: string;
   heightMinCm?: number;
   heightMaxCm?: number;
@@ -126,9 +124,9 @@ interface textDefaultsConfigType {
   letterSpacingMinCm?: number;
   letterSpacingMaxCm?: number;
   letter_spacing_show?: boolean;
-  /** Position-picker modal title; falls back to the step's default label when unset. */
+
   title?: string;
-  /** Position-picker modal description; supports basic HTML (e.g. `<b>`). */
+
   description?: string;
 }
 
@@ -166,13 +164,13 @@ interface preserveGltfMeshEntryConfigType {
 type preserveGltfMeshConfigType = string | preserveGltfMeshEntryConfigType;
 
 interface garmentConfigType {
-  /** Geometry id — matches the data folder name and the Shopify `custom.id` metafield. */
+
   id?: string;
-  /** @deprecated Business data (name/price/bonus) now comes from Shopify via `garmentBusinessType`. */
+
   name?: string;
   type?: string;
   previewImage?: string;
-  /** @deprecated Use the Shopify-sourced `garmentBusinessType.price`. Optional for geometry-only JSON. */
+
   price?: number;
   bonus_count?: number;
   bonus_discount?: number;
@@ -202,14 +200,12 @@ interface styleConfigType {
   products: garmentConfigType[];
 }
 
-/** Identifier of a local geometry model — equals the data folder name / JSON `id`. */
 type modelIdType = string;
 
-/** Business data sourced from the Shopify product (price, bonuses, name). */
 interface garmentBusinessType {
-  /** Shopify product GID. */
+
   shopifyProductId: string;
-  /** Shopify product handle (== URL slug). */
+
   handle: string;
   name: string;
   price: number;
@@ -217,9 +213,9 @@ interface garmentBusinessType {
   bonusCount: number;
   bonusDiscount: number;
   minimumCount: number;
-  /** Per-product "Tabella taglie" content sourced from Shopify metafields; falls back to the static default when unset. */
+
   sizeChart?: modalInfoTabType;
-  /** Real-world L-size measurements (cm) extracted from the size chart, used to display print sizes in cm instead of px. Undefined when the product has no Shopify size chart. */
+
   printReferenceCm?: printReferenceCmType;
 }
 

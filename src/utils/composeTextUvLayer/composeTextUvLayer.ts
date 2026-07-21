@@ -51,10 +51,6 @@ const drawTextLayer = (ctx: CanvasRenderingContext2D, layer: orderCuttingExportT
   ctx.restore();
 };
 
-/**
- * Renders configured text prints onto a transparent print-atlas-sized PNG.
- * Placement mirrors the garment shader anchors (atlas UV + total print rotation).
- */
 const composeTextUvLayer = async (atlasWidth: number, atlasHeight: number, layers: orderCuttingExportTextLayerSpecType[]): Promise<string> => {
   await loadLayerFonts(layers);
 

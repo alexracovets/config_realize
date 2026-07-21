@@ -1,8 +1,7 @@
 'use client';
 
 import { SceneFrameSync } from '@configurator/canvas/SceneFrameSync';
-// Direct module paths, not the layer barrels — barrel re-exports of these modules create
-// import cycles that leave bindings undefined in the production build.
+
 import { GarmentRuntime } from '@configurator/runtime/GarmentRuntime';
 import { GarmentModel } from '@configurator/scene/GarmentModel';
 import { resolveModelUrl } from '@configurator/utils';

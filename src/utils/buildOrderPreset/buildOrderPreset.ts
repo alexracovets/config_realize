@@ -7,13 +7,6 @@ const joinTesto = (testoTexts: string[]): string =>
     .filter(Boolean)
     .join(' / ');
 
-/**
- * Builds the `/api/checkout` payload from the checkout table state. Each table row becomes
- * one Shopify cart line carrying only human-readable line item properties (Taglia/Nome/Numero/
- * Testo). The full configuration snapshot no longer travels per-line as a raw `_config` JSON
- * (it overflows Shopify's 255-char attribute limit); instead it is uploaded once as a single
- * `config.json` for the whole order and referenced via a cart-level `_config_url` attribute.
- */
 const buildOrderPreset = (products: checkoutProductType[]): createCheckoutPayloadType => {
   const lines = products.flatMap((product) =>
     product.rows.map((row) => {

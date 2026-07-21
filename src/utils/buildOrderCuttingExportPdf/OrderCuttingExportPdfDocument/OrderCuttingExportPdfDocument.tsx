@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text -- @react-pdf/renderer's Image is not a DOM element and has no alt prop */
 import { Document, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
 import type {
@@ -9,9 +8,9 @@ import type {
 } from '@types';
 
 type orderCuttingExportPdfImagesType = {
-  /** Embeddable PNG data URLs keyed by `${cartItemId}:${label}` (composed UV textures) or raw src. */
+
   downloadPreviewByKey: Map<string, string | null>;
-  /** Public https URLs (already uploaded to Shopify Files) keyed by `${cartItemId}:${label}` — used as PDF link targets. */
+
   downloadLinkByKey: Map<string, string>;
 };
 
@@ -210,7 +209,7 @@ const ProductSection = ({ product, images }: { product: orderCuttingExportProduc
     <View style={styles.productHeader} wrap={false}>
       <Text style={styles.productTitle}>{product.productTitle}</Text>
       <Text style={styles.productMeta}>
-        Modello: {product.modelLabel} · Print atlas: {product.printAtlas.width}×{product.printAtlas.height}px
+        Modello: {product.modelLabel} Â· Print atlas: {product.printAtlas.width}Ã—{product.printAtlas.height}px
       </Text>
     </View>
 
@@ -248,7 +247,7 @@ const OrderCuttingExportPdfDocument = ({ exportData, images }: orderCuttingExpor
     ["Numero d'ordine", exportData.orderNumber, 'Data ordine', exportData.orderDate],
     ['Azienda', customer.company, 'Partita IVA o cod. fiscale', customer.vatOrTaxCode],
     ['Nome', customer.firstName, 'Cognome', customer.lastName],
-    ['Indirizzo', customer.address, 'Località', customer.city],
+    ['Indirizzo', customer.address, 'LocalitÃ ', customer.city],
     ['Provincia', customer.province, 'CAP', customer.postalCode],
     ['E-mail', customer.email, 'PEC', customer.pec],
   ];
@@ -257,7 +256,7 @@ const OrderCuttingExportPdfDocument = ({ exportData, images }: orderCuttingExpor
     <Document title={`Modulo ordine ${exportData.orderNumber}`.trim()} producer="Realize" creator="Realize">
       <Page size="A4" style={styles.page}>
         <Text style={styles.title}>Modulo ordine cliente</Text>
-        <Text style={styles.subtitle}>Dati generali del cliente privato o società sportiva</Text>
+        <Text style={styles.subtitle}>Dati generali del cliente privato o societÃ  sportiva</Text>
 
         <View style={styles.customerTable} wrap={false}>
           {customerRows.map(([labelA, valueA, labelB, valueB]) => (

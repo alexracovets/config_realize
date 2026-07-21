@@ -36,7 +36,6 @@ const blockNodeToHtml = (node: richTextBlockNodeType): string => {
   }
 };
 
-/** Converts a Shopify `rich_text_field` metafield JSON value into one HTML string per top-level block (paragraph/heading/list). */
 const richTextJsonToParagraphs = (json: string): string[] => {
   try {
     const doc = JSON.parse(json) as richTextBlockNodeType;
@@ -46,7 +45,6 @@ const richTextJsonToParagraphs = (json: string): string[] => {
   }
 };
 
-/** Splits a plain single/multi-line text metafield value into escaped paragraph strings. */
 const plainTextToParagraphs = (value: string): string[] =>
   value
     .split('\n')
@@ -54,7 +52,6 @@ const plainTextToParagraphs = (value: string): string[] =>
     .filter(Boolean)
     .map(escapeHtml);
 
-/** Converts a text-like metafield value to paragraph HTML strings, using the metafield `type` to pick the parser. */
 const metafieldValueToParagraphs = (value: string, type?: string | null): string[] =>
   type === 'rich_text_field' ? richTextJsonToParagraphs(value) : plainTextToParagraphs(value);
 

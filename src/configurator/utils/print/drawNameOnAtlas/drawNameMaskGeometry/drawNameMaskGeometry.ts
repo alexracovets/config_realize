@@ -18,7 +18,6 @@ const drawNameMaskGeometry = (ctx: CanvasRenderingContext2D, instance: drawNameM
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#ffffff';
 
-  // Center the actual glyph ink box (not the em box) so the text lines up with the symmetric gizmo frame.
   const metrics = ctx.measureText(instance.text);
   const ascent = metrics.actualBoundingBoxAscent ?? NAME_REFERENCE_FONT_SIZE * 0.8;
   const descent = metrics.actualBoundingBoxDescent ?? NAME_REFERENCE_FONT_SIZE * 0.2;

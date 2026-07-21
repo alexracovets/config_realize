@@ -5,9 +5,7 @@ const DEFAULT_CONFIGURATOR_MODEL_ID: modelIdType = 'federer_pallavolo';
 const DEFAULT_CONFIGURATOR_SLUG = 'federer_pallavolo';
 const DEFAULT_CONFIGURATOR_COLLECTION_HANDLE = '';
 
-// --- Configurator copy ---
-
-const CONFIGURATOR_PRODUCT_DESCRIPTION = "Eventuali liste dei giocatori, quantità e taglie da inserire dopo in 'Completa config.'";
+const CONFIGURATOR_PRODUCT_DESCRIPTION = "Eventuali liste dei giocatori, quantitÃ  e taglie da inserire dopo in 'Completa config.'";
 const CONFIGURATOR_DEFAULT_MINIMUM_COUNT = 5;
 
 type collectionVolumeDiscountConfigType = {
@@ -38,7 +36,7 @@ const CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL = 'Dove desideri inserire il num
 const CONFIGURATOR_TESTO_POSITION_SELECT_LABEL = 'Dove desideri inserire il testo?';
 const CONFIGURATOR_POSITION_SELECT_PLACEHOLDER = 'Seleziona posizione';
 const CONFIGURATOR_UPLOADED_FILES_LABEL = 'File caricati';
-const ADD_PRODUCT_DESIGN_MODAL_CONFIRM_LABEL = 'Sì';
+const ADD_PRODUCT_DESIGN_MODAL_CONFIRM_LABEL = 'SÃ¬';
 const ADD_PRODUCT_DESIGN_MODAL_DECLINE_LABEL = 'No';
 
 const buildAddProductDesignModalTitle = (productLabel: string): string => `Desideri lo stesso disegno anche su ${productLabel}?`;
@@ -62,8 +60,6 @@ const CONFIGURATOR_STEP_META: configuratorStepMetaItemType[] = [
   { value: 'logo', label: 'Logo', step: 7 },
 ];
 
-// --- Checkout ---
-
 const CHECKOUT_MIN_ROW_QUANTITY = 1;
 const CHECKOUT_MAX_ROW_QUANTITY = 999;
 const CHECKOUT_DEFAULT_SIZE = 'M';
@@ -78,14 +74,14 @@ const CHECKOUT_CONFIGURATION_TABLE_COLUMNS = [
   { id: 'size', header: 'Taglia', size: 88, minSize: 88, maxSize: 88 },
   { id: 'name', header: 'Nome', size: 176, minSize: 176, maxSize: 176 },
   { id: 'number', header: 'Numero', size: 128, minSize: 128, maxSize: 128 },
-  { id: 'quantity', header: 'Quantità', size: 132, minSize: 132, maxSize: 132 },
+  { id: 'quantity', header: 'QuantitÃ ', size: 132, minSize: 132, maxSize: 132 },
   { id: 'actions', header: 'Modifica', size: 136, minSize: 136, maxSize: 136 },
 ] as const;
 
 const CHECKOUT_SIZE_SELECT_OPTIONS = CHECKOUT_SIZES.map((size) => ({ label: size, value: size }));
 const CHECKOUT_TABLE_ADD_ROW_LABEL = 'Aggiungi riga';
 const CHECKOUT_ADD_MORE_PRODUCTS_LABEL = 'Aggiungi altri prodotti';
-const CHECKOUT_EMPTY_CART_LABEL = 'Il tuo carrello è vuoto.';
+const CHECKOUT_EMPTY_CART_LABEL = 'Il tuo carrello Ã¨ vuoto.';
 
 const CHECKOUT_SUMMARY_TITLE = 'Riepilogo';
 const CHECKOUT_SUMMARY_PROCEED_LABEL = 'Prosegui';
@@ -127,8 +123,6 @@ const CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX = 'All Rights Reserved';
 const ORDER_CUTTING_EXPORT_DATA_NOT_SPECIFIED = 'Dati non indicati';
 const ORDER_CUTTING_EXPORT_DOWNLOAD_PLACEHOLDER_HREF = 'about:blank';
 
-// --- UI palette ---
-
 const PALETTE_COLORS = [
   '#FFFFFF',
   '#000000',
@@ -152,8 +146,6 @@ const PALETTE_COLORS = [
   '#8D0FB4',
 ] as const;
 
-// --- Logo upload (UI constraints) ---
-
 const LOGO_MAX_FILE_SIZE = 10 * 1024 * 1024;
 const LOGO_ACCEPTED_INPUT = '.eps,.ps,.pdf,.ai,.svg,.png,.jpg,.jpeg,.bmp,.tiff,.tif,.webp';
 const LOGO_SUPPORTED_LABEL = 'eps, ps, pdf, ai, svg, png, jpg, jpeg, bmp, tiff, tif';
@@ -171,8 +163,6 @@ const LOGO_ACCEPTED_MIMES = new Set([
   'image/webp',
   '',
 ]);
-
-// --- Media ---
 
 const TUTORIAL_VIDEO_URL = 'https://youtu.be/dQw4w9WgXcQ?si=uL2ObwuN8FpWsScY';
 const VIDEO_PLAYER_DEFAULT_VOLUME = 0.2;

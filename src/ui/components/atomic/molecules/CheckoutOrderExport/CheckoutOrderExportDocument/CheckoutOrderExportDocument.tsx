@@ -198,7 +198,7 @@ const CheckoutOrderExportDocument = ({ exportData }: checkoutOrderExportDocument
           <hr className="order-export__divider" data-testid="checkout-order-export-footer-divider" />
           <div className="order-export__footer-bottom">
             <p className="order-export__copyright" data-testid="checkout-order-export-copyright">
-              {CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX} © {currentYear} · {CHECKOUT_ORDER_EXPORT_WEBSITE} · {CHECKOUT_ORDER_EXPORT_EMAIL}
+              {CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX} Â© {currentYear} Â· {CHECKOUT_ORDER_EXPORT_WEBSITE} Â· {CHECKOUT_ORDER_EXPORT_EMAIL}
             </p>
           </div>
         </footer>

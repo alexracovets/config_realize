@@ -54,7 +54,7 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
         step={size.step}
         formatValue={(value) => `${value.toFixed(1)} cm`}
       />
-      <RangeControl label="Rotazione" value={part.rotation} onChange={(rotation) => updatePart(part.id, { rotation })} min={0} max={360} unit="°" />
+      <RangeControl label="Rotazione" value={part.rotation} onChange={(rotation) => updatePart(part.id, { rotation })} min={0} max={360} unit="Â°" />
       <RangeControl label="Trasparenza" value={opacityPercent} onChange={(value) => updatePart(part.id, { opacity: value / 100 })} min={0} max={100} unit="%" />
     </Flex>
   );

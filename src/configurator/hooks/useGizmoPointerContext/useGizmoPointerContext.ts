@@ -2,7 +2,6 @@
 
 import { useThree } from '@react-three/fiber';
 
-/** Shared R3F pointer/raycast context for gizmo interaction hooks. */
 const useGizmoPointerContext = () => {
   const raycaster = useThree((state) => state.raycaster);
   const camera = useThree((state) => state.camera);

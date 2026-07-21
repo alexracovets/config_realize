@@ -61,9 +61,6 @@ const raycastGizmoUv = (clientX: number, clientY: number, elements: printGizmoEl
   ctx.raycaster.setFromCamera(new Vector2(x, y), ctx.camera);
   const hits = ctx.raycaster.intersectObject(ctx.scene as Object3D, true);
 
-  // The gizmo is painted on the garment surface, so only a direct hit counts: when the closest
-  // surface under the cursor is another mesh (e.g. the front of the shirt while the gizmo sits on
-  // the back), the gizmo is occluded and must not react to the click.
   const closest = hits[0];
   if (!closest?.uv) return null;
   if (!elements.some((element) => element.meshNames.includes(closest.object.name))) return null;

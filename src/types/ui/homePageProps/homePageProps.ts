@@ -3,12 +3,12 @@ type homePageProductType = {
   title: string;
   handle: string;
   status: string;
-  /** Local geometry model id (Shopify `custom.id`); `null` when not configured yet. */
+
   modelId: string | null;
   price: number | null;
   currencyCode: string | null;
   previewSrc: string | null;
-  /** Shopify `custom.view_image` — front side of home flip cards. */
+
   flipPreviewSrc: string | null;
   activePreviewSrc: string | null;
 };

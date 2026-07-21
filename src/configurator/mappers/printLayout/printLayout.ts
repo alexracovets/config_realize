@@ -11,7 +11,6 @@ const resolvePartCenterUv = (part: garmentPartConfigType): uvPointType => {
   };
 };
 
-/** Print placement UV in JSON is 0..1 inside the part; runtime expects atlas coordinates. */
 const resolvePrintLocalUvToAtlas = (part: garmentPartConfigType, localUv: uvPointType): uvPointType => {
   const bounds = resolvePartUvBounds(part);
 

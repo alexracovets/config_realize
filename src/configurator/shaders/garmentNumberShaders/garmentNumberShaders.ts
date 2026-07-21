@@ -1,7 +1,4 @@
-// Slot work runs in a fixed 4-iteration loop instead of hand-unrolled per-slot code — the
-// unrolled form quadrupled the GLSL source and made driver-side shader translation (ANGLE)
-// pathologically slow (multi-second compiles per material).
-const garmentNumberMapFragment = /* glsl */ `
+const garmentNumberMapFragment =  `
   for ( int numberSlot = 0; numberSlot < 4; numberSlot ++ ) {
     float numberChannel = float( numberSlot );
     vec2 numberStampUv = garmentNumberToStampUv( vPrintUv, uNumberAnchorUv[ numberSlot ], uNumberRotation[ numberSlot ], uNumberPlacementRotation[ numberSlot ], uNumberUploadRotation[ numberSlot ], uNumberPartRotation[ numberSlot ], uNumberScale[ numberSlot ], uNumberLineHeight[ numberSlot ] );

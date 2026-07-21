@@ -38,7 +38,7 @@ const activateCartItem = async (get: () => ActivateCartItemGetState, itemId: str
   const needsPrepare = needsGarmentModelPrepare(activeItem.modelId, product);
 
   if (savePreviousId && savePreviousId !== itemId && items.some((item) => item.id === savePreviousId)) {
-    // Configuration only — preview is captured synchronously in selectItem before activation.
+
     persistCartItemConfiguration(get, savePreviousId);
   }
 
@@ -64,7 +64,7 @@ const activateCartItem = async (get: () => ActivateCartItemGetState, itemId: str
     const requestedGeneration = generation;
     void prepareGarmentModel(product, { configuration })
       .catch(() => {
-        /* scene watchdog / empty garment fallback */
+
       })
       .finally(() => {
         if (requestedGeneration !== activationGeneration) return;

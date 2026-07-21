@@ -28,7 +28,6 @@ const resolveRelationAxis = (axis: 'left' | 'center' | 'right' | 'top' | 'bottom
   return 0;
 };
 
-/** Place follower outside the leader frame edge described by relation x/y (content space). */
 const resolvePrintRelationUv = ({
   leaderUv,
   leaderHalf,

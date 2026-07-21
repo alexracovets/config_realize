@@ -5,12 +5,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExte
 import type { garmentMaterialRegistryValueType } from '@configurator/types';
 import type { MeshStandardMaterial } from 'three';
 
-// This module is reachable through multiple chunk entry points. The production bundler can
-// evaluate it more than once, which would otherwise yield distinct createContext objects and
-// separate materials Maps: the provider writes to one copy, consumers read another, and sync
-// (colors / patterns / logos / text) silently targets an empty registry while the on-screen
-// meshes stay on the default white material. Pinning both the React context and the mutable
-// store on globalThis keeps every module copy on one instance.
 const GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY = Symbol.for('configurator.garmentMaterialRegistryContext');
 const GARMENT_MATERIAL_REGISTRY_STORE_KEY = Symbol.for('configurator.garmentMaterialRegistryStore');
 
@@ -111,8 +105,7 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
         cancelAnimationFrame(store.notifyFrame);
         store.notifyFrame = null;
       }
-      // Provider is keyed by modelUrl — drop the shared bucket so the next garment
-      // does not inherit stale part materials from a previous module copy / model.
+
       store.materials.clear();
       store.revision += 1;
       store.listeners.forEach((listener) => listener());

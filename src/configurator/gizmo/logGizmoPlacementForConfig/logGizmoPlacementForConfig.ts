@@ -51,7 +51,7 @@ const logGizmoPlacementForConfig = ({ kind, label, partId, uv, product, rotation
   if (kind === 'number') {
     const snippet = buildTextPositionSnippet(product, partId, label, uv, rotation, fontSize);
 
-    console.log(`[gizmo]${phaseLabel} ${label} — numberPositions:\n${JSON.stringify(snippet, null, 2)}`);
+    console.log(`[gizmo]${phaseLabel} ${label} â€” numberPositions:\n${JSON.stringify(snippet, null, 2)}`);
     return;
   }
 
@@ -59,7 +59,7 @@ const logGizmoPlacementForConfig = ({ kind, label, partId, uv, product, rotation
     const positionsKey = kind === 'testo' ? 'testoPositions' : 'namePositions';
     const snippet = buildTextPositionSnippet(product, partId, label, uv, rotation, fontSize);
 
-    console.log(`[gizmo]${phaseLabel} ${label} — ${positionsKey}:\n${JSON.stringify(snippet, null, 2)}`);
+    console.log(`[gizmo]${phaseLabel} ${label} â€” ${positionsKey}:\n${JSON.stringify(snippet, null, 2)}`);
     return;
   }
 
@@ -71,7 +71,7 @@ const logGizmoPlacementForConfig = ({ kind, label, partId, uv, product, rotation
     ...(scale !== undefined ? { scale: round(scale, 3) } : {}),
   };
 
-  console.log(`[gizmo]${phaseLabel} ${label} — logoPositions:\n${JSON.stringify(snippet, null, 2)}`);
+  console.log(`[gizmo]${phaseLabel} ${label} â€” logoPositions:\n${JSON.stringify(snippet, null, 2)}`);
 };
 
 export { logGizmoPlacementForConfig };

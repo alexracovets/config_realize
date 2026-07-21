@@ -8,7 +8,7 @@ const getExtension = (name: string): string => {
 };
 
 const findPdfOffset = (bytes: Uint8Array): number => {
-  const marker = [0x25, 0x50, 0x44, 0x46, 0x2d]; // %PDF-
+  const marker = [0x25, 0x50, 0x44, 0x46, 0x2d];
   outer: for (let i = 0; i <= bytes.length - marker.length; i++) {
     for (let j = 0; j < marker.length; j++) {
       if (bytes[i + j] !== marker[j]) continue outer;

@@ -13,7 +13,6 @@ const useSceneTransitionTrigger = (value: string | null, beginSceneTransitionLoa
       return;
     }
 
-    // Skip the first effect after initial load — store hydration may still be settling.
     if (!initialLoadReleasedRef.current) {
       initialLoadReleasedRef.current = true;
       previousValueRef.current = value;

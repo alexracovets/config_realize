@@ -29,7 +29,6 @@ const buildVariantQuery = (handles: string[]): string => {
   return `#graphql\n  query CheckoutVariants(${args}) {\n    ${body}\n  }`;
 };
 
-/** Resolves each product handle to its default (first) variant GID via the Storefront API. */
 const resolveVariantIdsByHandle = async (handles: string[]): Promise<Map<string, string>> => {
   const variables = Object.fromEntries(handles.map((handle, index) => [`h${index}`, handle]));
   const data = await shopifyGraphql<Record<string, productVariantNodeType | null>>(buildVariantQuery(handles), variables);

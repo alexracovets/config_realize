@@ -17,7 +17,6 @@ const warmModelFile = (url: string, options?: warmProductModelFileOptionsType) =
   });
 };
 
-/** Fetch of the product GLB file (network warm-up). */
 const warmProductModelFile = (product: garmentConfigType, options?: warmProductModelFileOptionsType) => {
   warmModelFile(resolveModelUrl(product), options);
 };

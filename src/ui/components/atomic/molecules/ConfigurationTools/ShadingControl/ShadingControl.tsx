@@ -38,7 +38,7 @@ const ShadingControl = ({ partId }: shadingControlPropsType) => {
             onChange={(value) => setPartGradientRotation(partId, value)}
             min={0}
             max={360}
-            unit="°"
+            unit="Â°"
           />
           <RangeControl
             label="Posizione"

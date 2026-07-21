@@ -50,7 +50,6 @@ const resolveCuttingExportDownloadUrl = async (
   }
 };
 
-/** Composes every downloadable UV texture in the export document and returns embeddable URLs for PDF links. */
 const resolveCuttingExportDownloadUrls = async (exportData: orderCuttingExportType): Promise<cuttingExportDownloadUrlEntryType[]> => {
   const entries: cuttingExportDownloadUrlEntryType[] = [];
 

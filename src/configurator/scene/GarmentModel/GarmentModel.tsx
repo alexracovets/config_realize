@@ -1,8 +1,7 @@
 'use client';
 
 import { GarmentMaterialRegistryProvider } from '@configurator/providers';
-// Direct module paths, not the '@configurator/scene' barrel: the barrel re-exports this
-// file, and the resulting import cycle leaves bindings undefined in the production build.
+
 import { GarmentMeshes } from '@configurator/scene/GarmentMeshes';
 import { buildGltfNodeIndex } from '@configurator/scene/gltf';
 import { GltfSceneProvider } from '@configurator/scene/GltfSceneProvider';
@@ -23,9 +22,6 @@ const GarmentModelLoaded = ({ modelUrl, children }: { modelUrl: string; children
   );
 };
 
-// The registry provider must sit outside the Suspense boundary: useGLTF suspends
-// GarmentModelLoaded, so a provider rendered inside it is not mounted yet while
-// children (GarmentRuntime) already read the registry context.
 const GarmentModelGate = ({ modelUrl, children }: { modelUrl: string; children?: ReactNode }) => {
   return (
     <GarmentMaterialRegistryProvider key={modelUrl}>

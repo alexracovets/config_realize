@@ -3,7 +3,6 @@ import { composeDesignUvLayerPreview, composeDesignUvMixPreview } from '@utils/c
 import { composeTextUvLayer } from '@utils/composeTextUvLayer';
 import type { orderCuttingExportDownloadFileType } from '@types';
 
-/** Mirrors `OrderCuttingExportDownloadCard`'s compose logic to produce a temporary object URL. */
 const composeOrderCuttingExportDownloadFile = async (file: orderCuttingExportDownloadFileType): Promise<string | null> => {
   if (file.composeKind === 'design-layer' && file.maskSrc && file.color) {
     return composeDesignUvLayerPreview(file.maskSrc, file.color, file.opacity ?? 1);
@@ -27,8 +26,6 @@ const composeOrderCuttingExportDownloadFile = async (file: orderCuttingExportDow
     return composeTextUvLayer(file.atlasWidth, file.atlasHeight, file.textLayers);
   }
 
-  // Files without a composeKind (e.g. uploaded logos) already point at a real image — nothing to compose,
-  // just surface it so the upload/blob-collection pipeline picks it up like the composed textures.
   if (!file.composeKind) {
     return file.downloadUrl || file.previewSrc || null;
   }

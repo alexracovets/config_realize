@@ -7,12 +7,6 @@ const SVG_FALLBACK_SIZE_PX = 1024;
 
 const isConcreteLength = (value: string | null): boolean => !!value && !value.trim().endsWith('%');
 
-/**
- * SVGs exported from design tools often carry only a viewBox, no width/height attributes.
- * Such files load fine in an <img>, but report naturalWidth/naturalHeight = 0 and make
- * canvas drawImage() throw in Firefox — the logo would silently disappear from the model
- * and every canvas-composed export. Injecting explicit width/height fixes the intrinsic size.
- */
 const normalizeSvgFileToDisplayUrl = async (file: File): Promise<string> => {
   const text = await file.text();
   const parsed = new DOMParser().parseFromString(text, 'image/svg+xml');

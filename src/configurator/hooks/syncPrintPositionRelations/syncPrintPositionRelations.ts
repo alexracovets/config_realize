@@ -148,7 +148,6 @@ const runSyncPass = (buckets: printRelationBucketType[], options: { leaderKind?:
   }
 };
 
-/** Keep related prints glued to a leader frame edge after move/scale/add. */
 const syncPrintPositionRelations = (options?: { leaderKind?: printRelationKindType; leaderInstanceId?: string; followerInstanceId?: string }) => {
   runSyncPass(collectBuckets(), options ?? {});
 };
@@ -161,7 +160,6 @@ const syncPrintPositionRelationsForFollower = (followerInstanceId: string) => {
   syncPrintPositionRelations({ followerInstanceId });
 };
 
-/** Live-preview variant: re-snaps through preview-merged render state and writes into the follower's own preview, so nothing commits mid-drag. */
 const syncPrintPositionRelationsPreviewForLeader = (leaderKind: printRelationKindType, leaderInstanceId: string) => {
   runSyncPass(collectPreviewBuckets(), { leaderKind, leaderInstanceId });
 };

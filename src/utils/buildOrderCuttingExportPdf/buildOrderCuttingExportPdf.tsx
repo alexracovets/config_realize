@@ -10,9 +10,9 @@ import { buildDownloadPreviewKey, OrderCuttingExportPdfDocument } from '@utils/b
 import type { orderCuttingExportPdfImagesType } from '@utils/buildOrderCuttingExportPdf/OrderCuttingExportPdfDocument';
 
 type buildOrderCuttingExportPdfBlobOptionsType = {
-  /** Composed UV textures (PNG data URLs) keyed by cart item + label, produced at submit time. */
+
   downloadUrls?: cuttingExportDownloadUrlEntryType[];
-  /** Public https URLs of the same assets (already uploaded) — become clickable link targets in the PDF. */
+
   linkUrls?: cuttingExportDownloadUrlEntryType[];
 };
 
@@ -51,7 +51,6 @@ const prepareOrderCuttingExportPdfImages = async (
   return { downloadPreviewByKey, downloadLinkByKey };
 };
 
-/** Renders the cutting-pattern PDF (vector text, auto-paginated, embedded UV previews) from export data. */
 const buildOrderCuttingExportPdfBlob = async (exportData: orderCuttingExportType, options: buildOrderCuttingExportPdfBlobOptionsType = {}): Promise<Blob> => {
   const images = await prepareOrderCuttingExportPdfImages(exportData, options.downloadUrls ?? [], options.linkUrls ?? []);
   return pdf(<OrderCuttingExportPdfDocument exportData={exportData} images={images} />).toBlob();

@@ -59,7 +59,6 @@ const parseUvImages = (value: string | undefined): uvImageEntryType[] => {
   }
 };
 
-/** Fetches the most recently created Shopify order and its `configurator.*` export metafields (PDF/config/UV image URLs). */
 const fetchLatestOrderExportAssets = async (): Promise<latestOrderExportAssetsType | null> => {
   const data = await shopifyAdminGraphql<shopifyLastOrderResponseType>(LAST_ORDER_EXPORT_ASSETS_QUERY);
   const order = data.orders.edges[0]?.node;

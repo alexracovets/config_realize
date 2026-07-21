@@ -66,7 +66,7 @@ interface rangeControlPropsType {
   max?: number;
   step?: number;
   unit?: string;
-  /** Overrides the `{value}{unit}` label rendering — used to display slider values converted to another unit (e.g. cm). */
+
   formatValue?: (value: number) => string;
 }
 

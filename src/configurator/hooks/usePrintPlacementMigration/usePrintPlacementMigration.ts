@@ -15,7 +15,6 @@ interface UsePrintPlacementMigrationOptions {
   migratePlacementRotation?: boolean;
 }
 
-/** Repairs legacy print placement when entering a print configuration step. */
 const usePrintPlacementMigration = ({
   activeStep,
   targetStep,

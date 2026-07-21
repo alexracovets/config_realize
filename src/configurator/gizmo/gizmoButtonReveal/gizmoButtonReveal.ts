@@ -1,7 +1,5 @@
 import { NAME_SLOT_COUNT } from '@configurator/constants';
 
-// Softened so the per-component fade in garmentGizmoButtonCell (light pixels on a steep curve,
-// dark outline on a linear one) keeps the dissolve at ~150ms: long enough to read as an animation, short enough that the dark chrome passing through gray (inherent to alpha-fading dark pixels over light fabric) is not perceived as a color shift.
 const REVEAL_LERP = 0.35;
 const REVEAL_EPSILON = 0.001;
 
@@ -56,8 +54,7 @@ const setGizmoButtonsRevealTarget = (slotIndex: number, snap = false) => {
       revealTarget[index] = next;
       changed = true;
     }
-    // Buttons appear instantly (an animated reveal-in desyncs the fill/icon/ring curves used for
-    // the dissolve); only the hide direction animates.
+
     if ((snap || next === 1) && revealCurrent[index] !== next) {
       revealCurrent[index] = next;
       changed = true;

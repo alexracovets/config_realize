@@ -17,13 +17,9 @@ import maloneBasketData from '@data/malone_basket/malone_basket.json';
 import malonePallavoloData from '@data/malone_pallavolo/malone_pallavolo.json';
 import picciPallavoloData from '@data/picci_pallavolo/picci_pallavolo.json';
 import syllaPallavoloData from '@data/sylla_pallavolo/sylla_pallavolo.json';
-/**
- * Geometry-only model catalog, keyed by model id.
- * The model id equals the data folder name and the Shopify product `custom.id` metafield —
- * this is the join key between a Shopify product (business data) and its local 3D geometry.
- */
+
 const MODELS: Record<modelIdType, garmentConfigType> = {
-  // WIP geometry JSON — schema is still being finalized (e.g. testoPositions), so cast through unknown.
+
   baggio_calcio: baggioData as unknown as garmentConfigType,
   canotta_magik_basket: canottaMagikBasketData as unknown as garmentConfigType,
   bernardi_calcio: bernardiCalcioData as unknown as garmentConfigType,
@@ -51,11 +47,6 @@ const resolveProductPreviewSrc = (product: garmentConfigType) => (product.previe
 
 const DEFAULT_CURRENCY_CODE = 'EUR';
 
-/**
- * Fallback business data sourced from a model's legacy local JSON fields.
- * Used when there is no Shopify context (in-configurator product catalog, default cart item).
- * The Shopify-driven flow overrides this with real product data via `garmentBusinessType`.
- */
 const deriveLocalBusiness = (modelId: modelIdType): garmentBusinessType => {
   const product = getModel(modelId);
 

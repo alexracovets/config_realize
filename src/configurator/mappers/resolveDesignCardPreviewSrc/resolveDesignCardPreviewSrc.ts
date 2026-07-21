@@ -1,6 +1,5 @@
 const DESIGN_CARD_PREVIEW_DIR = '/svg/design';
 
-/** Canonical card id, e.g. `design_01` … `design_10`. */
 const normalizeDesignId = (value: string): string | null => {
   const trimmed = value.trim().toLowerCase();
 

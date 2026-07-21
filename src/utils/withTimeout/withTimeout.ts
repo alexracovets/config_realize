@@ -1,4 +1,3 @@
-/** Rejects with a labeled error when the promise does not settle within `timeoutMs`. */
 const withTimeout = <T>(promise: Promise<T>, timeoutMs: number, label: string) =>
   new Promise<T>((resolve, reject) => {
     const timeoutId = setTimeout(() => {

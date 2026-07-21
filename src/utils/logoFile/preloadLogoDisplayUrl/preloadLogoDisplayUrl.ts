@@ -1,6 +1,5 @@
 'use client';
 
-/** Decode logo off the critical path so the first canvas draw is cheaper. */
 const preloadLogoDisplayUrl = async (src: string): Promise<void> => {
   if (typeof window === 'undefined' || !('createImageBitmap' in window)) return;
   try {
@@ -8,7 +7,7 @@ const preloadLogoDisplayUrl = async (src: string): Promise<void> => {
     const bitmap = await createImageBitmap(blob);
     bitmap.close();
   } catch {
-    /* browser will decode on first draw */
+
   }
 };
 

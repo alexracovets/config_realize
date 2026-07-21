@@ -14,7 +14,6 @@ const resolveCuttingExportDownloadAnchorMeta = (anchor: HTMLAnchorElement) => {
   return { cartItemId, label };
 };
 
-/** Patches cutting-export download cards so PDF link annotations point at stable absolute URLs. */
 const applyCuttingExportDownloadUrls = (documentRoot: HTMLElement, entries: cuttingExportDownloadUrlEntryType[]): void => {
   const urlByCartAndLabel = new Map(entries.map((entry) => [buildCuttingExportDownloadUrlKey(entry.cartItemId, entry.label), entry.url]));
 

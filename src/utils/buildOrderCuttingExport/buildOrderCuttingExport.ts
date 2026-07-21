@@ -40,8 +40,8 @@ const buildOrderCuttingExportArticles = (products: checkoutProductType[]) =>
       modelLabel,
       size: row.size,
       quantity: row.quantity,
-      jerseyName: row.name.trim() || '—',
-      number: row.number.trim() || '—',
+      jerseyName: row.name.trim() || 'â€”',
+      number: row.number.trim() || 'â€”',
     }));
   });
 

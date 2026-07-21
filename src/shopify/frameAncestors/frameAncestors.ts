@@ -2,7 +2,7 @@ const SHOPIFY_THEME_EDITOR_ORIGIN = 'https://admin.shopify.com';
 const SHOPIFY_THEME_PREVIEW_ORIGIN = 'https://online-store-web.shopifyapps.com';
 const SHOPIFY_DOMAIN_PATTERN = /^[a-z0-9][a-z0-9-]*\.myshopify\.com$/;
 const FRAME_ANCESTOR_WILDCARD_PATTERN = /\*/;
-/** Any valid public hostname (custom/primary storefront domain), optional port. */
+
 const HOSTNAME_PATTERN = /^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}(:\d{1,5})?$/;
 
 const readEnv = (key: string): string | undefined => {
@@ -33,7 +33,6 @@ const normalizeFrameAncestor = (origin: string): string | null => {
   return `https://${trimmed}`;
 };
 
-/** Validates a live storefront host (custom/primary domain) from the `?host=` param. */
 const normalizeLiveHost = (host: string | null | undefined): string | null => {
   if (!host) {
     return null;
@@ -43,7 +42,6 @@ const normalizeLiveHost = (host: string | null | undefined): string | null => {
   return HOSTNAME_PATTERN.test(trimmed) ? trimmed : null;
 };
 
-/** Builds frame-ancestors sources for Shopify storefront + Theme Editor embeds. */
 const buildShopifyFrameAncestors = (shop?: string | null, host?: string | null): string[] => {
   const origins = new Set<string>(["'self'", SHOPIFY_THEME_EDITOR_ORIGIN, SHOPIFY_THEME_PREVIEW_ORIGIN]);
 
@@ -52,7 +50,6 @@ const buildShopifyFrameAncestors = (shop?: string | null, host?: string | null):
     origins.add(`https://${shopFromRequest}`);
   }
 
-  // Live storefront domain the iframe is actually embedded on (custom/primary).
   const liveHost = normalizeLiveHost(host);
   if (liveHost) {
     origins.add(`https://${liveHost}`);

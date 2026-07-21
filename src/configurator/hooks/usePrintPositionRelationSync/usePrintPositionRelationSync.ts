@@ -37,7 +37,6 @@ const toSnapshot = (instance: { id: string; uv: { x: number; y: number }; fontSi
   rotation: instance.rotation,
 });
 
-/** Keeps relation followers glued when leaders change from UI (size/text) or gizmo. */
 const usePrintPositionRelationSync = () => {
   useEffect(() => {
     let previousNames = useGarmentName.getState().instances.map(toSnapshot);

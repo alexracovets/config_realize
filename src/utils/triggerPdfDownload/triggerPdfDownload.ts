@@ -2,7 +2,6 @@
 
 const DOWNLOAD_URL_REVOKE_DELAY_MS = 10_000;
 
-/** Triggers a browser download for the blob. Revoke is delayed — a sync revoke aborts the download in Safari/Firefox. */
 const triggerPdfDownload = (blob: Blob, filename: string) => {
   const objectUrl = URL.createObjectURL(blob);
 

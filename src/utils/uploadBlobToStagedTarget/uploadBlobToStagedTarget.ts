@@ -1,6 +1,5 @@
 import type { stagedUploadTargetType } from '@shopify/stagedUpload';
 
-/** POSTs a blob directly to Shopify's staged-upload bucket (browser or server). */
 const uploadBlobToStagedTarget = async (target: stagedUploadTargetType, file: Blob): Promise<void> => {
   const formData = new FormData();
   target.parameters.forEach(({ name, value }) => formData.append(name, value));

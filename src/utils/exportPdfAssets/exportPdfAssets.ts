@@ -5,7 +5,6 @@ import { resolveAbsoluteAssetUrl } from '@utils/resolveAbsoluteAssetUrl';
 const EXPORT_PDF_IMAGE_LOAD_TIMEOUT_MS = 8_000;
 const EXPORT_PDF_IMAGE_FALLBACK_SIZE_PX = 256;
 
-/** Sources @react-pdf/renderer can embed directly without re-encoding. */
 const isPdfReadyImageSrc = (src: string) => /^data:image\/(?:png|jpe?g);/i.test(src);
 
 const loadImageElement = (src: string): Promise<HTMLImageElement> =>
@@ -27,10 +26,6 @@ const loadImageElement = (src: string): Promise<HTMLImageElement> =>
     image.src = src;
   });
 
-/**
- * Normalizes any browser-displayable image (SVG, WebP, blob:, relative path…) into a PNG data URL
- * that @react-pdf/renderer can embed. Returns null when the source cannot be rasterized.
- */
 const rasterizeImageForPdf = async (src: string): Promise<string | null> => {
   if (!src) return null;
   if (isPdfReadyImageSrc(src)) return src;
@@ -55,7 +50,6 @@ const rasterizeImageForPdf = async (src: string): Promise<string | null> => {
   }
 };
 
-/** Rasterizes a set of image sources, deduplicating identical URLs. Failed sources map to null. */
 const rasterizeImagesForPdf = async (sources: string[]): Promise<Map<string, string | null>> => {
   const uniqueSources = Array.from(new Set(sources.filter(Boolean)));
   const entries = await Promise.all(uniqueSources.map(async (source) => [source, await rasterizeImageForPdf(source)] as const));

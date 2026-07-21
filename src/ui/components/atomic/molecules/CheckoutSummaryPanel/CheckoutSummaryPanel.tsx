@@ -57,7 +57,7 @@ const CheckoutSummaryPanel = () => {
         </div>
 
         <div className="rounded-[8px] bg-linear-to-r from-[#ECD187] via-[#DC2C6F] to-[#030102] px-4 py-3 text-center text-white">
-          <p className="text-[14px] font-semibold leading-snug">% Sconto quantità del {discountPercent}%</p>
+          <p className="text-[14px] font-semibold leading-snug">% Sconto quantitÃ  del {discountPercent}%</p>
           <p className="mt-1 text-[12px] leading-snug">Con questo ordine risparmierai: {priceFormat(discountAmount)}</p>
         </div>
 
@@ -69,7 +69,7 @@ const CheckoutSummaryPanel = () => {
             onClick={submitCheckout}
             className="h-12 w-full rounded-[8px] bg-base-black text-[16px] font-semibold text-white hover:bg-base-black/90 disabled:opacity-60"
           >
-            {isSubmitting ? 'Attendere…' : CHECKOUT_SUMMARY_PROCEED_LABEL}
+            {isSubmitting ? 'Attendereâ€¦' : CHECKOUT_SUMMARY_PROCEED_LABEL}
           </Button>
           {error && <p className="text-[12px] text-red-600">{error}</p>}
         </div>

@@ -7,8 +7,6 @@ import { ACESFilmicToneMapping } from 'three';
 import { useConfiguratorSceneLoad } from '@store';
 import { Suspense, useState } from 'react';
 
-// A drag started over selected HTML text (e.g. after a triple-click) hijacks pointer moves as a
-// text-selection drag instead of orbit-controls input. Clearing the selection on canvas hover prevents this.
 const clearTextSelection = () => {
   window.getSelection()?.removeAllRanges();
 };

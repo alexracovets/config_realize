@@ -6,7 +6,6 @@ import { useFrame, useThree } from '@react-three/fiber';
 
 import { useConfiguratorSceneLoad } from '@store';
 
-/** Mount scene nodes one per frame while loaders are active. */
 const useStaggeredMeshMount = (totalCount: number, resetKey: string) => {
   const invalidate = useThree((state) => state.invalidate);
   const isInitialSceneLoading = useConfiguratorSceneLoad((state) => state.isInitialSceneLoading);

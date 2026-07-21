@@ -30,7 +30,6 @@ const drawNameStrokeMaskGeometry = (
   ctx.lineWidth = lineWidth;
   ctx.strokeStyle = '#ffffff';
 
-  // Match the fill draw: center the ink box so stroke + fill + frame stay aligned.
   const metrics = ctx.measureText(instance.text);
   const ascent = metrics.actualBoundingBoxAscent ?? NAME_REFERENCE_FONT_SIZE * 0.8;
   const descent = metrics.actualBoundingBoxDescent ?? NAME_REFERENCE_FONT_SIZE * 0.2;

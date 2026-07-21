@@ -2,7 +2,6 @@ import type { garmentBusinessType } from '@types';
 
 import { mapSizeChartContent, resolveSizeReferenceCm, type sizeChartMetafieldsNodeType } from '@shopify/mapSizeChartContent';
 
-/** GraphQL fields needed to build `garmentBusinessType` from a Shopify product node. */
 const PRODUCT_BUSINESS_FIELDS = `#graphql
   id
   title

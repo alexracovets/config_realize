@@ -12,10 +12,6 @@ type configuratorRouteShellPropsType = {
   children?: React.ReactNode;
 };
 
-/**
- * Stamps slug/product onto zustand after first paint so the initial loader can render
- * before route activation and asset preloads run.
- */
 const ConfiguratorRouteShell = ({ collectionHandle, slug, product, children }: configuratorRouteShellPropsType) => {
   const appliedRouteKeyRef = useRef<string | null>(null);
 

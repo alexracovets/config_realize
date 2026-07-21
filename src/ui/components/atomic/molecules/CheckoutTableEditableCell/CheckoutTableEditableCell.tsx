@@ -72,7 +72,6 @@ const CheckoutTableEditableCell = ({
 
   return (
     <AtomInput
-      // Inline table edit: focus the cell input when entering edit mode.
 
       autoFocus
       aria-label={placeholder}

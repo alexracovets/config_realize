@@ -19,7 +19,6 @@ const useConfigurationCartSync = () => {
     if (!initializedRef.current) {
       initializedRef.current = true;
 
-      // Route shell stamps the product during render; skip default-model activation on first paint.
       if (isGarmentStoresEmpty) {
         return;
       }

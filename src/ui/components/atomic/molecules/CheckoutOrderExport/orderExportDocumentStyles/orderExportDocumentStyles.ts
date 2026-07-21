@@ -135,7 +135,7 @@ const ORDER_EXPORT_DOCUMENT_STYLES = `
   text-align: center;
 }
 
-.order-export__table th { 
+.order-export__table th {
   padding: 0 8px;
   background: #f2f2f2;
   font-size: 0;

@@ -1,12 +1,10 @@
-/** Wire format between the client (Prosegui) and the `/api/checkout` server route. */
-
 type checkoutLineAttributeType = {
   key: string;
   value: string;
 };
 
 type checkoutLinePayloadType = {
-  /** Shopify product handle; the server resolves it to a default variant GID. */
+
   handle: string;
   quantity: number;
   attributes: checkoutLineAttributeType[];
@@ -14,7 +12,7 @@ type checkoutLinePayloadType = {
 
 type createCheckoutPayloadType = {
   lines: checkoutLinePayloadType[];
-  /** Cart-level attributes; become the resulting order's `note_attributes` once placed. */
+
   attributes?: checkoutLineAttributeType[];
 };
 

@@ -10,7 +10,6 @@ type uvExportBlobType = {
   blob: Blob;
 };
 
-/** Composes and collects every downloadable UV texture already surfaced in the cutting-export document, as Blobs. */
 const collectOrderCuttingExportUvBlobs = async (exportData: orderCuttingExportType): Promise<uvExportBlobType[]> => {
   const results: uvExportBlobType[] = [];
 

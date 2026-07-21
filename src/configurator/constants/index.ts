@@ -8,7 +8,6 @@ const PATTERN_LAYER_COUNT = 2;
 const NAME_SLOT_COUNT = 4;
 const LOGO_SLOT_COUNT = 4;
 
-/** Corrects text/number orientation relative to the print UV space on the garment. */
 const PRINT_UPLOAD_ROTATION_DEG = 90;
 
 const NAME_REFERENCE_FONT_SIZE = 400;

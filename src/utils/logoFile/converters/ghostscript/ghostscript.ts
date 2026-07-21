@@ -61,14 +61,13 @@ const getWorker = (): Worker => {
   return worker;
 };
 
-/** Preload Ghostscript WASM in a worker while the user is on the logo step. */
 const warmupGhostscriptWorker = (): void => {
   if (warmupDone || typeof window === 'undefined') return;
   try {
     const id = ++jobId;
     getWorker().postMessage({ type: 'warmup', id });
   } catch {
-    /* optional preload */
+
   }
 };
 

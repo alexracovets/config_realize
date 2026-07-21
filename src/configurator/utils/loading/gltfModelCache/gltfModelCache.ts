@@ -3,11 +3,9 @@ import type { GLTF } from 'three-stdlib';
 import { GLTFLoader } from 'three-stdlib';
 import { peek } from 'suspend-react';
 
-/** Baked GLBs in /public/models do not use Draco or Meshopt — skip decoder init on first parse. */
 const GLTF_USE_DRACO = false;
 const GLTF_USE_MESHOPT = false;
 
-/** Defer GLTF parse for passive catalog hover — never use while a scene loader is active. */
 const scheduleGarmentGltfParse = (work: () => void) => {
   if (typeof window === 'undefined') {
     work();
@@ -47,7 +45,6 @@ const startGarmentGltfPreload = (modelUrl: string) => {
   useGLTF.preload(modelUrl, GLTF_USE_DRACO, GLTF_USE_MESHOPT);
 };
 
-/** Passive warm-up (catalog cards). Deferred so hover does not block the page. */
 const warmGltfModelCache = (modelUrl: string) => {
   if (isGltfModelReady(modelUrl)) return;
 
@@ -56,7 +53,6 @@ const warmGltfModelCache = (modelUrl: string) => {
   });
 };
 
-/** Active navigation — parse after one paint, not on idle (loaders keep the main thread busy). */
 const preloadGarmentGltfEager = (modelUrl: string) => {
   if (isGltfModelReady(modelUrl)) return;
 

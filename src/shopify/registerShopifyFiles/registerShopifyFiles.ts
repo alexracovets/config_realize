@@ -87,7 +87,6 @@ const resolveRegisteredFileUrl = async (file: fileNodeType): Promise<string> => 
   throw new Error(`[shopify] File "${file.id}" did not finish processing in time.`);
 };
 
-/** Registers staged uploads as Shopify Files and returns their public CDN URLs (same order as input). */
 const registerShopifyFiles = async (files: registerShopifyFileInputType[]): Promise<string[]> => {
   if (!files.length) return [];
 

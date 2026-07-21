@@ -3,7 +3,6 @@ import type { cartItemConfigurationType, checkoutProductType, modelIdType, uvBou
 
 type orderCuttingExportComposeKindType = 'design-layer' | 'design-mix' | 'color-atlas' | 'gradient-atlas' | 'text-layer';
 
-/** @deprecated Use orderCuttingExportComposeKindType */
 type orderCuttingExportDesignComposeKindType = orderCuttingExportComposeKindType;
 
 interface orderCuttingExportDesignLayerSpecType {
@@ -12,14 +11,14 @@ interface orderCuttingExportDesignLayerSpecType {
 }
 
 interface orderCuttingExportGradientSpecType {
-  /** Gradient end color; base part color is the start. Already resolved for `reversed`. */
+
   color2: string;
-  /** Degrees, same convention as the garment shader. */
+
   rotation: number;
   position: number;
   softness: number;
   opacity: number;
-  /** Part UV bounds the shader normalizes against. */
+
   uvBounds: uvBoundsType;
 }
 
@@ -37,9 +36,9 @@ interface orderCuttingExportTextLayerSpecType {
   strokeColor: string;
   strokeWidth: number;
   fontSize: number;
-  /** Anchor in atlas UV space (0..1). */
+
   uv: uvPointType;
-  /** Total print rotation in degrees (instance + placement + upload + part). */
+
   rotation: number;
   lineHeight?: number;
   letterSpacing?: number;
@@ -72,7 +71,7 @@ interface orderCuttingExportStepDetailParamType {
 interface orderCuttingExportStepDetailType {
   label: string;
   value: string;
-  /** Extra key/value rows rendered stacked under the main value. */
+
   params?: orderCuttingExportStepDetailParamType[];
 }
 
