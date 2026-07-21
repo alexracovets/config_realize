@@ -3,7 +3,7 @@
 import type { garmentBusinessType, garmentConfigType, modelIdType } from '@types';
 import { DEFAULT_MODEL_ID, deriveLocalBusiness, getModel } from '@utils';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 interface ConfiguratorProductState {
   modelId: modelIdType;
@@ -25,7 +25,7 @@ const resolveModel = (modelId: modelIdType): garmentConfigType => {
   return product;
 };
 
-const useConfiguratorProduct = create<ConfiguratorProductState>((set) => ({
+const useConfiguratorProduct = createSingletonStore<ConfiguratorProductState>('useConfiguratorProduct', (set) => ({
   modelId: DEFAULT_MODEL_ID,
   product: resolveModel(DEFAULT_MODEL_ID),
   business: deriveLocalBusiness(DEFAULT_MODEL_ID),

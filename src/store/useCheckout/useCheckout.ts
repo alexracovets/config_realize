@@ -11,7 +11,7 @@ import { resolveCheckoutPrintAvailability } from '@store/useCheckout/resolveChec
 import type { checkoutLineRowPatchType, checkoutLineRowType, checkoutProductType } from '@types';
 import { clampCheckoutRowQuantity } from '@constants';
 import { getModel } from '@utils';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface CheckoutState {
   products: checkoutProductType[];
   initializeFromCart: () => void;
@@ -40,7 +40,7 @@ const maybeSyncFirstRowPreview = (cartItemId: string, rowId: string, rows: check
   scheduleCheckoutPreviewCapture(cartItemId);
 };
 
-const useCheckout = create<CheckoutState>((set, get) => ({
+const useCheckout = createSingletonStore<CheckoutState>('useCheckout', (set, get) => ({
   products: [],
 
   initializeFromCart: () => {

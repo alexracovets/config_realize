@@ -2,7 +2,7 @@
 
 import type { garmentConfigType, garmentNumberSnapshotType, numberInstanceType, numberPositionType, numberPreviewType } from '@types';
 import { mapProductNumberPositions } from '@store/useGarmentNumber/mapProductNumbers';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface GarmentNumberState {
   productPath: string | null;
   positionsKey: string | null;
@@ -47,7 +47,7 @@ const syncNumberInstancesFromPositions = (instances: numberInstanceType[], posit
     return { ...instance, partId: position.partId, uv: position.uv, lineHeight: position.lineHeight ?? instance.lineHeight ?? 1.5 };
   });
 
-const useGarmentNumber = create<GarmentNumberState>((set, get) => ({
+const useGarmentNumber = createSingletonStore<GarmentNumberState>('useGarmentNumber', (set, get) => ({
   productPath: null,
   positionsKey: null,
   positions: [],

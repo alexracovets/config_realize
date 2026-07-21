@@ -1,6 +1,6 @@
 'use client';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 import { useConfigurationCart } from '@store/useConfigurationCart';
 import type { configuratorCatalogProductPickType } from '@types';
@@ -13,7 +13,7 @@ interface AddProductDesignDialogState {
   confirm: (inheritDesign: boolean) => void;
 }
 
-const useAddProductDesignDialog = create<AddProductDesignDialogState>((set, get) => ({
+const useAddProductDesignDialog = createSingletonStore<AddProductDesignDialogState>('useAddProductDesignDialog', (set, get) => ({
   isOpen: false,
   pendingProduct: null,
   openWithProduct: (product) => {

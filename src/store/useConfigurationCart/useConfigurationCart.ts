@@ -11,7 +11,7 @@ import { persistCartItemSnapshot } from '@store/useConfigurationCart/persistCart
 import { syncActiveCartItemToEmbeddedUrl } from '@store/useConfigurationCart/syncActiveCartItemToEmbeddedUrl';
 import type { cartItemConfigurationType, cartItemType, configuratorCatalogProductPickType, garmentBusinessType, modelIdType } from '@types';
 import { getModel } from '@utils';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface ConfigurationCartState {
   items: cartItemType[];
   activeItemId: string;
@@ -32,7 +32,7 @@ interface ConfigurationCartState {
 
 const initialItem = createDefaultCartItem();
 
-const useConfigurationCart = create<ConfigurationCartState>((set, get) => ({
+const useConfigurationCart = createSingletonStore<ConfigurationCartState>('useConfigurationCart', (set, get) => ({
   items: [initialItem],
   activeItemId: initialItem.id,
   configurations: {},

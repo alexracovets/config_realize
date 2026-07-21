@@ -1,6 +1,6 @@
 'use client';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 const MIN_LOADER_VISIBLE_MS = 400;
 
@@ -83,7 +83,7 @@ const beginLoader = (
   return { session, visibleUntil, patch: patch(session, visibleUntil) };
 };
 
-const useConfiguratorSceneLoad = create<ConfiguratorSceneLoadState>((set, get) => ({
+const useConfiguratorSceneLoad = createSingletonStore<ConfiguratorSceneLoadState>('useConfiguratorSceneLoad', (set, get) => ({
   isRouteHydrated: false,
   isInitialSceneLoading: true,
   isSceneTransitionLoading: false,

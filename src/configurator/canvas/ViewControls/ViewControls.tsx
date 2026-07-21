@@ -1,8 +1,9 @@
 'use client';
 
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { orbitControlsRef, syncOrbitControlsEnabled, useOrbitCameraFocus } from '@configurator/canvas';
 import { registerCameraBridgeHandlers } from '@configurator/canvas/cameraBridge';
+import { orbitControlsRef, syncOrbitControlsEnabled } from '@configurator/canvas/orbitGuard';
+import { useOrbitCameraFocus } from '@configurator/canvas/useOrbitCameraFocus';
 import {
   applyOrbitZoomAroundPoint,
   clampOrbitCameraOutsideGarment,

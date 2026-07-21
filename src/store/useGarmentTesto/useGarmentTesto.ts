@@ -2,7 +2,7 @@
 
 import type { garmentConfigType, garmentTestoSnapshotType, testoInstanceType, testoPositionType, testoPreviewType } from '@types';
 import { mapProductTestoPositions } from '@store/useGarmentTesto/mapProductTesto';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface GarmentTestoState {
   productPath: string | null;
   positionsKey: string | null;
@@ -47,7 +47,7 @@ const syncTestoInstancesFromPositions = (instances: testoInstanceType[], positio
     };
   });
 
-const useGarmentTesto = create<GarmentTestoState>((set, get) => ({
+const useGarmentTesto = createSingletonStore<GarmentTestoState>('useGarmentTesto', (set, get) => ({
   productPath: null,
   positionsKey: null,
   positions: [],

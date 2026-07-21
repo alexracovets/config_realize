@@ -2,7 +2,7 @@
 
 import { resolveAvailableConfiguratorStepNumbers } from '@hooks/resolveProductStepsConfiguration';
 import { useConfiguratorProduct } from '@store/useConfiguratorProduct';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface ConfigurationControlState {
   activeStep: number;
   name: string;
@@ -22,7 +22,7 @@ interface ConfigurationControlState {
 
 const resolveAvailableSteps = () => resolveAvailableConfiguratorStepNumbers(useConfiguratorProduct.getState().product);
 
-const useConfigurationControl = create<ConfigurationControlState>((set, get) => ({
+const useConfigurationControl = createSingletonStore<ConfigurationControlState>('useConfigurationControl', (set, get) => ({
   activeStep: 1,
   name: 'Maglia Federer',
   numberProduct: 1,

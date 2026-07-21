@@ -1,13 +1,13 @@
 'use client';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 interface InfoDialogState {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const useInfoDialog = create<InfoDialogState>((set) => ({
+const useInfoDialog = createSingletonStore<InfoDialogState>('useInfoDialog', (set) => ({
   isOpen: false,
   setIsOpen: (isOpen: boolean) => set({ isOpen }),
 }));

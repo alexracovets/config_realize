@@ -2,7 +2,7 @@
 
 import type { garmentColorSnapshotType, garmentConfigType, partGradientType } from '@types';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 import { PALETTE_COLORS } from '@constants';
 
@@ -32,7 +32,7 @@ const getOrCreateGradient = (gradientsByPart: Record<string, partGradientType>, 
   return gradientsByPart[partId] ?? DISABLED_PART_GRADIENT;
 };
 
-const useGarmentColor = create<GarmentColorState>((set, get) => ({
+const useGarmentColor = createSingletonStore<GarmentColorState>('useGarmentColor', (set, get) => ({
   byPart: {},
   gradientsByPart: {},
 

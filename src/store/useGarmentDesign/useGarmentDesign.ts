@@ -2,7 +2,7 @@
 
 import type { designPatternItemType, garmentConfigType, garmentDesignSnapshotType } from '@types';
 
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 
 import { mapDefaultPattern, mapProductDesigns } from '@configurator/mappers';
 import { PALETTE_COLORS } from '@constants';
@@ -32,7 +32,7 @@ interface UseGarmentDesignStore {
 const buildPatternColors = (pattern: designPatternItemType, layerColors: Record<number, string>): Record<string, string> =>
   Object.fromEntries(pattern.parts.map((part, index) => [part.key, layerColors[index] ?? DEFAULT_COLOR]));
 
-const useGarmentDesign = create<UseGarmentDesignStore>((set, get) => ({
+const useGarmentDesign = createSingletonStore<UseGarmentDesignStore>('useGarmentDesign', (set, get) => ({
   productPath: null,
   patterns: [],
   activePattern: null,

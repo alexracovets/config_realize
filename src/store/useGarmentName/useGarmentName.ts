@@ -2,7 +2,7 @@
 
 import type { garmentConfigType, garmentNameSnapshotType, nameInstanceType, namePositionType, namePreviewType } from '@types';
 import { mapProductNamePositions } from '@store/useGarmentName/mapProductNames';
-import { create } from 'zustand';
+import { createSingletonStore } from '@store/createSingletonStore';
 interface GarmentNameState {
   productPath: string | null;
   positionsKey: string | null;
@@ -39,7 +39,7 @@ const resolveInstancesForRender = (instances: nameInstanceType[], preview: nameP
 
 const buildPositionsKey = (product: garmentConfigType) => JSON.stringify(product.namePositions ?? []);
 
-const useGarmentName = create<GarmentNameState>((set, get) => ({
+const useGarmentName = createSingletonStore<GarmentNameState>('useGarmentName', (set, get) => ({
   productPath: null,
   positionsKey: null,
   positions: [],

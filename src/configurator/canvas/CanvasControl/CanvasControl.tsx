@@ -1,6 +1,6 @@
 'use client';
 
-import { ViewControls } from '@configurator/canvas';
+import { ViewControls } from '@configurator/canvas/ViewControls';
 import { useCartPreviewCapture } from '@configurator/hooks';
 import { Environment } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';

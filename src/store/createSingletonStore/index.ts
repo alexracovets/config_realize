@@ -1,0 +1,1 @@
+export { createSingletonStore } from './createSingletonStore';

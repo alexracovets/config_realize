@@ -1,52 +1,68 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
 
 import type { garmentMaterialRegistryValueType } from '@configurator/types';
 import type { MeshStandardMaterial } from 'three';
 
-// This module is reachable through two different specifiers ('@configurator' via the
-// bootstrap/canvas barrels, and '@configurator/providers' from the scene tree). The
-// production bundler instantiates it once per entry point, which yields two distinct
-// createContext objects: the provider writes to one, consumers read the other, and the
-// consumer throws. Pinning the context on globalThis keeps every copy on one instance.
+// This module is reachable through multiple chunk entry points. The production bundler can
+// evaluate it more than once, which would otherwise yield distinct createContext objects and
+// separate materials Maps: the provider writes to one copy, consumers read another, and sync
+// (colors / patterns / logos / text) silently targets an empty registry while the on-screen
+// meshes stay on the default white material. Pinning both the React context and the mutable
+// store on globalThis keeps every module copy on one instance.
 const GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY = Symbol.for('configurator.garmentMaterialRegistryContext');
+const GARMENT_MATERIAL_REGISTRY_STORE_KEY = Symbol.for('configurator.garmentMaterialRegistryStore');
+
+type registryStoreType = {
+  materials: Map<string, Set<MeshStandardMaterial>>;
+  revision: number;
+  listeners: Set<() => void>;
+  notifyFrame: number | null;
+};
 
 type registryContextGlobalType = typeof globalThis & {
   [GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY]?: React.Context<garmentMaterialRegistryValueType | null>;
+  [GARMENT_MATERIAL_REGISTRY_STORE_KEY]?: registryStoreType;
 };
 
-const registryContextGlobal = globalThis as registryContextGlobalType;
+const registryGlobal = globalThis as registryContextGlobalType;
 
 const GarmentMaterialRegistryContext =
-  registryContextGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] ??
-  (registryContextGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] = createContext<garmentMaterialRegistryValueType | null>(null));
+  registryGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] ??
+  (registryGlobal[GARMENT_MATERIAL_REGISTRY_CONTEXT_KEY] = createContext<garmentMaterialRegistryValueType | null>(null));
+
+const getRegistryStore = (): registryStoreType =>
+  (registryGlobal[GARMENT_MATERIAL_REGISTRY_STORE_KEY] ??= {
+    materials: new Map<string, Set<MeshStandardMaterial>>(),
+    revision: 0,
+    listeners: new Set<() => void>(),
+    notifyFrame: null,
+  });
 
 const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNode }) => {
-  const materialsRef = useRef<Map<string, Set<MeshStandardMaterial>>>(new Map());
-  const revisionRef = useRef(0);
-  const listenersRef = useRef(new Set<() => void>());
-  const notifyFrameRef = useRef<number | null>(null);
-
   const notifyMaterials = useCallback(() => {
-    revisionRef.current += 1;
-    listenersRef.current.forEach((listener) => listener());
+    const store = getRegistryStore();
+    store.revision += 1;
+    store.listeners.forEach((listener) => listener());
   }, []);
 
   const scheduleNotifyMaterials = useCallback(() => {
-    if (notifyFrameRef.current != null) return;
+    const store = getRegistryStore();
+    if (store.notifyFrame != null) return;
 
-    notifyFrameRef.current = requestAnimationFrame(() => {
-      notifyFrameRef.current = null;
+    store.notifyFrame = requestAnimationFrame(() => {
+      store.notifyFrame = null;
       notifyMaterials();
     });
   }, [notifyMaterials]);
 
   const register = useCallback(
     (key: string, material: MeshStandardMaterial) => {
-      const bucket = materialsRef.current.get(key) ?? new Set<MeshStandardMaterial>();
+      const store = getRegistryStore();
+      const bucket = store.materials.get(key) ?? new Set<MeshStandardMaterial>();
       bucket.add(material);
-      materialsRef.current.set(key, bucket);
+      store.materials.set(key, bucket);
       scheduleNotifyMaterials();
     },
     [scheduleNotifyMaterials],
@@ -54,32 +70,35 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
 
   const unregister = useCallback(
     (key: string, material: MeshStandardMaterial) => {
-      const bucket = materialsRef.current.get(key);
+      const store = getRegistryStore();
+      const bucket = store.materials.get(key);
       if (!bucket) return;
 
       bucket.delete(material);
-      if (bucket.size === 0) materialsRef.current.delete(key);
+      if (bucket.size === 0) store.materials.delete(key);
       scheduleNotifyMaterials();
     },
     [scheduleNotifyMaterials],
   );
 
   const getMaterials = useCallback((key: string) => {
-    return Array.from(materialsRef.current.get(key) ?? []);
+    return Array.from(getRegistryStore().materials.get(key) ?? []);
   }, []);
 
   const hasMaterialsForParts = useCallback((partIds: readonly string[]) => {
-    return partIds.every((partId) => (materialsRef.current.get(partId)?.size ?? 0) > 0);
+    const store = getRegistryStore();
+    return partIds.every((partId) => (store.materials.get(partId)?.size ?? 0) > 0);
   }, []);
 
   const subscribeMaterials = useCallback((listener: () => void) => {
-    listenersRef.current.add(listener);
+    const store = getRegistryStore();
+    store.listeners.add(listener);
     return () => {
-      listenersRef.current.delete(listener);
+      store.listeners.delete(listener);
     };
   }, []);
 
-  const getRevision = useCallback(() => revisionRef.current, []);
+  const getRevision = useCallback(() => getRegistryStore().revision, []);
 
   const bumpRevision = useCallback(() => {
     notifyMaterials();
@@ -87,9 +106,16 @@ const GarmentMaterialRegistryProvider = ({ children }: { children: React.ReactNo
 
   useEffect(() => {
     return () => {
-      if (notifyFrameRef.current != null) {
-        cancelAnimationFrame(notifyFrameRef.current);
+      const store = getRegistryStore();
+      if (store.notifyFrame != null) {
+        cancelAnimationFrame(store.notifyFrame);
+        store.notifyFrame = null;
       }
+      // Provider is keyed by modelUrl — drop the shared bucket so the next garment
+      // does not inherit stale part materials from a previous module copy / model.
+      store.materials.clear();
+      store.revision += 1;
+      store.listeners.forEach((listener) => listener());
     };
   }, []);
 

@@ -1,6 +1,7 @@
 'use client';
 
-import { CanvasControl, SceneModel } from '@configurator/canvas';
+import { CanvasControl } from '@configurator/canvas/CanvasControl';
+import { SceneModel } from '@configurator/canvas/SceneModel';
 import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping } from 'three';
 import { useConfiguratorSceneLoad } from '@store';

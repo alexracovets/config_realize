@@ -2,7 +2,7 @@
 
 import type { gizmoButtonHitType, printablePartMeshesType, printDragMoveStateType, printGizmoElementType } from '@configurator/types';
 import type { uvPointType } from '@types';
-import { setGizmoDragging } from '@configurator/canvas';
+import { setGizmoDragging } from '@configurator/canvas/orbitGuard';
 import {
   GIZMO_CORNERS,
   logGizmoPlacementForConfig,
