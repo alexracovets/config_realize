@@ -45,7 +45,7 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
             </Button>
           </Flex>
           <Flex className="gap-3">
-            <Text variant="small_secondary">QuantitÃ </Text>
+            <Text variant="small_secondary">Quantità</Text>
             <Box className="px-4 py-1.5 rounded-[8px] border border-primary-10">
               <Text variant="small_secondary" className="text-default">
                 {quantity} pz

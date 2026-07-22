@@ -62,7 +62,7 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
           <Box>
             <Text className="text-[11px] leading-[15px] font-medium text-center">Trascina qui il tuo logo o fai click per caricare un elemento</Text>
             <Text className="text-[10px] leading-[15px] text-center text-gray-10 text-wrap">
-              (Dimensione max {Math.round(LOGO_MAX_FILE_SIZE / (1024 * 1024))} MB â€” form. {LOGO_SUPPORTED_LABEL})
+              (Dimensione max {Math.round(LOGO_MAX_FILE_SIZE / (1024 * 1024))} MB — form. {LOGO_SUPPORTED_LABEL})
             </Text>
           </Box>
         </Button>
@@ -72,7 +72,7 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
 
       <Grid className="grid-cols-[auto_1fr] gap-2.5 items-center px-3 p-2 rounded-[4px] bg-primary w-full">
         <SvgIcon name="info" />
-        <Text className="text-[12px] text-gray">Per una qualitÃ  di stampa ottimale si consiglia l&apos;utilizzo di file vettoriali.</Text>
+        <Text className="text-[12px] text-gray">Per una qualità di stampa ottimale si consiglia l&apos;utilizzo di file vettoriali.</Text>
       </Grid>
     </Flex>
   );

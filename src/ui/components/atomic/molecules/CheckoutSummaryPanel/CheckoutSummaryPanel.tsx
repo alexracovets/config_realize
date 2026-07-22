@@ -62,7 +62,7 @@ const CheckoutSummaryPanel = () => {
               </Text>
             </Flex>
             <Button size="checkout" variant="checkout" disabled={isSubmitting} onClick={submitCheckout}>
-              {isSubmitting ? 'Attendereâ€¦' : CHECKOUT_SUMMARY_PROCEED_LABEL}
+              {isSubmitting ? 'Attendere…' : CHECKOUT_SUMMARY_PROCEED_LABEL}
               {error && <p className="text-[12px] text-red-600">{error}</p>}
             </Button>
           </Flex>

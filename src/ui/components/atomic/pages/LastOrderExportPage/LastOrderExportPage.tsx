@@ -24,7 +24,7 @@ const LastOrderExportPage = async () => {
   return (
     <Container>
       <div className="py-10 flex flex-col gap-6 max-w-[720px] mx-auto">
-        <h1 className="text-xl font-semibold">Ultimo ordine â€” file di export</h1>
+        <h1 className="text-xl font-semibold">Ultimo ordine — file di export</h1>
 
         {!order ? (
           <p className="text-sm text-gray-30">Nessun ordine trovato o impossibile contattare Shopify Admin API.</p>
@@ -63,7 +63,7 @@ const LastOrderExportPage = async () => {
               {order.uvImages.map((uvImage, index) => (
                 <li key={`${uvImage.cartItemId}-${uvImage.label}-${index}`}>
                   <a className="text-active underline" href={buildDownloadHref(uvImage.url, resolveUvImageFilename(uvImage))}>
-                    {uvImage.label} â€” {uvImage.cartItemId}
+                    {uvImage.label} — {uvImage.cartItemId}
                   </a>
                 </li>
               ))}

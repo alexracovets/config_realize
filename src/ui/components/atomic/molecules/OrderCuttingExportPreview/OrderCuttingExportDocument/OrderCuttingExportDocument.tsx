@@ -22,7 +22,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
       <style>{ORDER_CUTTING_EXPORT_DOCUMENT_STYLES}</style>
       <div className="cutting-export" data-testid="order-cutting-export-document">
         <h1 className="cutting-export__title">Modulo ordine cliente</h1>
-        <p className="cutting-export__subtitle">Dati generali del cliente privato o societÃ  sportiva</p>
+        <p className="cutting-export__subtitle">Dati generali del cliente privato o società sportiva</p>
 
         <table className="cutting-export__table">
           <tbody>
@@ -47,7 +47,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
             <tr>
               <th>Indirizzo</th>
               <td>{customer.address}</td>
-              <th>LocalitÃ </th>
+              <th>Località</th>
               <td>{customer.city}</td>
             </tr>
             <tr>
@@ -105,7 +105,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
             <header className="cutting-export__product-header">
               <h2 className="cutting-export__product-title">{product.productTitle}</h2>
               <p className="cutting-export__product-meta">
-                Modello: {product.modelLabel} Â· Print atlas: {product.printAtlas.width}Ã—{product.printAtlas.height}px
+                Modello: {product.modelLabel} · Print atlas: {product.printAtlas.width}×{product.printAtlas.height}px
               </p>
             </header>
 

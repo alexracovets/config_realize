@@ -18,7 +18,7 @@ const trustIconProps = {
 
 const CheckoutOrderExportTrustIcon = ({ icon }: checkoutOrderExportTrustIconPropsType) => {
   switch (icon) {
-    case 'shirt':
+    case 'order_0':
       return (
         <svg {...trustIconProps}>
           <path
@@ -27,7 +27,7 @@ const CheckoutOrderExportTrustIcon = ({ icon }: checkoutOrderExportTrustIconProp
           />
         </svg>
       );
-    case 'shieldCheck':
+    case 'order_1':
       return (
         <svg {...trustIconProps}>
           <path d="M8.75 10.3688L7.13125 8.75L6.25 9.63125L8.75 12.1312L13.75 7.13125L12.8688 6.25L8.75 10.3688Z" fill="currentColor" />
@@ -37,7 +37,7 @@ const CheckoutOrderExportTrustIcon = ({ icon }: checkoutOrderExportTrustIconProp
           />
         </svg>
       );
-    case 'truck':
+    case 'order_2':
       return (
         <svg {...trustIconProps}>
           <path
@@ -46,7 +46,7 @@ const CheckoutOrderExportTrustIcon = ({ icon }: checkoutOrderExportTrustIconProp
           />
         </svg>
       );
-    case 'star':
+    case 'order_3':
       return (
         <svg {...trustIconProps}>
           <path

@@ -6,6 +6,9 @@ import type {
   orderCuttingExportProductType,
   orderCuttingExportType,
 } from '@types';
+import { PDF_FONT_FAMILY, registerPdfFont } from '@utils';
+
+registerPdfFont();
 
 type orderCuttingExportPdfImagesType = {
 
@@ -27,7 +30,7 @@ const MIN_ARTICLE_ROWS = 4;
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: 'Helvetica',
+    fontFamily: PDF_FONT_FAMILY,
     fontSize: 9,
     color: COLOR_TEXT,
     paddingTop: 28,
@@ -35,7 +38,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     backgroundColor: '#ffffff',
   },
-  title: { fontSize: 16, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
+  title: { fontSize: 16, fontFamily: PDF_FONT_FAMILY, fontWeight: 700, marginBottom: 4 },
   subtitle: { fontSize: 9, color: COLOR_MUTED, marginBottom: 14 },
   customerTable: { borderWidth: 0.75, borderColor: COLOR_BORDER, marginBottom: 16 },
   customerRow: { flexDirection: 'row' },
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
     fontSize: 8,
   },
   customerTd: { width: '28%', borderWidth: 0.75, borderColor: COLOR_BORDER, padding: 5, fontSize: 8 },
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
     fontSize: 9,
     textAlign: 'center',
   },
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
     fontSize: 8,
     textAlign: 'center',
   },
@@ -72,15 +75,15 @@ const styles = StyleSheet.create({
   articlesTable: { marginBottom: 20 },
   product: { marginBottom: 18 },
   productHeader: { marginBottom: 8 },
-  productTitle: { fontSize: 12, fontFamily: 'Helvetica-Bold' },
+  productTitle: { fontSize: 12, fontFamily: PDF_FONT_FAMILY, fontWeight: 700 },
   productMeta: { fontSize: 8, color: COLOR_MUTED, marginTop: 2 },
   step: { borderWidth: 0.75, borderColor: COLOR_BORDER, borderRadius: 3, padding: 8, marginBottom: 8 },
   stepHeader: { flexDirection: 'row', gap: 4, marginBottom: 6 },
-  stepIndex: { fontFamily: 'Helvetica-Bold', fontSize: 9 },
-  stepTitle: { fontFamily: 'Helvetica-Bold', fontSize: 9 },
+  stepIndex: { fontFamily: PDF_FONT_FAMILY, fontWeight: 700, fontSize: 9 },
+  stepTitle: { fontFamily: PDF_FONT_FAMILY, fontWeight: 700, fontSize: 9 },
   stepEmpty: { fontSize: 8, color: COLOR_MUTED },
   detail: { marginBottom: 6 },
-  detailLabel: { fontFamily: 'Helvetica-Bold', fontSize: 8, marginBottom: 2 },
+  detailLabel: { fontFamily: PDF_FONT_FAMILY, fontWeight: 700, fontSize: 8, marginBottom: 2 },
   detailValue: { fontSize: 8 },
   paramsTable: { borderWidth: 0.75, borderColor: COLOR_BORDER, marginTop: 2 },
   paramRow: { flexDirection: 'row' },
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     borderColor: COLOR_BORDER,
     padding: 4,
     fontSize: 7.5,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
   },
   paramTd: { width: '65%', borderWidth: 0.75, borderColor: COLOR_BORDER, padding: 4, fontSize: 7.5 },
   downloads: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
   },
   downloadPreview: { width: 43, height: 43, objectFit: 'contain' },
   downloadPlaceholder: { fontSize: 7, color: COLOR_MUTED, textAlign: 'center' },
-  downloadLabel: { fontSize: 8, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
+  downloadLabel: { fontSize: 8, fontFamily: PDF_FONT_FAMILY, fontWeight: 700, textAlign: 'center' },
   downloadFile: { fontSize: 7, color: COLOR_MUTED, textAlign: 'center', marginTop: 2 },
   pageNumber: { position: 'absolute', right: 27, bottom: 14, fontSize: 7.5, color: COLOR_MUTED, textAlign: 'right' },
 });
@@ -209,7 +212,7 @@ const ProductSection = ({ product, images }: { product: orderCuttingExportProduc
     <View style={styles.productHeader} wrap={false}>
       <Text style={styles.productTitle}>{product.productTitle}</Text>
       <Text style={styles.productMeta}>
-        Modello: {product.modelLabel} Â· Print atlas: {product.printAtlas.width}Ã—{product.printAtlas.height}px
+        Modello: {product.modelLabel} · Print atlas: {product.printAtlas.width}×{product.printAtlas.height}px
       </Text>
     </View>
 
@@ -247,7 +250,7 @@ const OrderCuttingExportPdfDocument = ({ exportData, images }: orderCuttingExpor
     ["Numero d'ordine", exportData.orderNumber, 'Data ordine', exportData.orderDate],
     ['Azienda', customer.company, 'Partita IVA o cod. fiscale', customer.vatOrTaxCode],
     ['Nome', customer.firstName, 'Cognome', customer.lastName],
-    ['Indirizzo', customer.address, 'LocalitÃ ', customer.city],
+    ['Indirizzo', customer.address, 'Località', customer.city],
     ['Provincia', customer.province, 'CAP', customer.postalCode],
     ['E-mail', customer.email, 'PEC', customer.pec],
   ];
@@ -256,7 +259,7 @@ const OrderCuttingExportPdfDocument = ({ exportData, images }: orderCuttingExpor
     <Document title={`Modulo ordine ${exportData.orderNumber}`.trim()} producer="Realize" creator="Realize">
       <Page size="A4" style={styles.page}>
         <Text style={styles.title}>Modulo ordine cliente</Text>
-        <Text style={styles.subtitle}>Dati generali del cliente privato o societÃ  sportiva</Text>
+        <Text style={styles.subtitle}>Dati generali del cliente privato o società sportiva</Text>
 
         <View style={styles.customerTable} wrap={false}>
           {customerRows.map(([labelA, valueA, labelB, valueB]) => (

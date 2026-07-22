@@ -74,7 +74,7 @@ const createCheckoutConfigurationTableColumns = ({
     ...(showNumber ? [createNumberColumn(onPatchRow)] : []),
     {
       id: 'quantity',
-      header: 'QuantitÃ ',
+      header: 'Quantità',
       ...getColumnSizing('quantity'),
       cell: ({ row }) => (
         <CheckoutQuantityStepper

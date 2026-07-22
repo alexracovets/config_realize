@@ -5,7 +5,7 @@ import { resolvePrintRelationUv } from '@configurator/utils';
 describe('resolvePrintRelationUv', () => {
   const atlasSize = { width: 1000, height: 1000 };
 
-  it('places follower above leader for top-center with 90Â° content rotation', () => {
+  it('places follower above leader for top-center with 90° content rotation', () => {
     const uv = resolvePrintRelationUv({
       leaderUv: { x: 0.5, y: 0.5 },
       leaderHalf: { x: 100, y: 20 },
@@ -22,7 +22,7 @@ describe('resolvePrintRelationUv', () => {
     expect(uv.y).toBeCloseTo(0.5, 5);
   });
 
-  it('places follower below leader for bottom-center with 90Â° content rotation', () => {
+  it('places follower below leader for bottom-center with 90° content rotation', () => {
     const uv = resolvePrintRelationUv({
       leaderUv: { x: 0.5, y: 0.5 },
       leaderHalf: { x: 100, y: 20 },
