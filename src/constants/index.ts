@@ -91,10 +91,10 @@ const CHECKOUT_SUMMARY_TOTAL_LABEL = 'Importo Totale:';
 const CHECKOUT_SUMMARY_VAT_LABEL = 'IVA 22% inclusa';
 
 const CHECKOUT_SUMMARY_TRUST_ITEMS = [
-  { icon: 'shirt', label: 'Prodotti 100% Made in Italy' },
-  { icon: 'shieldCheck', label: 'Sicurezza Checkout' },
-  { icon: 'truck', label: 'Consegna sicura e veloce' },
-  { icon: 'star', label: 'Recensioni Trustpilot 4,8/5' },
+  { icon: 'order_0', label: 'Prodotti 100% Made in Italy' },
+  { icon: 'order_1', label: 'Sicurezza Checkout' },
+  { icon: 'order_2', label: 'Consegna sicura e veloce' },
+  { icon: 'order_3', label: 'Siamo anche su Trustpilot' },
 ] as const;
 
 const CHECKOUT_SUMMARY_TIMELINE_STEPS = [

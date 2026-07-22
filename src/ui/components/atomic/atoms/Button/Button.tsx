@@ -74,6 +74,11 @@ const buttonVariants = cva(
           'hover:bg-gray-100 hover:shadow-sm',
           'transition-all duration-200 ease-in',
         ),
+        checkout: cn(
+          'justify-center items-center text-[20px] rounded-[8px] text-white font-[600] bg-[#0A0A0A]',
+          'hover:bg-gray-100 hover:shadow-sm hover:text-[#0A0A0A]',
+          'transition-all duration-200 ease-in',
+        ),
       },
       size: {
         default: '',
@@ -85,6 +90,7 @@ const buttonVariants = cva(
         'icon-sm': '',
         'icon-lg': '',
         delete: 'px-2 h-[28.5px] rounded-[8px]',
+        checkout: 'h-[55px] w-full p-5',
       },
     },
     defaultVariants: {
