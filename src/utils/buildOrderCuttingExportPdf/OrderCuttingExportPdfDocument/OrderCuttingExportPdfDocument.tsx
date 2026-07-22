@@ -6,7 +6,7 @@ import type {
   orderCuttingExportProductType,
   orderCuttingExportType,
 } from '@types';
-import { PDF_FONT_FAMILY, registerPdfFont } from '@utils';
+import { PDF_FONT_FAMILY, registerPdfFont } from '@utils/registerPdfFont';
 
 registerPdfFont();
 

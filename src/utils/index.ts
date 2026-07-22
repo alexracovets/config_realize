@@ -56,4 +56,3 @@ export {
 } from './resolvePrintCmScale';
 export type { printCmScaleType, printUnitType } from './resolvePrintCmScale';
 export { fetchConfiguratorProductBusiness } from './fetchConfiguratorProductBusiness';
-export { PDF_FONT_FAMILY, registerPdfFont } from './registerPdfFont';
