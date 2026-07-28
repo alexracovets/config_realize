@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { Flex, Grid, ScrollArea } from '@atoms';
+import { Box, Flex, Grid, ScrollArea } from '@atoms';
 import { CardAddProduct, ConfiguratorLogoStepNotice, ConfiguratorProduct, ConfiguratorProductDescription } from '@molecules';
 
 import { registerAsideOrbitGuard } from '@configurator/canvas';
@@ -49,13 +49,18 @@ const AsideConfiguration = () => {
   useEffect(() => registerAsideOrbitGuard(asideRef.current), []);
 
   return (
-    <aside ref={asideRef} className="relative h-full min-h-0 overflow-visible p-4 pl-28">
-      <CardAddProduct />
-      <Grid className="grid h-full min-h-0 w-[334px] grid-rows-[auto_minmax(0,1fr)] gap-6">
-        <ConfiguratorProduct />
-        <ActiveStepContent />
-      </Grid>
-    </aside>
+    <>
+      <CardAddProduct className="hidden max-sm:flex" />
+      <Box variant="aside_configuration" asChild>
+        <aside ref={asideRef}>
+          <CardAddProduct className="max-sm:hidden" />
+          <Grid className="grid h-full min-h-0 w-83.5 grid-rows-[auto_minmax(0,1fr)] gap-6 max-sm:w-full">
+            <ConfiguratorProduct />
+            <ActiveStepContent />
+          </Grid>
+        </aside>
+      </Box>
+    </>
   );
 };
 

@@ -13,7 +13,7 @@ type textVariantType =
   | 'small_secondary'
   | 'product_card_name';
 
-type boxVariantType = 'default' | 'header' | 'footer' | 'toggle_handle';
+type boxVariantType = 'default' | 'header' | 'footer' | 'toggle_handle' | 'aside_configuration';
 
 type flexVariantType =
   | 'default'
@@ -25,7 +25,12 @@ type flexVariantType =
   | 'configurator_part'
   | 'slider_labels'
   | 'info_part'
-  | 'product_card_name';
+  | 'header_configuration'
+  | 'configurator_layout_template'
+  | 'configurator_view'
+  | 'configurator_view_canvas'
+  | 'product_card_name'
+  | 'card_add_product';
 
 type gridVariantType = 'default' | 'header' | 'configurator' | 'configurator_price' | 'select_parts' | 'aside_configurator';
 

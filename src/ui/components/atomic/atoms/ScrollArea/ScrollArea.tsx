@@ -8,9 +8,11 @@ import { OverlayScrollbars } from 'overlayscrollbars';
 import { cn } from '@utils';
 import type { scrollAreaPropsType } from '@types';
 
-const FADE_SIZE = 2;
+const FADE_SIZE = 3;
+const EDGE_SHADOW_SIZE = 24;
 
-const ScrollArea = ({ children, className, fadeEdges = false }: scrollAreaPropsType) => {
+const ScrollArea = ({ children, className, fadeEdges = false, edgeShadows = false, orientation = 'vertical' }: scrollAreaPropsType) => {
+  const isHorizontal = orientation === 'horizontal';
   const targetRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -22,14 +24,23 @@ const ScrollArea = ({ children, className, fadeEdges = false }: scrollAreaPropsT
 
   const updateFade = useCallback(() => {
     const viewport = viewportRef.current;
-    if (!viewport || !fadeEdges) return;
+    if (!viewport || (!fadeEdges && !edgeShadows)) return;
+
+    if (isHorizontal) {
+      const { scrollLeft, scrollWidth, clientWidth } = viewport;
+      const canScroll = scrollWidth > clientWidth + 1;
+
+      setShowTopFade(canScroll && scrollLeft > 4);
+      setShowBottomFade(canScroll && scrollLeft + clientWidth < scrollWidth - 4);
+      return;
+    }
 
     const { scrollTop, scrollHeight, clientHeight } = viewport;
     const canScroll = scrollHeight > clientHeight + 1;
 
     setShowTopFade(canScroll && scrollTop > 4);
     setShowBottomFade(canScroll && scrollTop + clientHeight < scrollHeight - 4);
-  }, [fadeEdges]);
+  }, [fadeEdges, edgeShadows, isHorizontal]);
 
   const updateScrollbarPadding = useCallback(() => {
     if (!instanceRef.current) return;
@@ -50,20 +61,22 @@ const ScrollArea = ({ children, className, fadeEdges = false }: scrollAreaPropsT
   const maskImage = useMemo(() => {
     if (!fadeEdges) return undefined;
 
+    const direction = isHorizontal ? 'to right' : 'to bottom';
+
     if (showTopFade && showBottomFade) {
-      return `linear-gradient(to bottom, transparent 0px, #000 ${FADE_SIZE}px, #000 calc(100% - ${FADE_SIZE}px), transparent 100%)`;
+      return `linear-gradient(${direction}, transparent 0px, #000 ${FADE_SIZE}px, #000 calc(100% - ${FADE_SIZE}px), transparent 100%)`;
     }
 
     if (showTopFade) {
-      return `linear-gradient(to bottom, transparent 0px, #000 ${FADE_SIZE}px, #000 100%)`;
+      return `linear-gradient(${direction}, transparent 0px, #000 ${FADE_SIZE}px, #000 100%)`;
     }
 
     if (showBottomFade) {
-      return `linear-gradient(to bottom, #000 0px, #000 calc(100% - ${FADE_SIZE}px), transparent 100%)`;
+      return `linear-gradient(${direction}, #000 0px, #000 calc(100% - ${FADE_SIZE}px), transparent 100%)`;
     }
 
     return undefined;
-  }, [fadeEdges, showTopFade, showBottomFade]);
+  }, [fadeEdges, isHorizontal, showTopFade, showBottomFade]);
 
   useLayoutEffect(() => {
     updateFade();
@@ -111,17 +124,52 @@ const ScrollArea = ({ children, className, fadeEdges = false }: scrollAreaPropsT
   }, [refresh, updateFade]);
 
   return (
-    <div ref={targetRef} className={cn('relative h-full w-full pr-[8px]', className)}>
+    <div
+      ref={targetRef}
+      className={cn('relative w-full', isHorizontal ? 'pb-2' : 'h-full pr-2', className)}
+    >
       <div
         ref={viewportRef}
-        className="h-full w-full overflow-y-scroll overflow-x-hidden scrollbar-none"
+        className={cn(
+          'w-full scrollbar-none',
+          isHorizontal ? 'overflow-x-scroll overflow-y-hidden' : 'h-full overflow-y-scroll overflow-x-hidden',
+        )}
         style={{
           WebkitMaskImage: maskImage,
           maskImage,
         }}
       >
-        <div ref={contentRef}>{children}</div>
+        <div ref={contentRef} className={cn(isHorizontal && 'w-fit')}>
+          {children}
+        </div>
       </div>
+
+      {edgeShadows && (
+        <>
+          <div
+            aria-hidden
+            className={cn(
+              'pointer-events-none absolute z-10 transition-opacity duration-150',
+              isHorizontal
+                ? 'inset-y-0 left-0 bg-linear-to-r from-white to-transparent'
+                : 'inset-x-0 top-0 bg-linear-to-b from-white to-transparent',
+              showTopFade ? 'opacity-100' : 'opacity-0',
+            )}
+            style={isHorizontal ? { width: EDGE_SHADOW_SIZE } : { height: EDGE_SHADOW_SIZE }}
+          />
+          <div
+            aria-hidden
+            className={cn(
+              'pointer-events-none absolute z-10 transition-opacity duration-150',
+              isHorizontal
+                ? 'inset-y-0 right-0 bg-linear-to-l from-white to-transparent'
+                : 'inset-x-0 bottom-0 bg-linear-to-t from-white to-transparent',
+              showBottomFade ? 'opacity-100' : 'opacity-0',
+            )}
+            style={isHorizontal ? { width: EDGE_SHADOW_SIZE } : { height: EDGE_SHADOW_SIZE }}
+          />
+        </>
+      )}
     </div>
   );
 };

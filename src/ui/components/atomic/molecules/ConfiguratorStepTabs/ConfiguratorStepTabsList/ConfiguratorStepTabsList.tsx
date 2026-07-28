@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { AtomTabsList, AtomTabsSeparator, AtomTabsTrigger, SlidingIndicator, Text } from '@atoms';
+import { AtomTabsList, AtomTabsSeparator, AtomTabsTrigger, ScrollArea, SlidingIndicator, Text } from '@atoms';
 import { useSlidingIndicator } from '@hooks';
 import type { configuratorTabItemPropsType, configuratorTabsListPropsType } from '@types';
 import { cn } from '@utils';
@@ -36,15 +36,16 @@ const ConfiguratorStepTabsList = ({ items, activeIndex, listClassName }: configu
   const { wrapperRef, getItemRef, indicatorRef } = useSlidingIndicator(activeIndex);
 
   return (
-    <div ref={wrapperRef} className="relative w-fit pt-2">
-      <AtomTabsList className={cn('gap-3', listClassName)}>
-        {items.map((item, index) => (
-          <ConfiguratorTabItem key={item.value} item={item} index={index} activeIndex={activeIndex} getItemRef={getItemRef} />
-        ))}
-      </AtomTabsList>
-
-      <SlidingIndicator ref={indicatorRef} variant="gradient" />
-    </div>
+    <ScrollArea orientation="horizontal" edgeShadows>
+      <div ref={wrapperRef} className="relative w-full min-w-0 pt-2">
+        <AtomTabsList className={cn('w-fit gap-3 max-sm:gap-1', listClassName)}>
+          {items.map((item, index) => (
+            <ConfiguratorTabItem key={item.value} item={item} index={index} activeIndex={activeIndex} getItemRef={getItemRef} />
+          ))}
+        </AtomTabsList>
+        <SlidingIndicator ref={indicatorRef} variant="gradient" />
+      </div>
+    </ScrollArea>
   );
 };
 

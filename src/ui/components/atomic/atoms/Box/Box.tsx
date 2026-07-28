@@ -18,6 +18,10 @@ const variantBox = cva('block', {
         'data-[active=true]:translate-x-5',
         'transition-all duration-200 ease-in',
       ),
+      aside_configuration: cn(
+        'relative h-full min-h-0 overflow-visible p-4 pl-16',
+        'max-sm:order-4 max-sm:flex max-sm:min-h-0 max-sm:w-full max-sm:flex-1 max-sm:basis-full max-sm:flex-col max-sm:p-4 max-sm:pl-4',
+      ),
     },
   },
   defaultVariants: {

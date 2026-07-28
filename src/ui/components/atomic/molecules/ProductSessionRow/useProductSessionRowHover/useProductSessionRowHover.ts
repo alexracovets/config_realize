@@ -247,6 +247,24 @@ const useProductSessionRowHover = () => {
     return () => portal.removeEventListener('wheel', onWheel);
   }, [isPortalVisible, syncHoverWithPointer]);
 
+  useEffect(() => {
+    if (!isPortalVisible) return;
+
+    const onPointerDownOutside = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      if (portalRef.current?.contains(target)) return;
+      if (anchorRef.current?.contains(target)) return;
+
+      stableDismissHover();
+    };
+
+    document.addEventListener('pointerdown', onPointerDownOutside, true);
+
+    return () => document.removeEventListener('pointerdown', onPointerDownOutside, true);
+  }, [isPortalVisible, stableDismissHover]);
+
   return {
     anchorRef,
     portalRef,

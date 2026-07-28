@@ -22,23 +22,28 @@ const AsideConfigurationUtility = () => {
   }, [setTutorialOpen]);
 
   return (
-    <aside className="p-4 pr-12">
-      <Flex className="flex-col justify-start h-full w-[253px] gap-6">
-        <Grid className="grid-cols-2 gap-2">
-          <Button size="sm" onClick={goToPreviousStep} disabled={activeStep === firstStep}>
+    <aside className="p-4 pr-12 h-full max-sm:order-3 max-sm:h-auto max-sm:w-fit max-sm:shrink-0 max-sm:self-start max-sm:p-2">
+      <Flex className="flex-col justify-start h-full w-[253px] gap-6 max-sm:h-auto max-sm:w-fit max-sm:gap-2">
+        <Grid className="grid-cols-2 gap-2 max-sm:grid-cols-1">
+          <Button size="sm" onClick={goToPreviousStep} disabled={activeStep === firstStep} className="max-sm:size-9 max-sm:p-0">
             <IoMdUndo className="size-4" />
-            Annulla
+            <span className="max-sm:hidden">Annulla</span>
           </Button>
-          <Button size="sm" onClick={goToNextStep} disabled={activeStep === lastStep}>
-            Ripristina
+          <Button size="sm" onClick={goToNextStep} disabled={activeStep === lastStep} className="max-sm:size-9 max-sm:p-0">
+            <span className="max-sm:hidden">Ripristina</span>
             <IoMdRedo className="size-4" />
           </Button>
         </Grid>
-        <Flex className="flex-col gap-3 p-4 rounded-md border-2 border-input-border">
-          <Text className="text-[16px] text-base-black font-medium">Hai bisogno di aiuto?</Text>
-          <Button size="sm" variant="center" className="w-full" onClick={handleTutorial}>
+        <Flex className="flex-col gap-3 p-4 rounded-md border-2 border-input-border max-sm:w-9 max-sm:p-0 max-sm:border-0 max-sm:gap-0">
+          <Text className="text-[16px] text-base-black font-medium max-sm:hidden">Hai bisogno di aiuto?</Text>
+          <Button
+            size="sm"
+            variant="center"
+            className="w-full max-sm:h-24 max-sm:w-9 max-sm:flex-col max-sm:gap-1 max-sm:p-1"
+            onClick={handleTutorial}
+          >
             <SvgIcon name="question" />
-            Tutorial
+            <span className="max-sm:[writing-mode:vertical-rl] max-sm:text-[11px]">Tutorial</span>
           </Button>
         </Flex>
       </Flex>

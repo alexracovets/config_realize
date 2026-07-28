@@ -1,12 +1,15 @@
 'use client';
 
 import { ConfiguratorStepTabs } from '@molecules';
+import { Flex } from '@atoms';
 
 const HeaderConfiguration = () => {
   return (
-    <header className="flex items-center justify-center bg-white py-2">
-      <ConfiguratorStepTabs />
-    </header>
+    <Flex variant="header_configuration" asChild>
+      <header>
+        <ConfiguratorStepTabs />
+      </header>
+    </Flex>
   );
 };
 

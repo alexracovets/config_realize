@@ -69,6 +69,8 @@ interface scrollAreaPropsType {
   children: ReactNode;
   className?: string;
   fadeEdges?: boolean;
+  edgeShadows?: boolean;
+  orientation?: 'vertical' | 'horizontal';
 }
 
 interface logoPropsType {

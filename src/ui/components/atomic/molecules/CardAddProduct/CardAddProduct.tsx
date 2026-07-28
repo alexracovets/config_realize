@@ -8,7 +8,7 @@ import { useGarmentCatalogPreloadEffect, useRequestAddProduct } from '@hooks';
 import { useConfigurationCart } from '@store';
 import { getModel, resolveCartItemDisplayPreview } from '@utils';
 import { useMemo } from 'react';
-const CardAddProduct = () => {
+const CardAddProduct = ({ className }: { className?: string }) => {
   const items = useConfigurationCart((state) => state.items);
   const activeItemId = useConfigurationCart((state) => state.activeItemId);
   const previews = useConfigurationCart((state) => state.previews);
@@ -22,7 +22,7 @@ const CardAddProduct = () => {
   useGarmentCatalogPreloadEffect(modelIds);
 
   return (
-    <Flex className="absolute left-0 top-4 z-30 flex max-h-[calc(100%-1rem)] w-[92px] flex-col gap-0 overflow-visible">
+    <Flex variant="card_add_product" className={className}>
       <ScrollArea className="min-h-0 w-full flex-1 pr-0">
         <Flex className="flex-col gap-0">
           {items.map((item) => {

@@ -5,7 +5,7 @@ import { AtomImage, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
 import { ProductSessionPreviewSkeleton } from '@skeletons';
 import type { productSessionRowPropsType } from '@types';
 import { cn } from '@utils';
-import { PRODUCT_SESSION_ROW_CARD_WIDTH_PX, PRODUCT_SESSION_ROW_PREVIEW_SIZE_PX } from '@molecules/ProductSessionRow/productSessionRowConstants';
+import { PRODUCT_SESSION_ROW_PREVIEW_SIZE_PX } from '@molecules/ProductSessionRow/productSessionRowConstants';
 
 type productSessionRowCardPropsType = Pick<productSessionRowPropsType, 'name' | 'previewSrc' | 'active' | 'onSelect' | 'onRemove'> & {
 
@@ -50,19 +50,23 @@ const ProductSessionRowCard = ({
     <Flex
       data-active={active}
       className={cn(
-        'h-full w-full items-center overflow-hidden border border-gray-10 bg-gray-5',
-        'transition-[border-color,box-shadow] duration-200 ease-out',
+        'h-full w-full items-center overflow-hidden border border-gray-10',
+        'transition-[border-color,background-color,box-shadow] duration-200 ease-out',
+        active ? 'bg-white' : 'bg-gray-5',
         active && 'border-active shadow-sm',
         isPortal && isExpanded && 'shadow-md',
+        'py-2 pr-2 pl-3',
       )}
     >
       <Grid
-        className={cn('h-full w-full items-center', isPortal && 'gap-3 pr-3')}
-        style={{
-          gridTemplateColumns: isPortal ? `${PRODUCT_SESSION_ROW_CARD_WIDTH_PX}px minmax(0, 1fr) auto` : `${PRODUCT_SESSION_ROW_CARD_WIDTH_PX}px`,
-        }}
+        className={cn('h-full w-full items-center', isPortal && 'gap-1')}
+        style={
+          isPortal
+            ? { gridTemplateColumns: `${PRODUCT_SESSION_ROW_PREVIEW_SIZE_PX}px minmax(0, 1fr) auto` }
+            : { gridTemplateColumns: 'minmax(0, 1fr)' }
+        }
       >
-        <Button type="button" variant="ghost" onClick={onSelect} className={cn('h-full w-full p-0', active && 'cursor-default')}>
+        <Button type="button" variant="ghost" onClick={onSelect} className={cn('h-full w-full p-0 bg-transparent', active && 'cursor-default')}>
           <Flex className="size-full items-center justify-center">
             <ProductSessionRowPreview name={name} previewSrc={previewSrc} isPreviewLoaded={isPreviewLoaded} onPreviewLoad={onPreviewLoad} />
           </Flex>
@@ -76,12 +80,12 @@ const ProductSessionRowCard = ({
               aria-hidden={!detailsVisible}
               tabIndex={detailsVisible ? 0 : -1}
               className={cn(
-                'h-full min-w-0 justify-start items-center overflow-hidden p-0 text-left transition-opacity duration-200 ease-out',
+                'h-full min-w-0 items-center justify-center overflow-hidden p-0 bg-transparent text-center transition-opacity duration-200 ease-out',
                 active && 'cursor-default',
                 detailsVisible ? 'w-auto opacity-100' : 'pointer-events-none w-0 opacity-0',
               )}
             >
-              <Text className="truncate whitespace-nowrap text-[14px] font-medium">{name}</Text>
+              <Text className="truncate whitespace-nowrap text-[12px] leading-4 font-semibold">{name}</Text>
             </Button>
             <Button
               type="button"
@@ -96,7 +100,7 @@ const ProductSessionRowCard = ({
               aria-label={`Rimuovi ${name}`}
               onClick={handleRemove}
             >
-              <SvgIcon name="delete" className="text-error" />
+              <SvgIcon name="delete" className="w-3.5 h-4 text-error" />
             </Button>
           </>
         )}

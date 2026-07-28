@@ -19,7 +19,7 @@ const atomTabsRootVariants = cva('', {
     variant: {
       default: '',
       line: '',
-      configurator: 'gap-0',
+      configurator: 'gap-0 min-w-0 max-w-full',
       modal: 'flex min-h-0 w-full flex-1 flex-col overflow-hidden gap-4',
     },
   },
