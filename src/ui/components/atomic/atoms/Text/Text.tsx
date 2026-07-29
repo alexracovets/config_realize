@@ -31,8 +31,8 @@ const variantText = cva('font-inter font-[400] leading-none', {
         'transition-all duration-200 ease-in-out',
       ),
       configurator_control_label: cn('text-[14px] leading-[15px] font-[400] text-gray', 'max-sm:text-[12px] max-sm:leading-[15px]'),
-      h2: 'text-[40px] leading-[1] font-[700] text-base-black mb-8 uppercase tracking-[-1px]',
-      h3: 'text-[24px] leading-[1] font-semibold text-base-black mb-3',
+      h2: cn('text-[40px] leading-[1] font-[700] text-base-black mb-8 uppercase tracking-[-1px]', 'max-sm:text-[28px] max-sm:mb-4'),
+      h3: cn('text-[24px] leading-[1] font-semibold text-base-black mb-3', 'max-sm:text-[18px] max-sm:mb-2'),
       small: 'text-[14px] text-gray',
       small_secondary: 'text-[16px] leading-[15px] text-gray',
       product_card_name: cn(

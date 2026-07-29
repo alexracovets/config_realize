@@ -13,7 +13,7 @@ const atomTabsSlidingListVariants = cva('relative', {
   variants: {
     preset: {
       configurator: 'w-fit pt-2',
-      modal: 'w-fit',
+      modal: 'w-full overflow-x-auto max-w-full sm:w-fit',
     },
   },
   defaultVariants: {

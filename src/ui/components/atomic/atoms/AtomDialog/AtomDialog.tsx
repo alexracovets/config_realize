@@ -47,7 +47,7 @@ const dialogContentVariants = cva(
         default: 'rounded-[8px]',
       },
       size: {
-        default: 'p-10 w-full max-w-[1044px]',
+        default: 'p-4 sm:p-10 w-[calc(100%-32px)] sm:w-full max-w-[1044px] max-h-[calc(100dvh-32px)] sm:max-h-[80dvh]',
       },
       background: {
         default: 'bg-white',
@@ -121,12 +121,12 @@ const dialogCloseVariants = cva(
         muted: 'text-gray-30 hover:text-default',
       },
       position: {
-        'top-right': 'top-5 right-5',
-        'top-left': 'top-5 left-5',
-        inside: 'top-5 right-5',
+        'top-right': 'top-3 right-3 sm:top-5 sm:right-5',
+        'top-left': 'top-3 left-3 sm:top-5 sm:left-5',
+        inside: 'top-3 right-3 sm:top-5 sm:right-5',
       },
       size: {
-        default: "[&_svg:not([class*='size-'])]:size-4 p-2",
+        default: "[&_svg:not([class*='size-'])]:size-4 p-2 max-sm:[&_svg:not([class*='size-'])]:size-3.5 max-sm:p-1.5",
       },
     },
     defaultVariants: {

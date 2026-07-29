@@ -17,14 +17,16 @@ const ModalInfo = () => {
       <AtomDialogContent aria-describedby={undefined} aria-label="Informazioni">
         <AtomDialogTitle visuallyHidden>Info Dialog</AtomDialogTitle>
         <AtomTabs variant="modal" value={activeTab} onValueChange={(value) => value && setActiveTab(value)}>
-          <AtomTabsSlidingList activeValue={activeTab} preset="modal" className="shrink-0">
-            {MODAL_INFO_TABS.map(({ value, label, icon }) => (
-              <AtomTabsTrigger key={value} value={value}>
-                {icon}
-                {label}
-              </AtomTabsTrigger>
-            ))}
-          </AtomTabsSlidingList>
+          <div className="pr-8 sm:pr-0">
+            <AtomTabsSlidingList activeValue={activeTab} preset="modal" className="shrink-0">
+              {MODAL_INFO_TABS.map(({ value, label, icon }) => (
+                <AtomTabsTrigger key={value} value={value}>
+                  {icon}
+                  {label}
+                </AtomTabsTrigger>
+              ))}
+            </AtomTabsSlidingList>
+          </div>
           <ScrollArea className="min-h-0 flex-1 w-full" fadeEdges>
             {MODAL_INFO_TABS.map(({ value, tab }) => (
               <ModalInfoTabContent key={value} tab={value === SIZE_CHART_TAB_VALUE ? (sizeChart ?? tab) : tab} tabValue={value} />

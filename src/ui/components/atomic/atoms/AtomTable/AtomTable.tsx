@@ -83,11 +83,11 @@ const atomTableHeadVariants = cva('align-middle font-medium whitespace-nowrap te
     variant: {
       default: 'h-10 px-2 text-left [&:has([role=checkbox])]:pr-0',
       size_chart:
-        'h-auto border border-gray-20 bg-gray-100 px-3 py-4 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal',
+        'h-auto min-w-[64px] border border-gray-20 bg-gray-100 px-3 py-4 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
       discounts:
-        'h-auto border border-gray-20 bg-gray-100 px-3 py-4 text-left align-middle font-medium text-[16px] leading-none text-default whitespace-normal',
+        'h-auto border border-gray-20 bg-gray-100 px-3 py-4 text-left align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
       checkout:
-        'h-auto border border-gray-20 bg-gray-100 px-3 py-3 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal',
+        'h-auto border border-gray-20 bg-gray-100 px-3 py-3 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
     },
   },
   defaultVariants: {
@@ -99,9 +99,12 @@ const atomTableCellVariants = cva('align-middle', {
   variants: {
     variant: {
       default: 'p-2 whitespace-nowrap [&:has([role=checkbox])]:pr-0',
-      size_chart: 'border border-gray-20 bg-white px-3 py-4 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal',
-      discounts: 'border border-gray-20 bg-white px-3 py-4 text-left align-middle font-normal text-[14px] leading-none text-default whitespace-normal',
-      checkout: 'border border-gray-20 bg-white px-2 py-2 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal',
+      size_chart:
+        'min-w-[64px] border border-gray-20 bg-white px-3 py-4 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
+      discounts:
+        'border border-gray-20 bg-white px-3 py-4 text-left align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
+      checkout:
+        'border border-gray-20 bg-white px-2 py-2 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:px-1.5 max-sm:py-1.5 max-sm:text-[13px]',
     },
   },
   defaultVariants: {
