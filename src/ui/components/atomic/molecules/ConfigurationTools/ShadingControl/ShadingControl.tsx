@@ -27,7 +27,7 @@ const ShadingControl = ({ partId }: shadingControlPropsType) => {
             <div className="w-15 h-15 rounded-[8px] shrink-0 border-[.2px] border-gray-30 transition-colors duration-150" style={{ background: baseColor }} />
           </Flex>
           <ColorControl
-            label="Colore sfumatura"
+            label="Sfumatura di colore"
             color={gradient.color2}
             onSelect={(color) => setPartGradientColor2(partId, color)}
             onPreviewSelect={(color) => setPartGradientColor2(partId, color)}
@@ -41,7 +41,7 @@ const ShadingControl = ({ partId }: shadingControlPropsType) => {
             unit="°"
           />
           <RangeControl
-            label="Posizione"
+            label="Posizione linea"
             value={Math.round(gradient.position * 100)}
             onChange={(value) => setPartGradientPosition(partId, value / 100)}
             min={0}

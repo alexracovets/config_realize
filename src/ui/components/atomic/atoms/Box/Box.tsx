@@ -20,7 +20,7 @@ const variantBox = cva('block', {
       ),
       aside_configuration: cn(
         'relative h-full min-h-0 overflow-visible p-4 pl-16',
-        'max-sm:order-4 max-sm:flex max-sm:min-h-0 max-sm:w-full max-sm:flex-1 max-sm:basis-full max-sm:flex-col max-sm:p-4 max-sm:pl-4',
+        'max-sm:col-start-1 max-sm:col-span-3 max-sm:row-start-2 max-sm:flex max-sm:min-h-0 max-sm:w-full max-sm:flex-col max-sm:p-4 max-sm:pl-4 max-sm:pb-0',
       ),
     },
   },

@@ -22,9 +22,10 @@ const ActiveStepContent = () => {
   const isLogoStep = stepValue === 'logo';
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col py-1">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col max-sm:py-0">
       <ScrollArea className="min-h-0 flex-1 w-full pt-0">
-        <Flex variant="step_design">
+        <Flex variant="step_design" className="max-sm:py-1">
+          <ConfiguratorProduct className="hidden max-sm:flex" />
           {showSkeleton ? (
             <>
               {isLogoStep ? <ConfiguratorLogoStepNotice /> : null}
@@ -54,8 +55,8 @@ const AsideConfiguration = () => {
       <Box variant="aside_configuration" asChild>
         <aside ref={asideRef}>
           <CardAddProduct className="max-sm:hidden" />
-          <Grid className="grid h-full min-h-0 w-83.5 grid-rows-[auto_minmax(0,1fr)] gap-6 max-sm:w-full">
-            <ConfiguratorProduct />
+          <Grid className="grid h-full min-h-0 w-83.5 grid-rows-[auto_minmax(0,1fr)] gap-6 max-sm:w-full max-sm:grid-rows-[minmax(0,1fr)] max-sm:gap-0">
+            <ConfiguratorProduct className="max-sm:hidden" />
             <ActiveStepContent />
           </Grid>
         </aside>

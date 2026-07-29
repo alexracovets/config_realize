@@ -34,24 +34,27 @@ const FooterConfiguration = () => {
     toggleGizmoVisible();
   }, [toggleGizmoVisible]);
 
+  const smallButtonClass =
+    'max-sm:h-8 max-sm:w-full max-sm:gap-0.5 max-sm:rounded-lg max-sm:bg-[#D4D4D8]/80 max-sm:px-1.5 max-sm:text-[12px] max-sm:leading-4 max-sm:font-semibold max-sm:[&_svg]:size-3';
+
   return (
     <Container>
-      <Flex className="gap-2 items-center justify-center w-full pb-12 pt-2 max-sm:flex-wrap max-sm:gap-1.5 max-sm:pb-4">
-        <Button size="sm" className="max-sm:px-2 max-sm:text-[13px]">
+      <Flex className="gap-2 items-center justify-center w-full pb-12 pt-2 max-sm:hidden">
+        <Button size="sm">
           <SvgIcon name="share" />
           Condividi
         </Button>
         <ProductCatalogPopover activeCollectionHandle={activeItem.collectionHandle} onSelect={requestAddProduct} contentSide="top" contentAlign="center">
-          <Button size="sm" className="max-sm:px-2 max-sm:text-[13px]">
+          <Button size="sm">
             <SvgIcon name="plus" />
             Prodotto
           </Button>
         </ProductCatalogPopover>
-        <Button size="sm" onClick={handleDuplicate} className="max-sm:px-2 max-sm:text-[13px]">
+        <Button size="sm" onClick={handleDuplicate}>
           <SvgIcon name="duplicate" />
           Duplica
         </Button>
-        <Button size="sm" onClick={handleInfo} className="max-sm:px-2 max-sm:text-[13px]">
+        <Button size="sm" onClick={handleInfo}>
           <SvgIcon name="info" />
           Info
         </Button>
@@ -60,11 +63,38 @@ const FooterConfiguration = () => {
           onClick={handleToggleGizmo}
           aria-pressed={isGizmoVisible}
           aria-label={isGizmoVisible ? 'Nascondi gizmo' : 'Mostra gizmo'}
-          className={cn('px-3 max-sm:hidden', !isGizmoVisible && 'opacity-50')}
+          className={cn('px-3', !isGizmoVisible && 'opacity-50')}
         >
           <AiOutlineBorderOuter className="size-6 shrink-0" aria-hidden />
         </Button>
-        <Button variant="primary" size="sm" onClick={navigateToCheckout} className="max-sm:w-full max-sm:basis-full">
+        <Button variant="primary" size="sm" onClick={navigateToCheckout}>
+          <SvgIcon name="cart" />
+          Completa Config.
+        </Button>
+      </Flex>
+
+      <Flex className="hidden max-sm:flex max-sm:w-full max-sm:flex-col max-sm:gap-4 max-sm:pt-3 max-sm:pb-6">
+        <Flex className="max-sm:grid max-sm:w-full max-sm:grid-cols-4 max-sm:gap-0.5">
+          <Button size="sm" className={smallButtonClass}>
+            <SvgIcon name="share" />
+            Condividi
+          </Button>
+          <ProductCatalogPopover activeCollectionHandle={activeItem.collectionHandle} onSelect={requestAddProduct} contentSide="top" contentAlign="center">
+            <Button size="sm" className={smallButtonClass}>
+              <SvgIcon name="plus" />
+              Prodotto
+            </Button>
+          </ProductCatalogPopover>
+          <Button size="sm" onClick={handleDuplicate} className={smallButtonClass}>
+            <SvgIcon name="duplicate" />
+            Duplica
+          </Button>
+          <Button size="sm" onClick={handleInfo} className={smallButtonClass}>
+            <SvgIcon name="info" />
+            Info Ordine
+          </Button>
+        </Flex>
+        <Button variant="primary" size="sm" onClick={navigateToCheckout} className="max-sm:w-full max-sm:h-8 max-sm:text-[14px] max-sm:leading-4.75 max-sm:font-bold max-sm:[&_svg]:size-3.5">
           <SvgIcon name="cart" />
           Completa Config.
         </Button>

@@ -6,6 +6,7 @@ export { Skeleton } from './Skeleton';
 export { Slider } from './Slider';
 export { Input } from './Input';
 export * from './Accordion';
+export * from './Carousel';
 export * from './Dialog';
 export * from './Popover';
 export * from './Select';

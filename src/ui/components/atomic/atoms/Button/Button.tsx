@@ -39,7 +39,9 @@ const buttonVariants = cva(
         ),
         select_part_short: cn(
           'w-full h-[60px] rounded-[8px] border-[1px] border-transparent shadow-sm',
+          'max-sm:h-[30px] max-sm:rounded-lg max-sm:border-gray-30 max-sm:shadow-none',
           'data-[active=true]:border-gray-30 hover:border-gray-30 data-[active=true]:shadow-md hover:shadow-md',
+          'max-sm:data-[active=true]:shadow-none',
           'transition-all duration-200 ease-in',
         ),
         select_none: cn(
@@ -51,9 +53,10 @@ const buttonVariants = cva(
         ),
         destructive: cn(
           'text-[14px] leading-[16px] font-semibold text-default gap-2 items-center',
+          'max-sm:text-[12px] max-sm:leading-4 max-sm:gap-1 max-sm:text-[#0A0A0A]',
           'hover:text-active',
           '[&_span]:underline underline-offset-4',
-          '[&_svg]:size-4 [&_svg]:shrink-0',
+          '[&_svg]:size-4 [&_svg]:shrink-0 max-sm:[&_svg]:size-3.5',
           'transition-all duration-200 ease-in',
         ),
         link: '',

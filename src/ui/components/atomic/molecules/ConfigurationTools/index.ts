@@ -12,6 +12,7 @@ export { LogoListRow } from './LogoListRow';
 export { LogoUploadedFilesSection } from './LogoUploadedFilesSection';
 export { HiddenLogoFileInput, LogoUpload } from './LogoUpload';
 export { ColorControl } from './ColorControl';
+export { ColorPaletteCarousel } from './ColorPaletteCarousel';
 export { PatternLayerColorControl } from './PatternLayerColorControl';
 export { RangeControl } from './RangeControl';
 export { TextSizeControl } from './TextSizeControl';

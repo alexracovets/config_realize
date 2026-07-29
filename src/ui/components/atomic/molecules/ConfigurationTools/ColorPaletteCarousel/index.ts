@@ -1,0 +1,1 @@
+export { ColorPaletteCarousel } from './ColorPaletteCarousel';
