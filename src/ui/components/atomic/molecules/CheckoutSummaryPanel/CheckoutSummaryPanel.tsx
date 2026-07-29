@@ -318,6 +318,10 @@ const CheckoutSummaryPanel = () => {
     applySheetHeight(measureExpandedHeight());
   };
 
+  const closeSheet = () => {
+    applySheetHeight(PEEK_HEIGHT_PX);
+  };
+
   const beginSheetDrag = () => {
     if (!dragRef.current || dragRef.current.mode === 'sheet') return;
     dragRef.current.mode = 'sheet';
@@ -430,6 +434,38 @@ const CheckoutSummaryPanel = () => {
     return () => sheet.removeEventListener('touchmove', onTouchMove);
   }, []);
 
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousOverscroll = document.body.style.overscrollBehavior;
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
+
+    const isInsideDrawerScroll = (target: EventTarget | null) =>
+      target instanceof Element && Boolean(target.closest('[data-checkout-drawer-scroll]'));
+
+    const preventBackgroundScroll = (event: TouchEvent) => {
+      if (isInsideDrawerScroll(event.target)) return;
+      event.preventDefault();
+    };
+
+    const preventBackgroundWheel = (event: WheelEvent) => {
+      if (isInsideDrawerScroll(event.target)) return;
+      event.preventDefault();
+    };
+
+    document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+    document.addEventListener('wheel', preventBackgroundWheel, { passive: false });
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.overscrollBehavior = previousOverscroll;
+      document.removeEventListener('touchmove', preventBackgroundScroll);
+      document.removeEventListener('wheel', preventBackgroundWheel);
+    };
+  }, [isExpanded]);
+
   return (
     <>
       <AtomCard className="sticky top-0 right-0 mt-9 h-[calc(100%-(--spacing(9)))] w-full justify-self-end gap-8 bg-[#E5E5E5] p-12 ring-0 max-sm:hidden">
@@ -445,8 +481,13 @@ const CheckoutSummaryPanel = () => {
 
       <div
         aria-hidden={!isExpanded}
+        role="presentation"
         className="fixed inset-0 z-40 hidden bg-black max-sm:block"
-        style={{ opacity: progress * 0.4, pointerEvents: 'none' }}
+        style={{
+          opacity: progress * 0.4,
+          pointerEvents: isExpanded ? 'auto' : 'none',
+        }}
+        onClick={closeSheet}
       />
 
       <div className="fixed inset-x-0 bottom-0 z-50 hidden max-sm:block">
@@ -475,7 +516,7 @@ const CheckoutSummaryPanel = () => {
             <div
               ref={scrollRef}
               data-checkout-drawer-scroll
-              className="min-h-0 flex-1 px-4"
+              className="min-h-0 flex-1 overscroll-contain px-4"
               style={{
                 opacity: progress,
                 pointerEvents: isExpanded ? 'auto' : 'none',
@@ -483,7 +524,7 @@ const CheckoutSummaryPanel = () => {
               }}
               aria-hidden={!isExpanded}
             >
-              <ScrollArea className="h-full min-h-0 w-full" fadeEdges>
+              <ScrollArea className="h-full min-h-0 w-full overscroll-contain" fadeEdges>
                 <div ref={contentRef}>
                   <Text className="mb-4 text-[24px] font-semibold leading-none tracking-[-1px] text-[#0A0A0A]">
                     {CHECKOUT_SUMMARY_TITLE}

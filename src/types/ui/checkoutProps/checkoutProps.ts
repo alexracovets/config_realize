@@ -40,6 +40,8 @@ interface checkoutQuantityStepperPropsType {
   quantity: number;
   onDecrease: () => void;
   onIncrease: () => void;
+  decreaseIconClassName?: string;
+  increaseIconClassName?: string;
 }
 
 interface checkoutSizePopoverPropsType {

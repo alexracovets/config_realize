@@ -76,7 +76,6 @@ const createCheckoutConfigurationTableColumns = ({
       id: 'row',
       header: 'Riga',
       ...getColumnSizing('row'),
-      meta: { cellClassName: 'max-sm:hidden', headClassName: 'max-sm:hidden' },
       cell: ({ index }) => <span className="text-[16px] max-sm:text-[14px]">{index + 1}</span>,
     },
     {
