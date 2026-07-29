@@ -34,7 +34,7 @@ const CheckoutView = () => {
 
   return (
     <Grid className="min-h-0 flex-1 grid-cols-[minmax(0,1fr)_400px] items-start gap-8 max-sm:grid-cols-1 max-sm:gap-4">
-      <Flex className="min-w-0 w-full flex-col items-start justify-start gap-6 pt-9 max-sm:gap-4 max-sm:pt-4">
+      <Flex className="min-w-0 w-full flex-col items-start justify-start gap-6 pt-9 max-sm:gap-4 max-sm:pt-4 max-sm:pb-[160px]">
         {products.map((product) => (
           <CheckoutProductCard key={product.cartItemId} product={product} />
         ))}

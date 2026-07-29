@@ -96,7 +96,7 @@ const CHECKOUT_SUMMARY_TRUST_ITEMS = [
   { icon: 'order_0', label: 'Prodotti 100% Made in Italy' },
   { icon: 'order_1', label: 'Sicurezza Checkout' },
   { icon: 'order_2', label: 'Consegna sicura e veloce' },
-  { icon: 'order_3', label: 'Siamo anche su Trustpilot' },
+  { icon: 'order_3', label: 'Recensioni Trustpilot 4,8/5' },
 ] as const;
 
 const CHECKOUT_SUMMARY_TIMELINE_STEPS = [

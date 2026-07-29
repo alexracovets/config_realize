@@ -44,7 +44,7 @@ function DrawerContent({ className, children, ...props }: React.ComponentProps<t
         )}
         {...props}
       >
-        <div className="mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-gray-20" />
+        <div className="mx-auto mt-2 h-1 w-8 shrink-0 rounded-full bg-[#CDCDCD]" />
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
