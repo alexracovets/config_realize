@@ -13,6 +13,7 @@ interface checkoutConfigurationTablePropsType {
 interface checkoutConfigurationTableColumnHandlersType {
   onPatchRow: (rowId: string, patch: checkoutLineRowPatchType) => void;
   onRemoveRow: (rowId: string) => void;
+  onEditRow: (rowId: string) => void;
   printAvailability?: checkoutPrintAvailabilityType;
 }
 
@@ -29,6 +30,7 @@ interface checkoutConfigurationTableColumnType {
   maxSize?: number;
   meta?: {
     cellClassName?: string;
+    headClassName?: string;
     grow?: boolean;
   };
   cell: (context: checkoutConfigurationTableCellContextType) => ReactNode;
@@ -67,6 +69,15 @@ interface checkoutTablePlaceholderPropsType {
   className?: string;
 }
 
+interface checkoutRowEditModalPropsType {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  row: checkoutLineRowType | null;
+  printAvailability?: checkoutPrintAvailabilityType;
+  onPatchRow: (rowId: string, patch: checkoutLineRowPatchType) => void;
+  onRemoveRow: (rowId: string) => void;
+}
+
 export type {
   checkoutConfigurationTableCellContextType,
   checkoutConfigurationTableColumnHandlersType,
@@ -74,6 +85,7 @@ export type {
   checkoutConfigurationTablePropsType,
   checkoutProductCardPropsType,
   checkoutQuantityStepperPropsType,
+  checkoutRowEditModalPropsType,
   checkoutSizePopoverPropsType,
   checkoutTableEditableCellPropsType,
   checkoutTablePlaceholderPropsType,

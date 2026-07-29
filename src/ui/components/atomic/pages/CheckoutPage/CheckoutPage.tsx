@@ -9,7 +9,7 @@ const CheckoutPage = () => {
   useCheckoutInit();
 
   return (
-    <Container className="flex min-h-0 flex-1 flex-col">
+    <Container className="flex min-h-0 flex-1 flex-col max-sm:pb-32">
       <CheckoutPreviewCaptureHost />
       <CheckoutView />
     </Container>

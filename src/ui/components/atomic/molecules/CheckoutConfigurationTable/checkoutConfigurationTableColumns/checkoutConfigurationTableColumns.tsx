@@ -1,5 +1,7 @@
 'use client';
 
+import { FiEdit2 } from 'react-icons/fi';
+
 import { CheckoutQuantityStepper } from '@molecules/CheckoutQuantityStepper';
 import { CheckoutSizePopover } from '@molecules/CheckoutSizePopover';
 import { CheckoutTableEditableCell } from '@molecules/CheckoutTableEditableCell';
@@ -28,7 +30,14 @@ const createNameColumn = (onPatchRow: checkoutConfigurationTableColumnHandlersTy
   id: 'name',
   header: 'Nome',
   ...getColumnSizing('name'),
-  cell: ({ row }) => <CheckoutTableEditableCell value={row.name} placeholder="Nome" canEdit onChange={(name) => onPatchRow(row.id, { name })} />,
+  cell: ({ row }) => (
+    <>
+      <span className="hidden max-sm:block text-[14px] text-default truncate">{row.name || '-'}</span>
+      <div className="max-sm:hidden">
+        <CheckoutTableEditableCell value={row.name} placeholder="Nome" canEdit onChange={(name) => onPatchRow(row.id, { name })} />
+      </div>
+    </>
+  ),
 });
 
 const createNumberColumn = (onPatchRow: checkoutConfigurationTableColumnHandlersType['onPatchRow']): checkoutConfigurationTableColumnType => ({
@@ -36,21 +45,27 @@ const createNumberColumn = (onPatchRow: checkoutConfigurationTableColumnHandlers
   header: 'Numero',
   ...getColumnSizing('number'),
   cell: ({ row }) => (
-    <CheckoutTableEditableCell
-      value={row.number}
-      placeholder="00"
-      inputMode="numeric"
-      maxLength={NUMBER_MAX_LENGTH}
-      formatValue={sanitizeNumberText}
-      canEdit
-      onChange={(number) => onPatchRow(row.id, { number })}
-    />
+    <>
+      <span className="hidden max-sm:block text-[14px] text-default">{row.number || '-'}</span>
+      <div className="max-sm:hidden">
+        <CheckoutTableEditableCell
+          value={row.number}
+          placeholder="00"
+          inputMode="numeric"
+          maxLength={NUMBER_MAX_LENGTH}
+          formatValue={sanitizeNumberText}
+          canEdit
+          onChange={(number) => onPatchRow(row.id, { number })}
+        />
+      </div>
+    </>
   ),
 });
 
 const createCheckoutConfigurationTableColumns = ({
   onPatchRow,
   onRemoveRow,
+  onEditRow,
   printAvailability,
 }: checkoutConfigurationTableColumnHandlersType): checkoutConfigurationTableColumnType[] => {
   const showName = printAvailability?.hasName ?? false;
@@ -61,14 +76,22 @@ const createCheckoutConfigurationTableColumns = ({
       id: 'row',
       header: 'Riga',
       ...getColumnSizing('row'),
-      cell: ({ index }) => <span className="text-[16px]">{index + 1}</span>,
+      meta: { cellClassName: 'max-sm:hidden', headClassName: 'max-sm:hidden' },
+      cell: ({ index }) => <span className="text-[16px] max-sm:text-[14px]">{index + 1}</span>,
     },
     {
       id: 'size',
       header: 'Taglia',
       ...getColumnSizing('size'),
-      meta: { cellClassName: 'p-0' },
-      cell: ({ row }) => <CheckoutSizePopover value={row.size} onChange={(size) => onPatchRow(row.id, { size })} />,
+      meta: { cellClassName: 'p-0 max-sm:p-2' },
+      cell: ({ row }) => (
+        <>
+          <span className="hidden max-sm:block text-[14px] text-default">{row.size}</span>
+          <div className="max-sm:hidden">
+            <CheckoutSizePopover value={row.size} onChange={(size) => onPatchRow(row.id, { size })} />
+          </div>
+        </>
+      ),
     },
     ...(showName ? [createNameColumn(onPatchRow)] : []),
     ...(showNumber ? [createNumberColumn(onPatchRow)] : []),
@@ -77,11 +100,16 @@ const createCheckoutConfigurationTableColumns = ({
       header: 'Quantità',
       ...getColumnSizing('quantity'),
       cell: ({ row }) => (
-        <CheckoutQuantityStepper
-          quantity={row.quantity}
-          onDecrease={() => onPatchRow(row.id, { quantity: row.quantity - 1 })}
-          onIncrease={() => onPatchRow(row.id, { quantity: row.quantity + 1 })}
-        />
+        <>
+          <span className="hidden max-sm:block text-[14px] text-default">{row.quantity}</span>
+          <div className="max-sm:hidden">
+            <CheckoutQuantityStepper
+              quantity={row.quantity}
+              onDecrease={() => onPatchRow(row.id, { quantity: row.quantity - 1 })}
+              onIncrease={() => onPatchRow(row.id, { quantity: row.quantity + 1 })}
+            />
+          </div>
+        </>
       ),
     },
     {
@@ -89,10 +117,22 @@ const createCheckoutConfigurationTableColumns = ({
       header: 'Modifica',
       ...getColumnSizing('actions'),
       cell: ({ row }) => (
-        <Button type="button" variant="delete" size="delete" className="mx-auto" onClick={() => onRemoveRow(row.id)}>
-          <SvgIcon name="delete" className="w-[14px] h-[15.75px]" />
-          Eliminare
-        </Button>
+        <>
+          <Button type="button" variant="delete" size="delete" className="mx-auto max-sm:hidden" onClick={() => onRemoveRow(row.id)}>
+            <SvgIcon name="delete" className="w-3.5 h-[15.75px]" />
+            Eliminare
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="mx-auto hidden max-sm:flex size-8"
+            onClick={() => onEditRow(row.id)}
+            aria-label="Modifica riga"
+          >
+            <FiEdit2 className="size-4" />
+          </Button>
+        </>
       ),
     },
   ];

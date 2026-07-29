@@ -68,6 +68,7 @@ const clampCheckoutRowQuantity = (quantity: number) => Math.min(CHECKOUT_MAX_ROW
 
 const CHECKOUT_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'] as const;
 const CHECKOUT_SHIPPING_DAYS_LABEL = 'Spedizione entro 15-20 giorni lavorativi.';
+const CHECKOUT_DISCOUNT_INFO_LABEL = '% Scontistica applicata direttamente alla somma finale nel carrello';
 
 const CHECKOUT_CONFIGURATION_TABLE_COLUMNS = [
   { id: 'row', header: 'Riga', size: 60, minSize: 60, maxSize: 60 },
@@ -82,6 +83,7 @@ const CHECKOUT_SIZE_SELECT_OPTIONS = CHECKOUT_SIZES.map((size) => ({ label: size
 const CHECKOUT_TABLE_ADD_ROW_LABEL = 'Aggiungi riga';
 const CHECKOUT_ADD_MORE_PRODUCTS_LABEL = 'Aggiungi altri prodotti';
 const CHECKOUT_EMPTY_CART_LABEL = 'Il tuo carrello è vuoto.';
+const CHECKOUT_COMPLETE_CONFIG_LABEL = 'Completa Config.';
 
 const CHECKOUT_SUMMARY_TITLE = 'Riepilogo';
 const CHECKOUT_SUMMARY_PROCEED_LABEL = 'Prosegui';
@@ -182,6 +184,7 @@ export type { configuratorStepMetaItemType };
 export {
   CHECKOUT_CONFIGURATION_TABLE_COLUMNS,
   CHECKOUT_DEFAULT_SIZE,
+  CHECKOUT_DISCOUNT_INFO_LABEL,
   CHECKOUT_MAX_ROW_QUANTITY,
   CHECKOUT_MIN_ROW_QUANTITY,
   CHECKOUT_SHIPPING_DAYS_LABEL,
@@ -214,6 +217,7 @@ export {
   ORDER_CUTTING_EXPORT_DOWNLOAD_PLACEHOLDER_HREF,
   CHECKOUT_TABLE_ADD_ROW_LABEL,
   CHECKOUT_ADD_MORE_PRODUCTS_LABEL,
+  CHECKOUT_COMPLETE_CONFIG_LABEL,
   CHECKOUT_EMPTY_CART_LABEL,
   ADD_PRODUCT_DESIGN_MODAL_CONFIRM_LABEL,
   ADD_PRODUCT_DESIGN_MODAL_DECLINE_LABEL,

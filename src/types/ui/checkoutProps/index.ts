@@ -5,6 +5,7 @@ export type {
   checkoutConfigurationTablePropsType,
   checkoutProductCardPropsType,
   checkoutQuantityStepperPropsType,
+  checkoutRowEditModalPropsType,
   checkoutSizePopoverPropsType,
   checkoutTableEditableCellPropsType,
   checkoutTablePlaceholderPropsType,

@@ -11,11 +11,11 @@ const CheckoutQuantityStepper = ({ quantity, onDecrease, onIncrease }: checkoutQ
   return (
     <Flex className="items-center justify-center mx-auto">
       <Button type="button" variant="ghost" size="icon" onClick={onDecrease} disabled={quantity <= CHECKOUT_MIN_ROW_QUANTITY} aria-label="Diminuisci quantità">
-        <FiMinusCircle className="size-6 text-primary-10" />
+        <FiMinusCircle className="size-6 text-primary-10 max-sm:size-4.5" />
       </Button>
-      <Text className="text-[16px] leading-[19px] min-w-6 text-center">{quantity}</Text>
+      <Text className="text-[16px] leading-[19px] min-w-6 text-center max-sm:text-[14px] max-sm:min-w-4">{quantity}</Text>
       <Button type="button" variant="ghost" size="icon" onClick={onIncrease} disabled={quantity >= CHECKOUT_MAX_ROW_QUANTITY} aria-label="Aumenta quantità">
-        <FiPlusCircle className="size-6 text-primary-10" />
+        <FiPlusCircle className="size-6 text-primary-10 max-sm:size-4.5" />
       </Button>
     </Flex>
   );

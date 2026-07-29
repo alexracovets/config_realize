@@ -87,7 +87,7 @@ const atomTableHeadVariants = cva('align-middle font-medium whitespace-nowrap te
       discounts:
         'h-auto border border-gray-20 bg-gray-100 px-3 py-4 text-left align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
       checkout:
-        'h-auto border border-gray-20 bg-gray-100 px-3 py-3 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
+        'h-auto border border-gray-20 bg-gray-100 px-3 py-3 text-center align-middle font-medium text-[16px] leading-none text-default whitespace-normal max-sm:border-[#D4D4D4] max-sm:bg-[#F8F8F8] max-sm:px-2 max-sm:py-2 max-sm:text-[12px]',
     },
   },
   defaultVariants: {
@@ -104,7 +104,7 @@ const atomTableCellVariants = cva('align-middle', {
       discounts:
         'border border-gray-20 bg-white px-3 py-4 text-left align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:px-2 max-sm:py-2 max-sm:text-[13px]',
       checkout:
-        'border border-gray-20 bg-white px-2 py-2 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:px-1.5 max-sm:py-1.5 max-sm:text-[13px]',
+        'border border-gray-20 bg-white px-2 py-2 text-center align-middle font-normal text-[14px] leading-none text-default whitespace-normal max-sm:h-12 max-sm:border-[#D4D4D4] max-sm:p-1.5 max-sm:text-[14px]',
     },
   },
   defaultVariants: {
