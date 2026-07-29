@@ -45,8 +45,8 @@ const buttonVariants = cva(
           'transition-all duration-200 ease-in',
         ),
         select_none: cn(
-          'text-[11px] color-default rounded-[8px]',
-          'flex flex-col items-center justify-center w-full h-[80px] gap-1',
+          'text-[11px] color-default rounded-[8px] text-center whitespace-nowrap overflow-hidden',
+          'flex flex-col items-center justify-center w-full h-[80px] gap-1 px-1',
           'bg-gray-100 border-[2px] border-gray-200',
           'data-[active=true]:border-active hover:border-active',
           'transition-all duration-200 ease-in',

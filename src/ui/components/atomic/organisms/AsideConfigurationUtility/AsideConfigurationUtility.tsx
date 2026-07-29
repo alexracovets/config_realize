@@ -39,7 +39,7 @@ const AsideConfigurationUtility = () => {
           <Button
             size="sm"
             variant="center"
-            className="w-full max-sm:h-24 max-sm:w-9 max-sm:flex-col max-sm:gap-1 max-sm:p-1"
+            className="w-full max-sm:h-20 max-sm:flex-col max-sm:gap-1 max-sm:p-1"
             onClick={handleTutorial}
           >
             <SvgIcon name="question" />

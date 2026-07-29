@@ -31,7 +31,7 @@ const ConfigurationPositionSelect = ({
         type="button"
         disabled={!hasSelectablePositions}
         onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer w-full h-10 flex items-center justify-between border border-input-border rounded-[8px] px-3 text-sm bg-white text-default disabled:opacity-50 disabled:cursor-not-allowed"
+        className="cursor-pointer w-full h-10 max-sm:h-8.75 flex items-center justify-between border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm bg-white text-default disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span className="text-gray-30">{placeholder}</span>
         <SvgIcon name="plus" className="size-4" />

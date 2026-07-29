@@ -1,0 +1,1 @@
+export { DesignPatternCarousel } from './DesignPatternCarousel';

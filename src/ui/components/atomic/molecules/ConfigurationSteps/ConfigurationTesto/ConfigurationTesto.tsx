@@ -65,7 +65,7 @@ const TestoPartForm = ({ instanceId, limits, placeholder, lineHeightShow, letter
           maxLength={limits.maxLength}
           onChange={(e) => setPreview(instanceId, { text: e.target.value })}
           onBlur={commitFromPreview}
-          className="w-full h-10 bg-white border border-input-border rounded-[8px] px-3 text-sm font-inter text-default outline-none focus:border-active transition-colors"
+          className="w-full h-10 max-sm:h-8.75 bg-white border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm font-inter text-default outline-none focus:border-active transition-colors"
           placeholder={placeholder}
         />
       </Flex>

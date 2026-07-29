@@ -27,21 +27,21 @@ const ColorPaletteCarousel = ({ color, onSelect }: colorPaletteCarouselPropsType
   }, [color]);
 
   return (
-    <Carousel opts={CAROUSEL_OPTS} setApi={(api) => (apiRef.current = api ?? null)} className="w-full h-11">
-      <CarouselContent className="-ml-1.5 py-1.5">
+    <Carousel opts={CAROUSEL_OPTS} setApi={(api) => (apiRef.current = api ?? null)} className="w-full">
+      <CarouselContent className="-ml-1.5 items-center py-1.5 h-12 will-change-transform">
         {PALETTE_COLORS.map((paletteColor) => {
           const isActive = color === paletteColor;
 
           return (
-            <CarouselItem key={paletteColor} className="basis-auto pl-1.5">
+            <CarouselItem key={paletteColor} className="basis-auto pl-1.5 contain-[layout_paint]">
               <button
                 type="button"
                 aria-label={paletteColor}
                 aria-pressed={isActive}
                 onClick={() => onSelect?.(paletteColor)}
                 className={cn(
-                  'size-7.5 shrink-0 rounded-lg border border-gray-30 shadow-sm transition-all duration-200 ease-in cursor-pointer',
-                  isActive && '-translate-y-1.5 size-10.5 shadow-md border-active',
+                  'size-7.5 shrink-0 rounded-lg border border-gray-30 shadow-sm transition-[width,height,box-shadow,border-color] duration-200 ease-in cursor-pointer',
+                  isActive && 'size-10.5 shadow-md border-active',
                 )}
                 style={{ backgroundColor: paletteColor }}
               />

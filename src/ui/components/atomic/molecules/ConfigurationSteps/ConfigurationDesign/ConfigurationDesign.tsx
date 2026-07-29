@@ -4,6 +4,7 @@ import { ColorControl } from '@molecules/ConfigurationTools/ColorControl';
 import { ColorTabControl } from '@molecules/ConfigurationTools/ColorTabControl';
 import { PatternLayerColorControl } from '@molecules/ConfigurationTools/PatternLayerColorControl';
 import { RangeControl } from '@molecules/ConfigurationTools/RangeControl';
+import { DesignPatternCarousel } from '@molecules/ConfigurationSteps/DesignPatternCarousel';
 import type { designPatternItemType } from '@types';
 import { AtomImage, Button, Flex, Grid, SvgIcon } from '@atoms';
 import { PALETTE_COLORS } from '@constants';
@@ -61,7 +62,7 @@ const ConfigurationDesign = () => {
 
   return (
     <Flex key={product.path} variant="step_design">
-      <Grid variant="select_parts">
+      <Grid variant="select_parts" className="max-sm:hidden">
         <Button variant="select_none" title="Nessuno" data-active={activePattern === null} onClick={() => setActivePattern(null)}>
           <SvgIcon name="none" />
           Nessuno
@@ -80,6 +81,16 @@ const ConfigurationDesign = () => {
           </Button>
         ))}
       </Grid>
+      <div className="hidden w-full min-w-0 max-sm:block">
+        <DesignPatternCarousel
+          patterns={patterns}
+          activePatternKey={activePattern?.key ?? null}
+          onSelect={setActivePattern}
+          renderPreview={(pattern, index) => (
+            <DesignCardPreview src={pattern.cardPreviewSrc} layerColors={resolvePatternLayerColors(pattern, activePattern, getPartColor)} eager={index < 2} />
+          )}
+        />
+      </div>
 
       {activePattern && activePattern.parts.length === 1 && (
         <ColorControl
