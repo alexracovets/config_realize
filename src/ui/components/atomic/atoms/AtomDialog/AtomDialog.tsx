@@ -47,7 +47,7 @@ const dialogContentVariants = cva(
         default: 'rounded-[8px]',
       },
       size: {
-        default: 'p-4 sm:p-10 w-[calc(100%-32px)] sm:w-full max-w-[1044px] max-h-[calc(100dvh-32px)] sm:max-h-[80dvh]',
+        default: 'p-4 sm:p-10 w-[calc(100%-32px)] max-w-[1044px] max-h-[calc(100dvh-32px)]',
       },
       background: {
         default: 'bg-white',
