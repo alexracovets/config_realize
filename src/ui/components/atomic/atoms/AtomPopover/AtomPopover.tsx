@@ -9,7 +9,7 @@ const popoverContentVariants = cva('z-50 rounded-xl border border-gray-30 shadow
   variants: {
     variant: {
       default: 'bg-white',
-      color_picker: 'flex items-center flex-col justify-center w-auto translate-x-full bg-white p-4 gap-4',
+      color_picker: 'flex w-auto flex-col items-center justify-center gap-4 bg-white p-4 max-sm:max-w-[calc(100vw-32px)]',
     },
     gap: {
       default: '',
