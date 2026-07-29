@@ -13,7 +13,7 @@ const variantAtomImage = cva('', {
     variant: {
       default: 'w-full h-full',
       logo: 'relative h-[109px] aspect-[143/154] shrink-0',
-      logo_full: 'relative h-[38px] aspect-[170/38] shrink-0',
+      logo_full: 'relative h-[38px] aspect-[170/38] shrink-0 max-sm:h-[22px]',
     },
   },
   defaultVariants: {

@@ -41,12 +41,17 @@ const ModalAddProductDesign = () => {
 
   return (
     <AtomDialog open={isOpen} onOpenChange={handleOpenChange}>
-      <AtomDialogContent aria-describedby={undefined} aria-label={title} className="h-auto max-h-none w-full max-w-[380px] gap-5">
-        <AtomDialogTitle className="text-center">{title}</AtomDialogTitle>
+      <AtomDialogContent
+        aria-describedby={undefined}
+        aria-label={title}
+        className="h-auto max-h-[calc(100dvh-32px)] w-full max-w-95 gap-5 max-sm:min-w-0 max-sm:max-w-[calc(100%-32px)] max-sm:gap-4 max-sm:p-5"
+        closeButtonClassName="max-sm:top-4 max-sm:right-4"
+      >
+        <AtomDialogTitle className="text-center max-sm:pr-6 max-sm:text-[15px] max-sm:leading-5">{title}</AtomDialogTitle>
         <Flex className="items-center justify-center gap-1 mx-auto">
-          <AtomImage src={sourcePreview} alt="prev" className="h-[120px] w-[110px]" />
-          <SvgIcon name="arrow_right" className="size-7 shrink-0 text-gray-10" aria-hidden />
-          <AtomImage src={targetPreview} alt="new" className="h-[120px] w-[110px]" />
+          <AtomImage src={sourcePreview} alt="prev" className="h-[120px] w-[110px] max-sm:h-20 max-sm:w-18" />
+          <SvgIcon name="arrow_right" className="size-7 shrink-0 text-gray-10 max-sm:size-5" aria-hidden />
+          <AtomImage src={targetPreview} alt="new" className="h-[120px] w-[110px] max-sm:h-20 max-sm:w-18" />
         </Flex>
 
         <Flex className="flex-col gap-3 w-full">

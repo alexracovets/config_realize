@@ -15,7 +15,7 @@ const ModalTutorial = () => {
 
   return (
     <AtomDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AtomDialogContent aria-describedby={undefined} aria-label="Tutorial" className="p-0 h-auto">
+      <AtomDialogContent aria-describedby={undefined} aria-label="Tutorial" className="p-0 sm:p-0 h-auto">
         <AtomDialogTitle visuallyHidden>Tutorial Dialog</AtomDialogTitle>
         {isOpen ? <VideoPlayer src={TUTORIAL_VIDEO_URL} variant="tutorial" className="w-full" poster={tutorialPoster} /> : null}
       </AtomDialogContent>

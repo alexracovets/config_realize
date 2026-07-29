@@ -12,8 +12,9 @@ const ProductSessionAddButton = forwardRef<HTMLButtonElement, productSessionAddB
       ref={ref}
       type="button"
       className={cn(
-        'flex h-11 w-12 items-center justify-center border border-gray-10 bg-gray-5 cursor-pointer',
+        'flex h-12 w-15 items-center justify-center border border-gray-10 bg-gray-5 cursor-pointer',
         'transition-colors duration-200 hover:shadow-md hover:border-active',
+        'max-sm:h-11 max-sm:w-12',
         className,
       )}
       aria-label="Aggiungi prodotto"

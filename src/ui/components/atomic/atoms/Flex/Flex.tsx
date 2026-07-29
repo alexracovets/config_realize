@@ -11,7 +11,7 @@ const variantFlex = cva('flex w-fit items-center justify-center', {
   variants: {
     variant: {
       default: '',
-      utility_bar: 'gap-5',
+      utility_bar: cn('gap-5', 'max-sm:gap-2'),
       search_bar: cn(
         'relative rounded-full w-full h-full justify-start overflow-hidden border border-transparent bg-white outline-none',
         'data-[active=true]:border-border',
@@ -34,8 +34,8 @@ const variantFlex = cva('flex w-fit items-center justify-center', {
       ),
       configurator_view_canvas: cn('relative h-full min-h-0 min-w-0 w-full', 'max-sm:h-[328px] max-sm:shrink-0'),
       card_add_product: cn(
-        'absolute left-0 top-4 z-30 flex max-h-[calc(100%-1rem)] w-12 flex-col gap-0 overflow-visible',
-        'max-sm:relative max-sm:col-start-1 max-sm:row-start-1 max-sm:top-0 max-sm:h-auto max-sm:max-h-[328px] max-sm:shrink-0 max-sm:self-start max-sm:pt-7',
+        'absolute left-0 top-4 z-30 flex max-h-[calc(100%-1rem)] w-15 flex-col gap-0 overflow-visible',
+        'max-sm:relative max-sm:col-start-1 max-sm:row-start-1 max-sm:top-0 max-sm:h-auto max-sm:max-h-[328px] max-sm:w-12 max-sm:shrink-0 max-sm:self-start max-sm:pt-7',
       ),
     },
   },

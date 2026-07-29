@@ -8,7 +8,7 @@ const variantTrigger = cva('font-inter', {
   variants: {
     variant: {
       default: '',
-      leng_switcher: 'text-[14px] px-4 py-1.5 rounded-full border border-border',
+      leng_switcher: 'text-[14px] px-4 py-1.5 rounded-full border border-border max-sm:px-2.5 max-sm:py-1 max-sm:text-[12px]',
       font: 'w-full h-10 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm bg-white text-default',
       position: 'w-full h-10 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm bg-white text-default',
     },
