@@ -33,7 +33,7 @@ const ConfiguratorTabItem = memo(({ item, index, activeIndex, getItemRef }: conf
 ConfiguratorTabItem.displayName = 'ConfiguratorTabItem';
 
 const ConfiguratorStepTabsList = ({ items, activeIndex, listClassName }: configuratorTabsListPropsType) => {
-  const { wrapperRef, getItemRef, indicatorRef } = useSlidingIndicator(activeIndex);
+  const { wrapperRef, getItemRef, indicatorRef } = useSlidingIndicator(activeIndex, { scrollIntoView: true });
 
   return (
     <ScrollArea orientation="horizontal" edgeShadows>
