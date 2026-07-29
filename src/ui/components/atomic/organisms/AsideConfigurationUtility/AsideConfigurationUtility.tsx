@@ -1,17 +1,21 @@
 'use client';
 
 import { useCallback } from 'react';
+import { AiOutlineBorderOuter } from 'react-icons/ai';
 import { IoMdRedo, IoMdUndo } from 'react-icons/io';
 
 import { Button, Flex, Grid, SvgIcon, Text } from '@atoms';
 
 import { useProductStepsConfiguration } from '@hooks';
 import { useConfigurationControl, useTutorialDialog } from '@store';
+import { cn } from '@utils';
 
 const AsideConfigurationUtility = () => {
   const activeStep = useConfigurationControl((state) => state.activeStep);
   const goToPreviousStep = useConfigurationControl((state) => state.goToPreviousStep);
   const goToNextStep = useConfigurationControl((state) => state.goToNextStep);
+  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
+  const toggleGizmoVisible = useConfigurationControl((state) => state.toggleGizmoVisible);
   const setTutorialOpen = useTutorialDialog((state) => state.setIsOpen);
   const availableSteps = useProductStepsConfiguration();
   const firstStep = availableSteps[0]?.step ?? 1;
@@ -20,6 +24,10 @@ const AsideConfigurationUtility = () => {
   const handleTutorial = useCallback(() => {
     setTutorialOpen(true);
   }, [setTutorialOpen]);
+
+  const handleToggleGizmo = useCallback(() => {
+    toggleGizmoVisible();
+  }, [toggleGizmoVisible]);
 
   return (
     <aside className="p-4 pr-12 h-full max-sm:col-start-3 max-sm:row-start-1 max-sm:h-auto max-sm:w-fit max-sm:shrink-0 max-sm:self-start max-sm:p-2">
@@ -46,6 +54,15 @@ const AsideConfigurationUtility = () => {
             <span className="max-sm:[writing-mode:vertical-rl] max-sm:text-[11px]">Tutorial</span>
           </Button>
         </Flex>
+        <Button
+          size="sm"
+          onClick={handleToggleGizmo}
+          aria-pressed={isGizmoVisible}
+          aria-label={isGizmoVisible ? 'Nascondi gizmo' : 'Mostra gizmo'}
+          className={cn('hidden max-sm:flex max-sm:size-9 max-sm:p-0', !isGizmoVisible && 'opacity-50')}
+        >
+          <AiOutlineBorderOuter className="size-4 shrink-0" aria-hidden />
+        </Button>
       </Flex>
     </aside>
   );

@@ -57,10 +57,10 @@ const LogoUpload = ({ canUpload, loading, error, onOpenFilePicker, onFileSelecte
         }}
         className={cn('w-full cursor-pointer', !canUpload && 'cursor-not-allowed opacity-60', dragOver && 'ring-2 ring-active/30 rounded-[8px]')}
       >
-        <Button variant="upload" type="button" disabled={!canUpload} className="pointer-events-none">
+        <Button variant="upload" type="button" disabled={!canUpload} className="pointer-events-none whitespace-normal">
           <SvgIcon name="upload" />
           <Box>
-            <Text className="text-[11px] leading-[15px] font-medium text-center">Trascina qui il tuo logo o fai click per caricare un elemento</Text>
+            <Text className="text-[11px] leading-[15px] font-medium text-center text-wrap">Trascina qui il tuo logo o fai click per caricare un elemento</Text>
             <Text className="text-[10px] leading-[15px] text-center text-gray-10 text-wrap">
               (Dimensione max {Math.round(LOGO_MAX_FILE_SIZE / (1024 * 1024))} MB — form. {LOGO_SUPPORTED_LABEL})
             </Text>
