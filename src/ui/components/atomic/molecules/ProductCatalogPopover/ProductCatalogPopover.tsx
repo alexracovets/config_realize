@@ -1,6 +1,17 @@
 'use client';
 
-import { AtomPopover, AtomPopoverContent, AtomPopoverTrigger, Button, Grid, Text } from '@atoms';
+import {
+  AtomDialog,
+  AtomDialogContent,
+  AtomDialogTitle,
+  AtomDialogTrigger,
+  AtomPopover,
+  AtomPopoverContent,
+  AtomPopoverTrigger,
+  Button,
+  Grid,
+  Text,
+} from '@atoms';
 import { mapHomePageProductBusiness } from '@shopify/mapHomePageProductBusiness';
 import { useConfiguratorCatalog } from '@providers/configuratorCatalogProvider';
 import { ProductCatalogOption } from '@molecules/ProductCatalogOption';
@@ -40,7 +51,8 @@ const ProductCatalogPopover = ({
   contentAlign = 'start',
 }: productCatalogPopoverPropsType) => {
   const { collections } = useConfiguratorCatalog();
-  const [open, setOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [view, setView] = useState<catalogPopoverViewType>('products');
   const [selectedCollectionHandle, setSelectedCollectionHandle] = useState(activeCollectionHandle);
 
@@ -53,9 +65,7 @@ const ProductCatalogPopover = ({
   const columnCount = resolveCatalogGridColumns(gridItems.length);
   const popoverWidthPx = resolveCatalogGridWidthPx(columnCount) + POPOVER_PADDING_X_PX;
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    setOpen(nextOpen);
-
+  const syncCatalogView = (nextOpen: boolean) => {
     if (nextOpen) {
       const initialHandle = activeCollectionHandle || collections[0]?.handle || '';
       setSelectedCollectionHandle(initialHandle);
@@ -65,6 +75,16 @@ const ProductCatalogPopover = ({
 
     setView('products');
     setSelectedCollectionHandle(activeCollectionHandle);
+  };
+
+  const handlePopoverOpenChange = (nextOpen: boolean) => {
+    setPopoverOpen(nextOpen);
+    syncCatalogView(nextOpen);
+  };
+
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    setDialogOpen(nextOpen);
+    syncCatalogView(nextOpen);
   };
 
   const handleProductSelect = (collectionHandle: string, product: homePageCollectionType['products'][number]) => {
@@ -77,7 +97,9 @@ const ProductCatalogPopover = ({
       business: mapHomePageProductBusiness(product, product.modelId),
       catalogPreviewSrc: product.previewSrc ?? product.flipPreviewSrc ?? product.activePreviewSrc ?? null,
     });
-    handleOpenChange(false);
+    setPopoverOpen(false);
+    setDialogOpen(false);
+    syncCatalogView(false);
   };
 
   const handleCollectionSelect = (collectionHandle: string) => {
@@ -85,52 +107,78 @@ const ProductCatalogPopover = ({
     setView('products');
   };
 
-  return (
-    <AtomPopover open={open} onOpenChange={handleOpenChange}>
-      <AtomPopoverTrigger asChild>{children}</AtomPopoverTrigger>
-      <AtomPopoverContent side={contentSide} align={contentAlign} className="flex flex-col gap-1 p-3" style={{ width: popoverWidthPx }}>
-        <Text className="text-[16px]  uppercase font-semibold text-default">{view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}</Text>
-        {view === 'products' && (
-          <Button
-            type="button"
-            variant="ghost"
-            className={cn('h-auto justify-start leading-none items-center gap-1 px-0 text-[14px] font-medium text-default hover:text-active')}
-            onClick={() => setView('collections')}
-          >
-            <ArrowLeft className="size-4 shrink-0" /> Collezioni
-          </Button>
-        )}
-        <Grid
-          style={{
-            gap: CATALOG_GRID_GAP_PX,
-            height: CATALOG_GRID_HEIGHT_PX,
-            gridTemplateRows: `repeat(${CATALOG_GRID_ROWS}, ${CATALOG_CELL_HEIGHT_PX}px)`,
-            gridTemplateColumns: `repeat(${columnCount}, ${CATALOG_CARD_SIZE_PX}px)`,
-          }}
-        >
-          {view === 'collections' &&
-            collections.map((collection) => (
-              <ProductCatalogOption
-                key={collection.id}
-                name={collection.title}
-                previewSrc={collection.imageSrc ?? ''}
-                onSelect={() => handleCollectionSelect(collection.handle)}
-              />
-            ))}
+  const catalogOptions =
+    view === 'collections'
+      ? collections.map((collection) => (
+          <ProductCatalogOption
+            key={collection.id}
+            name={collection.title}
+            previewSrc={collection.imageSrc ?? ''}
+            onSelect={() => handleCollectionSelect(collection.handle)}
+          />
+        ))
+      : selectedCollection?.products.map((product) => (
+          <ProductCatalogOption
+            key={product.id}
+            name={product.title}
+            previewSrc={product.previewSrc ?? ''}
+            disabled={!product.modelId || !hasModel(product.modelId)}
+            onSelect={() => handleProductSelect(selectedCollection.handle, product)}
+          />
+        ));
 
-          {view === 'products' &&
-            selectedCollection?.products.map((product) => (
-              <ProductCatalogOption
-                key={product.id}
-                name={product.title}
-                previewSrc={product.previewSrc ?? ''}
-                disabled={!product.modelId || !hasModel(product.modelId)}
-                onSelect={() => handleProductSelect(selectedCollection.handle, product)}
-              />
-            ))}
-        </Grid>
-      </AtomPopoverContent>
-    </AtomPopover>
+  const catalogBackButton = view === 'products' && (
+    <Button
+      type="button"
+      variant="ghost"
+      className={cn('h-auto items-center justify-start gap-1 px-0 text-[14px] font-medium leading-none text-default hover:text-active')}
+      onClick={() => setView('collections')}
+    >
+      <ArrowLeft className="size-4 shrink-0" /> Collezioni
+    </Button>
+  );
+
+  return (
+    <>
+      <div className="contents max-sm:hidden">
+        <AtomPopover open={popoverOpen} onOpenChange={handlePopoverOpenChange}>
+          <AtomPopoverTrigger asChild>{children}</AtomPopoverTrigger>
+          <AtomPopoverContent side={contentSide} align={contentAlign} className="flex flex-col gap-1 p-3" style={{ width: popoverWidthPx }}>
+            <Text className="text-[16px] font-semibold uppercase text-default">
+              {view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}
+            </Text>
+            {catalogBackButton}
+            <Grid
+              style={{
+                gap: CATALOG_GRID_GAP_PX,
+                height: CATALOG_GRID_HEIGHT_PX,
+                gridTemplateRows: `repeat(${CATALOG_GRID_ROWS}, ${CATALOG_CELL_HEIGHT_PX}px)`,
+                gridTemplateColumns: `repeat(${columnCount}, ${CATALOG_CARD_SIZE_PX}px)`,
+              }}
+            >
+              {catalogOptions}
+            </Grid>
+          </AtomPopoverContent>
+        </AtomPopover>
+      </div>
+
+      <div className="hidden max-sm:contents">
+        <AtomDialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+          <AtomDialogTrigger asChild>{children}</AtomDialogTrigger>
+          <AtomDialogContent
+            aria-describedby={undefined}
+            className="h-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] min-w-0 max-w-140 gap-3 overflow-hidden p-4 pt-10"
+            closeButtonClassName="top-3 right-3 bg-transparent opacity-100"
+          >
+            <AtomDialogTitle className="text-[16px] font-semibold uppercase text-default">
+              {view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}
+            </AtomDialogTitle>
+            {catalogBackButton}
+            <Grid className="max-h-[calc(100dvh-140px)] grid-cols-3 gap-2 overflow-y-auto overscroll-contain pr-1">{catalogOptions}</Grid>
+          </AtomDialogContent>
+        </AtomDialog>
+      </div>
+    </>
   );
 };
 

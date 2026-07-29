@@ -4,7 +4,7 @@ import { createCheckoutConfigurationTableColumns } from '@molecules/CheckoutConf
 import { getCheckoutColumnStyle } from '@molecules/CheckoutConfigurationTable/getCheckoutColumnStyle';
 import { CheckoutRowEditModal } from '@molecules/CheckoutRowEditModal';
 import type { checkoutConfigurationTablePropsType } from '@types';
-import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Button, SvgIcon } from '@atoms';
+import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Button, ScrollArea, SvgIcon } from '@atoms';
 import { CHECKOUT_TABLE_ADD_ROW_LABEL } from '@constants';
 import { useCheckoutConfigurationTable } from '@hooks';
 import { cn } from '@utils';
@@ -30,37 +30,39 @@ const CheckoutConfigurationTable = ({ cartItemId, rows, printAvailability }: che
 
   return (
     <div className="w-full min-w-0">
-      <div className="w-full max-sm:overflow-x-visible sm:overflow-x-auto">
-        <AtomTable variant="checkout" className="table-fixed w-full max-sm:min-w-0!" style={{ minWidth: tableMinWidth }}>
-          <AtomTableHeader>
-            <AtomTableRow>
-              {columns.map((column) => (
-                <AtomTableHead
-                  key={column.id}
-                  className={cn('max-sm:w-auto! max-sm:min-w-0! max-sm:max-w-none!', column.meta?.headClassName)}
-                  style={getCheckoutColumnStyle(column)}
-                >
-                  {column.header}
-                </AtomTableHead>
-              ))}
-            </AtomTableRow>
-          </AtomTableHeader>
-          <AtomTableBody>
-            {rows.map((row, index) => (
-              <AtomTableRow key={row.id}>
+      <div className="w-full overflow-hidden max-sm:rounded-t-lg max-sm:border-x max-sm:border-t max-sm:border-[#D4D4D4]">
+        <ScrollArea orientation="horizontal" className="w-full pb-0">
+          <AtomTable variant="checkout" className="table-fixed w-full" style={{ minWidth: tableMinWidth }}>
+            <AtomTableHeader>
+              <AtomTableRow>
                 {columns.map((column) => (
-                  <AtomTableCell
+                  <AtomTableHead
                     key={column.id}
-                    className={cn('max-sm:w-auto! max-sm:min-w-0! max-sm:max-w-none!', column.meta?.cellClassName)}
+                    className={cn('max-sm:first:border-l-0 max-sm:last:border-r-0', column.meta?.headClassName)}
                     style={getCheckoutColumnStyle(column)}
                   >
-                    {column.cell({ row, index })}
-                  </AtomTableCell>
+                    {column.header}
+                  </AtomTableHead>
                 ))}
               </AtomTableRow>
-            ))}
-          </AtomTableBody>
-        </AtomTable>
+            </AtomTableHeader>
+            <AtomTableBody>
+              {rows.map((row, index) => (
+                <AtomTableRow key={row.id}>
+                  {columns.map((column) => (
+                    <AtomTableCell
+                      key={column.id}
+                      className={cn('max-sm:first:border-l-0 max-sm:last:border-r-0', column.meta?.cellClassName)}
+                      style={getCheckoutColumnStyle(column)}
+                    >
+                      {column.cell({ row, index })}
+                    </AtomTableCell>
+                  ))}
+                </AtomTableRow>
+              ))}
+            </AtomTableBody>
+          </AtomTable>
+        </ScrollArea>
       </div>
 
       <Button

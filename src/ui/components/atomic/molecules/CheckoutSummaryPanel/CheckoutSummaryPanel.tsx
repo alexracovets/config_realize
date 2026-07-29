@@ -91,7 +91,7 @@ const CheckoutSummaryLineItems = ({
           <Text className={cn('font-semibold text-[#0A0A0A]', compact ? 'text-[16px] leading-4' : 'text-[20px] leading-4')}>{item.name}</Text>
           <AtomBadge
             variant="quantity"
-            className={cn(compact && 'h-5.5 rounded-[7.5px] border-[#4B5563] px-2.5 text-[12px] font-medium text-[#4B5563]')}
+            className={cn(compact && 'h-5.5 rounded-[7.5px] border-[#4B5563] bg-transparent px-2.5 text-[12px] font-medium text-[#4B5563]')}
           >
             {item.quantity} pz
           </AtomBadge>
@@ -529,9 +529,12 @@ const CheckoutSummaryPanel = () => {
                   <Text className="mb-4 text-[24px] font-semibold leading-none tracking-[-1px] text-[#0A0A0A]">
                     {CHECKOUT_SUMMARY_TITLE}
                   </Text>
-                  <div className="flex flex-col gap-4 pb-3">
+                  <div className="flex flex-col gap-4">
                     <CheckoutSummaryLineItems lineItems={lineItems} shippingCost={shippingCost} grandTotal={grandTotal} compact />
                     <CheckoutSummaryMeta deliveryTimeline={deliveryTimeline} compact />
+                  </div>
+                  <div className="py-3">
+                    <AtomSeparator className="bg-[#9CA3AF]" />
                   </div>
                 </div>
               </ScrollArea>
