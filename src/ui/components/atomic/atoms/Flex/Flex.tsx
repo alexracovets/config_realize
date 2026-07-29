@@ -26,6 +26,7 @@ const variantFlex = cva('flex w-fit items-center justify-center', {
       header_configuration: cn('flex items-center justify-center bg-white py-2 w-full min-w-0', 'max-sm:py-0 max-sm:px-4'),
       configurator_layout_template: cn(
         'grid min-h-0 grid-cols-[auto_minmax(0,1fr)_auto] overflow-hidden w-full',
+        'max-xl:relative max-xl:grid-cols-[auto_minmax(0,1fr)]',
         'max-sm:relative max-sm:grid max-sm:h-full max-sm:min-h-0 max-sm:flex-1 max-sm:grid-cols-1 max-sm:grid-rows-[auto_minmax(0,1fr)] max-sm:items-start max-sm:overflow-hidden',
       ),
       configurator_view: cn(

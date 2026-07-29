@@ -63,7 +63,7 @@ const FooterConfiguration = () => {
           onClick={handleToggleGizmo}
           aria-pressed={isGizmoVisible}
           aria-label={isGizmoVisible ? 'Nascondi gizmo' : 'Mostra gizmo'}
-          className={cn('px-3', !isGizmoVisible && 'opacity-50')}
+          className={cn('px-3 max-xl:hidden', !isGizmoVisible && 'opacity-50')}
         >
           <AiOutlineBorderOuter className="size-6 shrink-0" aria-hidden />
         </Button>
