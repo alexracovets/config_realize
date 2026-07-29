@@ -20,7 +20,10 @@ const variantText = cva('font-inter font-[400] leading-none', {
         'data-[active=true]:text-default hover:text-default',
         'transition-colors duration-300 ease-in-out',
       ),
-      slider_label: cn('text-[14px] leading-[15px] text-gray', 'data-[thumb=true]:text-default data-[thumb=true]:absolute data-[thumb=true]:-translate-x-1/2'),
+      slider_label: cn(
+        'text-[14px] leading-[15px] text-gray whitespace-nowrap',
+        'data-[thumb=true]:text-default data-[thumb=true]:absolute data-[thumb=true]:top-0 data-[thumb=true]:-translate-x-1/2',
+      ),
       configurator_part_label: cn(
         'text-[16px] leading-[16px] font-semibold text-gray-30 underline-gray-30',
         'max-sm:text-[14px] max-sm:leading-4',
