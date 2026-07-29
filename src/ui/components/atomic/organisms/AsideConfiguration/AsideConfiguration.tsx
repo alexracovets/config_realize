@@ -55,7 +55,7 @@ const AsideConfiguration = () => {
       <Box variant="aside_configuration" asChild>
         <aside ref={asideRef}>
           <CardAddProduct className="max-sm:hidden" />
-          <Grid className="grid h-full min-h-0 w-83.5 grid-rows-[auto_minmax(0,1fr)] gap-6 max-sm:w-full max-sm:grid-rows-[minmax(0,1fr)] max-sm:gap-0">
+          <Grid className="grid h-full min-h-0 w-83.5 grid-rows-[auto_minmax(0,1fr)] gap-6 max-xl:w-58.5 max-xl:gap-5 max-sm:w-full max-sm:grid-rows-[minmax(0,1fr)] max-sm:gap-0">
             <ConfiguratorProduct className="max-sm:hidden" />
             <ActiveStepContent />
           </Grid>

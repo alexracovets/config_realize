@@ -85,7 +85,7 @@ const ConfigurationLogo = () => {
             e.target.value = '';
           }}
         />
-        <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4">
+        <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4 max-xl:gap-3">
           <LogoEditPanel
             partId={editingPart.id}
             onClose={() => setEditingPartId(null)}
@@ -108,7 +108,7 @@ const ConfigurationLogo = () => {
         }}
       />
 
-      <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4">
+      <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4 max-xl:gap-3">
         <LogoUpload canUpload={canUpload} loading={loading} error={error} onOpenFilePicker={openFilePicker} onFileSelected={handleUploadFile} />
         <LogoUploadedFilesSection userLogos={userLogos} onEdit={handleEdit} onDelete={handleDelete} />
       </Flex>

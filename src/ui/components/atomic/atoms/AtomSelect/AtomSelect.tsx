@@ -9,8 +9,8 @@ const variantTrigger = cva('font-inter', {
     variant: {
       default: '',
       leng_switcher: 'text-[14px] px-4 py-1.5 rounded-full border border-border max-sm:px-2.5 max-sm:py-1 max-sm:text-[12px]',
-      font: 'w-full h-10 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm bg-white text-default',
-      position: 'w-full h-10 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-sm:rounded-[7.5px] px-3 text-sm bg-white text-default',
+      font: 'w-full h-10 max-xl:h-8 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-xl:rounded-[6.5px] max-sm:rounded-[7.5px] px-3 max-xl:px-2.5 text-sm max-xl:text-[13px] bg-white text-default',
+      position: 'w-full h-10 max-xl:h-8 max-sm:h-8.75 justify-between border border-input-border rounded-[8px] max-xl:rounded-[6.5px] max-sm:rounded-[7.5px] px-3 max-xl:px-2.5 text-sm max-xl:text-[13px] bg-white text-default',
     },
   },
   defaultVariants: {

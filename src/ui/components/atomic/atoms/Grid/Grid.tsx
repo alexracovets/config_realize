@@ -16,6 +16,7 @@ const variantGrid = cva('grid', {
       configurator_price: 'grid-cols-[auto_1fr] items-center gap-3 w-full',
       select_parts: cn(
         'grid-cols-[repeat(auto-fill,minmax(55px,1fr))] gap-2 w-full px-1',
+        'max-xl:grid-cols-[repeat(auto-fill,minmax(44px,1fr))] max-xl:gap-1.5',
         'max-sm:grid-cols-[repeat(auto-fill,minmax(30px,1fr))] max-sm:px-0',
       ),
       aside_configurator: cn(

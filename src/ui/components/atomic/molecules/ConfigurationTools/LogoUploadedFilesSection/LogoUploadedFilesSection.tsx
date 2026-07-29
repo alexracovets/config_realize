@@ -7,9 +7,9 @@ import { Flex, Text } from '@atoms';
 import { CONFIGURATOR_UPLOADED_FILES_LABEL } from '@constants';
 const LogoUploadedFilesSection = ({ userLogos, onEdit, onDelete }: logoUploadedFilesSectionPropsType) => {
   return (
-    <Flex className="flex-col gap-3 items-start w-full">
-      <Text className="text-[14px] leading-[15px] text-gray">{CONFIGURATOR_UPLOADED_FILES_LABEL}</Text>
-      <Flex className="flex-col gap-5 items-start w-full" asChild>
+    <Flex className="flex-col gap-3 max-xl:gap-2.5 items-start w-full">
+      <Text className="text-[14px] leading-[15px] max-xl:text-[11px] max-xl:leading-3 text-gray">{CONFIGURATOR_UPLOADED_FILES_LABEL}</Text>
+      <Flex className="flex-col gap-5 max-xl:gap-4 items-start w-full" asChild>
         <ul>
           <li className="w-full">
             <DefaultBrandLogoPlaceholder />

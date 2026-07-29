@@ -41,11 +41,15 @@ const ColorTabControl = ({
             onClick={() => setColorTab(id)}
             className={cn(
               'flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-inter font-medium',
+              'max-xl:gap-1.5 max-xl:py-2 max-xl:text-[13px]',
               'border-b-2 -mb-px transition-colors duration-200 cursor-pointer',
               colorTab === id ? 'border-default text-default' : 'border-transparent text-gray hover:text-default',
             )}
           >
-            <div className="w-5 h-5 rounded-[3px] shrink-0 border-[.3px] border-gray-30 transition-colors duration-150" style={{ background: colors[id] }} />
+            <div
+              className="w-5 h-5 rounded-[3px] shrink-0 border-[.3px] border-gray-30 transition-colors duration-150 max-xl:w-4 max-xl:h-4"
+              style={{ background: colors[id] }}
+            />
             {tabLabel}
           </button>
         ))}

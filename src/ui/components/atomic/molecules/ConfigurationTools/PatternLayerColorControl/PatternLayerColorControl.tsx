@@ -23,6 +23,7 @@ const PatternLayerColorControl = ({ layers, colors, onColorChange, onPreviewColo
             onClick={() => setActiveLayerKey(layer.key)}
             className={cn(
               'flex-1 flex items-center justify-center py-2.5 text-sm font-inter font-medium',
+              'max-xl:py-2 max-xl:text-[13px]',
               'border-b-2 -mb-px transition-colors duration-200 cursor-pointer',
               activeLayerKey === layer.key ? 'border-default text-default' : 'border-transparent text-gray hover:text-default',
             )}

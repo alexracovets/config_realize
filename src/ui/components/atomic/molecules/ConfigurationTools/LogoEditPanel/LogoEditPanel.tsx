@@ -16,12 +16,17 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
   const opacityPercent = Math.round(opacity * 100);
 
   return (
-    <Flex className="w-full flex-col items-start justify-start gap-5">
-      <Grid className="grid-cols-[1fr_auto] items-center w-full gap-2">
-        <Text className="text-[14px] leading-[15px] text-gray">File caricati</Text>
-        <Button type="button" variant="outline" className="h-auto gap-1 px-0 py-0 text-[16px] font-semibold hover:text-error bg-transparent" onClick={onClose}>
+    <Flex className="w-full flex-col items-start justify-start gap-5 max-xl:gap-4">
+      <Grid className="grid-cols-[1fr_auto] items-center w-full gap-2 max-xl:gap-1.5">
+        <Text className="text-[14px] leading-[15px] max-xl:text-[11px] max-xl:leading-3 text-gray">File caricati</Text>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-auto gap-1 px-0 py-0 text-[16px] max-xl:text-[13px] font-semibold hover:text-error bg-transparent"
+          onClick={onClose}
+        >
           Chiudi
-          <SvgIcon name="close" />
+          <SvgIcon name="close" className="max-xl:size-3.25" />
         </Button>
       </Grid>
 
@@ -31,10 +36,12 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
         disabled={replacing}
         onClick={onReplaceImage}
         aria-label="Sostituisci immagine"
-        className="grid h-auto w-full min-w-0 grid-cols-[auto_1fr] items-center justify-start gap-2 bg-transparent"
+        className="grid h-auto w-full min-w-0 grid-cols-[auto_1fr] items-center justify-start gap-2 max-xl:gap-1.5 bg-transparent"
       >
-        <AtomImage src={part.src} alt={part.fileName} width={24} height={24} className="object-contain shrink-0" />
-        <Text className="text-[16px] leading-[20px] font-semibold text-black-10 tracking-wide line-clamp-2 text-left">{part.fileName}</Text>
+        <AtomImage src={part.src} alt={part.fileName} width={24} height={24} className="object-contain shrink-0 max-xl:w-5 max-xl:h-5" />
+        <Text className="text-[16px] leading-[20px] max-xl:text-[13px] max-xl:leading-4 font-semibold text-black-10 tracking-wide line-clamp-2 text-left">
+          {part.fileName}
+        </Text>
       </Button>
       <RangeControl
         label="Altezza"

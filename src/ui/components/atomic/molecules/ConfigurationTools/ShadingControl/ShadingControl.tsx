@@ -25,7 +25,7 @@ const ShadingControl = ({ partId }: shadingControlPropsType) => {
           <Flex className="gap-2 items-start flex-col">
             <Text variant="configurator_control_label">Colore primario</Text>
             <div
-              className="w-15 h-15 max-sm:w-10.5 max-sm:h-10.5 rounded-[8px] shrink-0 border-[.2px] border-gray-30 transition-colors duration-150"
+              className="w-15 h-15 max-xl:w-12 max-xl:h-12 max-sm:w-10.5 max-sm:h-10.5 rounded-[8px] shrink-0 border-[.2px] border-gray-30 transition-colors duration-150"
               style={{ background: baseColor }}
             />
           </Flex>

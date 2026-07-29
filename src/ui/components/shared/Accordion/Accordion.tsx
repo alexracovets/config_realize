@@ -39,7 +39,7 @@ const AccordionTrigger = ({ className, children, actions, ...props }: accordionT
       <ChevronDownIcon
         data-slot="accordion-trigger-icon"
         aria-hidden
-        className="mr-[8px] size-4 shrink-0 text-base-black transition-transform duration-150 ease-out peer-aria-expanded/accordion-trigger:rotate-180 max-sm:mr-0 max-sm:size-3"
+        className="mr-[8px] size-4 shrink-0 text-base-black transition-transform duration-150 ease-out peer-aria-expanded/accordion-trigger:rotate-180 max-xl:mr-1.5 max-xl:size-3.25 max-sm:mr-0 max-sm:size-3"
       />
     </AccordionPrimitive.Header>
   );

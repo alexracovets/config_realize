@@ -11,10 +11,10 @@ const rangeVariants = cva('', {
   variants: {
     variant: {
       default: cn(
-        '[&_[data-slot=slider-track]]:h-[4px]',
+        '[&_[data-slot=slider-track]]:h-[4px] max-xl:[&_[data-slot=slider-track]]:h-[3px]',
         '[&_[data-slot=slider-track]]:bg-gray-20',
         '[&_[data-slot=slider-range]]:bg-[#000000]',
-        '[&_[data-slot=slider-thumb]]:size-[10px]',
+        '[&_[data-slot=slider-thumb]]:size-[10px] max-xl:[&_[data-slot=slider-thumb]]:size-2',
         '[&_[data-slot=slider-thumb]]:bg-[#000000]',
         '[&_[data-slot=slider-thumb]]:border-[#000000]',
       ),

@@ -8,7 +8,7 @@ const ProductCatalogOption = ({ name, previewSrc, disabled = false, onSelect }: 
     <Button
       variant="select_part"
       aria-label={name}
-      className="flex h-full w-full flex-col gap-0 overflow-hidden p-0 whitespace-normal"
+      className="flex h-full max-xl:h-full w-full flex-col gap-0 overflow-hidden p-0 whitespace-normal"
       disabled={disabled}
       onClick={onSelect}
     >

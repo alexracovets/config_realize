@@ -10,27 +10,34 @@ import type { textPropsType } from '@types';
 const variantText = cva('font-inter font-[400] leading-none', {
   variants: {
     variant: {
-      default: 'text-[16px] text-default',
+      default: cn('text-[16px] text-default', 'max-xl:text-[13px]'),
       whatsapp_badge: 'text-[14px] leading-[24px] text-white font-medium',
-      product_name: cn('text-[32px] leading-[1] font-[600] tracking-[-1px]', 'max-sm:text-[20px]'),
-      product_price: cn('text-[32px] leading-[39px] font-semibold tracking-[-1px]', 'max-sm:text-[26px] max-sm:leading-[100%]'),
+      product_name: cn('text-[32px] leading-[1] font-[600] tracking-[-1px]', 'max-xl:text-[20px]', 'max-sm:text-[20px]'),
+      product_price: cn('text-[32px] leading-[39px] font-semibold tracking-[-1px]', 'max-xl:text-[24px] max-xl:leading-[31px]', 'max-sm:text-[26px] max-sm:leading-[100%]'),
       menu_step_buy: cn(
         'relative text-[22px] text-gray-10 leading-[27px] font-semibold uppercase overflow-hidden cursor-pointer',
+        'max-xl:text-[18px] max-xl:leading-[22px]',
         'max-sm:text-[12px] max-sm:leading-[12px]',
         'data-[active=true]:text-default hover:text-default',
         'transition-colors duration-300 ease-in-out',
       ),
       slider_label: cn(
         'text-[14px] leading-[15px] text-gray whitespace-nowrap',
+        'max-xl:text-[11px] max-xl:leading-[12px]',
         'data-[thumb=true]:text-default data-[thumb=true]:absolute data-[thumb=true]:top-0 data-[thumb=true]:-translate-x-1/2',
       ),
       configurator_part_label: cn(
         'text-[16px] leading-[16px] font-semibold text-gray-30 underline-gray-30',
+        'max-xl:text-[13px] max-xl:leading-[13px]',
         'max-sm:text-[14px] max-sm:leading-4',
         'group-aria-expanded/accordion-trigger:text-default',
         'transition-all duration-200 ease-in-out',
       ),
-      configurator_control_label: cn('text-[14px] leading-[15px] font-[400] text-gray', 'max-sm:text-[12px] max-sm:leading-[15px]'),
+      configurator_control_label: cn(
+        'text-[14px] leading-[15px] font-[400] text-gray',
+        'max-xl:text-[11px] max-xl:leading-[12px]',
+        'max-sm:text-[12px] max-sm:leading-[15px]',
+      ),
       h2: cn('text-[40px] leading-[1] font-[700] text-base-black mb-8 uppercase tracking-[-1px]', 'max-sm:text-[28px] max-sm:mb-4'),
       h3: cn('text-[24px] leading-[1] font-semibold text-base-black mb-3', 'max-sm:text-[18px] max-sm:mb-2'),
       small: 'text-[14px] text-gray',

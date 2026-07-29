@@ -26,22 +26,22 @@ const ConfiguratorProduct = memo(({ className }: { className?: string }) => {
   }
 
   return (
-    <Flex className={cn('flex-col items-start w-full gap-3', className)}>
-      <Grid className="grid-cols-[1fr_auto] gap-3 max-sm:items-center">
+    <Flex className={cn('flex-col items-start w-full gap-3 max-xl:gap-2.5', className)}>
+      <Grid className="grid-cols-[1fr_auto] gap-3 max-xl:gap-2.5 max-sm:items-center">
         <Text variant="product_name" asChild>
           <h3>{name}</h3>
         </Text>
-        <Flex className="flex-col items-start px-3 py-2 rounded-sm bg-primary hover:bg-primary/90 transition-colors max-sm:flex-row max-sm:items-center max-sm:gap-1 max-sm:px-2 max-sm:py-1">
-          <Text className="font-semibold max-sm:text-[12px] max-sm:leading-4">Prodotto {numberProduct}</Text>
+        <Flex className="flex-col items-start px-3 py-2 rounded-sm bg-primary hover:bg-primary/90 transition-colors max-xl:px-2.5 max-xl:py-1.5 max-sm:flex-row max-sm:items-center max-sm:gap-1 max-sm:px-2 max-sm:py-1">
+          <Text className="font-semibold max-xl:text-[13px] max-sm:text-[12px] max-sm:leading-4">Prodotto {numberProduct}</Text>
           {showMinimumQuantity ? (
-            <Text className="text-[14px] text-gray max-sm:text-[12px] max-sm:leading-3.75 max-sm:text-[#6B7280]">{buildMinimumQuantityLabel(minimumCount)}</Text>
+            <Text className="text-[14px] text-gray max-xl:text-[11px] max-sm:text-[12px] max-sm:leading-3.75 max-sm:text-[#6B7280]">{buildMinimumQuantityLabel(minimumCount)}</Text>
           ) : null}
         </Flex>
       </Grid>
       <Grid variant="configurator_price">
         <Text variant="product_price">{priceFormat(price)}</Text>
         {showVolumeDiscount ? (
-          <Text className="text-[#6B7280] font-medium max-sm:text-[12px] max-sm:leading-3.75 max-sm:font-normal">{buildVolumeDiscountLabel(bonusCount, bonusDiscount)}</Text>
+          <Text className="text-[#6B7280] font-medium max-xl:text-[11px] max-sm:text-[12px] max-sm:leading-3.75 max-sm:font-normal">{buildVolumeDiscountLabel(bonusCount, bonusDiscount)}</Text>
         ) : null}
       </Grid>
     </Flex>

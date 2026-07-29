@@ -38,7 +38,7 @@ const ConfiguratorStepTabsList = ({ items, activeIndex, listClassName }: configu
   return (
     <ScrollArea orientation="horizontal" edgeShadows>
       <div ref={wrapperRef} className="relative w-full min-w-0 pt-2">
-        <AtomTabsList className={cn('w-fit gap-3 max-sm:gap-1', listClassName)}>
+        <AtomTabsList className={cn('w-fit gap-3 max-xl:gap-1.5 max-sm:gap-1', listClassName)}>
           {items.map((item, index) => (
             <ConfiguratorTabItem key={item.value} item={item} index={index} activeIndex={activeIndex} getItemRef={getItemRef} />
           ))}

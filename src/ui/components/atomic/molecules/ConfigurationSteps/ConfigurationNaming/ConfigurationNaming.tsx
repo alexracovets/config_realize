@@ -50,7 +50,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
   if (!instance) return null;
 
   return (
-    <Flex variant="configurator_part" className="gap-5 pt-2">
+    <Flex variant="configurator_part" className="gap-5 max-xl:gap-4 pt-2">
       <Flex variant="configurator_part">
         <Text variant="configurator_control_label">Testo</Text>
         <input
@@ -59,7 +59,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
           maxLength={limits.maxLength}
           onChange={(e) => setPreview(instanceId, { text: e.target.value })}
           onBlur={commitFromPreview}
-          className="w-full h-10 bg-white border border-input-border rounded-[8px] px-3 text-sm font-inter text-default outline-none focus:border-active transition-colors"
+          className="w-full h-10 max-xl:h-8 bg-white border border-input-border rounded-[8px] max-xl:rounded-[6.5px] px-3 max-xl:px-2.5 text-sm max-xl:text-[13px] font-inter text-default outline-none focus:border-active transition-colors"
           placeholder={placeholder}
         />
       </Flex>
@@ -99,7 +99,7 @@ const NamePartForm = ({ instanceId, limits, placeholder }: namePartFormPropsType
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>
-        <SvgIcon name="delete" className="w-[14px] h-[15.75px]" />
+        <SvgIcon name="delete" className="w-[14px] h-[15.75px] max-xl:w-2.75 max-xl:h-[12.5px]" />
         Eliminare
       </Button>
     </Flex>
@@ -171,7 +171,7 @@ const ConfigurationNaming = () => {
   if (positions.length === 0 || !limitsByPositionKey || !nameDefaults) return null;
 
   return (
-    <Flex key={product.path} variant="step_design" className="gap-3">
+    <Flex key={product.path} variant="step_design" className="gap-3 max-xl:gap-2.5">
       <ConfigurationPositionSelect
         label={CONFIGURATOR_NAME_POSITION_SELECT_LABEL}
         title={nameDefaults.title}
@@ -181,7 +181,14 @@ const ConfigurationNaming = () => {
       />
 
       {instances.length > 0 && (
-        <AccordionAtom items={items} value={openItems} onValueChange={handleOpenItemsChange} onItemActivate={handleItemActivate} multiple className="gap-2" />
+        <AccordionAtom
+          items={items}
+          value={openItems}
+          onValueChange={handleOpenItemsChange}
+          onItemActivate={handleItemActivate}
+          multiple
+          className="gap-2 max-xl:gap-1.5"
+        />
       )}
     </Flex>
   );

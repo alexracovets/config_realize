@@ -20,14 +20,14 @@ const inputVariants = cva(
         default: 'border border-input-border rounded-full bg-transparent',
         ghost: 'border border-transparent bg-transparent',
         filled: 'border border-input-border rounded-full bg-primary',
-        color_picker: 'max-w-[80px] min-w-auto border border-gray-30 rounded-full bg-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2)] pr-1',
+        color_picker: 'max-w-[80px] max-xl:max-w-16 min-w-auto border border-gray-30 rounded-full bg-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2)] pr-1',
         checkout: 'h-10 rounded-[8px] border border-input-border bg-white px-3 text-sm',
       },
       size: {
         default: '',
         sm: 'h-7 px-3 py-1 text-xs',
         lg: 'h-11 px-5 py-3 text-base',
-        color_picker: 'pl-3 pr-1 text-[12px] h-6',
+        color_picker: 'pl-3 pr-1 text-[12px] max-xl:text-[10px] h-6 max-xl:h-5',
       },
     },
     defaultVariants: {

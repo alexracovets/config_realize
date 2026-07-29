@@ -21,7 +21,7 @@ const accordionItemVariants = cva('', {
 const accordionTriggerVariants = cva('', {
   variants: {
     variant: {
-      default: cn('py-3 color-gray-30', 'max-sm:py-2', 'transition-colors duration-150 ease-out'),
+      default: cn('py-3 color-gray-30', 'max-xl:py-2.5', 'max-sm:py-2', 'transition-colors duration-150 ease-out'),
     },
   },
   defaultVariants: {
@@ -56,7 +56,7 @@ const AccordionDeleteAction = ({ onDelete }: { onDelete: () => void }) => (
       onDelete();
     }}
   >
-    <SvgIcon name="delete" className="w-[14px] h-[15.75px]" />
+    <SvgIcon name="delete" className="w-[14px] h-[15.75px] max-xl:w-2.75 max-xl:h-[12.5px]" />
   </Button>
 );
 
