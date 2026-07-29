@@ -192,7 +192,7 @@ const CheckoutSummaryBody = ({
   error,
   onSubmit,
 }: CheckoutSummarySharedProps) => (
-  <Flex className="w-full flex-col gap-8">
+  <Flex className="w-full flex-col gap-8 max-xl:gap-4">
     <CheckoutSummaryLineItems lineItems={lineItems} shippingCost={shippingCost} grandTotal={grandTotal} />
     <Flex className="w-full flex-col gap-3">
       <CheckoutDiscountBanner discountPercent={discountPercent} discountAmount={discountAmount} className="gap-2 px-6 py-2" />
@@ -468,7 +468,7 @@ const CheckoutSummaryPanel = () => {
 
   return (
     <>
-      <AtomCard className="sticky top-0 right-0 mt-9 h-[calc(100%-(--spacing(9)))] w-full justify-self-end gap-8 bg-[#E5E5E5] p-12 ring-0 max-sm:hidden">
+      <AtomCard className="sticky top-0 right-0 mt-9 h-[calc(100%-(--spacing(9)))] w-full min-w-0 justify-self-end gap-8 bg-[#E5E5E5] p-12 max-xl:p-4 ring-0 max-xl:gap-4 max-sm:hidden">
         <AtomCardHeader>
           <AtomCardTitle className="text-[32px] font-semibold leading-none tracking-[-1px] text-base-black max-sm:text-[22px]">
             {CHECKOUT_SUMMARY_TITLE}
