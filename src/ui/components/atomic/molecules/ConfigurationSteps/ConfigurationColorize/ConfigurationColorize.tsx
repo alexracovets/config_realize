@@ -8,11 +8,18 @@ import { usePartAccordionCameraFocus } from '@hooks';
 import { DEFAULT_COLOR, useConfiguratorProduct, useGarmentColor } from '@store';
 import { memo, useMemo } from 'react';
 
-const PartColorControl = memo(({ partId }: partColorControlPropsType) => {
+const PartColorControl = memo(({ partId, restrictedColors }: partColorControlPropsType) => {
   const color = useGarmentColor((state) => state.byPart[partId] ?? DEFAULT_COLOR);
   const setPartColor = useGarmentColor((state) => state.setPartColor);
 
-  return <ColorControl color={color} onSelect={(value) => setPartColor(partId, value)} onPreviewSelect={(value) => setPartColor(partId, value)} />;
+  return (
+    <ColorControl
+      color={color}
+      onSelect={(value) => setPartColor(partId, value)}
+      onPreviewSelect={(value) => setPartColor(partId, value)}
+      restrictedColors={restrictedColors}
+    />
+  );
 });
 
 PartColorControl.displayName = 'PartColorControl';
@@ -34,7 +41,7 @@ const ConfigurationColorizeAccordion = ({ parts, partIds }: configurationColoriz
       parts.map((part) => ({
         value: part.id,
         trigger: <PartColorSwitch color={byPart[part.id] ?? DEFAULT_COLOR} label={part.label} />,
-        content: <PartColorControl partId={part.id} />,
+        content: <PartColorControl partId={part.id} restrictedColors={part.restrictedColors} />,
       })),
     [byPart, parts],
   );

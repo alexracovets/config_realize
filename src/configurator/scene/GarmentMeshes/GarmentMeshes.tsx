@@ -19,6 +19,17 @@ type garmentMeshEntryType = {
   renderOrder: number;
 };
 
+/**
+ * GLTFLoader loads a multi-primitive (multi-material) mesh as a Group of child Meshes
+ * rather than a single Mesh with a material array, so a `meshNames` entry can resolve to
+ * a non-mesh container. Flatten it down to its actual mesh descendants so every primitive
+ * still renders (and shares the same part id, so they take the same color).
+ */
+const collectMeshDescendants = (node: Object3D): Object3D[] => {
+  if ('isMesh' in node && (node as unknown as { isMesh?: boolean }).isMesh) return [node];
+  return node.children.flatMap(collectMeshDescendants);
+};
+
 const GarmentMeshes = () => {
   const product = useConfiguratorProduct((state) => state.product);
   const modelUrl = resolveModelUrl(product);
@@ -33,15 +44,13 @@ const GarmentMeshes = () => {
         const node = resolveMeshNode(meshName);
         if (!node) return [];
 
-        return [
-          {
-            key: `${part.id}-${meshName}`,
-            registryKey: part.id,
-            meshName,
-            node,
-            renderOrder: part.renderOrder ?? 0,
-          },
-        ];
+        return collectMeshDescendants(node).map((meshNode, index) => ({
+          key: `${part.id}-${meshName}-${index}`,
+          registryKey: part.id,
+          meshName: meshNode.name || meshName,
+          node: meshNode,
+          renderOrder: part.renderOrder ?? 0,
+        }));
       }),
     );
   }, [product.parts, resolveMeshNode]);

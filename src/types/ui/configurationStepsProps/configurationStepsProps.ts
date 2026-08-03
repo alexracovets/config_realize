@@ -23,6 +23,7 @@ interface testoPartFormPropsType {
 
 interface partColorControlPropsType {
   partId: string;
+  restrictedColors?: string[];
 }
 
 interface configurationPositionPickerPositionType {

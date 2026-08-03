@@ -5,6 +5,7 @@ interface colorControlPropsType {
   label?: string;
   onSelect?: (color: string) => void;
   onPreviewSelect?: (color: string) => void;
+  restrictedColors?: string[];
 }
 
 type colorTabType = 'colori' | 'contorno';

@@ -49,6 +49,7 @@ interface garmentPartConfigType {
   gradient?: partGradientConfigType;
 
   colorOnly?: boolean;
+  restrictedColors?: string[];
 }
 
 interface patternPartConfigType {

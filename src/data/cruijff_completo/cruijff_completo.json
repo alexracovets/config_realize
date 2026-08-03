@@ -7,7 +7,7 @@
     "height": 806
   },
   "hiddenSteps": ["name"],
-  "preserveGltfMeshes": ["model_inside", "model_laces"],
+  "preserveGltfMeshes": ["model_inside"],
   "parts": [
     {
       "name": "Davanti",
@@ -50,6 +50,15 @@
         "softness": 0.5,
         "opacity": 1
       }
+    },
+    {
+      "name": "Lacci",
+      "label": "Lacci",
+      "id": "cruijff_completo_laces",
+      "meshNames": ["model_laces"],
+      "renderOrder": 1,
+      "colorOnly": true,
+      "restrictedColors": ["#FFFFFF", "#000000", "#0027F8", "#03094D", "#F6FF00", "#FFCF00", "#D0021B"]
     }
   ],
   "patterns": [

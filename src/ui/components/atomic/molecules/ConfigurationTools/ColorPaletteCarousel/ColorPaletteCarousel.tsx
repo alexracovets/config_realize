@@ -9,27 +9,28 @@ import { cn } from '@utils';
 type colorPaletteCarouselPropsType = {
   color: string;
   onSelect?: (color: string) => void;
+  colors?: readonly string[];
 };
 
 const CAROUSEL_OPTS = { align: 'center', dragFree: true, containScroll: 'keepSnaps', watchResize: false } as const;
 
-const ColorPaletteCarousel = ({ color, onSelect }: colorPaletteCarouselPropsType) => {
+const ColorPaletteCarousel = ({ color, onSelect, colors = PALETTE_COLORS }: colorPaletteCarouselPropsType) => {
   const apiRef = useRef<carouselApiType | null>(null);
 
   useEffect(() => {
     const api = apiRef.current;
     if (!api) return;
 
-    const index = (PALETTE_COLORS as readonly string[]).indexOf(color);
+    const index = colors.indexOf(color);
     if (index === -1) return;
 
     api.scrollTo(index, false);
-  }, [color]);
+  }, [color, colors]);
 
   return (
     <Carousel opts={CAROUSEL_OPTS} setApi={(api) => (apiRef.current = api ?? null)} className="w-full">
       <CarouselContent className="-ml-1.5 items-center py-1.5 h-12 will-change-transform">
-        {PALETTE_COLORS.map((paletteColor) => {
+        {colors.map((paletteColor) => {
           const isActive = color === paletteColor;
 
           return (
