@@ -1,12 +1,38 @@
 import { CHECKOUT_CONFIG_EXPORT_FILENAME, CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from '@constants';
 import { fetchLatestOrderExportAssets } from '@shopify';
-import type { uvImageEntryType } from '@shopify';
+import type { shopifyOrderNodeType, uvImageEntryType } from '@shopify';
 import { Container } from '@atoms';
 
 const buildDownloadHref = (fileUrl: string, filename: string) => {
   const params = new URLSearchParams({ url: fileUrl, filename });
   return `/api/download?${params.toString()}`;
 };
+
+const parseJsonValue = (value: string): unknown => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
+
+const buildOrderJson = (raw: shopifyOrderNodeType) =>
+  JSON.stringify(
+    {
+      ...raw,
+      metafields: raw.metafields.edges.map(({ node }) => ({
+        ...node,
+        value: node.type === 'json' ? parseJsonValue(node.value) : node.value,
+      })),
+      customAttributes: raw.customAttributes.map((attribute) => ({
+        ...attribute,
+        value: attribute.value?.trimStart().startsWith('[') || attribute.value?.trimStart().startsWith('{') ? parseJsonValue(attribute.value) : attribute.value,
+      })),
+      lineItems: raw.lineItems.edges.map(({ node }) => node),
+    },
+    null,
+    2,
+  );
 
 const resolveUvImageFilename = (uvImage: uvImageEntryType) => {
   const pathname = uvImage.url.split('?')[0] ?? uvImage.url;
@@ -72,6 +98,11 @@ const LastOrderExportPage = async () => {
             {!order.orderPdfUrl && !order.cuttingPdfUrl && !order.configUrl && order.uvImages.length === 0 && (
               <p className="text-sm text-gray-30">Nessun file di export trovato per questo ordine.</p>
             )}
+
+            <section className="flex flex-col gap-3">
+              <h2 className="text-base font-semibold">Ordine (JSON)</h2>
+              <pre className="text-xs text-gray-30 whitespace-pre-wrap break-all border border-gray-20 rounded p-3">{buildOrderJson(order.raw)}</pre>
+            </section>
           </>
         )}
       </div>

@@ -1,7 +1,7 @@
 export { assertShopifyConfigured, getShopifyAdminClientSecret, getShopifyFrameAncestors, isShopifyEnabled } from './config';
 export { shopifyAdminGraphql } from './adminClient';
 export { fetchLatestOrderExportAssets } from './fetchLatestOrderExportAssets';
-export type { latestOrderExportAssetsType, uvImageEntryType } from './fetchLatestOrderExportAssets';
+export type { latestOrderExportAssetsType, shopifyOrderNodeType, uvImageEntryType } from './fetchLatestOrderExportAssets';
 export { createCheckoutCart } from './createCheckoutCart';
 export type { checkoutLineAttributeType, createCheckoutPayloadType, createCheckoutResultType } from './checkoutPayload';
 export { buildShopifyFrameAncestors, buildShopifyFrameAncestorsHeader } from './frameAncestors';
