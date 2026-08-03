@@ -32,7 +32,12 @@ const CheckoutSizePopover = ({ value, onChange }: checkoutSizePopoverPropsType) 
           <ChevronDown className={cn('size-4 shrink-0 text-gray transition-transform', open && 'rotate-180')} aria-hidden />
         </button>
       </AtomPopoverTrigger>
-      <AtomPopoverContent align="center" sideOffset={4} className="min-w-[88px] p-1">
+      <AtomPopoverContent
+        align="center"
+        sideOffset={4}
+        collisionPadding={8}
+        className="min-w-[88px] p-1 max-h-[min(320px,var(--radix-popover-content-available-height))] overflow-y-auto"
+      >
         <ul className="flex flex-col">
           {CHECKOUT_SIZE_SELECT_OPTIONS.map((option) => (
             <li key={option.value}>
