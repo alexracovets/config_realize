@@ -105,10 +105,7 @@
       "name": "Design 5",
       "parts": [
         {
-          "path_name": "design_5_color_1.webp"
-        },
-        {
-          "path_name": "design_5_color_2.webp"
+          "path_name": "design_5.webp"
         }
       ],
       "designId": "design_05"
@@ -117,7 +114,10 @@
       "name": "Design 6",
       "parts": [
         {
-          "path_name": "design_6.webp"
+          "path_name": "design_6_color_1.webp"
+        },
+        {
+          "path_name": "design_6_color_2.webp"
         }
       ],
       "designId": "design_06"
@@ -126,10 +126,7 @@
       "name": "Design 7",
       "parts": [
         {
-          "path_name": "design_7_color_1.webp"
-        },
-        {
-          "path_name": "design_7_color_2.webp"
+          "path_name": "design_7.webp"
         }
       ],
       "designId": "design_07"
@@ -142,6 +139,9 @@
         },
         {
           "path_name": "design_8_color_2.webp"
+        },
+        {
+          "path_name": "design_8_color_3.webp"
         }
       ],
       "designId": "design_08"
@@ -162,7 +162,10 @@
       "name": "Design 10",
       "parts": [
         {
-          "path_name": "design_10.webp"
+          "path_name": "design_10_color_1.webp"
+        },
+        {
+          "path_name": "design_10_color_2.webp"
         }
       ],
       "designId": "design_10"

@@ -1,4 +1,5 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -74,12 +75,50 @@ const normalizeSvg = (svgText, targetWidth) => {
 
 const formatKb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
 
+/**
+ * librsvg's XML parser refuses a single text node beyond ~10MB ("try XML_PARSE_HUGE"),
+ * which multi-MB inline base64 <image> data URIs can exceed. Sidestep it by writing each
+ * embedded image to a temp PNG/JPEG file alongside a rewritten wrapper .svg (referencing
+ * them by relative filename) and rendering that file from disk — the XML shrinks to a
+ * few KB and librsvg loads the raster data separately. (A bare in-memory Buffer has no
+ * base URI, so file:// hrefs silently fail to resolve and render nothing; the SVG must
+ * be read from a real path for relative references to work.)
+ */
+const externalizeEmbeddedImages = (svgText) => {
+  const tmpDir = mkdtempSync(join(tmpdir(), 'design-svg-'));
+  let index = 0;
+  let replaced = 0;
+
+  const rewritten = svgText.replace(/(xlink:href|href)="data:image\/(png|jpeg);base64,([^"]+)"/g, (_full, attr, ext, base64) => {
+    const name = `image_${index++}.${ext === 'jpeg' ? 'jpg' : ext}`;
+    writeFileSync(join(tmpDir, name), Buffer.from(base64, 'base64'));
+    replaced += 1;
+    return `${attr}="${name}"`;
+  });
+
+  const svgFile = join(tmpDir, 'wrapper.svg');
+  writeFileSync(svgFile, rewritten);
+
+  return { svgFile, cleanup: () => rmSync(tmpDir, { recursive: true, force: true }), replaced };
+};
+
 const convert = async (svgPath) => {
   const svgText = readFileSync(svgPath, 'utf8');
   const { svg, width, height } = normalizeSvg(svgText, TARGET_WIDTH);
   const outPath = svgPath.replace(/\.svg$/i, '.webp');
 
-  await sharp(Buffer.from(svg)).resize({ width, height, fit: 'fill' }).webp({ quality: WEBP_QUALITY, alphaQuality: 100, effort: 6 }).toFile(outPath);
+  try {
+    await sharp(Buffer.from(svg)).resize({ width, height, fit: 'fill' }).webp({ quality: WEBP_QUALITY, alphaQuality: 100, effort: 6 }).toFile(outPath);
+  } catch (error) {
+    const { svgFile, cleanup, replaced } = externalizeEmbeddedImages(svg);
+    if (replaced === 0) throw error;
+
+    try {
+      await sharp(svgFile).resize({ width, height, fit: 'fill' }).webp({ quality: WEBP_QUALITY, alphaQuality: 100, effort: 6 }).toFile(outPath);
+    } finally {
+      cleanup();
+    }
+  }
 
   return {
     name: basename(svgPath),

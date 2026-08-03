@@ -101,7 +101,125 @@
       "colorOnly": true
     }
   ],
-  "patterns": [],
+  "patterns": [
+    {
+      "name": "Design 1",
+      "parts": [
+        {
+          "path_name": "design_1_color_1.webp"
+        },
+        {
+          "path_name": "design_1_color_2.webp"
+        }
+      ],
+      "designId": "design_01"
+    },
+    {
+      "name": "Design 2",
+      "parts": [
+        {
+          "path_name": "design_2_color_1.webp"
+        },
+        {
+          "path_name": "design_2_color_2.webp"
+        }
+      ],
+      "designId": "design_02"
+    },
+    {
+      "name": "Design 3",
+      "parts": [
+        {
+          "path_name": "design_3_color_1.webp"
+        },
+        {
+          "path_name": "design_3_color_2.webp"
+        }
+      ],
+      "designId": "design_03"
+    },
+    {
+      "name": "Design 4",
+      "parts": [
+        {
+          "path_name": "design_4_color_2.webp"
+        },
+        {
+          "path_name": "design_4_color_1.webp"
+        }
+      ],
+      "designId": "design_04"
+    },
+    {
+      "name": "Design 5",
+      "parts": [
+        {
+          "path_name": "design_5.webp"
+        }
+      ],
+      "designId": "design_05"
+    },
+    {
+      "name": "Design 6",
+      "parts": [
+        {
+          "path_name": "design_6_color_1.webp"
+        },
+        {
+          "path_name": "design_6_color_2.webp"
+        }
+      ],
+      "designId": "design_06"
+    },
+    {
+      "name": "Design 7",
+      "parts": [
+        {
+          "path_name": "design_7.webp"
+        }
+      ],
+      "designId": "design_07"
+    },
+    {
+      "name": "Design 8",
+      "parts": [
+        {
+          "path_name": "design_8_color_1.webp"
+        },
+        {
+          "path_name": "design_8_color_2.webp"
+        },
+        {
+          "path_name": "design_8_color_3.webp"
+        }
+      ],
+      "designId": "design_08"
+    },
+    {
+      "name": "Design 9",
+      "parts": [
+        {
+          "path_name": "design_9_color_1.webp"
+        },
+        {
+          "path_name": "design_9_color_2.webp"
+        }
+      ],
+      "designId": "design_09"
+    },
+    {
+      "name": "Design 10",
+      "parts": [
+        {
+          "path_name": "design_10_color_1.webp"
+        },
+        {
+          "path_name": "design_10_color_2.webp"
+        }
+      ],
+      "designId": "design_10"
+    }
+  ],
   "default_pattern": [
     {
       "name": "Logos",
