@@ -189,7 +189,7 @@
   ],
   "nameDefaults": {
     "text": "PLAYER",
-    "font": "Oswald",
+    "font": "Russo One",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
@@ -199,7 +199,7 @@
   },
   "numberDefaults": {
     "text": "10",
-    "font": "Oswald",
+    "font": "Russo One",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
@@ -213,7 +213,7 @@
   },
   "testoDefaults": {
     "text": "TEAM",
-    "font": "Oswald",
+    "font": "Russo One",
     "textColor": "#000000",
     "strokeColor": "#ffffff",
     "strokeWidth": 0,
