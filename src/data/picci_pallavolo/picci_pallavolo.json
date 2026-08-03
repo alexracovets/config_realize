@@ -233,8 +233,8 @@
       "label": "Destra inferiore",
       "partId": "picci_pallavolo_back",
       "uv": {
-        "x": 0.606,
-        "y": 0.724
+        "x": 0.7,
+        "y": 0.775
       },
       "rotation": 0,
       "fontSize": 90,
@@ -251,8 +251,8 @@
       "label": "Destra superiore",
       "partId": "picci_pallavolo_back",
       "uv": {
-        "x": 0.606,
-        "y": 0.539
+        "x": 0.7,
+        "y": 0.606
       },
       "rotation": 0,
       "fontSize": 90,
@@ -269,8 +269,8 @@
       "label": "Laterale",
       "partId": "picci_pallavolo_back",
       "uv": {
-        "x": 0.5,
-        "y": 0.65
+        "x": 0.575,
+        "y": 0.677
       },
       "rotation": 0,
       "fontSize": 90,
@@ -290,8 +290,8 @@
       "label": "Davanti",
       "partId": "picci_pallavolo_front",
       "uv": {
-        "x": 0.394,
-        "y": 0.539
+        "x": 0.333,
+        "y":0.606
       },
       "rotation": 0,
       "fontSize": 90,

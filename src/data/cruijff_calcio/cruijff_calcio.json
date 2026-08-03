@@ -233,8 +233,8 @@
       "label": "Destra inferiore",
       "partId": "cruijff_calcio_back",
       "uv": {
-        "x": 0.609,
-        "y": 0.748
+        "x": 0.7,
+        "y": 0.776
       },
       "rotation": 0,
       "fontSize": 100,
@@ -251,8 +251,8 @@
       "label": "Destra superiore",
       "partId": "cruijff_calcio_back",
       "uv": {
-        "x": 0.609,
-        "y": 0.561
+        "x": 0.7,
+        "y": 0.606
       },
       "rotation": 0,
       "fontSize": 100,
@@ -269,8 +269,8 @@
       "label": "Laterale",
       "partId": "cruijff_calcio_back",
       "uv": {
-        "x": 0.5,
-        "y": 0.65
+        "x": 0.572,
+        "y": 0.683
       },
       "rotation": 0,
       "fontSize": 100,
@@ -290,8 +290,8 @@
       "label": "Davanti",
       "partId": "cruijff_calcio_front",
       "uv": {
-        "x": 0.391,
-        "y": 0.561
+        "x": 0.368,
+        "y": 0.63
       },
       "rotation": 0,
       "fontSize": 100,

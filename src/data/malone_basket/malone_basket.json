@@ -234,8 +234,8 @@
       "label": "Destra inferiore",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.609,
-        "y": 0.748
+        "x": 0.7,
+        "y": 0.768
       },
       "rotation": 0,
       "fontSize": 100,
@@ -252,8 +252,8 @@
       "label": "Destra superiore",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.609,
-        "y": 0.561
+        "x": 0.7,
+        "y": 0.6
       },
       "rotation": 0,
       "fontSize": 100,
@@ -270,8 +270,8 @@
       "label": "Laterale",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.5,
-        "y": 0.65
+        "x": 0.571,
+        "y": 0.675
       },
       "rotation": 0,
       "fontSize": 100,
@@ -291,8 +291,8 @@
       "label": "Davanti",
       "partId": "malone_basket_front",
       "uv": {
-        "x": 0.391,
-        "y": 0.561
+        "x": 0.377,
+        "y": 0.6
       },
       "rotation": 0,
       "fontSize": 100,
