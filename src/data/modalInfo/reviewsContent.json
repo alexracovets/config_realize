@@ -7,7 +7,7 @@
       "parts": [
         {
           "type": "text",
-          "content": ["Ecco cosa dicono di noi"]
+          "content": ["Ecco cosa dicono di noi su <a class=\"text-active underline\" href=\"https://it.trustpilot.com/review/realizesport.com\" target=\"_blank\" rel=\"noopener noreferrer\">Trustpilot</a>"]
         }
       ]
     }
