@@ -34,6 +34,7 @@ const ConfigurationColorizeAccordion = ({ parts, partIds }: configurationColoriz
   const { openItems, handleItemActivate, handleOpenItemsChange } = usePartAccordionCameraFocus({
     partIds,
     defaultOpenPartIds: partIds[0] ? [partIds[0]] : [],
+    enableCameraFocus: false,
   });
 
   const items = useMemo(

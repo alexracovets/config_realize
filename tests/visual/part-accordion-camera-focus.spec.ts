@@ -11,7 +11,7 @@ const PARTS = [
 ] as const;
 
 const MIN_ORBIT_DELTA = 0.12;
-const FOCUS_SETTLE_TIMEOUT_MS = 8_000;
+const SETTLE_TIMEOUT_MS = 1_500;
 
 interface orbitStateType {
   azimuth: number;
@@ -56,32 +56,6 @@ const orbitAngularDelta = (from: orbitStateType, to: orbitStateType) => {
   return Math.hypot(deltaAzimuth, deltaPolar);
 };
 
-const waitForPartFocus = async (page: import('@playwright/test').Page, partId: string, before: orbitStateType) => {
-  await page.waitForFunction(
-    ({ expectedPartId, minRequestId, minDelta, beforeAzimuth, beforePolar }) => {
-      const state = window.__configuratorCameraDebug?.getOrbitState();
-      if (!state) return false;
-      if (state.requestId <= minRequestId) return false;
-      if (state.targetPartId !== expectedPartId) return false;
-      if (state.isAnimating) return false;
-
-      let deltaAzimuth = Math.abs(state.azimuth - beforeAzimuth);
-      if (deltaAzimuth > Math.PI) deltaAzimuth = 2 * Math.PI - deltaAzimuth;
-      const deltaPolar = Math.abs(state.polar - beforePolar);
-
-      return Math.hypot(deltaAzimuth, deltaPolar) > minDelta;
-    },
-    {
-      expectedPartId: partId,
-      minRequestId: before.requestId,
-      minDelta: MIN_ORBIT_DELTA,
-      beforeAzimuth: before.azimuth,
-      beforePolar: before.polar,
-    },
-    { timeout: FOCUS_SETTLE_TIMEOUT_MS },
-  );
-};
-
 const clickPartAccordion = async (page: import('@playwright/test').Page, label: string) => {
   const trigger = page.getByRole('button', { name: new RegExp(label, 'i') }).first();
   await expect(trigger).toBeVisible({ timeout: 10_000 });
@@ -107,7 +81,7 @@ const clickPartAccordionContent = async (page: import('@playwright/test').Page, 
 };
 
 test.describe('part accordion camera focus', () => {
-  test('rotates orbit camera for every garment part in COLORE', async ({ page }) => {
+  test('does not rotate orbit camera for any garment part in COLORE', async ({ page }) => {
     await page.goto(CONFIGURATOR_ROUTE, { waitUntil: 'networkidle' });
     await waitForConfiguratorScene(page);
 
@@ -116,19 +90,18 @@ test.describe('part accordion camera focus', () => {
     for (const part of PARTS) {
       const stateBeforeClick = previousState;
       await clickPartAccordion(page, part.label);
-      await waitForPartFocus(page, part.partId, stateBeforeClick);
+      await page.waitForTimeout(SETTLE_TIMEOUT_MS);
 
       const nextState = await readOrbitState(page);
       const delta = orbitAngularDelta(stateBeforeClick, nextState);
 
-      expect(delta, `camera should rotate when focusing ${part.label}`).toBeGreaterThan(MIN_ORBIT_DELTA);
-      expect(nextState.targetPartId).toBe(part.partId);
+      expect(delta, `camera should not rotate when opening ${part.label} in COLORE`).toBeLessThan(MIN_ORBIT_DELTA);
 
       previousState = nextState;
     }
   });
 
-  test('rotates orbit camera for every garment part in SFUMATURA', async ({ page }) => {
+  test('does not rotate orbit camera for any garment part in SFUMATURA', async ({ page }) => {
     await page.goto(CONFIGURATOR_ROUTE, { waitUntil: 'networkidle' });
     await waitForConfiguratorScene(page);
     await clickConfigurationStep(page, 'Sfumatura');
@@ -138,35 +111,36 @@ test.describe('part accordion camera focus', () => {
     for (const part of SHADING_PARTS) {
       const stateBeforeClick = previousState;
       await clickPartAccordion(page, part.label);
-      await waitForPartFocus(page, part.partId, stateBeforeClick);
+      await page.waitForTimeout(SETTLE_TIMEOUT_MS);
 
       const nextState = await readOrbitState(page);
       const delta = orbitAngularDelta(stateBeforeClick, nextState);
 
-      expect(delta, `camera should rotate when focusing ${part.label} in SFUMATURA`).toBeGreaterThan(MIN_ORBIT_DELTA);
-      expect(nextState.targetPartId).toBe(part.partId);
+      expect(delta, `camera should not rotate when opening ${part.label} in SFUMATURA`).toBeLessThan(MIN_ORBIT_DELTA);
 
       previousState = nextState;
     }
   });
 
-  test('rotates orbit camera when clicking accordion content in COLORE', async ({ page }) => {
+  test('does not rotate camera when clicking accordion content in COLORE', async ({ page }) => {
     await page.goto(CONFIGURATOR_ROUTE, { waitUntil: 'networkidle' });
     await waitForConfiguratorScene(page);
 
     await clickPartAccordion(page, 'Manica 2');
+    await page.waitForTimeout(SETTLE_TIMEOUT_MS);
 
     const afterManicaOpen = await readOrbitState(page);
     await clickPartAccordion(page, 'Retro');
-    await waitForPartFocus(page, 'baggio_calcio_back', afterManicaOpen);
+    await page.waitForTimeout(SETTLE_TIMEOUT_MS);
 
     const beforeContentClick = await readOrbitState(page);
+    expect(orbitAngularDelta(afterManicaOpen, beforeContentClick)).toBeLessThan(MIN_ORBIT_DELTA);
+
     await clickPartAccordionContent(page, 'Manica 2');
-    await waitForPartFocus(page, 'baggio_calcio_sleeve_right', beforeContentClick);
+    await page.waitForTimeout(SETTLE_TIMEOUT_MS);
 
     const afterContentClick = await readOrbitState(page);
-    expect(orbitAngularDelta(beforeContentClick, afterContentClick)).toBeGreaterThan(MIN_ORBIT_DELTA);
-    expect(afterContentClick.targetPartId).toBe('baggio_calcio_sleeve_right');
+    expect(orbitAngularDelta(beforeContentClick, afterContentClick)).toBeLessThan(MIN_ORBIT_DELTA);
   });
 
   test('does not rotate camera when switching configuration steps', async ({ page }) => {

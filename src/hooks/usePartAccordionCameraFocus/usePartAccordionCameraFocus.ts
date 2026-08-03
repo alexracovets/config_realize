@@ -8,15 +8,17 @@ import { useCallback, useState } from 'react';
 interface usePartAccordionCameraFocusOptionsType {
   partIds: readonly string[];
   defaultOpenPartIds?: readonly string[];
+  enableCameraFocus?: boolean;
 }
 
-const usePartAccordionCameraFocus = ({ partIds, defaultOpenPartIds }: usePartAccordionCameraFocusOptionsType) => {
+const usePartAccordionCameraFocus = ({ partIds, defaultOpenPartIds, enableCameraFocus = true }: usePartAccordionCameraFocusOptionsType) => {
   const parts = useConfiguratorProduct((state) => state.product.parts);
   const defaultPartId = partIds[0] ?? null;
   const [openItems, setOpenItems] = useState(() => [...(defaultOpenPartIds ?? (defaultPartId ? [defaultPartId] : []))]);
 
   const handleItemActivate = useCallback(
     (partId: string) => {
+      if (!enableCameraFocus) return;
       if (!partIds.includes(partId)) return;
 
       const part = parts.find((item) => item.id === partId);
@@ -24,7 +26,7 @@ const usePartAccordionCameraFocus = ({ partIds, defaultOpenPartIds }: usePartAcc
 
       requestConfiguratorCameraFocus({ partId, uv: resolvePartCenterUv(part) });
     },
-    [partIds, parts],
+    [enableCameraFocus, partIds, parts],
   );
 
   const handleOpenItemsChange = useCallback((value: string[]) => {
