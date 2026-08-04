@@ -22,7 +22,7 @@ const ConfiguratorCanvas = () => {
     <Canvas
       key={`${sceneRouteKey}:${canvasKey}`}
       camera={{ position: [0, 0, 3], fov: 45 }}
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100%', touchAction: 'none' }}
       frameloop={useContinuousFrameLoop ? 'always' : 'demand'}
       onPointerEnter={clearTextSelection}
       onPointerDown={clearTextSelection}

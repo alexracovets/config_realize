@@ -16,7 +16,7 @@ import { OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useConfiguratorProduct, useConfiguratorSceneLoad } from '@store';
 import { useCallback, useEffect, useRef } from 'react';
-import { Raycaster, Vector3 } from 'three';
+import { Raycaster, TOUCH, Vector3 } from 'three';
 const ORBIT_MIN_DISTANCE = 0.05;
 const ORBIT_MAX_DISTANCE = 0.9;
 
@@ -182,6 +182,61 @@ const ViewControls = () => {
       invalidate();
     };
 
+    const activePointers = new Map<number, { x: number; y: number }>();
+    let pinchDistance = 0;
+
+    const pinchSpan = () => {
+      const [a, b] = Array.from(activePointers.values());
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+
+    const pinchCenter = () => {
+      const [a, b] = Array.from(activePointers.values());
+      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'touch') return;
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (activePointers.size === 2) pinchDistance = pinchSpan();
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== 'touch' || !activePointers.has(event.pointerId)) return;
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+      if (activePointers.size !== 2 || !controls.enabled) return;
+
+      const span = pinchSpan();
+      if (!pinchDistance || !span) {
+        pinchDistance = span;
+        return;
+      }
+
+      event.preventDefault();
+
+      const center = pinchCenter();
+      const resolved = resolveCursorFocusPoint(
+        { camera, controls, scene, raycaster: raycasterRef.current, domElement, clientX: center.x, clientY: center.y },
+        zoomFocusRef.current,
+      );
+      if (!resolved) {
+        pinchDistance = span;
+        return;
+      }
+
+      const next = pendingZoomRef.current - Math.log(span / pinchDistance);
+      pendingZoomRef.current = Math.min(ZOOM_MAX_PENDING_LOG, Math.max(-ZOOM_MAX_PENDING_LOG, next));
+      pinchDistance = span;
+      invalidate();
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (event.pointerType !== 'touch') return;
+      activePointers.delete(event.pointerId);
+      pinchDistance = 0;
+    };
+
     const clampCamera = () => {
       if (isClampingRef.current) return;
       isClampingRef.current = true;
@@ -196,10 +251,18 @@ const ViewControls = () => {
     };
 
     domElement.addEventListener('wheel', onWheel, { passive: false });
+    domElement.addEventListener('pointerdown', onPointerDown);
+    domElement.addEventListener('pointermove', onPointerMove, { passive: false });
+    domElement.addEventListener('pointerup', onPointerUp);
+    domElement.addEventListener('pointercancel', onPointerUp);
     controls.addEventListener('change', clampCamera);
 
     return () => {
       domElement.removeEventListener('wheel', onWheel);
+      domElement.removeEventListener('pointerdown', onPointerDown);
+      domElement.removeEventListener('pointermove', onPointerMove);
+      domElement.removeEventListener('pointerup', onPointerUp);
+      domElement.removeEventListener('pointercancel', onPointerUp);
       controls.removeEventListener('change', clampCamera);
     };
   }, [camera, controls, gl.domElement, invalidate, scene]);
@@ -266,10 +329,7 @@ const ViewControls = () => {
         invalidate();
       },
       zoom: (direction) => {
-        pendingZoomRef.current = Math.min(
-          ZOOM_MAX_PENDING_LOG,
-          Math.max(-ZOOM_MAX_PENDING_LOG, pendingZoomRef.current - direction * BUTTON_ZOOM_STEP_LOG),
-        );
+        pendingZoomRef.current = Math.min(ZOOM_MAX_PENDING_LOG, Math.max(-ZOOM_MAX_PENDING_LOG, pendingZoomRef.current - direction * BUTTON_ZOOM_STEP_LOG));
         if (controls) zoomFocusRef.current.copy(controls.target);
         invalidate();
       },
@@ -293,6 +353,7 @@ const ViewControls = () => {
       makeDefault
       enablePan={false}
       enableZoom={false}
+      touches={{ ONE: TOUCH.ROTATE }}
       enableDamping
       dampingFactor={ORBIT_DAMPING_FACTOR}
       minDistance={ORBIT_MIN_DISTANCE}
