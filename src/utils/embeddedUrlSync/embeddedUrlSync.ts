@@ -59,23 +59,6 @@ const postEmbeddedCheckoutRedirect = (url: string): void => {
   );
 };
 
-const EMBEDDED_RESIZE_TYPE = 'resize' as const;
-
-const postEmbeddedHeightToParent = (height: number): void => {
-  if (!isEmbeddedSession() || window.parent === window) {
-    return;
-  }
-
-  window.parent.postMessage(
-    {
-      source: EMBEDDED_URL_SYNC_SOURCE_APP,
-      type: EMBEDDED_RESIZE_TYPE,
-      height,
-    },
-    '*',
-  );
-};
-
 const redirectToShopifyCheckout = (checkoutUrl: string): void => {
   if (isEmbeddedSession() && window.parent !== window) {
     postEmbeddedCheckoutRedirect(checkoutUrl);
@@ -93,13 +76,11 @@ const redirectToShopifyCheckout = (checkoutUrl: string): void => {
 
 export {
   EMBEDDED_CHECKOUT_REDIRECT_TYPE,
-  EMBEDDED_RESIZE_TYPE,
   EMBEDDED_URL_SYNC_SOURCE_APP,
   EMBEDDED_URL_SYNC_SOURCE_SHOPIFY,
   EMBEDDED_URL_SYNC_TYPE,
   isEmbeddedUrlSyncMessage,
   postEmbeddedCheckoutRedirect,
-  postEmbeddedHeightToParent,
   postEmbeddedUrlToParent,
   redirectToShopifyCheckout,
 };
