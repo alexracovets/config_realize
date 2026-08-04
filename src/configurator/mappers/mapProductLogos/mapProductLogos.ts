@@ -80,20 +80,32 @@ const createDefaultLogoInstances = (positions: logoPositionType[]): logoInstance
       }),
     );
 
-const resolveLogoDefaults = (product: garmentConfigType) => {
-  const frontPart = product.parts.find((part) => part.label === 'Front') ?? product.parts[0];
+// Shorts are the products that carry a drawstring part instead of sleeves/collar.
+const isShortsProduct = (product: garmentConfigType) => product.parts.some((part) => part.label === 'Lacci');
 
-  if (!frontPart) {
+// Shorts get their logo on the right leg rather than the centre of the garment,
+// which on the shorts layout falls between the legs. Expressed as a fraction of
+// the part so it lands in the same spot on every shorts model.
+const SHORTS_LOGO_PART_FRACTION = { x: 0.685, y: 0.67 };
+
+const resolveLogoDefaults = (product: garmentConfigType) => {
+  const shorts = isShortsProduct(product);
+  const targetPart = shorts
+    ? (product.parts.find((part) => part.label === 'Retro') ?? product.parts[0])
+    : (product.parts.find((part) => part.label === 'Front') ?? product.parts[0]);
+
+  if (!targetPart) {
     throw new Error(`Product "${product.path}" has no parts for logo defaults.`);
   }
 
-  const bounds = resolvePartUvBounds(frontPart);
+  const bounds = resolvePartUvBounds(targetPart);
+  const fraction = shorts ? SHORTS_LOGO_PART_FRACTION : { x: 0.5, y: 0.5 };
 
   return {
-    partId: frontPart.id,
+    partId: targetPart.id,
     uv: {
-      x: (bounds.minX + bounds.maxX) / 2,
-      y: (bounds.minY + bounds.maxY) / 2,
+      x: bounds.minX + (bounds.maxX - bounds.minX) * fraction.x,
+      y: bounds.minY + (bounds.maxY - bounds.minY) * fraction.y,
     },
     rotation: 0,
     scale: 1,
