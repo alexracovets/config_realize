@@ -21,6 +21,19 @@ html:has(.configurator-shell) body {
   overscroll-behavior: none;
 }
 
+/* Standalone the shell spans the viewport. Inside Shopify it must span the iframe
+   instead: the host already subtracts its own header from the frame's height, but dvh
+   inside an iframe still resolves to the full window, so the shell would overhang the
+   frame by exactly the header height and bury the footer. */
+.configurator-shell {
+  height: var(--configurator-shell-height, 100dvh);
+  max-height: var(--configurator-shell-height, 100dvh);
+}
+
+html[data-embedded='1'] {
+  --configurator-shell-height: 100%;
+}
+
 @theme {
   --font-inter: var(--font-inter);
 

@@ -1,0 +1,1 @@
+export { EmbeddedFlagBridge } from './EmbeddedFlagBridge';

@@ -21,10 +21,11 @@ type configuratorLayoutTemplatePropsType = childrenType & {
 const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
   return (
     <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
-      {/* Fills exactly the height it is given and never grows the page: embedded in
-          Shopify a taller document would scroll the host instead, putting the footer
-          out of reach. Long content scrolls in its own column inside the shell. */}
-      <div className="configurator-shell flex h-dvh max-h-dvh flex-col overflow-hidden w-full">
+      {/* Height comes from the .configurator-shell rule, not a utility class: embedded
+          in Shopify it has to track the iframe rather than the viewport, since the host
+          already subtracts its own header. Never grows the page — a taller document
+          would scroll the host and put the footer out of reach. */}
+      <div className="configurator-shell flex flex-col overflow-hidden w-full">
         <Header />
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-t from-[#E8E8E8] to-white">
           <ConfiguratorInitialLoader />
