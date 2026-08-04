@@ -8,7 +8,9 @@ const garmentTestoMapFragment =  `
     slotTesto = garmentCompositeNameLayer( slotTesto, uTestoStrokeColors[ testoSlot ], garmentNameSampleStrokeChannel( uTestoMask, testoStampUv, testoChannel ) * testoInside );
     slotTesto = garmentCompositeNameLayer( slotTesto, uTestoTextColors[ testoSlot ], garmentNameSampleFillChannel( uTestoMask, testoStampUv, testoChannel ) * testoInside );
     printColor = garmentCompositePrintElement( printColor, slotTesto );
-    printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[ testoSlot ], uTestoScale[ testoSlot ], uTestoGizmoHalf[ testoSlot ], uGizmoRotation, uTestoPartRotation[ testoSlot ], uTestoGizmoEnabled * uTestoGizmoFrameActive[ testoSlot ], testoInside ) );
+    vec4 testoFrame = garmentGizmoFrameColor( vPrintUv, uTestoAnchorUv[ testoSlot ], uTestoScale[ testoSlot ], uTestoGizmoHalf[ testoSlot ], uGizmoRotation, uTestoPartRotation[ testoSlot ], uTestoGizmoEnabled * uTestoGizmoFrameActive[ testoSlot ], testoInside );
+    printColor = garmentCompositeGizmoFrame( printColor, testoFrame );
+    garmentGizmoUiColor = garmentCompositeUiLayer( garmentGizmoUiColor, testoFrame );
 
     vec4 testoBtn = garmentGizmoButtons( vPrintUv, uTestoAnchorUv[ testoSlot ], uTestoScale[ testoSlot ], uTestoGizmoHalf[ testoSlot ], uGizmoRotation, uTestoPartRotation[ testoSlot ], uTestoGizmoEnabled * uTestoGizmoButtonsActive[ testoSlot ], uTestoGizmoButtonsReveal[ testoSlot ], testoInside, uNameGizmoIcons, testoChannel );
     garmentGizmoUiColor = garmentCompositeUiLayer( garmentGizmoUiColor, testoBtn );

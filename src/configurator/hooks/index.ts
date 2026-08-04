@@ -3,6 +3,7 @@ export { useSyncGarmentMaterials } from './useSyncGarmentMaterials';
 export { useGarmentLogoTextures } from './useGarmentLogoTextures';
 export { useGarmentTextPrintTextures, useGarmentNameTextures } from './useGarmentTextPrintTextures';
 export { useGizmoButtonHover } from './useGizmoButtonHover';
+export { useGizmoButtonScaleSync } from './useGizmoButtonScaleSync';
 export { useGizmoIconAtlas } from './useGizmoIconAtlas';
 export { useGizmoPointerContext } from './useGizmoPointerContext';
 export { useGizmoSelection } from './useGizmoSelection';

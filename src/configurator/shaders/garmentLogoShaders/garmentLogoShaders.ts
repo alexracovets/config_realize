@@ -8,7 +8,9 @@ const garmentLogoMapFragment =  `
     logoColor.a *= logoInside * garmentNameInsideStamp( logoStampUv );
 
     printColor = garmentCompositePrintElement( printColor, logoColor );
-    printColor = garmentCompositeGizmoFrame( printColor, garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[ logoSlot ], uLogoScale[ logoSlot ], uLogoGizmoHalf[ logoSlot ], uGizmoRotation, uLogoPartRotation[ logoSlot ], uLogoGizmoEnabled * uLogoGizmoFrameActive[ logoSlot ], logoInside ) );
+    vec4 logoFrame = garmentGizmoFrameColor( vPrintUv, uLogoAnchorUv[ logoSlot ], uLogoScale[ logoSlot ], uLogoGizmoHalf[ logoSlot ], uGizmoRotation, uLogoPartRotation[ logoSlot ], uLogoGizmoEnabled * uLogoGizmoFrameActive[ logoSlot ], logoInside );
+    printColor = garmentCompositeGizmoFrame( printColor, logoFrame );
+    garmentGizmoUiColor = garmentCompositeUiLayer( garmentGizmoUiColor, logoFrame );
 
     vec4 logoBtn = garmentGizmoButtons( vPrintUv, uLogoAnchorUv[ logoSlot ], uLogoScale[ logoSlot ], uLogoGizmoHalf[ logoSlot ], uGizmoRotation, uLogoPartRotation[ logoSlot ], uLogoGizmoEnabled * uLogoGizmoButtonsActive[ logoSlot ], uLogoGizmoButtonsReveal[ logoSlot ], logoInside, uNameGizmoIcons, logoCell );
     garmentGizmoUiColor = garmentCompositeUiLayer( garmentGizmoUiColor, logoBtn );

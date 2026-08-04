@@ -1,5 +1,7 @@
 import { NAME_GIZMO_BTN_HALF_ATLAS, NAME_GIZMO_BTN_OUTSET_ATLAS } from '@configurator/constants';
 
+import { getGizmoButtonScale } from '../gizmoButtonScale';
+
 import type { gizmoButtonHitType, gizmoHandleKindType, printGizmoElementType } from '@configurator/types';
 
 const GIZMO_CORNERS: ReadonlyArray<{ kind: gizmoHandleKindType; cornerIndex: number; sx: number; sy: number }> = [
@@ -11,11 +13,14 @@ const GIZMO_CORNERS: ReadonlyArray<{ kind: gizmoHandleKindType; cornerIndex: num
 
 const hitTestGizmoButton = (world: { x: number; y: number }, element: printGizmoElementType): gizmoButtonHitType | null => {
   const halfWorld = { x: element.half.x * element.scale, y: element.half.y * element.scale };
+  const btnScale = getGizmoButtonScale();
+  const btnHalf = NAME_GIZMO_BTN_HALF_ATLAS * btnScale;
+  const btnOutset = NAME_GIZMO_BTN_OUTSET_ATLAS * btnScale;
 
   const corner = GIZMO_CORNERS.find(({ sx, sy }) => {
-    const cx = world.x - sx * (halfWorld.x + NAME_GIZMO_BTN_OUTSET_ATLAS);
-    const cy = world.y - sy * (halfWorld.y + NAME_GIZMO_BTN_OUTSET_ATLAS);
-    return Math.hypot(cx, cy) <= NAME_GIZMO_BTN_HALF_ATLAS;
+    const cx = world.x - sx * (halfWorld.x + btnOutset);
+    const cy = world.y - sy * (halfWorld.y + btnOutset);
+    return Math.hypot(cx, cy) <= btnHalf;
   });
 
   if (!corner) return null;

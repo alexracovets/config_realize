@@ -9,7 +9,7 @@ import {
   buildTestoGizmoElements,
 } from '@configurator/gizmo';
 import type { nameInstanceType, numberInstanceType, testoInstanceType } from '@types';
-import { useGizmoButtonHover, useGizmoSelection, usePrintPlacementMigration, usePrintPositionRelationSync } from '@configurator/hooks';
+import { useGizmoButtonHover, useGizmoButtonScaleSync, useGizmoSelection, usePrintPlacementMigration, usePrintPositionRelationSync } from '@configurator/hooks';
 import { registerPrintRelationE2eDebug } from '@configurator/hooks/registerPrintRelationE2eDebug';
 import { resolvePrintCmScale } from '@configurator/mappers';
 import { PrintGizmoInstance } from '@configurator/runtime/PrintGizmoLayer/PrintGizmoInstance';
@@ -292,6 +292,7 @@ const PrintGizmoLayer = memo(() => {
 
   useGizmoSelection({ elements, atlasSize, gizmoStep, isGizmoVisible, store: selectionStore });
   useGizmoButtonHover({ elements, atlasSize, gizmoStep, selectedInstanceId });
+  useGizmoButtonScaleSync({ product });
 
   if (elements.length === 0) return null;
 
