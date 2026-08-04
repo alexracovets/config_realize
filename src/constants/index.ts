@@ -67,7 +67,7 @@ const CHECKOUT_DEFAULT_SIZE = 'M';
 const clampCheckoutRowQuantity = (quantity: number) => Math.min(CHECKOUT_MAX_ROW_QUANTITY, Math.max(CHECKOUT_MIN_ROW_QUANTITY, quantity));
 
 const CHECKOUT_SIZES = ['5XS', '4XS', '3XS', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'] as const;
-const CHECKOUT_SHIPPING_DAYS_LABEL = 'Spedizione entro 15-20 giorni lavorativi.';
+const CHECKOUT_SHIPPING_DAYS_LABEL = 'Spedizione entro 19-21 giorni lavorativi.';
 const CHECKOUT_DISCOUNT_INFO_LABEL = '% Scontistica applicata direttamente alla somma finale nel carrello';
 
 const CHECKOUT_CONFIGURATION_TABLE_COLUMNS = [
@@ -96,7 +96,7 @@ const CHECKOUT_SUMMARY_TRUST_ITEMS = [
   { icon: 'order_0', label: 'Prodotti 100% Made in Italy' },
   { icon: 'order_1', label: 'Sicurezza Checkout' },
   { icon: 'order_2', label: 'Consegna sicura e veloce' },
-  { icon: 'order_3', label: 'Dicono di noi Trustpilot' },
+  { icon: 'order_3', label: 'Siamo anche su Trustpilot' },
 ] as const;
 
 const CHECKOUT_SUMMARY_TIMELINE_STEPS = [
