@@ -4,18 +4,23 @@ const garmentPrintMapFragment =  `
   vec4 printColor = vec4( 0.0 );
   garmentGizmoUiColor = vec4( 0.0 );
 
-  vec4 layer0 = vec4(
-    uPatternColor0,
-    texture2D( uPatternMask0, vPrintUv ).a * uPatternOpacity
-  );
-  printColor = layer0;
+  float mask0 = texture2D( uPatternMask0, vPrintUv ).a;
+  float mask1 = texture2D( uPatternMask1, vPrintUv ).a;
 
-  vec4 layer1 = vec4(
-    uPatternColor1,
-    texture2D( uPatternMask1, vPrintUv ).a * uPatternOpacity
-  );
-  printColor.rgb = layer1.rgb * layer1.a + printColor.rgb * ( 1.0 - layer1.a );
-  printColor.a = layer1.a + printColor.a * ( 1.0 - layer1.a );
+  // The colour_1 artwork is drawn slightly larger than colour_2 and tucks in under
+  // it, so compositing layer1 over layer0 by its raw alpha lets that hidden margin
+  // leak out along layer1's edge as a rim. Layer0 gives up exactly the coverage
+  // layer1 already provides, which cancels the margin without thresholding either
+  // mask, so antialiased edges stay soft and neither shape loses its shape.
+  float rim = max( mask0 - mask1, 0.0 );
+
+  // Colour_1 keeps the coverage it owns outright, but along layer1's edge the
+  // margin is folded into layer1 instead of tinting it, so the transition runs
+  // straight from colour_2 to the fabric with no lighter seam in between.
+  float coverage = max( mask0, mask1 );
+  float blend1 = mask1 / max( rim + mask1, 0.001 );
+
+  printColor = vec4( mix( uPatternColor0, uPatternColor1, blend1 ), min( coverage, 1.0 ) * uPatternOpacity );
 
 #ifdef USE_GARMENT_LOGO
 ${garmentLogoMapFragment}
