@@ -21,7 +21,10 @@ type configuratorLayoutTemplatePropsType = childrenType & {
 const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
   return (
     <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
-      <div className="flex h-dvh max-h-dvh flex-col overflow-hidden w-full">
+      {/* Embedded in Shopify the iframe height is set by the host, not the device
+          viewport, so pinning to dvh clips the footer out of reach. There the shell
+          grows with its content and the host resizes the frame to match. */}
+      <div className="configurator-shell flex h-dvh max-h-dvh flex-col overflow-hidden w-full">
         <Header />
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-t from-[#E8E8E8] to-white">
           <ConfiguratorInitialLoader />

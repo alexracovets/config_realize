@@ -9,6 +9,27 @@ body {
   color: var(--color-default);
 }
 
+/* Embedded in Shopify the iframe height is controlled by the host page, so the
+   configurator shell must grow with its content instead of clipping itself to the
+   frame's viewport. On narrow screens the stacked layout is taller than the frame,
+   and pinning it to dvh puts the checkout button permanently out of reach. The host
+   listens for the height we post and resizes the frame to match. */
+@media (max-width: 639px) {
+  html[data-embedded='1'],
+  html[data-embedded='1'] body {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  html[data-embedded='1'] .configurator-shell {
+    height: auto;
+    max-height: none;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+}
+
 @theme {
   --font-inter: var(--font-inter);
 
