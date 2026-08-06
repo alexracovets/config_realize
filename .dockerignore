@@ -1,0 +1,51 @@
+# dependencies & build
+node_modules
+.next
+out
+build
+coverage
+.nyc_output
+.vitest
+*.tsbuildinfo
+
+# git / ide
+.git
+.gitignore
+.claude
+.cursor
+.vscode
+.idea
+
+# env & secrets — Coolify injects runtime env
+.env
+.env.*
+!.env.example
+env/
+
+# tests & reports
+tests
+test-results
+playwright-report
+blob-report
+playwright.config.ts
+vitest.config.ts
+
+# docs / local tooling
+README.md
+ARCHITECTURE.md
+AGENTS.md
+.editorconfig
+.prettierignore
+.prettierrc
+eslint.config.mjs
+
+# misc
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+*.md
+*.pem
+*.log
+*.tmp
+*.tmp.*
+.DS_Store

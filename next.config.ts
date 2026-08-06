@@ -11,6 +11,7 @@ const threeWebpackAlias = path.join(process.cwd(), 'node_modules/three/build/thr
 const threeExamplesWebpackAlias = path.join(process.cwd(), 'node_modules/three/examples/jsm');
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactStrictMode: false,
   reactCompiler: true,
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
