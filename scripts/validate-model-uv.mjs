@@ -5,17 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { NodeIO } from '@gltf-transform/core';
 import { EXTMeshoptCompression, EXTTextureWebP, KHRMeshQuantization } from '@gltf-transform/extensions';
 
-/**
- * Compares garment part uvBounds in product JSON with TEXCOORD_0/1 on each mesh node.
- *
- * The configurator samples designs with vPrintUv = TEXCOORD_0 (Three.js `uv`).
- * uvBounds in JSON must match TEXCOORD_0 bounds on model_front / model_back / sleeves.
- *
- * Usage:
- *   node scripts/validate-model-uv.mjs federer_calcio
- *   node scripts/validate-model-uv.mjs --all
- */
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 const dataRoot = join(root, 'src/data');

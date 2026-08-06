@@ -7,28 +7,6 @@ import { EXTTextureWebP } from '@gltf-transform/extensions';
 import { dedup, prune, textureCompress } from '@gltf-transform/functions';
 import sharp from 'sharp';
 
-/**
- * Optimizes a garment glTF model into a single GLB without changing UV coordinates.
- *
- * Safe transforms (UV-preserving):
- *   - dedup   — merge duplicate meshes/materials/textures (accessors/UVs excluded)
- *   - prune   — remove unused nodes (keepAttributes: true keeps TEXCOORD_0 + TEXCOORD_1)
- *   - textureCompress — resize + WebP recompress (does not touch mesh UVs)
- *
- * Intentionally skipped (can alter UV seams, mesh names, or print layout):
- *   - weld, simplify, join, flatten, quantize, meshopt
- *
- * Usage:
- *   node scripts/optimize-gltf-model.mjs federer_calcio
- *   node scripts/optimize-gltf-model.mjs baggio_calcio bernardi_calcio cruijff_calcio
- *   node scripts/optimize-gltf-model.mjs --all
- *   node scripts/optimize-gltf-model.mjs federer_calcio --dry-run
- *
- * Env:
- *   TEXTURE_MAX_SIZE=1024
- *   TEXTURE_WEBP_QUALITY=85
- */
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 

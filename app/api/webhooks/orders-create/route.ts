@@ -101,7 +101,6 @@ export async function POST(request: Request): Promise<Response> {
   const uvImageUrls = readNoteAttribute(attributes, NOTE_ATTRIBUTE_KEYS.uvImageUrls);
 
   if (!configUrl) {
-    // No configuration snapshot — nothing to generate (e.g. an order placed outside the configurator).
     return Response.json({ skipped: true });
   }
 
@@ -130,7 +129,6 @@ export async function POST(request: Request): Promise<Response> {
     fields.push({ key: 'cutting_pdf_url', type: 'url', value: cuttingPdfUrl });
   } catch (error) {
     console.error(`[shopify webhook] Failed to generate order PDFs for order ${order.id}:`, error);
-    // Non-2xx makes Shopify redeliver the webhook; uploads/metafieldsSet are idempotent upserts.
     return Response.json({ error: 'Failed to generate order PDFs.' }, { status: 500 });
   }
 

@@ -1,6 +1,5 @@
 export { Badge, badgeVariants } from './Badge';
 export { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './Card';
-export { ClientOnly } from './ClientOnly';
 export { Separator } from './Separator';
 export { Skeleton } from './Skeleton';
 export { Slider } from './Slider';
@@ -8,7 +7,6 @@ export { Input } from './Input';
 export * from './Accordion';
 export * from './Carousel';
 export * from './Dialog';
-export * from './Drawer';
 export * from './Popover';
 export * from './Select';
 export * from './Tabs';

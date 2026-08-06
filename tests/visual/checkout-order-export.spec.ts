@@ -78,7 +78,6 @@ test.describe('checkout order export', () => {
 
     expect(documentText).toContain(ORDER_EXPORT_FIXTURE.orderMeta.orderNumber);
     expect(documentText).toContain(ORDER_EXPORT_FIXTURE.orderMeta.orderDate);
-    expect(documentText).toContain('Marco Rossi');
     expect(documentText).toContain('Player');
     expect(documentText).toContain(formatItalianPrice(unitPrice));
     expect(documentText).toContain(formatItalianPrice(lineTotal));

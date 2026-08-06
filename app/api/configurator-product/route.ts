@@ -2,11 +2,6 @@ import { resolveConfiguratorProduct } from '@shopify';
 
 export const dynamic = 'force-dynamic';
 
-/**
- * Resolves the full configurator product hydration (model id + Shopify business, including the
- * size chart + `printReferenceCm`) for a product slug. Used by the client to lazily enrich cart
- * items added via the catalog, which otherwise carry only placeholder business data.
- */
 export async function GET(request: Request): Promise<Response> {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get('slug')?.trim();

@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 
-/** Only files we uploaded to Shopify Files may be proxied — anything else would make this an open proxy. */
 const ALLOWED_DOWNLOAD_HOSTS = new Set(['cdn.shopify.com']);
 const isAllowedDownloadHost = (hostname: string) => ALLOWED_DOWNLOAD_HOSTS.has(hostname) || hostname.endsWith('.shopifycdn.com');
 

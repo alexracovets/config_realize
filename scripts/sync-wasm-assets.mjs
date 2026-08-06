@@ -2,13 +2,6 @@ import { copyFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-/**
- * Optional — run after upgrading @imagemagick/magick-wasm, pdfjs-dist, or @okathira/ghostpdl-wasm.
- * WASM/JS binaries are committed under public/ghostscript/ for static serving in the browser.
- *
- *   pnpm sync:wasm-assets
- */
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const copies = [

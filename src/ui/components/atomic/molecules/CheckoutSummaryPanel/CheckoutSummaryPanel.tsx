@@ -332,7 +332,6 @@ const CheckoutSummaryPanel = () => {
     const drag = dragRef.current;
     if (!drag || drag.mode !== 'pending') return;
 
-    // Scrollable content owns the gesture — never steal it to close the sheet.
     if (drag.preferScroll) {
       drag.mode = 'scroll';
       return;

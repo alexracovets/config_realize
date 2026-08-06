@@ -12,10 +12,18 @@
 
 # testing
 /coverage
+/.nyc_output
 /test-results/
 /playwright-report/
+/blob-report/
 /tests/visual/test-results/
 /tests/visual/output/
+.vitest/
+
+# scratch / one-off scripts
+*.tmp
+*.tmp.*
+*.tmp.mjs
 
 # next.js
 /.next/

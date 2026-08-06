@@ -1,1 +1,0 @@
-export { CheckoutTestoEditableCell } from './CheckoutTestoEditableCell';

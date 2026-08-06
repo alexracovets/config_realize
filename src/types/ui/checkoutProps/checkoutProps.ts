@@ -60,13 +60,6 @@ interface checkoutTableEditableCellPropsType {
   canEdit?: boolean;
 }
 
-interface checkoutTestoEditableCellPropsType {
-  texts: string[];
-  maxLength?: number;
-  canEdit?: boolean;
-  onChangeText: (index: number, value: string) => void;
-}
-
 interface checkoutTablePlaceholderPropsType {
   className?: string;
 }
@@ -91,5 +84,4 @@ export type {
   checkoutSizePopoverPropsType,
   checkoutTableEditableCellPropsType,
   checkoutTablePlaceholderPropsType,
-  checkoutTestoEditableCellPropsType,
 };

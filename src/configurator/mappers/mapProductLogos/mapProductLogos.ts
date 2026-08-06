@@ -80,12 +80,8 @@ const createDefaultLogoInstances = (positions: logoPositionType[]): logoInstance
       }),
     );
 
-// Shorts are the products that carry a drawstring part instead of sleeves/collar.
 const isShortsProduct = (product: garmentConfigType) => product.parts.some((part) => part.label === 'Lacci');
 
-// Shorts get their logo on the right leg rather than the centre of the garment,
-// which on the shorts layout falls between the legs. Expressed as a fraction of
-// the part so it lands in the same spot on every shorts model.
 const SHORTS_LOGO_PART_FRACTION = { x: 0.685, y: 0.67 };
 
 const resolveLogoDefaults = (product: garmentConfigType) => {

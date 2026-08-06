@@ -9,5 +9,4 @@ export type {
   checkoutSizePopoverPropsType,
   checkoutTableEditableCellPropsType,
   checkoutTablePlaceholderPropsType,
-  checkoutTestoEditableCellPropsType,
 } from './checkoutProps';

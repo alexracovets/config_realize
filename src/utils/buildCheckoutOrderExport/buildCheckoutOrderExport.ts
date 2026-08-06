@@ -9,17 +9,17 @@ const createCheckoutOrderNumber = () => `#${Math.floor(1_000_000_000 + Math.rand
 
 const formatCheckoutOrderDate = (date = new Date()) => new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
 
-const PLACEHOLDER_RECIPIENT = {
-  name: 'Marco Rossi',
-  email: 'marco.rossi@example.com',
-  phone: '+39 347 987 6543',
+const EMPTY_RECIPIENT = {
+  name: '',
+  email: '',
+  phone: '',
 };
 
-const PLACEHOLDER_SHIPPING_ADDRESS = {
-  street: 'Via Giuseppe Verdi 24',
-  postalCode: '20121',
-  city: 'Milano (MI)',
-  country: 'Italy',
+const EMPTY_SHIPPING_ADDRESS = {
+  street: '',
+  postalCode: '',
+  city: '',
+  country: '',
 };
 
 const buildCheckoutOrderExport = ({
@@ -58,8 +58,8 @@ const buildCheckoutOrderExport = ({
   return {
     orderNumber: orderMeta?.orderNumber ?? createCheckoutOrderNumber(),
     orderDate: orderMeta?.orderDate ?? formatCheckoutOrderDate(),
-    recipient: PLACEHOLDER_RECIPIENT,
-    shippingAddress: PLACEHOLDER_SHIPPING_ADDRESS,
+    recipient: EMPTY_RECIPIENT,
+    shippingAddress: EMPTY_SHIPPING_ADDRESS,
     billingNote: "Corrisponde all'indirizzo di spedizione",
     lines,
     subtotal,

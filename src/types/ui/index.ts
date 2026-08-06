@@ -110,6 +110,5 @@ export type {
   checkoutSizePopoverPropsType,
   checkoutTableEditableCellPropsType,
   checkoutTablePlaceholderPropsType,
-  checkoutTestoEditableCellPropsType,
 } from './checkoutProps';
 export type { collectionPagePropsType, homePageCollectionSummaryType, homePageCollectionType, homePageProductType, homePagePropsType } from './homePageProps';

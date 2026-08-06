@@ -5,28 +5,9 @@ import { fileURLToPath } from 'node:url';
 
 import sharp from 'sharp';
 
-/**
- * Rasterizes the embedded-raster design "SVG" files into WebP.
- *
- * The design files under public/models/<style>/<model>/designs/*.svg are not real
- * vectors — each wraps one or more base64-encoded PNGs (multi-MB). At runtime they
- * are drawn into the print atlas (PRINT_ATLAS_WIDTH = 2048), so a 2048-wide WebP is
- * a 1:1 replacement that is an order of magnitude smaller.
- *
- * The original .svg files are KEPT as the full-resolution master for the future
- * print/export pipeline; only the runtime loads the .webp (see crewneck.json).
- *
- * UI design picker cards use static SVG templates under public/svg/design/ — no
- * raster thumbnails are generated here.
- *
- * Re-runnable. Override defaults with env vars:
- *   DESIGN_WIDTH=2048 DESIGN_QUALITY=90 node scripts/convert-design-assets.mjs
- */
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const modelsRoot = join(root, 'public/models');
 
-// Keep in sync with PRINT_ATLAS_WIDTH (@configurator/constants).
 const TARGET_WIDTH = Number(process.env.DESIGN_WIDTH ?? 2048);
 const WEBP_QUALITY = Number(process.env.DESIGN_QUALITY ?? 90);
 
@@ -49,7 +30,6 @@ const findDesignSvgs = (dir) => {
   return found;
 };
 
-/** Force concrete pixel dimensions so librsvg rasterizes at the target size (these SVGs use width/height="100%"). */
 const normalizeSvg = (svgText, targetWidth) => {
   const viewBox = svgText.match(/viewBox\s*=\s*"([^"]+)"/i);
   let width = targetWidth;
@@ -75,15 +55,6 @@ const normalizeSvg = (svgText, targetWidth) => {
 
 const formatKb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
 
-/**
- * librsvg's XML parser refuses a single text node beyond ~10MB ("try XML_PARSE_HUGE"),
- * which multi-MB inline base64 <image> data URIs can exceed. Sidestep it by writing each
- * embedded image to a temp PNG/JPEG file alongside a rewritten wrapper .svg (referencing
- * them by relative filename) and rendering that file from disk — the XML shrinks to a
- * few KB and librsvg loads the raster data separately. (A bare in-memory Buffer has no
- * base URI, so file:// hrefs silently fail to resolve and render nothing; the SVG must
- * be read from a real path for relative references to work.)
- */
 const externalizeEmbeddedImages = (svgText) => {
   const tmpDir = mkdtempSync(join(tmpdir(), 'design-svg-'));
   let index = 0;
