@@ -80,6 +80,76 @@ const traceViewport = (() => {
     lastSignature = signature;
 
     console.log(`[configurator-viewport] ${JSON.stringify(snapshot)}`);
+    updateViewportHud(snapshot);
+  };
+})();
+
+// On-screen debug HUD for phones, where nobody opens the console. A fixed panel in
+// the BOTTOM-LEFT corner (the host HUD takes top-left) with the live viewport
+// numbers from inside the iframe, plus the measured on-screen top edge of
+// .configurator-shell (shellTop !== 0 means the shell is shifted). Stays fully
+// opaque until tapped to dismiss. Remove this + its call site once confirmed.
+type ViewportHudSnapshot = {
+  t: number;
+  label: string;
+  innerH: number;
+  clientH: number;
+  vvH: number | null;
+  vvOffsetTop: number | null;
+  vvPageTop: number | null;
+  vvScale: number | null;
+  scrollY: number;
+  shellTop: number | null;
+  cssVh: string | null;
+  cssVvTop: string | null;
+};
+
+const updateViewportHud = (() => {
+  let node: HTMLElement | null = null;
+
+  return (snapshot: ViewportHudSnapshot) => {
+    if (typeof document === 'undefined' || !document.body) return;
+
+    if (!node) {
+      node = document.createElement('div');
+      node.id = 'configurator-viewport-hud-iframe';
+      node.setAttribute(
+        'style',
+        [
+          'position:fixed',
+          'bottom:0',
+          'left:0',
+          'z-index:2147483647',
+          'margin:4px',
+          'padding:6px 8px',
+          'max-width:60vw',
+          'font:11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace',
+          'color:#0ff',
+          'background:#000',
+          'border:1px solid #0ff',
+          'border-radius:6px',
+          'white-space:pre',
+          'pointer-events:auto',
+        ].join(';'),
+      );
+      node.addEventListener('click', () => node?.remove());
+      document.body.appendChild(node);
+    }
+
+    node.textContent = [
+      'IFRAME (app)',
+      `t=${snapshot.t} ${snapshot.label}`,
+      `innerH   ${snapshot.innerH}`,
+      `clientH  ${snapshot.clientH}`,
+      `vvH      ${snapshot.vvH}`,
+      `vvOffTop ${snapshot.vvOffsetTop}`,
+      `vvPageTp ${snapshot.vvPageTop}`,
+      `vvScale  ${snapshot.vvScale}`,
+      `scrollY  ${snapshot.scrollY}`,
+      `shellTop ${snapshot.shellTop}`,
+      `--vh     ${snapshot.cssVh}`,
+      `--vvTop  ${snapshot.cssVvTop}`,
+    ].join('\n');
   };
 })();
 
@@ -87,7 +157,9 @@ const applyViewport = (traceLabel?: string) => {
   const { height, offsetTop } = readViewport();
   const root = document.documentElement;
 
-  if (height > 0) {
+  // Ignore a collapsed viewport (tab switch / frame hidden momentarily reports
+  // ~0-1px). Keeping the last good value avoids a 1px shell flash.
+  if (height > 120) {
     root.style.setProperty('--configurator-vh', `${Math.round(height)}px`);
   }
 
@@ -101,9 +173,68 @@ const applyViewport = (traceLabel?: string) => {
   }
 };
 
+// Always-on viewport monitor for on-device debugging. Unlike the correction below
+// it is NOT gated on the embedded session, so the HUD also shows on a direct
+// localhost / preview visit and inside DevTools device mode. Emits the same phase
+// trace (initial, settle timers, viewport events, orientation, first touch) for
+// ~6s after load. DELETE this hook and its render once the shift is diagnosed.
+const useViewportDebugMonitor = () => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const sample = (label: string) => traceViewport(label);
+
+    sample('initial');
+    const raf = requestAnimationFrame(() => sample('raf'));
+    const timers = [
+      window.setTimeout(() => sample('timer:150'), 150),
+      window.setTimeout(() => sample('timer:400'), 400),
+      window.setTimeout(() => sample('timer:900'), 900),
+      window.setTimeout(() => sample('timer:2000'), 2000),
+      window.setTimeout(() => sample('timer:4000'), 4000),
+    ];
+
+    const onVvChange = () => sample('event:vv-change');
+    const onWinResize = () => sample('event:window-resize');
+    const onScroll = () => sample('event:scroll');
+    const onOrientation = () => {
+      sample('event:orientation');
+      window.setTimeout(() => sample('event:orientation+300'), 300);
+    };
+    const onPageShow = () => sample('event:pageshow');
+    const onTouch = () => sample('event:touch');
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onVvChange);
+      window.visualViewport.addEventListener('scroll', onVvChange);
+    }
+    window.addEventListener('resize', onWinResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('orientationchange', onOrientation);
+    window.addEventListener('pageshow', onPageShow);
+    window.addEventListener('touchstart', onTouch, { passive: true, once: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      timers.forEach(window.clearTimeout);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', onVvChange);
+        window.visualViewport.removeEventListener('scroll', onVvChange);
+      }
+      window.removeEventListener('resize', onWinResize);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('orientationchange', onOrientation);
+      window.removeEventListener('pageshow', onPageShow);
+      window.removeEventListener('touchstart', onTouch);
+    };
+  }, []);
+};
+
 const PIN_WINDOW_MS = 4000;
 
 const EmbeddedViewportKickBridge = () => {
+  useViewportDebugMonitor();
+
   useEffect(() => {
     if (!isEmbeddedSession() || window.parent === window) return;
 
