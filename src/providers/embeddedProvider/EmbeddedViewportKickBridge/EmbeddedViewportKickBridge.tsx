@@ -28,6 +28,16 @@ import { isEmbeddedSession } from '@utils';
 //   2. --configurator-vv-top = visualViewport.offsetTop -> the camera shift, which
 //      the shell counteracts with a translateY so its top lines up with what the
 //      user sees. Snaps back to 0 once the viewports reconcile.
+// iOS (iPhone/iPod, and iPadOS which reports as Mac but has touch). The frozen-
+// viewport bug is specific to the iOS in-app browser (Telegram, Viber, …); on
+// desktop the outerHeight/innerHeight gap is just browser UI and must be left
+// alone.
+const IS_IOS =
+  typeof navigator !== 'undefined' &&
+  (/iP(hone|od|ad)/.test(navigator.platform || '') ||
+    /iP(hone|od|ad)/.test(navigator.userAgent || '') ||
+    (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1));
+
 const readViewport = () => {
   const vv = window.visualViewport;
   const vpH = vv ? Math.round(vv.height) : window.innerHeight;
@@ -40,14 +50,10 @@ const readViewport = () => {
   // Exception — iOS in-app browser (Telegram, Viber, …) cold load: innerHeight,
   // visualViewport.height and clientHeight all stay frozen at the value from while
   // the chrome was still expanded, and no resize ever corrects them (device: 720
-  // vs a 896 screen, unchanged even after a touch). Detect that specific state —
-  // the browser window fills the whole screen (so this is a phone, not a resized
-  // desktop window) yet the reported viewport is a good bit shorter — and use the
-  // screen height instead.
-  const windowFillsScreen = screenH > 0 && Math.abs(window.outerHeight - screenH) < 40;
-  const viewportLooksFrozen = screenH - vpH > 60;
-
-  if (windowFillsScreen && viewportLooksFrozen) {
+  // vs a 896 screen, unchanged even after a touch). Only on iOS, and only when the
+  // reported viewport is a good bit shorter than the screen, fall back to the
+  // screen height. On desktop the same inner/screen gap is just browser UI.
+  if (IS_IOS && screenH - vpH > 60) {
     height = screenH;
   }
 
@@ -199,7 +205,7 @@ const updateViewportHud = (() => {
     );
 
     node.textContent = [
-      `IFRAME  t=${snapshot.t} ${snapshot.label}`,
+      `IFRAME  t=${snapshot.t} ${snapshot.label}  IS_IOS=${IS_IOS}`,
       `onConfigurator ${snapshot.onConfigurator}`,
       `inner/client ${snapshot.innerH}/${snapshot.clientH}`,
       `vvH ${snapshot.vvH}  vvOffTop ${snapshot.vvOffsetTop}  sc ${snapshot.vvScale}`,
