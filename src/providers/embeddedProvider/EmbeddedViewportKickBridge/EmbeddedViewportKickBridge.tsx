@@ -75,6 +75,10 @@ const traceViewport = (() => {
       t: Math.round(performance.timeOrigin + performance.now()),
       label,
       frame: 'iframe',
+      // The configurator layout only renders on /[collection]/[slug]; on any other
+      // route (landing, catalog) .configurator-shell and the data-dbg hooks are
+      // absent, so every T×H below reads "-". This flag says which case you see.
+      onConfigurator: shellEl ? 'yes' : 'NO (not on configurator route)',
       innerH: window.innerHeight,
       clientH: de.clientHeight,
       vvH: vv ? Math.round(vv.height) : null,
@@ -110,11 +114,12 @@ const traceViewport = (() => {
 
 // On-screen debug HUD for phones, where nobody opens the console. A fixed panel in
 // the BOTTOM-LEFT corner (the host HUD takes top-left) with the full height chain
-// from inside the frame. Stays fully opaque until tapped to dismiss. Remove this +
+// from inside the frame. Always visible while debugging — no dismiss. Remove this +
 // its call site once confirmed on device.
 type ViewportHudSnapshot = {
   t: number;
   label: string;
+  onConfigurator: string;
   innerH: number;
   clientH: number;
   vvH: number | null;
@@ -138,64 +143,58 @@ type ViewportHudSnapshot = {
   cssShellH: string | null;
 };
 
+const HUD_ID = 'configurator-viewport-hud-iframe';
+
 const updateViewportHud = (() => {
   let node: HTMLElement | null = null;
 
   return (snapshot: ViewportHudSnapshot) => {
     if (typeof document === 'undefined' || !document.body) return;
 
+    // On HMR the closure resets but the previous DOM node lingers — drop every
+    // stale copy so panels never stack, then (re)create a single fresh one.
     if (!node) {
+      document.querySelectorAll(`#${HUD_ID}`).forEach((n) => n.remove());
       node = document.createElement('div');
-      node.id = 'configurator-viewport-hud-iframe';
-      node.setAttribute(
-        'style',
-        [
-          'position:fixed',
-          'bottom:0',
-          'left:0',
-          'z-index:2147483647',
-          'margin:4px',
-          'padding:5px 7px',
-          'max-width:64vw',
-          'max-height:46vh',
-          'overflow:auto',
-          'font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace',
-          'color:#0ff',
-          'background:#000',
-          'border:1px solid #0ff',
-          'border-radius:6px',
-          'white-space:pre',
-          'pointer-events:auto',
-        ].join(';'),
-      );
-      node.addEventListener('click', () => node?.remove());
+      node.id = HUD_ID;
       document.body.appendChild(node);
     }
 
+    node.setAttribute(
+      'style',
+      [
+        'position:fixed',
+        'bottom:2px',
+        'left:2px',
+        'z-index:2147483647',
+        'padding:3px 5px',
+        'font:8px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace',
+        'color:#0ff',
+        'background:rgba(0,0,0,0.72)',
+        'border:1px solid #0ff',
+        'border-radius:4px',
+        'white-space:pre',
+        'pointer-events:auto',
+      ].join(';'),
+    );
+
     node.textContent = [
-      'IFRAME (app)  T×H = top×height',
-      `t=${snapshot.t} ${snapshot.label}`,
-      `innerH   ${snapshot.innerH}`,
-      `clientH  ${snapshot.clientH}`,
-      `vvH      ${snapshot.vvH}`,
-      `vvOffTop ${snapshot.vvOffsetTop}`,
-      `vvPageTp ${snapshot.vvPageTop}`,
-      `vvScale  ${snapshot.vvScale}`,
-      `scrollY  ${snapshot.scrollY}`,
-      `docElTop ${snapshot.docElTop}`,
-      `docScrH  ${snapshot.docScrollH}`,
-      `shell T×H ${snapshot.shellTH}`,
-      `shell csH ${snapshot.shellCssH}`,
+      `IFRAME  t=${snapshot.t} ${snapshot.label}`,
+      `onConfigurator ${snapshot.onConfigurator}`,
+      `inner/client ${snapshot.innerH}/${snapshot.clientH}`,
+      `vvH ${snapshot.vvH}  vvOffTop ${snapshot.vvOffsetTop}  sc ${snapshot.vvScale}`,
+      `scrollY ${snapshot.scrollY}  docElTop ${snapshot.docElTop}  docScrH ${snapshot.docScrollH}`,
+      `shell  ${snapshot.shellTH}  csH ${snapshot.shellCssH}`,
       `shell xfm ${snapshot.shellXfrm}`,
-      `bg    T×H ${snapshot.bgTH}`,
-      `grid  T×H ${snapshot.gridTH}`,
-      `logo  T×H ${snapshot.logoRowTH}`,
-      `steps T×H ${snapshot.stepHeaderTH}`,
-      `main  T×H ${snapshot.mainTH}`,
-      `foot  T×H ${snapshot.footerTH}`,
-      `--vh      ${snapshot.cssVh}`,
-      `--vvTop   ${snapshot.cssVvTop}`,
-      `--shellH  ${snapshot.cssShellH}`,
+      `bg    ${snapshot.bgTH}`,
+      `grid  ${snapshot.gridTH}`,
+      `logo  ${snapshot.logoRowTH}`,
+      `steps ${snapshot.stepHeaderTH}`,
+      `main  ${snapshot.mainTH}`,
+      `foot  ${snapshot.footerTH}`,
+      `--vh ${snapshot.cssVh}  --vvTop ${snapshot.cssVvTop}`,
+      `--shellH ${snapshot.cssShellH}`,
+      '(T×H = top×height)',
     ].join('\n');
   };
 })();
