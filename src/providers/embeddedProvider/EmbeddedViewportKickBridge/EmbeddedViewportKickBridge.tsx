@@ -40,42 +40,66 @@ const readViewport = () => {
   };
 };
 
-// Diagnostic trace for the iOS two-viewport cold-load shift, from inside the frame.
-// Logs the layout viewport, the visual viewport (height / offsetTop / pageTop /
-// scale), the document scroll offset and the actual on-screen position of the
-// .configurator-shell top edge, tagged with a phase label. Runs for the first ~6s
-// of a cold load only, then stops on its own. Remove once confirmed on device.
+/** "top×height" of the first element matching `selector`, or "-" when absent. */
+const rectTH = (selector: string): string => {
+  const el = document.querySelector(selector);
+  if (!el) return '-';
+  const r = el.getBoundingClientRect();
+  return `${Math.round(r.top)}×${Math.round(r.height)}`;
+};
+
+// Diagnostic trace for the iOS two-viewport cold-load shift, from INSIDE the frame.
+// Captures the full height chain: layout viewport, visual viewport, document
+// scroll/overflow (documentElement.top !== 0 means the frame doc itself is
+// scrolled — the thing a reload fixes), then the box (top×height) of every link in
+// the render tree — .configurator-shell (+ computed height + transform, to see if
+// the translateY correction actually applied), .configurator-shell-background, the
+// store <Header> logo row, the step-tab header (HeaderConfiguration — the dashed
+// line), the <main> canvas, and the footer — plus the two CSS vars. `t` is
+// wall-clock so it lines up with the host HUD. Runs ~6s after load, then stops.
 const traceViewport = (() => {
-  const START = Date.now();
   const TRACE_WINDOW_MS = 6000;
+  const START = performance.now();
   let lastSignature = '';
 
   return (label: string) => {
-    const elapsed = Date.now() - START;
-    if (elapsed > TRACE_WINDOW_MS) return;
+    if (performance.now() - START > TRACE_WINDOW_MS) return;
 
     const vv = window.visualViewport;
-    const shell = document.querySelector('.configurator-shell');
-    const shellTop = shell ? Math.round(shell.getBoundingClientRect().top) : null;
-    const rootStyle = getComputedStyle(document.documentElement);
+    const de = document.documentElement;
+    const rootStyle = getComputedStyle(de);
+    const shellEl = document.querySelector('.configurator-shell');
+    const shellCS = shellEl ? getComputedStyle(shellEl) : null;
 
     const snapshot = {
-      t: elapsed,
+      t: Math.round(performance.timeOrigin + performance.now()),
       label,
       frame: 'iframe',
       innerH: window.innerHeight,
-      clientH: document.documentElement.clientHeight,
+      clientH: de.clientHeight,
       vvH: vv ? Math.round(vv.height) : null,
       vvOffsetTop: vv ? Math.round(vv.offsetTop) : null,
       vvPageTop: vv ? Math.round(vv.pageTop) : null,
       vvScale: vv ? Number(vv.scale.toFixed(3)) : null,
       scrollY: Math.round(window.scrollY),
-      shellTop,
+      docElTop: Math.round(de.getBoundingClientRect().top),
+      docScrollH: de.scrollHeight,
+      // render-tree boxes, top→bottom (data-dbg hooks set in ConfiguratorLayoutTemplate)
+      shellTH: rectTH('.configurator-shell'),
+      shellCssH: shellCS ? shellCS.height : null,
+      shellXfrm: shellCS && shellCS.transform !== 'none' ? shellCS.transform : null,
+      bgTH: rectTH('[data-dbg="bg"]'),
+      gridTH: rectTH('[data-dbg="grid"]'),
+      logoRowTH: rectTH('.configurator-shell > header'),
+      stepHeaderTH: rectTH('[data-dbg="grid"] > header'),
+      mainTH: rectTH('[data-dbg="main"]'),
+      footerTH: rectTH('[data-dbg="grid"] > :last-child'),
       cssVh: rootStyle.getPropertyValue('--configurator-vh').trim() || null,
       cssVvTop: rootStyle.getPropertyValue('--configurator-vv-top').trim() || null,
+      cssShellH: rootStyle.getPropertyValue('--configurator-shell-height').trim() || null,
     };
 
-    const signature = `${snapshot.innerH}|${snapshot.clientH}|${snapshot.vvH}|${snapshot.vvOffsetTop}|${snapshot.scrollY}|${shellTop}`;
+    const signature = [snapshot.innerH, snapshot.vvH, snapshot.vvOffsetTop, snapshot.scrollY, snapshot.docElTop, snapshot.shellTH, snapshot.logoRowTH, snapshot.stepHeaderTH, snapshot.footerTH].join('|');
     if (label.startsWith('event:') && signature === lastSignature) return;
     lastSignature = signature;
 
@@ -85,10 +109,9 @@ const traceViewport = (() => {
 })();
 
 // On-screen debug HUD for phones, where nobody opens the console. A fixed panel in
-// the BOTTOM-LEFT corner (the host HUD takes top-left) with the live viewport
-// numbers from inside the iframe, plus the measured on-screen top edge of
-// .configurator-shell (shellTop !== 0 means the shell is shifted). Stays fully
-// opaque until tapped to dismiss. Remove this + its call site once confirmed.
+// the BOTTOM-LEFT corner (the host HUD takes top-left) with the full height chain
+// from inside the frame. Stays fully opaque until tapped to dismiss. Remove this +
+// its call site once confirmed on device.
 type ViewportHudSnapshot = {
   t: number;
   label: string;
@@ -99,9 +122,20 @@ type ViewportHudSnapshot = {
   vvPageTop: number | null;
   vvScale: number | null;
   scrollY: number;
-  shellTop: number | null;
+  docElTop: number;
+  docScrollH: number;
+  shellTH: string;
+  shellCssH: string | null;
+  shellXfrm: string | null;
+  bgTH: string;
+  gridTH: string;
+  logoRowTH: string;
+  stepHeaderTH: string;
+  mainTH: string;
+  footerTH: string;
   cssVh: string | null;
   cssVvTop: string | null;
+  cssShellH: string | null;
 };
 
 const updateViewportHud = (() => {
@@ -121,9 +155,11 @@ const updateViewportHud = (() => {
           'left:0',
           'z-index:2147483647',
           'margin:4px',
-          'padding:6px 8px',
-          'max-width:60vw',
-          'font:11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace',
+          'padding:5px 7px',
+          'max-width:64vw',
+          'max-height:46vh',
+          'overflow:auto',
+          'font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace',
           'color:#0ff',
           'background:#000',
           'border:1px solid #0ff',
@@ -137,7 +173,7 @@ const updateViewportHud = (() => {
     }
 
     node.textContent = [
-      'IFRAME (app)',
+      'IFRAME (app)  T×H = top×height',
       `t=${snapshot.t} ${snapshot.label}`,
       `innerH   ${snapshot.innerH}`,
       `clientH  ${snapshot.clientH}`,
@@ -146,9 +182,20 @@ const updateViewportHud = (() => {
       `vvPageTp ${snapshot.vvPageTop}`,
       `vvScale  ${snapshot.vvScale}`,
       `scrollY  ${snapshot.scrollY}`,
-      `shellTop ${snapshot.shellTop}`,
-      `--vh     ${snapshot.cssVh}`,
-      `--vvTop  ${snapshot.cssVvTop}`,
+      `docElTop ${snapshot.docElTop}`,
+      `docScrH  ${snapshot.docScrollH}`,
+      `shell T×H ${snapshot.shellTH}`,
+      `shell csH ${snapshot.shellCssH}`,
+      `shell xfm ${snapshot.shellXfrm}`,
+      `bg    T×H ${snapshot.bgTH}`,
+      `grid  T×H ${snapshot.gridTH}`,
+      `logo  T×H ${snapshot.logoRowTH}`,
+      `steps T×H ${snapshot.stepHeaderTH}`,
+      `main  T×H ${snapshot.mainTH}`,
+      `foot  T×H ${snapshot.footerTH}`,
+      `--vh      ${snapshot.cssVh}`,
+      `--vvTop   ${snapshot.cssVvTop}`,
+      `--shellH  ${snapshot.cssShellH}`,
     ].join('\n');
   };
 })();
