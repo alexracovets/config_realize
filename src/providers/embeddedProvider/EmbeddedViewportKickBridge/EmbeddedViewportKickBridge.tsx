@@ -173,16 +173,18 @@ const applyViewport = (traceLabel?: string) => {
   }
 };
 
-// Always-on viewport monitor for on-device debugging. Unlike the correction below
-// it is NOT gated on the embedded session, so the HUD also shows on a direct
-// localhost / preview visit and inside DevTools device mode. Emits the same phase
-// trace (initial, settle timers, viewport events, orientation, first touch) for
-// ~6s after load. DELETE this hook and its render once the shift is diagnosed.
+// Always-on viewport monitor. Unlike the pin-to-top loop below (iframe only), this
+// is NOT gated on the embedded session: --configurator-vh / --configurator-vv-top
+// are written everywhere so the values are observable on a direct localhost /
+// preview visit and inside DevTools device mode too. Outside an iframe the writes
+// are inert (--vh == the height 100dvh would resolve to, --vvTop == 0). Emits the
+// phase trace (initial, settle timers, viewport events, orientation, first touch)
+// for ~6s after load. DELETE this hook and its render once the shift is diagnosed.
 const useViewportDebugMonitor = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const sample = (label: string) => traceViewport(label);
+    const sample = (label: string) => applyViewport(label);
 
     sample('initial');
     const raf = requestAnimationFrame(() => sample('raf'));
@@ -233,8 +235,13 @@ const useViewportDebugMonitor = () => {
 const PIN_WINDOW_MS = 4000;
 
 const EmbeddedViewportKickBridge = () => {
+  // Writes --configurator-vh / --configurator-vv-top and drives the HUD, on every
+  // context (not just embedded) so the values are observable while debugging.
   useViewportDebugMonitor();
 
+  // Embedded-only: hold the frame scrolled to the top through the cold-load
+  // window, and re-run applyViewport on the events coupled to that hold. The
+  // monitor above already covers the plain timers/events.
   useEffect(() => {
     if (!isEmbeddedSession() || window.parent === window) return;
 
@@ -251,6 +258,7 @@ const EmbeddedViewportKickBridge = () => {
     const extendPin = () => {
       if (userInteracted) return;
       pinUntil = Date.now() + PIN_WINDOW_MS;
+      applyViewport('event:extend-pin');
       pinToTop();
     };
 
@@ -267,68 +275,28 @@ const EmbeddedViewportKickBridge = () => {
       if (!userInteracted && Date.now() <= pinUntil) requestAnimationFrame(rafPin);
     };
 
-    applyViewport('initial');
-    requestAnimationFrame(() => applyViewport('raf'));
-    // Some iOS builds only report the settled viewport one or two frames / a few
-    // hundred ms after the chrome transition ends.
-    const t1 = window.setTimeout(() => applyViewport('timer:150'), 150);
-    const t2 = window.setTimeout(() => applyViewport('timer:400'), 400);
-    const t3 = window.setTimeout(() => applyViewport('timer:900'), 900);
-    const t4 = window.setTimeout(() => applyViewport('timer:2000'), 2000);
     requestAnimationFrame(rafPin);
 
-    const onViewportChange = () => {
-      applyViewport('event:vv-change');
-    };
     const onVisible = () => {
-      if (document.visibilityState === 'visible') {
-        applyViewport('event:visible');
-        extendPin();
-      }
+      if (document.visibilityState === 'visible') extendPin();
     };
     const onShow = () => {
-      applyViewport('event:pageshow');
-      window.setTimeout(() => applyViewport('event:pageshow+300'), 300);
       extendPin();
+      window.setTimeout(() => applyViewport('event:pageshow+300'), 300);
     };
-    const onOrientation = () => {
-      applyViewport('event:orientation');
-      window.setTimeout(() => applyViewport('event:orientation+300'), 300);
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', onViewportChange);
-      window.visualViewport.addEventListener('scroll', onViewportChange);
-    } else {
-      window.addEventListener('resize', onViewportChange);
-    }
 
     window.addEventListener('scroll', pinToTop, { passive: true });
     window.addEventListener('touchstart', releasePin, { passive: true });
     window.addEventListener('wheel', releasePin, { passive: true });
     window.addEventListener('pageshow', onShow);
-    window.addEventListener('orientationchange', onOrientation);
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('focus', onShow);
 
     return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
-      window.clearTimeout(t4);
-
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', onViewportChange);
-        window.visualViewport.removeEventListener('scroll', onViewportChange);
-      } else {
-        window.removeEventListener('resize', onViewportChange);
-      }
-
       window.removeEventListener('scroll', pinToTop);
       window.removeEventListener('touchstart', releasePin);
       window.removeEventListener('wheel', releasePin);
       window.removeEventListener('pageshow', onShow);
-      window.removeEventListener('orientationchange', onOrientation);
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('focus', onShow);
     };
