@@ -2,36 +2,15 @@
 
 import { useEffect } from 'react';
 
-import { isEmbeddedSession } from '@utils';
-
-// iOS has two viewports and on a cold load they disagree:
+// On an iOS in-app-browser cold load WebKit hands the page a viewport shorter than
+// the screen and never sends the resize that would correct it. This bridge writes
+// --configurator-vh so the shell is sized against the real height rather than that
+// short layout viewport; globals.css falls back to 100% until the first
+// measurement lands.
 //
-//   * the LAYOUT viewport is what CSS resolves %, vh, 100dvh and position:fixed
-//     against — on first paint WebKit sizes it for the *collapsed* chrome (tall);
-//   * the VISUAL viewport is what the user actually sees right now — with the
-//     address bar / bottom bar still expanded it is shorter, and WebKit offsets it
-//     downward inside the layout viewport (window.visualViewport.offsetTop > 0).
-//
-// So the shell is not merely mis-sized — the "camera" is pointed below the top of
-// the layout box. The store logo row sits above offsetTop and is clipped; the step
-// tabs (dashed separators + sliding gradient indicator) become the first visible
-// row; and below the shell's 100dvh box the layout viewport keeps going, showing as
-// empty page under the footer. overflow:hidden / position:fixed are pinned to the
-// LAYOUT viewport, so they do not hold content in view while the visual viewport is
-// shifted. A reload fixes it because both viewports initialise together; returning
-// from another app fixes it because that forces WebKit to reconcile them.
-//
-// Fix, in two parts, both driven by window.visualViewport (the one API that always
-// reports the real visible box and fires 'resize'/'scroll' when the chrome settles):
-//   1. --configurator-vh  = visualViewport.height  -> real height for the shell
-//      (globals.css falls back to 100% only until the first measurement lands).
-//   2. --configurator-vv-top = visualViewport.offsetTop -> the camera shift, which
-//      the shell counteracts with a translateY so its top lines up with what the
-//      user sees. Snaps back to 0 once the viewports reconcile.
-// iOS (iPhone/iPod, and iPadOS which reports as Mac but has touch). The frozen-
-// viewport bug is specific to the iOS in-app browser (Telegram, Viber, …); on
-// desktop the outerHeight/innerHeight gap is just browser UI and must be left
-// alone.
+// iOS = iPhone/iPod, and iPadOS which reports as Mac but has touch. The
+// screen.availHeight fallback below is iOS-only; on desktop the inner/screen gap
+// is just browser UI and must be left alone.
 const IS_IOS =
   typeof navigator !== 'undefined' &&
   (/iP(hone|od|ad)/.test(navigator.platform || '') ||
@@ -64,13 +43,7 @@ const readViewport = () => {
     height = window.innerHeight;
   }
 
-  return {
-    height,
-    // offsetTop: gap between the visual viewport's top and the layout viewport's
-    // top. pageTop is the same measured from the document origin; offsetTop is the
-    // one we want (independent of document scroll).
-    offsetTop: vv?.offsetTop ?? 0,
-  };
+  return { height };
 };
 
 /** "top×height" of the first element matching `selector`, or "-" when absent. */
@@ -223,7 +196,7 @@ const updateViewportHud = (() => {
 let lastVh = 0;
 
 const applyViewport = (traceLabel?: string) => {
-  const { height, offsetTop } = readViewport();
+  const { height } = readViewport();
   const root = document.documentElement;
 
   // Grow freely; shrink only on a deliberate, sustained change (real rotation to a
@@ -233,11 +206,6 @@ const applyViewport = (traceLabel?: string) => {
     lastVh = height;
     root.style.setProperty('--configurator-vh', `${Math.round(height)}px`);
   }
-
-  // Only correct a real, transient shift. Sub-pixel noise and the legitimate
-  // keyboard-open case (large offsetTop that should NOT be fought) are excluded.
-  const shift = offsetTop > 1 && offsetTop < 160 ? Math.round(offsetTop) : 0;
-  root.style.setProperty('--configurator-vv-top', `${shift}px`);
 
   if (traceLabel) {
     traceViewport(traceLabel);
@@ -298,75 +266,9 @@ const useViewportDebugMonitor = () => {
   }, []);
 };
 
-const PIN_WINDOW_MS = 4000;
-
 const EmbeddedViewportKickBridge = () => {
-  // Writes --configurator-vh / --configurator-vv-top and drives the HUD, on every
-  // context (not just embedded) so the values are observable while debugging.
+  // Writes --configurator-vh and drives the HUD.
   useViewportDebugMonitor();
-
-  // Embedded-only: hold the frame scrolled to the top through the cold-load
-  // window, and re-run applyViewport on the events coupled to that hold. The
-  // monitor above already covers the plain timers/events.
-  useEffect(() => {
-    if (!isEmbeddedSession() || window.parent === window) return;
-
-    let pinUntil = Date.now() + PIN_WINDOW_MS;
-    let userInteracted = false;
-
-    const pinToTop = () => {
-      if (userInteracted || Date.now() > pinUntil) return;
-      if (window.scrollX !== 0 || window.scrollY !== 0) {
-        window.scrollTo(0, 0);
-      }
-    };
-
-    const extendPin = () => {
-      if (userInteracted) return;
-      pinUntil = Date.now() + PIN_WINDOW_MS;
-      applyViewport('event:extend-pin');
-      pinToTop();
-    };
-
-    const releasePin = () => {
-      userInteracted = true;
-      // The correction is a cold-load-only workaround; once the user starts
-      // scrolling, let the browser own the viewport entirely.
-      document.documentElement.style.setProperty('--configurator-vv-top', '0px');
-      traceViewport('touch:release');
-    };
-
-    const rafPin = () => {
-      pinToTop();
-      if (!userInteracted && Date.now() <= pinUntil) requestAnimationFrame(rafPin);
-    };
-
-    requestAnimationFrame(rafPin);
-
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') extendPin();
-    };
-    const onShow = () => {
-      extendPin();
-      window.setTimeout(() => applyViewport('event:pageshow+300'), 300);
-    };
-
-    window.addEventListener('scroll', pinToTop, { passive: true });
-    window.addEventListener('touchstart', releasePin, { passive: true });
-    window.addEventListener('wheel', releasePin, { passive: true });
-    window.addEventListener('pageshow', onShow);
-    document.addEventListener('visibilitychange', onVisible);
-    window.addEventListener('focus', onShow);
-
-    return () => {
-      window.removeEventListener('scroll', pinToTop);
-      window.removeEventListener('touchstart', releasePin);
-      window.removeEventListener('wheel', releasePin);
-      window.removeEventListener('pageshow', onShow);
-      document.removeEventListener('visibilitychange', onVisible);
-      window.removeEventListener('focus', onShow);
-    };
-  }, []);
 
   return null;
 };

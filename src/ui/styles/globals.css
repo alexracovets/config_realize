@@ -19,9 +19,6 @@ html:has(.configurator-shell) body {
 :root {
   --viewport-height: 100dvh;
   --embed-header-offset: 0px;
-  /* Written from window.visualViewport by EmbeddedViewportKickBridge (embedded
-     only). Default keeps a non-embedded render untouched. */
-  --configurator-vv-top: 0px;
 }
 
 .configurator-shell {
@@ -30,35 +27,15 @@ html:has(.configurator-shell) body {
 }
 
 html[data-embedded='1'] {
-  /* iOS has two viewports that disagree on a cold load. EmbeddedViewportKickBridge
-     mirrors window.visualViewport into two custom properties:
-
-       --configurator-vh      real visible height  -> the shell's own height, so it
-                              is not laid out against the (too-tall) layout
-                              viewport sized for collapsed chrome. Falls back to
-                              100% only until the first measurement lands.
-
-       --configurator-vv-top  visualViewport.offsetTop, i.e. how far the visible
-                              "camera" is shifted down inside the layout viewport.
-                              The shell translates up by this amount so its top
-                              lines up with what the user actually sees (store logo
-                              row stops being clipped, step tabs / dashed line stop
-                              being the first visible row, no empty band under the
-                              footer). Snaps back to 0 once the viewports reconcile
-                              or the user scrolls. */
+  /* --configurator-vh is written from window.visualViewport by
+     EmbeddedViewportKickBridge (with a screen.availHeight fallback for the frozen
+     iOS in-app-browser viewport). Falls back to 100% until the first measurement
+     lands. */
   --configurator-shell-height: var(--configurator-vh, 100%);
   --viewport-height: var(--configurator-vh, 100%);
   /* The embedded store header (EmbeddedStoreHeader) now sits in normal flow and
      takes its own space, so nothing below it needs to reserve an offset. */
   --embed-header-offset: 0px;
-}
-
-html[data-embedded='1'] .configurator-shell {
-  transform: translateY(calc(-1 * var(--configurator-vv-top, 0px)));
-  /* Small nudge only; a quick ease keeps the correction from looking like a jump
-     when the viewports reconcile and --configurator-vv-top returns to 0. */
-  transition: transform 0.12s ease-out;
-  will-change: transform;
 }
 
 @theme {
