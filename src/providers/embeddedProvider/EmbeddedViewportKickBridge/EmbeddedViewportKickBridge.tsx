@@ -58,13 +58,9 @@ const rectTH = (selector: string): string => {
 // line), the <main> canvas, and the footer — plus the two CSS vars. `t` is
 // wall-clock so it lines up with the host HUD. Runs ~6s after load, then stops.
 const traceViewport = (() => {
-  const TRACE_WINDOW_MS = 6000;
-  const START = performance.now();
   let lastSignature = '';
 
   return (label: string) => {
-    if (performance.now() - START > TRACE_WINDOW_MS) return;
-
     const vv = window.visualViewport;
     const de = document.documentElement;
     const rootStyle = getComputedStyle(de);
@@ -223,9 +219,10 @@ const applyViewport = (traceLabel?: string) => {
 // is NOT gated on the embedded session: --configurator-vh / --configurator-vv-top
 // are written everywhere so the values are observable on a direct localhost /
 // preview visit and inside DevTools device mode too. Outside an iframe the writes
-// are inert (--vh == the height 100dvh would resolve to, --vvTop == 0). Emits the
-// phase trace (initial, settle timers, viewport events, orientation, first touch)
-// for ~6s after load. DELETE this hook and its render once the shift is diagnosed.
+// are inert (--vh == the height 100dvh would resolve to, --vvTop == 0). Samples
+// repeatedly for the first ~9s (the iframe can take a couple of seconds to boot,
+// and the shift shows up late) then on every viewport event. DELETE this hook and
+// its render once the shift is diagnosed.
 const useViewportDebugMonitor = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -234,13 +231,7 @@ const useViewportDebugMonitor = () => {
 
     sample('initial');
     const raf = requestAnimationFrame(() => sample('raf'));
-    const timers = [
-      window.setTimeout(() => sample('timer:150'), 150),
-      window.setTimeout(() => sample('timer:400'), 400),
-      window.setTimeout(() => sample('timer:900'), 900),
-      window.setTimeout(() => sample('timer:2000'), 2000),
-      window.setTimeout(() => sample('timer:4000'), 4000),
-    ];
+    const timers = [150, 400, 900, 1500, 2500, 4000, 6000, 9000].map((ms) => window.setTimeout(() => sample(`timer:${ms}`), ms));
 
     const onVvChange = () => sample('event:vv-change');
     const onWinResize = () => sample('event:window-resize');
