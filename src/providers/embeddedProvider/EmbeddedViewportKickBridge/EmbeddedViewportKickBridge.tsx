@@ -42,18 +42,21 @@ const readViewport = () => {
   const vv = window.visualViewport;
   const vpH = vv ? Math.round(vv.height) : window.innerHeight;
   const screenH = window.screen?.availHeight ?? 0;
+  const clientH = document.documentElement.clientHeight;
 
   // Default: trust the live viewport (visualViewport tracks the iOS chrome on a
-  // normal load — exactly what we want).
+  // normal load — even when it is shorter than the screen because the address bar
+  // is genuinely there).
   let height = vpH;
 
-  // Exception — iOS in-app browser (Telegram, Viber, …) cold load: innerHeight,
-  // visualViewport.height and clientHeight all stay frozen at the value from while
-  // the chrome was still expanded, and no resize ever corrects them (device: 720
-  // vs a 896 screen, unchanged even after a touch). Only on iOS, and only when the
-  // reported viewport is a good bit shorter than the screen, fall back to the
-  // screen height. On desktop the same inner/screen gap is just browser UI.
-  if (IS_IOS && screenH - vpH > 60) {
+  // Exception — the *frozen* iOS in-app browser cold load. Its signature is that
+  // window.innerHeight and documentElement.clientHeight DISAGREE (observed 896 vs
+  // 720). A normal chrome-showing load has innerHeight === clientHeight (e.g.
+  // 699/699) and must be left alone — using the screen height there makes the
+  // shell taller than the viewport and it scrolls under the chrome.
+  const isFrozenViewport = IS_IOS && Math.abs(window.innerHeight - clientH) > 40 && screenH - vpH > 60;
+
+  if (isFrozenViewport) {
     height = screenH;
   }
 
