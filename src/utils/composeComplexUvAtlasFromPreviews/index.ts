@@ -3,6 +3,6 @@ export {
   composeComplexUvAtlasFromPreviews,
   fillMissingComplexUvPreviews,
   pngBufferFromDataUrl,
-  resolveDefaultLogosFilePath,
+  resolveDefaultLogosAssetUrl,
 } from './composeComplexUvAtlasFromPreviews';
 export type { complexUvPreviewLayerType, composeComplexUvAtlasFromPreviewsInputType } from './composeComplexUvAtlasFromPreviews';

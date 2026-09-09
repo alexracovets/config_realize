@@ -1,6 +1,3 @@
-import { existsSync } from 'node:fs';
-import path from 'node:path';
-
 import sharp from 'sharp';
 
 import { resolveLogoDrawSize } from '@configurator/utils';
@@ -39,14 +36,29 @@ const pngBufferFromDataUrl = (dataUrl: string): Buffer => dataUrlToBuffer(dataUr
 
 const bufferToPngDataUrl = (buffer: Buffer) => `data:image/png;base64,${buffer.toString('base64')}`;
 
-const resolveDefaultLogosFilePath = (model: garmentConfigType | undefined): string | null => {
+// public/ assets are read over HTTP (not from disk) so Next's file tracer does not bundle
+// the whole public/ tree — 135 MB of design SVGs — into serverless function output.
+const resolvePublicAssetOrigin = (): string => (process.env.APP_ORIGIN ?? process.env.APP_URL ?? 'http://127.0.0.1:3000').replace(/\/+$/, '');
+
+const toPublicAssetUrl = (relativePath: string): string => `${resolvePublicAssetOrigin()}/${relativePath.replace(/^\/+/, '').split('?')[0]}`;
+
+const fetchPublicAssetBuffer = async (url: string): Promise<Buffer | null> => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    return Buffer.from(await response.arrayBuffer());
+  } catch {
+    return null;
+  }
+};
+
+const resolveDefaultLogosAssetUrl = (model: garmentConfigType | undefined): string | null => {
   const fileName = model?.default_pattern?.[0]?.parts[0]?.path_name;
   if (!fileName || !model) return null;
 
-  const designsDir = path.join(process.cwd(), 'public', model.path.replace(/^\//, ''), 'designs');
-  const candidates = [fileName, fileName.replace(/\.webp$/i, '.svg'), fileName.replace(/\.svg$/i, '.webp')];
-
-  return candidates.map((name) => path.join(designsDir, name)).find((filePath) => existsSync(filePath)) ?? null;
+  // The catalog may name the file .webp or .svg; prefer .svg (vector, crisp when rasterized).
+  const svgName = fileName.replace(/\.webp$/i, '.svg');
+  return toPublicAssetUrl(`${model.path.replace(/^\/+/, '')}/designs/${svgName}`);
 };
 
 const resolveOverlayLayers = (layers: Array<{ label: string; dataUrl: string }>) => {
@@ -123,10 +135,10 @@ const readPublicAssetBuffer = async (src: string): Promise<Buffer | null> => {
   const relativePath = src.replace(/^\//, '').split('?')[0];
   if (!relativePath) return null;
 
-  const filePath = path.join(process.cwd(), 'public', relativePath);
-  if (!existsSync(filePath)) return null;
+  const buffer = await fetchPublicAssetBuffer(toPublicAssetUrl(relativePath));
+  if (!buffer) return null;
 
-  return sharp(filePath).ensureAlpha().png().toBuffer();
+  return sharp(buffer).ensureAlpha().png().toBuffer();
 };
 
 const loadStampSourceBuffer = async (
@@ -303,8 +315,11 @@ const composeComplexUvAtlasFromPreviews = async ({
 
   if (defaultLogosPath) {
     try {
+      const defaultLogosBuffer = /^https?:/i.test(defaultLogosPath) ? await fetchPublicAssetBuffer(defaultLogosPath) : null;
+      if (!defaultLogosBuffer) throw new Error('default logos asset unavailable');
+
       compositeInputs.push({
-        input: await thresholdDefaultLogosAlpha(await sharp(defaultLogosPath).ensureAlpha().png().toBuffer(), width, height),
+        input: await thresholdDefaultLogosAlpha(await sharp(defaultLogosBuffer).ensureAlpha().png().toBuffer(), width, height),
         blend: 'over',
       });
     } catch {
@@ -346,7 +361,7 @@ const fillMissingComplexUvPreviews = async ({
     const complexFile = product.steps?.find((step) => step.key === 'complex')?.downloadFiles[0];
     const dataUrl = await composeComplexUvAtlasFromPreviews({
       layers: layers.filter((layer) => layer.cartItemId === product.cartItemId),
-      defaultLogosPath: resolveDefaultLogosFilePath(getModel(product.modelId)),
+      defaultLogosPath: resolveDefaultLogosAssetUrl(getModel(product.modelId)),
       logoStamps: complexFile?.logoStamps,
       logoDataUrlByFileName,
       atlasWidth: complexFile?.atlasWidth ?? product.printAtlas?.width,
@@ -357,5 +372,5 @@ const fillMissingComplexUvPreviews = async ({
   }
 };
 
-export { COMPLEX_PREVIEW_LABEL, composeComplexUvAtlasFromPreviews, fillMissingComplexUvPreviews, pngBufferFromDataUrl, resolveDefaultLogosFilePath };
+export { COMPLEX_PREVIEW_LABEL, composeComplexUvAtlasFromPreviews, fillMissingComplexUvPreviews, pngBufferFromDataUrl, resolveDefaultLogosAssetUrl };
 export type { complexUvPreviewLayerType, composeComplexUvAtlasFromPreviewsInputType };

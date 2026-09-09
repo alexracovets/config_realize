@@ -1,6 +1,3 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-
 import { renderToBuffer } from '@react-pdf/renderer';
 import sharp from 'sharp';
 
@@ -61,9 +58,14 @@ const resolveDownloadFilenameExtension = (url: string): string => {
   return match ? match[1].toLowerCase() : 'png';
 };
 
-const renderLogoDataUrl = async (): Promise<string | null> => {
+// Fetched over HTTP (not read from disk) so Next's file tracer keeps public/ out of the
+// serverless function bundle. Falls back to the local dev server when APP_ORIGIN is unset.
+const renderLogoDataUrl = async (appOrigin: string | null): Promise<string | null> => {
   try {
-    const svg = await readFile(path.join(process.cwd(), 'public', 'svg', 'logo_you.svg'));
+    const origin = (appOrigin ?? process.env.APP_ORIGIN ?? 'http://127.0.0.1:3000').replace(/\/+$/, '');
+    const response = await fetch(`${origin}/svg/logo_you.svg`);
+    if (!response.ok) return null;
+    const svg = Buffer.from(await response.arrayBuffer());
     const png = await sharp(svg).png().toBuffer();
     return `data:image/png;base64,${png.toString('base64')}`;
   } catch {
@@ -130,7 +132,7 @@ const generateOrderPdfs = async (context: orderPdfContextType): Promise<orderPdf
     billingNote: context.billingNote,
   };
 
-  const logoSrc = await renderLogoDataUrl();
+  const logoSrc = await renderLogoDataUrl(context.appOrigin);
   const previewBySrc = new Map<string, string | null>();
   const previewSrcs = [...new Set(orderExport.lines.map((line) => line.previewSrc).filter(isHttpUrl))];
   await Promise.all(previewSrcs.map(async (src) => previewBySrc.set(src, await fetchImageAsDataUrl(src))));
