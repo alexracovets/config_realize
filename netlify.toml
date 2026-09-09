@@ -1,0 +1,57 @@
+# Netlify deploy config for the Next.js configurator.
+#
+# Why this file exists: public/ is ~420 MB (public/models 3D assets, public/ghostscript
+# wasm, public/png). @netlify/plugin-nextjs traces server code and, because the webhook
+# route reads files via `path.join(process.cwd(), 'public', <dynamic>)`, it bundles the
+# ENTIRE public/ tree into the ___netlify-server-handler function. That blows past
+# Netlify's function size limit (250 MB unzipped / ~50 MB zipped) -> the deploy fails
+# with "could not parse form file: http: request body too large".
+#
+# The excluded_files globs below tell the tracer to keep these directories OUT of the
+# function bundle. They are still published as ordinary static files under /models, /png,
+# /ghostscript and served directly by the CDN (the browser fetches .gltf / wasm anyway).
+#
+# The only server-side public/ reads are in app/api/webhooks/orders-create:
+#   - public/<model>/designs/*.svg   (kept: *.svg under public/models is NOT excluded)
+#   - public/svg/logo_you.svg        (kept: public/svg is not excluded at all)
+# so PDF generation still has the files it needs.
+
+[build]
+  command = "pnpm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Keep bulky, browser-only assets out of every serverless/edge function bundle.
+[functions]
+  # 3D models: exclude the heavy binary formats, but let *.svg design files through
+  # (the webhook's UV atlas composer reads public/<model>/designs/*.svg).
+  excluded_files = [
+    "public/models/**/*.gltf",
+    "public/models/**/*.glb",
+    "public/models/**/*.bin",
+    "public/models/**/*.png",
+    "public/models/**/*.jpg",
+    "public/models/**/*.jpeg",
+    "public/models/**/*.webp",
+    "public/models/**/*.ktx2",
+    "public/models/**/*.hdr",
+    "public/ghostscript/**",
+    "public/png/**",
+  ]
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/models/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/ghostscript/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
