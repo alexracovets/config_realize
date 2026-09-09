@@ -30,24 +30,33 @@ import { isEmbeddedSession } from '@utils';
 //      user sees. Snaps back to 0 once the viewports reconcile.
 const readViewport = () => {
   const vv = window.visualViewport;
+  const vpH = vv ? Math.round(vv.height) : window.innerHeight;
+  const screenH = window.screen?.availHeight ?? 0;
 
-  // On an iOS in-app browser cold load (Telegram, Viber, …) innerHeight,
-  // visualViewport.height and documentElement.clientHeight all stay frozen at the
-  // value from while the browser chrome was still expanded — no resize event ever
-  // fires to correct them (confirmed on device: 720 vs a 896 screen, unchanged
-  // even after a touch). window.screen.* and outerHeight do NOT track the chrome,
-  // so they carry the true device height. Take the largest plausible value so the
-  // shell fills the screen instead of leaving empty page below it.
-  const candidates = [
-    vv?.height ?? 0,
-    window.innerHeight,
-    document.documentElement.clientHeight,
-    window.screen?.availHeight ?? 0,
-    window.outerHeight,
-  ].filter((h) => typeof h === 'number' && h > 120 && h < 4000);
+  // Default: trust the live viewport (visualViewport tracks the iOS chrome on a
+  // normal load — exactly what we want).
+  let height = vpH;
+
+  // Exception — iOS in-app browser (Telegram, Viber, …) cold load: innerHeight,
+  // visualViewport.height and clientHeight all stay frozen at the value from while
+  // the chrome was still expanded, and no resize ever corrects them (device: 720
+  // vs a 896 screen, unchanged even after a touch). Detect that specific state —
+  // the browser window fills the whole screen (so this is a phone, not a resized
+  // desktop window) yet the reported viewport is a good bit shorter — and use the
+  // screen height instead.
+  const windowFillsScreen = screenH > 0 && Math.abs(window.outerHeight - screenH) < 40;
+  const viewportLooksFrozen = screenH - vpH > 60;
+
+  if (windowFillsScreen && viewportLooksFrozen) {
+    height = screenH;
+  }
+
+  if (!(height > 120 && height < 4000)) {
+    height = window.innerHeight;
+  }
 
   return {
-    height: candidates.length ? Math.max(...candidates) : window.innerHeight,
+    height,
     // offsetTop: gap between the visual viewport's top and the layout viewport's
     // top. pageTop is the same measured from the document origin; offsetTop is the
     // one we want (independent of document scroll).
