@@ -31,8 +31,23 @@ import { isEmbeddedSession } from '@utils';
 const readViewport = () => {
   const vv = window.visualViewport;
 
+  // On an iOS in-app browser cold load (Telegram, Viber, …) innerHeight,
+  // visualViewport.height and documentElement.clientHeight all stay frozen at the
+  // value from while the browser chrome was still expanded — no resize event ever
+  // fires to correct them (confirmed on device: 720 vs a 896 screen, unchanged
+  // even after a touch). window.screen.* and outerHeight do NOT track the chrome,
+  // so they carry the true device height. Take the largest plausible value so the
+  // shell fills the screen instead of leaving empty page below it.
+  const candidates = [
+    vv?.height ?? 0,
+    window.innerHeight,
+    document.documentElement.clientHeight,
+    window.screen?.availHeight ?? 0,
+    window.outerHeight,
+  ].filter((h) => typeof h === 'number' && h > 120 && h < 4000);
+
   return {
-    height: vv?.height ?? window.innerHeight,
+    height: candidates.length ? Math.max(...candidates) : window.innerHeight,
     // offsetTop: gap between the visual viewport's top and the layout viewport's
     // top. pageTop is the same measured from the document origin; offsetTop is the
     // one we want (independent of document scroll).
@@ -195,13 +210,17 @@ const updateViewportHud = (() => {
   };
 })();
 
+let lastVh = 0;
+
 const applyViewport = (traceLabel?: string) => {
   const { height, offsetTop } = readViewport();
   const root = document.documentElement;
 
-  // Ignore a collapsed viewport (tab switch / frame hidden momentarily reports
-  // ~0-1px). Keeping the last good value avoids a 1px shell flash.
-  if (height > 120) {
+  // Grow freely; shrink only on a deliberate, sustained change (real rotation to a
+  // shorter viewport) — a transient dip (keyboard, momentary chrome) must not yank
+  // the layout.
+  if (height > 120 && (height > lastVh || height < lastVh - 60)) {
+    lastVh = height;
     root.style.setProperty('--configurator-vh', `${Math.round(height)}px`);
   }
 
