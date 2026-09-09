@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-import { CHECKOUT_CONFIG_EXPORT_FILENAME } from '@constants';
+import { buildMinimumQuantityLabel, CHECKOUT_CONFIG_EXPORT_FILENAME } from '@constants';
 import { useCheckout, useConfigurationCart } from '@store';
 import {
   buildCheckoutConfigExport,
@@ -129,7 +129,12 @@ const useSubmitCheckout = () => {
     setError(null);
 
     try {
-      const { products } = useCheckout.getState();
+      const checkoutStore = useCheckout.getState();
+      if (!checkoutStore.canMeetMinimumQuantity()) {
+        throw new Error(buildMinimumQuantityLabel(checkoutStore.getRequiredMinimumQuantity()));
+      }
+
+      const { products } = checkoutStore;
       const payload: createCheckoutPayloadType = buildOrderPreset(products);
 
       if (!payload.lines.length) {

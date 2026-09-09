@@ -17,9 +17,9 @@ const mapPartGradientDefaults = (part: garmentPartConfigType): partGradientType 
 
   return {
     enabled: false,
-    reversed: config.reversed,
+    reversed: false,
     color2: DEFAULT_GRADIENT_COLOR2,
-    rotation: config.rotation,
+    rotation: 0,
     position: config.position,
     softness: config.softness,
     opacity: config.opacity,

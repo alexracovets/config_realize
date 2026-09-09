@@ -16,6 +16,11 @@ html:has(.configurator-shell) body {
   overscroll-behavior: none;
 }
 
+:root {
+  --viewport-height: 100dvh;
+  --embed-header-offset: 0px;
+}
+
 .configurator-shell {
   height: var(--configurator-shell-height, 100dvh);
   max-height: var(--configurator-shell-height, 100dvh);
@@ -23,6 +28,10 @@ html:has(.configurator-shell) body {
 
 html[data-embedded='1'] {
   --configurator-shell-height: 100%;
+  --viewport-height: 100%;
+  /* The embedded store header (EmbeddedStoreHeader) now sits in normal flow and
+     takes its own space, so nothing below it needs to reserve an offset. */
+  --embed-header-offset: 0px;
 }
 
 @theme {
@@ -66,6 +75,19 @@ html[data-embedded='1'] {
 
 a {
   display: inline-block;
+}
+
+.reversed-link {
+  background: linear-gradient(to right, currentColor, currentColor) 0 min(100%, 1.35em) / 0 1px no-repeat;
+  background-position-x: right;
+  transition: background-size 0.5s cubic-bezier(0.3, 1, 0.3, 1);
+}
+
+@media (pointer: fine) {
+  .reversed-link:not([aria-disabled]):hover {
+    background-position-x: left;
+    background-size: 100% 1px;
+  }
 }
 
 .os-theme-custom.os-scrollbar {

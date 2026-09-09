@@ -1,7 +1,7 @@
 import { CHECKOUT_CONFIG_EXPORT_FILENAME, CHECKOUT_CUTTING_EXPORT_FILENAME, CHECKOUT_ORDER_EXPORT_FILENAME } from '@constants';
 import { fetchLatestOrderExportAssets } from '@shopify';
 import type { shopifyOrderNodeType, uvImageEntryType } from '@shopify';
-import { Container } from '@atoms';
+import { Container, Flex } from '@atoms';
 
 const buildDownloadHref = (fileUrl: string, filename: string) => {
   const params = new URLSearchParams({ url: fileUrl, filename });
@@ -49,20 +49,20 @@ const LastOrderExportPage = async () => {
 
   return (
     <Container>
-      <div className="py-10 flex flex-col gap-6 max-w-[720px] mx-auto">
+      <Flex variant="last_order_page_column">
         <h1 className="text-xl font-semibold">Ultimo ordine — file di export</h1>
 
         {!order ? (
           <p className="text-sm text-gray-30">Nessun ordine trovato o impossibile contattare Shopify Admin API.</p>
         ) : (
           <>
-            <div className="text-sm text-gray-30 flex flex-col gap-1">
+            <Flex variant="last_order_meta_column">
               <span>
                 Ordine <strong className="text-default">{order.name}</strong> ({order.id})
               </span>
               <span>Creato: {new Date(order.createdAt).toLocaleString('it-IT')}</span>
               <span>Stato pagamento: {order.financialStatus}</span>
-            </div>
+            </Flex>
 
             <ul className="flex flex-col gap-2">
               {order.orderPdfUrl && (
@@ -105,7 +105,7 @@ const LastOrderExportPage = async () => {
             </section>
           </>
         )}
-      </div>
+      </Flex>
     </Container>
   );
 };

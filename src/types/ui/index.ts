@@ -61,8 +61,6 @@ export type {
 export type { accordionAtomPropsType, atomInputHexPropsType, colorPickerPropsType, searchInputPropsType } from './atomsControlsProps';
 export type {
   colorControlPropsType,
-  colorTabType,
-  colorTabVariantType,
   colorTabControlPropsType,
   configurationPositionOptionType,
   configurationPositionPickerModalPropsType,

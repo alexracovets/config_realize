@@ -1,6 +1,7 @@
 'use client';
 
 import type { garmentConfigType } from '@types';
+import { randomId } from '@utils';
 
 type textPrintSnapshotType<TInstance extends { id: string; label: string }> = {
   instances: TInstance[];
@@ -12,7 +13,7 @@ type textPrintPositionType = {
   label: string;
 };
 
-const createInheritedInstanceId = (positionKey: string) => `${positionKey}_inherited_${crypto.randomUUID()}`;
+const createInheritedInstanceId = (positionKey: string) => `${positionKey}_inherited_${randomId()}`;
 
 const inheritTextPrintSnapshot = <TInstance extends { id: string; label: string }, TPosition extends textPrintPositionType>(
   referenceSnapshot: textPrintSnapshotType<TInstance>,

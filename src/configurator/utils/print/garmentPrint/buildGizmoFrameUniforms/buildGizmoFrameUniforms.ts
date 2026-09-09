@@ -10,6 +10,7 @@ const buildGizmoFrameUniforms = (
   meshPartId: string,
   enabled: boolean,
   gizmoRotationDeg = 0,
+  showButtons = true,
 ): gizmoFrameStateType => {
   const half = Array.from({ length: NAME_SLOT_COUNT }, () => ({ x: 0, y: 0 }));
   const frameActive = Array.from({ length: NAME_SLOT_COUNT }, () => 0);
@@ -20,7 +21,7 @@ const buildGizmoFrameUniforms = (
       if (instance.partId !== meshPartId || !instance.text.trim()) return;
 
       frameActive[index] = instance.showFrame ? 1 : 0;
-      gizmoActive[index] = instance.showGizmo ? 1 : 0;
+      gizmoActive[index] = showButtons && instance.showGizmo ? 1 : 0;
 
       const measured = measureNameGizmoHalf(instance.text, instance.font, measureCtx, resolveTextGizmoMeasureOptions(instance));
       if (measured) {

@@ -7,9 +7,11 @@ import { cn } from '@utils';
 import { Text } from '@atoms';
 
 const AtomRichText = ({ content, className, variant = 'default', ...props }: atomRichTextTextPropsType) => {
+  const resolvedVariant = variant === 'default' ? 'rich_text' : variant;
+
   return (
-    <Text variant={variant} className={cn('leading-[1.4] text-left w-full', className)} {...props}>
-      <span dangerouslySetInnerHTML={{ __html: content }} className="text-left" />
+    <Text variant={resolvedVariant} {...props}>
+      <span dangerouslySetInnerHTML={{ __html: content }} className={cn('text-left', className)} />
     </Text>
   );
 };

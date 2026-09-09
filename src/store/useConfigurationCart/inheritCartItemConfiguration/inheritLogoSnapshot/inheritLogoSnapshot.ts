@@ -2,8 +2,9 @@
 
 import type { garmentConfigType, garmentLogoSnapshotType, logoInstanceType } from '@types';
 import { createDefaultLogoInstances, createLogoInstance, mapProductLogoPositions } from '@store/useGarmentLogo';
+import { randomId } from '@utils';
 
-const createInheritedLogoId = (positionKey: string) => `${positionKey}_inherited_${crypto.randomUUID()}`;
+const createInheritedLogoId = (positionKey: string) => `${positionKey}_inherited_${randomId()}`;
 
 const isCustomizedLogo = (reference: logoInstanceType, catalogDefaultSrc?: string) =>
   !reference.isDefault || (catalogDefaultSrc !== undefined && reference.src !== catalogDefaultSrc);

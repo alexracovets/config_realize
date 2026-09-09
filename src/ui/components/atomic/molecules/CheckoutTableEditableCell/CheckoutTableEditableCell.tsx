@@ -45,7 +45,7 @@ const CheckoutTableEditableCell = ({
     }
 
     return (
-      <Flex className={cn('w-full items-center', isSpreadLayout ? 'justify-start' : 'justify-center')}>
+      <Flex variant={isSpreadLayout ? 'checkout_cell_row_start' : 'checkout_cell_row_center'}>
         <button type="button" className="text-[16px] leading-none text-default" onClick={handleActivate} aria-label={`Modifica ${placeholder}`}>
           -
         </button>
@@ -55,7 +55,7 @@ const CheckoutTableEditableCell = ({
 
   if (!isEditing) {
     return (
-      <Flex className={cn('w-full items-center gap-1.5', isSpreadLayout ? 'justify-between' : 'justify-center')}>
+      <Flex variant={isSpreadLayout ? 'checkout_cell_actions_between' : 'checkout_cell_actions_center'}>
         <button
           type="button"
           className={cn('text-[16px] leading-none text-default', isSpreadLayout ? 'min-w-0 flex-1 truncate text-left' : 'text-center')}
@@ -72,7 +72,6 @@ const CheckoutTableEditableCell = ({
 
   return (
     <AtomInput
-
       autoFocus
       aria-label={placeholder}
       variant="checkout"

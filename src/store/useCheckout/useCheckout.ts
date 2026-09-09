@@ -6,7 +6,14 @@ import { buildCheckoutRows, createCheckoutRowFromPreset, extractCheckoutRowPrese
 import { scheduleCheckoutPreviewCapture } from '@configurator';
 import { applyCheckoutFirstRowToConfiguration } from '@store/useCheckout/applyCheckoutFirstRowToConfiguration';
 import { isNonemptyPrintText } from '@store/useCheckout/extractUniqueTestoTexts';
-import { getCheckoutDiscountPercent, getProductRowQuantity, getProductsSubtotal, getProductUnitPrice } from '@store/useCheckout/checkoutPricing';
+import {
+  getCheckoutDiscountPercent,
+  getCheckoutMinimumQuantity,
+  getProductRowQuantity,
+  getProductsSubtotal,
+  getProductUnitPrice,
+  isCheckoutMinimumQuantityMet,
+} from '@store/useCheckout/checkoutPricing';
 import { resolveCheckoutPrintAvailability } from '@store/useCheckout/resolveCheckoutPrintAvailability';
 import type { checkoutLineRowPatchType, checkoutLineRowType, checkoutProductType } from '@types';
 import { clampCheckoutRowQuantity } from '@constants';
@@ -26,6 +33,8 @@ interface CheckoutState {
   getDiscountPercent: () => number;
   getDiscountAmount: () => number;
   getGrandTotal: () => number;
+  getRequiredMinimumQuantity: () => number;
+  canMeetMinimumQuantity: () => boolean;
 }
 
 const maybeSyncFirstRowPreview = (cartItemId: string, rowId: string, rows: checkoutLineRowType[]) => {
@@ -204,6 +213,10 @@ const useCheckout = createSingletonStore<CheckoutState>('useCheckout', (set, get
     const shipping = get().getShippingCost();
     return Math.max(subtotal - discount + shipping, 0);
   },
+
+  getRequiredMinimumQuantity: () => getCheckoutMinimumQuantity(get().products),
+
+  canMeetMinimumQuantity: () => isCheckoutMinimumQuantityMet(get().products),
 }));
 
 export { useCheckout };

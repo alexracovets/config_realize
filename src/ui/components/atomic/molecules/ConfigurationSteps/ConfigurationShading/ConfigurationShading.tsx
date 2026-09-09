@@ -20,7 +20,6 @@ const ConfigurationShadingAccordion = ({ parts, partIds }: configurationShadingA
   const { openItems, handleItemActivate, handleOpenItemsChange } = usePartAccordionCameraFocus({
     partIds,
     defaultOpenPartIds: partIds[0] ? [partIds[0]] : [],
-    enableCameraFocus: false,
   });
 
   const getShadingPreview = useCallback(
@@ -33,7 +32,7 @@ const ConfigurationShadingAccordion = ({ parts, partIds }: configurationShadingA
       const color1 = gradient.reversed ? gradient.color2 : baseColor;
       const color2 = gradient.reversed ? baseColor : gradient.color2;
 
-      return `linear-gradient(${gradient.rotation}deg, ${color1}, ${color2})`;
+      return `linear-gradient(${gradient.rotation + 180}deg, ${color1}, ${color2})`;
     },
     [byPart, gradientsByPart],
   );

@@ -1,5 +1,6 @@
-import { composeGarmentColorUvAtlas } from '@utils/composeGarmentColorUvAtlas';
+import { composeComplexUvAtlas } from '@utils/composeComplexUvAtlas';
 import { composeDesignUvLayerPreview, composeDesignUvMixPreview } from '@utils/composeDesignUvPreview';
+import { composeGarmentColorUvAtlas } from '@utils/composeGarmentColorUvAtlas';
 import { composeTextUvLayer } from '@utils/composeTextUvLayer';
 import type { orderCuttingExportDownloadFileType } from '@types';
 
@@ -24,6 +25,10 @@ const composeOrderCuttingExportDownloadFile = async (file: orderCuttingExportDow
 
   if (file.composeKind === 'text-layer' && file.textLayers?.length && file.atlasWidth && file.atlasHeight) {
     return composeTextUvLayer(file.atlasWidth, file.atlasHeight, file.textLayers);
+  }
+
+  if (file.composeKind === 'complex-atlas' && file.modelSrc && file.colorParts?.length && file.atlasWidth && file.atlasHeight) {
+    return composeComplexUvAtlas(file);
   }
 
   if (!file.composeKind) {

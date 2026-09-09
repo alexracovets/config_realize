@@ -15,7 +15,7 @@ const Footer = () => {
     <Box variant="footer" asChild>
       <footer>
         <Container>
-          <Grid className="grid-cols-[1fr_auto] items-center">
+          <Grid variant="footer_notification">
             <Flex></Flex>
             <Notification />
           </Grid>

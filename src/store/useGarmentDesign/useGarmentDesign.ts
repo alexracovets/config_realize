@@ -30,7 +30,7 @@ interface UseGarmentDesignStore {
 }
 
 const buildPatternColors = (pattern: designPatternItemType, layerColors: Record<number, string>): Record<string, string> =>
-  Object.fromEntries(pattern.parts.map((part, index) => [part.key, layerColors[index] ?? DEFAULT_COLOR]));
+  Object.fromEntries(pattern.parts.map((part) => [part.key, layerColors[part.colorIndex] ?? DEFAULT_COLOR]));
 
 const useGarmentDesign = createSingletonStore<UseGarmentDesignStore>('useGarmentDesign', (set, get) => ({
   productPath: null,
@@ -90,21 +90,19 @@ const useGarmentDesign = createSingletonStore<UseGarmentDesignStore>('useGarment
   },
 
   setPartColor: (partKey, color) => {
-    const { activePattern } = get();
-    const partIndex = activePattern?.parts.findIndex((part) => part.key === partKey) ?? -1;
+    const part = get().activePattern?.parts.find((item) => item.key === partKey);
 
     set((state) => ({
       patternColors: {
         ...state.patternColors,
         [partKey]: color,
       },
-      designLayerColors:
-        partIndex >= 0
-          ? {
-              ...state.designLayerColors,
-              [partIndex]: color,
-            }
-          : state.designLayerColors,
+      designLayerColors: part
+        ? {
+            ...state.designLayerColors,
+            [part.colorIndex]: color,
+          }
+        : state.designLayerColors,
     }));
   },
 

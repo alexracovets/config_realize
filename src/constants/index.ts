@@ -1,3 +1,4 @@
+import { LOGO_MAX_USER_FILES } from '@configurator/constants';
 import type { configuratorStepValueType } from '@configurator/types';
 import type { modelIdType } from '@types';
 
@@ -16,7 +17,7 @@ type collectionVolumeDiscountConfigType = {
 
 const CONFIGURATOR_COLLECTION_VOLUME_DISCOUNTS: Record<string, collectionVolumeDiscountConfigType> = {
   'completo-gara-calcio': { minimumOrderCount: 5, bonusCount: 25, bonusDiscount: 20 },
-  'completo-gara-pallavolo': { minimumOrderCount: 5, bonusCount: 25, bonusDiscount: 20 },
+  'completo-gara-pallavolo-config': { minimumOrderCount: 5, bonusCount: 25, bonusDiscount: 20 },
   'completo-gara-basket': { minimumOrderCount: 5, bonusCount: 25, bonusDiscount: 20 },
   completo: { minimumOrderCount: 5, bonusCount: 25, bonusDiscount: 20 },
 };
@@ -29,13 +30,14 @@ const resolveShopifyCollectionVolumeDiscount = (collectionHandle: string): colle
 };
 
 const buildMinimumQuantityLabel = (minimumCount: number) => `Minimo ${minimumCount} pz`;
-const buildVolumeDiscountLabel = (bonusCount: number, bonusDiscount: number) => `>${bonusCount} pezzi +${bonusDiscount}% di sconto`;
+const buildVolumeDiscountLabel = (bonusCount: number) => `>${bonusCount} pezzi +% Sconto`;
 const CONFIGURATOR_GRADIENT_ACTIVE_LABEL = 'Sfumatura attiva';
 const CONFIGURATOR_NAME_POSITION_SELECT_LABEL = 'Dove desideri inserire il nome?';
 const CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL = 'Dove desideri inserire il numero?';
 const CONFIGURATOR_TESTO_POSITION_SELECT_LABEL = 'Dove desideri inserire il testo?';
 const CONFIGURATOR_POSITION_SELECT_PLACEHOLDER = 'Seleziona posizione';
 const CONFIGURATOR_UPLOADED_FILES_LABEL = 'File caricati';
+const SCROLL_HINT_CAPTION = 'Scorri per vedere tutte le opzioni di personalizzazione';
 const ADD_PRODUCT_DESIGN_MODAL_CONFIRM_LABEL = 'Sì';
 const ADD_PRODUCT_DESIGN_MODAL_DECLINE_LABEL = 'No';
 
@@ -108,6 +110,9 @@ const CHECKOUT_SUMMARY_TIMELINE_STEPS = [
 const CHECKOUT_CUTTING_EXPORT_PATH = '/dev/order-cutting-export';
 const CHECKOUT_CUTTING_EXPORT_FILENAME = 'modulo-tessitura.pdf';
 const CHECKOUT_CONFIG_EXPORT_FILENAME = 'config.json';
+const SHARE_CONFIG_EXPORT_FILENAME_PREFIX = 'configurator-share';
+const SHARE_CONFIG_QUERY_PARAM = 'share';
+const SHARE_CONFIG_ROUTE_BASE = '/configurator/share';
 const CHECKOUT_ORDER_EXPORT_TITLE = "Conferma d'ordine";
 const CHECKOUT_ORDER_EXPORT_FILENAME = 'conferma-ordine.pdf';
 const CHECKOUT_ORDER_EXPORT_WEBSITE = 'www.realize.com';
@@ -150,7 +155,7 @@ const PALETTE_COLORS = [
 
 const LOGO_MAX_FILE_SIZE = 10 * 1024 * 1024;
 const LOGO_ACCEPTED_INPUT = '.eps,.ps,.pdf,.ai,.svg,.png,.jpg,.jpeg,.bmp,.tiff,.tif,.webp';
-const LOGO_SUPPORTED_LABEL = 'eps, ps, pdf, ai, svg, png, jpg, jpeg, bmp, tiff, tif';
+const LOGO_SUPPORTED_LABEL = 'eps, ps, pdf, ai, svg, png, jpg, jpeg, bmp, tiff, tif, webp';
 const LOGO_ACCEPTED_EXTENSIONS = new Set(['eps', 'ps', 'pdf', 'ai', 'svg', 'png', 'jpg', 'jpeg', 'bmp', 'tiff', 'tif', 'webp']);
 const LOGO_ACCEPTED_MIMES = new Set([
   'application/postscript',
@@ -163,10 +168,12 @@ const LOGO_ACCEPTED_MIMES = new Set([
   'image/bmp',
   'image/tiff',
   'image/webp',
-  '',
 ]);
 
 const TUTORIAL_VIDEO_URL = 'https://youtu.be/dQw4w9WgXcQ?si=uL2ObwuN8FpWsScY';
+
+const DFRNC_LOGO_SRC = '/png/dfrnc_logo.png';
+const DFRNC_LOGO_URL = 'https://unitry.io/p/realize-sport';
 const VIDEO_PLAYER_DEFAULT_VOLUME = 0.2;
 const VIDEO_PLAYER_YOUTUBE_CONFIG = {
   enablejsapi: 1,
@@ -236,6 +243,7 @@ export {
   CONFIGURATOR_STEP_META,
   CONFIGURATOR_TESTO_POSITION_SELECT_LABEL,
   CONFIGURATOR_UPLOADED_FILES_LABEL,
+  SCROLL_HINT_CAPTION,
   DEFAULT_CONFIGURATOR_COLLECTION_HANDLE,
   DEFAULT_CONFIGURATOR_MODEL_ID,
   DEFAULT_CONFIGURATOR_SLUG,
@@ -243,9 +251,15 @@ export {
   LOGO_ACCEPTED_INPUT,
   LOGO_ACCEPTED_MIMES,
   LOGO_MAX_FILE_SIZE,
+  LOGO_MAX_USER_FILES,
   LOGO_SUPPORTED_LABEL,
   PALETTE_COLORS,
   resolveShopifyCollectionVolumeDiscount,
+  SHARE_CONFIG_EXPORT_FILENAME_PREFIX,
+  SHARE_CONFIG_QUERY_PARAM,
+  SHARE_CONFIG_ROUTE_BASE,
+  DFRNC_LOGO_SRC,
+  DFRNC_LOGO_URL,
   TUTORIAL_VIDEO_URL,
   VIDEO_PLAYER_DEFAULT_VOLUME,
   VIDEO_PLAYER_YOUTUBE_CONFIG,

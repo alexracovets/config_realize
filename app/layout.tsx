@@ -4,6 +4,7 @@ import { Geist } from 'next/font/google';
 
 import '@styles';
 
+import { AtomTooltipProvider } from '@atoms/AtomTooltip';
 import { anton, bebasNeue, blackOpsOne, inter, oswald, russoOne } from '@fonts';
 import { EmbeddedProvider } from '@providers';
 import type { childrenType } from '@types';
@@ -31,7 +32,9 @@ const RootLayout = ({ children }: childrenType) => {
       )}
     >
       <body className="min-h-full">
-        <EmbeddedProvider>{children}</EmbeddedProvider>
+        <AtomTooltipProvider>
+          <EmbeddedProvider>{children}</EmbeddedProvider>
+        </AtomTooltipProvider>
       </body>
     </html>
   );

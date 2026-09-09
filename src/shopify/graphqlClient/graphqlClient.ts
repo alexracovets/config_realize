@@ -25,7 +25,7 @@ const shopifyGraphql = async <TData>(query: string, variables?: Record<string, u
     method: 'POST',
     headers,
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 },
+    cache: 'no-store',
   });
 
   if (!response.ok) {

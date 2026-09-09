@@ -17,7 +17,7 @@ import {
   CHECKOUT_SUMMARY_TRUST_ITEMS,
 } from '@constants';
 import { priceFormat } from '@utils';
-import { AtomImage } from '@atoms';
+import { AtomImage, Box } from '@atoms';
 import { ORDER_EXPORT_DOCUMENT_STYLES } from '@molecules/CheckoutOrderExport/orderExportDocumentStyles';
 import { CheckoutOrderExportTrustIcon } from '@molecules/CheckoutOrderExport/CheckoutOrderExportTrustIcon';
 
@@ -35,10 +35,10 @@ const CheckoutOrderExportDocument = ({ exportData }: checkoutOrderExportDocument
   return (
     <>
       <style>{ORDER_EXPORT_DOCUMENT_STYLES}</style>
-      <div className="order-export" data-testid="checkout-order-export-document">
-        <div className="order-export__content">
+      <Box className="order-export" data-testid="checkout-order-export-document">
+        <Box className="order-export__content">
           <header className="order-export__header">
-            <div className="order-export__header-top">
+            <Box className="order-export__header-top">
               <AtomImage
                 src={CHECKOUT_ORDER_EXPORT_LOGO_SRC}
                 alt="Realize You"
@@ -49,48 +49,48 @@ const CheckoutOrderExportDocument = ({ exportData }: checkoutOrderExportDocument
                 data-testid="checkout-order-export-logo"
                 data-order-export-preview=""
               />
-              <div className="order-export__contact">
+              <Box className="order-export__contact">
                 <p>{CHECKOUT_ORDER_EXPORT_WEBSITE}</p>
                 <p>{CHECKOUT_ORDER_EXPORT_EMAIL}</p>
-              </div>
-            </div>
+              </Box>
+            </Box>
             <hr className="order-export__divider" data-testid="checkout-order-export-header-divider" />
           </header>
 
-          <div className="order-export__info">
-            <div className="order-export__customer">
-              <div className="order-export__section-row">
+          <Box className="order-export__info">
+            <Box className="order-export__customer">
+              <Box className="order-export__section-row">
                 <span className="order-export__section-label">{CHECKOUT_ORDER_EXPORT_RECIPIENT_TITLE}:</span>
                 <span className="order-export__section-value">
                   {recipient.name} {recipient.email} {recipient.phone}
                 </span>
-              </div>
+              </Box>
 
-              <div className="order-export__section-row">
+              <Box className="order-export__section-row">
                 <span className="order-export__section-label">{CHECKOUT_ORDER_EXPORT_SHIPPING_TITLE}:</span>
                 <span className="order-export__section-value">{formatShippingAddressLine(shippingAddress)}</span>
-              </div>
+              </Box>
 
-              <div className="order-export__section-row">
+              <Box className="order-export__section-row">
                 <span className="order-export__section-label">{CHECKOUT_ORDER_EXPORT_BILLING_TITLE}:</span>
                 <span className="order-export__section-value">{exportData.billingNote}</span>
-              </div>
-            </div>
+              </Box>
+            </Box>
 
-            <div className="order-export__title-block">
+            <Box className="order-export__title-block">
               <h1 className="order-export__title">{CHECKOUT_ORDER_EXPORT_TITLE}</h1>
-              <div className="order-export__meta-grid">
-                <div className="order-export__meta-item">
+              <Box className="order-export__meta-grid">
+                <Box className="order-export__meta-item">
                   <span className="order-export__meta-label">{CHECKOUT_ORDER_EXPORT_ORDER_DATE_LABEL}</span>
                   <span>{exportData.orderDate}</span>
-                </div>
-                <div className="order-export__meta-item">
+                </Box>
+                <Box className="order-export__meta-item">
                   <span className="order-export__meta-label">{CHECKOUT_ORDER_EXPORT_ORDER_NUMBER_LABEL}</span>
                   <span>{exportData.orderNumber}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
 
           <table className="order-export__table">
             <thead>
@@ -152,36 +152,36 @@ const CheckoutOrderExportDocument = ({ exportData }: checkoutOrderExportDocument
 
           <hr className="order-export__divider order-export__divider--totals" data-testid="checkout-order-export-totals-divider" />
 
-          <div className="order-export__totals">
-            <div className="order-export__totals-box">
-              <div className="order-export__totals-row">
+          <Box className="order-export__totals">
+            <Box className="order-export__totals-box">
+              <Box className="order-export__totals-row">
                 <span className="order-export__totals-label">Subtotale</span>
                 <span>{priceFormat(exportData.subtotal)}</span>
-              </div>
+              </Box>
               {exportData.discountAmount > 0 && (
-                <div className="order-export__totals-row">
+                <Box className="order-export__totals-row">
                   <span className="order-export__totals-label">Sconto</span>
                   <span>-{priceFormat(exportData.discountAmount)}</span>
-                </div>
+                </Box>
               )}
               {exportData.shippingCost > 0 && (
-                <div className="order-export__totals-row">
+                <Box className="order-export__totals-row">
                   <span className="order-export__totals-label">Spedizione</span>
                   <span>{priceFormat(exportData.shippingCost)}</span>
-                </div>
+                </Box>
               )}
-              <div className="order-export__totals-row">
+              <Box className="order-export__totals-row">
                 <span className="order-export__totals-label">{CHECKOUT_ORDER_EXPORT_VAT_LABEL}</span>
                 <span>{priceFormat(exportData.vatTotal)}</span>
-              </div>
-              <div className="order-export__totals-row order-export__totals-row--grand">
+              </Box>
+              <Box className="order-export__totals-row order-export__totals-row--grand">
                 <span className="order-export__totals-label">Prezzo Totale</span>
                 <span className="order-export__totals-grand">{priceFormat(exportData.grandTotal)}</span>
-              </div>
+              </Box>
               <p className="order-export__totals-note">{CHECKOUT_ORDER_EXPORT_VAT_INCLUDED_LABEL}</p>
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
         <footer className="order-export__footer" data-testid="checkout-order-export-footer">
           <hr className="order-export__divider order-export__divider--footer-top" data-testid="checkout-order-export-footer-top-divider" />
@@ -196,13 +196,13 @@ const CheckoutOrderExportDocument = ({ exportData }: checkoutOrderExportDocument
             ))}
           </ul>
           <hr className="order-export__divider" data-testid="checkout-order-export-footer-divider" />
-          <div className="order-export__footer-bottom">
+          <Box className="order-export__footer-bottom">
             <p className="order-export__copyright" data-testid="checkout-order-export-copyright">
               {CHECKOUT_ORDER_EXPORT_COPYRIGHT_PREFIX} © {currentYear} · {CHECKOUT_ORDER_EXPORT_WEBSITE} · {CHECKOUT_ORDER_EXPORT_EMAIL}
             </p>
-          </div>
+          </Box>
         </footer>
-      </div>
+      </Box>
     </>
   );
 };

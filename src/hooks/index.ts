@@ -1,6 +1,7 @@
 'use client';
 
 export { useAppNavigate } from './useAppNavigate';
+export { useMagnet } from './useMagnet';
 export { useConfiguratorRouteReset } from './useConfiguratorRouteReset';
 export { useEmbeddedUrlSync } from './useEmbeddedUrlSync';
 export { isConfiguratorStepAvailable, resolveAvailableConfiguratorStepNumbers, resolveProductStepsConfiguration } from './resolveProductStepsConfiguration';
@@ -15,14 +16,19 @@ export { useOrderCuttingExport } from './useOrderCuttingExport';
 export { useNavigateToCheckout } from './useNavigateToCheckout';
 export { useSubmitCheckout } from './useSubmitCheckout';
 export { useRequestAddProduct } from './useRequestAddProduct';
+export { useRestoreSharedConfiguration } from './useRestoreSharedConfiguration';
+export { useShareConfiguration } from './useShareConfiguration';
 export { useNavigateToConfigurator } from './useNavigateToConfigurator';
 export { useConfigurationCartSync } from './useConfigurationCartSync';
-export { useGarmentLogoCameraFocus } from './useGarmentLogoCameraFocus';
+export { useConfigurationHistoryHotkeys } from './useConfigurationHistoryHotkeys';
+export { useConfigurationHistoryTracker } from './useConfigurationHistoryTracker';
+export { focusGarmentCamera } from './focusGarmentCamera';
 export { usePartAccordionCameraFocus } from './usePartAccordionCameraFocus';
 export { useConfigurationPositionPicker } from './useConfigurationPositionPicker';
 export { useControlledState } from './useControlledState';
 export { useSlidingIndicator } from './useSlidingIndicator';
 export { useShowConfigurationSkeleton } from './useShowConfigurationSkeleton';
+export { useScrollHintTutorialTrigger } from './useScrollHintTutorialTrigger';
 export { useLogoFileHandler } from './useLogoFileHandler';
 export { useProductStepsConfiguration } from './useProductStepsConfiguration';
 export { useStepLogo } from './useStepLogo';

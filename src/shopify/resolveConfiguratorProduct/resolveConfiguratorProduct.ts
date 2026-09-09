@@ -1,8 +1,7 @@
-import { cache } from 'react';
-
 import { CONFIGURATOR_DEFAULT_MINIMUM_COUNT, resolveShopifyCollectionVolumeDiscount } from '@constants';
 import { isShopifyEnabled } from '@shopify/config';
 import { fetchConfiguratorProductByHandle } from '@shopify/fetchConfiguratorProductByHandle';
+import { formatShopifyRequestError } from '@shopify/fetchShopifyWithTimeout';
 import type { configuratorProductHydrationType } from '@configurator/types';
 import type { garmentBusinessType } from '@types';
 import { resolveConfiguratorProductBySlug } from '@utils';
@@ -31,7 +30,7 @@ const withDefaultMinimumOrder = (product: configuratorProductHydrationType): con
   };
 };
 
-const resolveConfiguratorProduct = cache(async (slug: string, collectionHandle?: string): Promise<configuratorProductHydrationType | null> => {
+const resolveConfiguratorProduct = async (slug: string, collectionHandle?: string): Promise<configuratorProductHydrationType | null> => {
   const localProduct = resolveConfiguratorProductBySlug(slug);
 
   if (!isShopifyEnabled()) {
@@ -56,10 +55,10 @@ const resolveConfiguratorProduct = cache(async (slug: string, collectionHandle?:
 
     return withDefaultMinimumOrder(product);
   } catch (error) {
-    console.warn(`[shopify] Failed to fetch product "${slug}"; falling back to local catalog.`, error);
+    console.warn(`[shopify] Failed to fetch product "${slug}"; falling back to local catalog (${formatShopifyRequestError(error)}).`);
   }
 
   return localProduct;
-});
+};
 
 export { resolveConfiguratorProduct };

@@ -1,6 +1,6 @@
 import type { buildLogoGizmoElementsInputType, printGizmoElementType } from '@configurator/types';
 
-import { LOGO_SCALE_MAX, LOGO_SCALE_MIN, LOGO_SLOT_COUNT, LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
+import { LOGO_SCALE_MAX, LOGO_SCALE_MIN, LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
 import {
   resolveGizmoElementRotationDeg,
   resolveLogoDisplayScale,
@@ -19,7 +19,7 @@ const buildLogoGizmoElements = ({ product, instances }: buildLogoGizmoElementsIn
   return instances.flatMap((instance) => {
     if (!instance.showGizmo || !instance.src.trim()) return [];
 
-    const slotIndex = instances.slice(0, LOGO_SLOT_COUNT).findIndex((item) => item.id === instance.id);
+    const slotIndex = instances.findIndex((item) => item.id === instance.id);
     if (slotIndex < 0) return [];
 
     const part = partsById[instance.partId];

@@ -11,6 +11,10 @@ const isShopifyEnabled = (): boolean => readEnv('SHOPIFY_ENABLED') === 'true';
 
 const getShopifyStoreDomain = (): string | undefined => readEnv('SHOPIFY_STORE_DOMAIN');
 
+// Admin API lives only on the *.myshopify.com host. A custom storefront domain
+// redirects to admin.shopify.com, where Cloudflare answers 403 with a challenge page.
+const getShopifyAdminStoreDomain = (): string | undefined => readEnv('SHOPIFY_ADMIN_STORE_DOMAIN') ?? getShopifyStoreDomain();
+
 const getShopifyAdminAccessToken = (): string | undefined => readEnv('SHOPIFY_ADMIN_ACCESS_TOKEN');
 
 const getShopifyAdminClientId = (): string | undefined => readEnv('SHOPIFY_ADMIN_CLIENT_ID');
@@ -19,7 +23,7 @@ const getShopifyAdminClientSecret = (): string | undefined => readEnv('SHOPIFY_A
 
 const getShopifyStorefrontAccessToken = (): string | undefined => readEnv('SHOPIFY_STOREFRONT_ACCESS_TOKEN');
 
-const DEFAULT_SHOPIFY_HOME_COLLECTION_HANDLES = ['completo-gara-calcio', 'completo-gara-pallavolo', 'completo-gara-basket', 'completo'] as const;
+const DEFAULT_SHOPIFY_HOME_COLLECTION_HANDLES = ['completo-gara-calcio', 'completo-gara-pallavolo-config', 'completo-gara-basket', 'completo'] as const;
 
 const getShopifyHomeCollectionHandles = (): string[] => {
   const raw = readEnv('SHOPIFY_HOME_COLLECTION_HANDLES');
@@ -33,7 +37,7 @@ const getShopifyHomeCollectionHandles = (): string[] => {
   return handles;
 };
 
-const getShopifyApiVersion = (): string => readEnv('SHOPIFY_API_VERSION') ?? '2025-01';
+const getShopifyApiVersion = (): string => readEnv('SHOPIFY_API_VERSION') ?? '2025-10';
 
 const getShopifyApiMode = (): shopifyApiModeType => {
   const mode = readEnv('SHOPIFY_API_MODE');
@@ -57,16 +61,16 @@ const assertShopifyConfigured = (): {
   mode: shopifyApiModeType;
   accessToken: string;
 } => {
-  const storeDomain = getShopifyStoreDomain();
   const apiVersion = getShopifyApiVersion();
   const mode = getShopifyApiMode();
+  const storeDomain = mode === 'storefront' ? getShopifyStoreDomain() : getShopifyAdminStoreDomain();
   const accessToken = mode === 'storefront' ? getShopifyStorefrontAccessToken() : getShopifyAdminAccessToken();
 
   if (!storeDomain || !accessToken) {
     throw new Error(
       mode === 'storefront'
         ? '[shopify] Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_STOREFRONT_ACCESS_TOKEN. See .env.example.'
-        : '[shopify] Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_ADMIN_ACCESS_TOKEN. See .env.example.',
+        : '[shopify] Missing SHOPIFY_ADMIN_STORE_DOMAIN or SHOPIFY_ADMIN_ACCESS_TOKEN. See .env.example.',
     );
   }
 
@@ -83,6 +87,7 @@ export {
   getShopifyApiVersion,
   getShopifyFrameAncestors,
   getShopifyHomeCollectionHandles,
+  getShopifyAdminStoreDomain,
   getShopifyStoreDomain,
   getShopifyStorefrontAccessToken,
   isShopifyEnabled,

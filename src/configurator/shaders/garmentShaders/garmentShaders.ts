@@ -1,6 +1,7 @@
-const garmentFragmentUvPars =  `
+const garmentFragmentUvPars = `
 #include <uv_pars_fragment>
 varying vec2 vPrintUv;
+varying vec3 vGarmentWorldPos;
 #ifdef USE_GRADIENT
 uniform vec4 uPartUvBounds;
 uniform float uGradientEnabled;
@@ -9,15 +10,27 @@ uniform float uGradientRotation;
 uniform float uGradientPosition;
 uniform float uGradientSoftness;
 uniform float uGradientOpacity;
+uniform vec3 uGradientOrigin;
+uniform vec3 uGradientExtent;
+uniform vec3 uGradientDir;
+uniform vec2 uGradientUvAxis;
 
-float garmentGradientMask( vec2 uv ) {
-  vec2 dir = vec2( cos( uGradientRotation ), sin( uGradientRotation ) );
-  vec2 gradStart = vec2( 0.5 ) - dir * 0.5;
-  vec2 gradEnd = vec2( 0.5 ) + dir * 0.5;
-  vec2 gradVec = gradEnd - gradStart;
-  float t = dot( uv - gradStart, gradVec ) / dot( gradVec, gradVec );
-  t = clamp( t, 0.0, 1.0 );
+float garmentGradientWorldT( vec3 worldPos ) {
+  if ( dot( uGradientUvAxis, uGradientUvAxis ) > 0.25 ) {
+    vec2 partSize = max( uPartUvBounds.zw - uPartUvBounds.xy, vec2( 1e-5 ) );
+    vec2 partUv = ( vPrintUv - uPartUvBounds.xy ) / partSize;
+    vec2 toward = max( uGradientUvAxis, vec2( 0.0 ) );
+    vec2 fromHem = max( -uGradientUvAxis, vec2( 0.0 ) );
+    return clamp( dot( partUv, toward ) + dot( vec2( 1.0 ) - partUv, fromHem ), 0.0, 1.0 );
+  }
 
+  vec3 dir = uGradientDir;
+  vec3 local = worldPos - uGradientOrigin;
+  float span = abs( dir.x ) * uGradientExtent.x + abs( dir.y ) * uGradientExtent.y + abs( dir.z ) * uGradientExtent.z;
+  return clamp( dot( local, dir ) / max( span, 1e-5 ) * 0.5 + 0.5, 0.0, 1.0 );
+}
+
+float garmentGradientMask( float t ) {
   float mid = uGradientPosition;
   float spread = uGradientSoftness * 0.5;
   float stop0 = max( 0.0, mid - spread );
@@ -92,18 +105,23 @@ uniform vec2 uNumberGizmoHalf[4];
 #ifdef USE_GARMENT_LOGO
 uniform sampler2D uLogoStamp;
 uniform vec2 uLogoStampCellSize;
-uniform vec2 uLogoAnchorUv[4];
-uniform float uLogoRotation[4];
-uniform float uLogoUploadRotation[4];
-uniform float uLogoPartRotation[4];
-uniform float uLogoScale[4];
-uniform float uLogoSlotActive[4];
-uniform vec4 uLogoPartBounds[4];
+uniform float uLogoStampGrid;
+uniform vec4 uLogoA[LOGO_SLOT_COUNT];
+uniform vec4 uLogoB[LOGO_SLOT_COUNT];
+uniform vec4 uLogoPartBounds[LOGO_SLOT_COUNT];
 uniform float uLogoGizmoEnabled;
-uniform float uLogoGizmoFrameActive[4];
-uniform float uLogoGizmoButtonsActive[4];
-uniform float uLogoGizmoButtonsReveal[4];
-uniform vec2 uLogoGizmoHalf[4];
+uniform vec4 uLogoG[LOGO_SLOT_COUNT];
+uniform vec2 uLogoGizmoHalf[LOGO_SLOT_COUNT];
+#define uLogoAnchorUv( i ) ( uLogoA[ i ].xy )
+#define uLogoScale( i ) ( uLogoA[ i ].z )
+#define uLogoStampSlot( i ) ( uLogoA[ i ].w )
+#define uLogoRotation( i ) ( uLogoB[ i ].x )
+#define uLogoUploadRotation( i ) ( uLogoB[ i ].y )
+#define uLogoPartRotation( i ) ( uLogoB[ i ].z )
+#define uLogoSlotActive( i ) ( uLogoB[ i ].w )
+#define uLogoGizmoFrameActive( i ) ( uLogoG[ i ].x )
+#define uLogoGizmoButtonsActive( i ) ( uLogoG[ i ].y )
+#define uLogoGizmoButtonsReveal( i ) ( uLogoG[ i ].z )
 #endif
 #ifdef USE_GARMENT_TEXT
 uniform sampler2D uNameGizmoIcons;
@@ -117,13 +135,14 @@ uniform vec3 uNameGizmoIconColor;
 #endif
 uniform sampler2D uPatternMask0;
 uniform sampler2D uPatternMask1;
+uniform sampler2D uPatternMask2;
 uniform vec3 uPatternColor0;
 uniform vec3 uPatternColor1;
+uniform vec3 uPatternColor2;
 uniform float uPatternOpacity;
 
 vec4 garmentGizmoUiColor;
 vec4 garmentPrintColor;
-vec3 garmentBaseAlbedo;
 float garmentPbrShade;
 
 #ifdef USE_GARMENT_TEXT
@@ -134,8 +153,6 @@ vec4 garmentCompositeUiLayer( vec4 base, vec4 layer ) {
 }
 
 vec4 garmentCompositePrintElement( vec4 printColor, vec4 layer ) {
-  printColor.rgb *= ( 1.0 - layer.a );
-  printColor.a *= ( 1.0 - layer.a );
   return garmentCompositeUiLayer( printColor, layer );
 }
 
@@ -201,18 +218,29 @@ vec2 garmentLogoToStampUv( vec2 worldUv, vec2 anchor, float rotation, float uplo
 }
 
 vec2 garmentLogoStampAtlasUv( vec2 stampUv, float slotIndex ) {
-  vec2 cell = vec2( mod( slotIndex, 2.0 ), floor( slotIndex * 0.5 ) );
-  return ( cell + stampUv ) * 0.5;
+  float grid = max( uLogoStampGrid, 1.0 );
+  vec2 cell = vec2( mod( slotIndex, grid ), floor( slotIndex / grid ) );
+  return ( cell + stampUv ) / grid;
 }
 #endif
 
 #ifdef USE_GARMENT_TEXT
-vec2 garmentTextMaskFillUv( vec2 stampUv ) {
-  return vec2( stampUv.x, stampUv.y * 0.5 );
+vec2 garmentTextMaskFillUv( vec2 stampUv, vec2 stampSize ) {
+  float halfX = 0.5 / max( stampSize.x, 1.0 );
+  float halfY = 0.5 / max( stampSize.y * 2.0, 1.0 );
+  return vec2(
+    clamp( stampUv.x, halfX, 1.0 - halfX ),
+    clamp( stampUv.y * 0.5, halfY, 0.5 - halfY )
+  );
 }
 
-vec2 garmentTextMaskStrokeUv( vec2 stampUv ) {
-  return vec2( stampUv.x, stampUv.y * 0.5 + 0.5 );
+vec2 garmentTextMaskStrokeUv( vec2 stampUv, vec2 stampSize ) {
+  float halfX = 0.5 / max( stampSize.x, 1.0 );
+  float halfY = 0.5 / max( stampSize.y * 2.0, 1.0 );
+  return vec2(
+    clamp( stampUv.x, halfX, 1.0 - halfX ),
+    clamp( stampUv.y * 0.5 + 0.5, 0.5 + halfY, 1.0 - halfY )
+  );
 }
 
 float garmentNameInsideStamp( vec2 stampUv ) {
@@ -232,12 +260,12 @@ float garmentNameMaskAlphaAA( float alpha ) {
   return smoothstep( 0.5 - fw, 0.5 + fw, alpha );
 }
 
-float garmentNameSampleFillChannel( sampler2D tex, vec2 stampUv, float channel ) {
-  return garmentNameMaskAlphaAA( garmentNameFillChannel( tex, garmentTextMaskFillUv( stampUv ), channel ) ) * garmentNameInsideStamp( stampUv );
+float garmentNameSampleFillChannel( sampler2D tex, vec2 stampUv, float channel, vec2 stampSize ) {
+  return garmentNameMaskAlphaAA( garmentNameFillChannel( tex, garmentTextMaskFillUv( stampUv, stampSize ), channel ) ) * garmentNameInsideStamp( stampUv );
 }
 
-float garmentNameSampleStrokeChannel( sampler2D tex, vec2 stampUv, float channel ) {
-  return garmentNameMaskAlphaAA( garmentNameFillChannel( tex, garmentTextMaskStrokeUv( stampUv ), channel ) ) * garmentNameInsideStamp( stampUv );
+float garmentNameSampleStrokeChannel( sampler2D tex, vec2 stampUv, float channel, vec2 stampSize ) {
+  return garmentNameMaskAlphaAA( garmentNameFillChannel( tex, garmentTextMaskStrokeUv( stampUv, stampSize ), channel ) ) * garmentNameInsideStamp( stampUv );
 }
 
 float garmentNameInsidePart( vec2 worldUv, vec4 bounds ) {
@@ -387,10 +415,10 @@ vec4 garmentGizmoButtons( vec2 worldUv, vec2 anchor, float scale, vec2 halfPx, f
 #endif
 `;
 
-const garmentGizmoLightsFragment =  `
+const garmentGizmoLightsFragment = `
 #ifdef USE_PRINT
   if ( garmentGizmoUiColor.a > 0.001 ) {
-    vec3 fabricShaded = garmentBaseAlbedo * garmentPbrShade;
+    vec3 fabricShaded = diffuseColor.rgb * garmentPbrShade;
 
     gl_FragColor.rgb = garmentGizmoUiColor.rgb + fabricShaded * ( 1.0 - garmentGizmoUiColor.a );
   }

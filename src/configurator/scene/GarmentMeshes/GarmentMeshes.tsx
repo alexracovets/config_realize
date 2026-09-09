@@ -41,7 +41,7 @@ const GarmentMeshes = () => {
         return collectMeshDescendants(node).map((meshNode, index) => ({
           key: `${part.id}-${meshName}-${index}`,
           registryKey: part.id,
-          meshName: meshNode.name || meshName,
+          meshName,
           node: meshNode,
           renderOrder: part.renderOrder ?? 0,
         }));

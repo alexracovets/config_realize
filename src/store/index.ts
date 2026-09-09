@@ -8,6 +8,8 @@ export {
   areGarmentPrintStoresSynced,
   useConfigurationCart,
 } from './useConfigurationCart';
+export { applyConfigurationHistoryEntry, redoConfiguration, undoConfiguration, useConfigurationHistory } from './useConfigurationHistory';
+export type { configurationHistoryEntryType } from './useConfigurationHistory';
 export { useConfiguratorProduct } from './useConfiguratorProduct';
 export { useConfiguratorSceneLoad } from './useConfiguratorSceneLoad';
 export { buildDefaultGradients, DEFAULT_COLOR, DEFAULT_PART_GRADIENT, DISABLED_PART_GRADIENT, resolveGradientColors, useGarmentColor } from './useGarmentColor';
@@ -40,9 +42,13 @@ export {
   resolveTestoPositionLimits,
   useGarmentTesto,
 } from './useGarmentTesto';
-export { resolveLogoInstancesForRender, useGarmentLogo } from './useGarmentLogo';
+export { resolveCanAddUserLogo, resolveLogoInstancesForRender, useGarmentLogo } from './useGarmentLogo';
 export { resolvePrintPositionConflicts } from './resolvePrintPositionConflicts';
 export { useAddProductDesignDialog } from './useAddProductDesignDialog';
+export { useEmbeddedStoreHeader } from './useEmbeddedStoreHeader';
 export { useInfoDialog } from './useInfoDialog';
+export { useScrollHintTutorial } from './useScrollHintTutorial';
+export { useShareDialog } from './useShareDialog';
+export type { shareDialogStatusType } from './useShareDialog';
 export { useTutorialDialog } from './useTutorialDialog';
 export { resolveCheckoutPrintAvailability, useCheckout } from './useCheckout';

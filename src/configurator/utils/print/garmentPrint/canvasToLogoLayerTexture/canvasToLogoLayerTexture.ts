@@ -1,8 +1,8 @@
-import { ClampToEdgeWrapping, LinearFilter, NoColorSpace, RGBAFormat, Texture } from 'three';
+import { ClampToEdgeWrapping, LinearFilter, RGBAFormat, SRGBColorSpace, Texture } from 'three';
 
 const canvasToLogoLayerTexture = (canvas: HTMLCanvasElement): Texture => {
   const texture = new Texture(canvas);
-  texture.colorSpace = NoColorSpace;
+  texture.colorSpace = SRGBColorSpace;
   texture.format = RGBAFormat;
   texture.premultiplyAlpha = false;
   texture.flipY = false;
@@ -11,6 +11,7 @@ const canvasToLogoLayerTexture = (canvas: HTMLCanvasElement): Texture => {
   texture.generateMipmaps = false;
   texture.minFilter = LinearFilter;
   texture.magFilter = LinearFilter;
+  texture.anisotropy = 16;
   texture.needsUpdate = true;
   return texture;
 };

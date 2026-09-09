@@ -1,5 +1,7 @@
 import { CollectionPageLoader } from '@pages';
 
+export const dynamic = 'force-dynamic';
+
 type collectionRoutePropsType = {
   params: Promise<{ collectionHandle: string }>;
 };

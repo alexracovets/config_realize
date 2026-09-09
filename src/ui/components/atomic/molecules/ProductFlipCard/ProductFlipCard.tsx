@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { AtomImage } from '@atoms';
+import { AtomImage, Box } from '@atoms';
 import { useAppNavigate, useGarmentCatalogPreload } from '@hooks';
 import type { productFlipCardPropsType } from '@types';
 import { buildConfiguratorPath, cn, resolveProductFlipCardSrc } from '@utils';
@@ -64,19 +64,14 @@ const ProductFlipCard = ({ collection, slug, alt, previewSrc, activePreviewSrc, 
         className,
       )}
     >
-      <div
-        className={cn(
-          'relative size-full transform-3d transition-transform duration-600 ease-in-out',
-          'group-hover/card:transform-[rotateY(180deg)] group-focus-within/card:transform-[rotateY(180deg)]',
-        )}
-      >
-        <div className="absolute inset-0 backface-hidden">
+      <Box variant="product_flip_card_inner">
+        <Box variant="product_flip_card_front">
           <AtomImage src={frontSrc} alt={alt} priority loading="eager" className="size-full rounded-[8px] bg-gray-20 backface-hidden" />
-        </div>
-        <div className="absolute inset-0 transform-[rotateY(180deg)] backface-hidden">
+        </Box>
+        <Box variant="product_flip_card_back">
           <AtomImage src={backSrc} alt={alt} loading="eager" className="size-full rounded-[8px] bg-gray-20 backface-hidden" />
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Link>
   );
 };

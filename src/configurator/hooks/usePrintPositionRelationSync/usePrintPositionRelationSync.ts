@@ -20,13 +20,7 @@ type printInstanceSnapshotType = {
 
 const didInstanceChange = (prev: printInstanceSnapshotType | undefined, next: printInstanceSnapshotType) => {
   if (!prev) return true;
-  return (
-    prev.uv.x !== next.uv.x ||
-    prev.uv.y !== next.uv.y ||
-    prev.fontSize !== next.fontSize ||
-    prev.rotation !== next.rotation ||
-    prev.text !== next.text
-  );
+  return prev.uv.x !== next.uv.x || prev.uv.y !== next.uv.y || prev.fontSize !== next.fontSize || prev.rotation !== next.rotation || prev.text !== next.text;
 };
 
 const toSnapshot = (instance: { id: string; uv: { x: number; y: number }; fontSize: number; text: string; rotation: number }): printInstanceSnapshotType => ({
@@ -59,7 +53,12 @@ const usePrintPositionRelationSync = () => {
 
     const unsubName = useGarmentName.subscribe((state) => {
       const next = state.instances.map(toSnapshot);
-      const changed = state.instances.filter((instance) => didInstanceChange(previousNames.find((item) => item.id === instance.id), toSnapshot(instance)));
+      const changed = state.instances.filter((instance) =>
+        didInstanceChange(
+          previousNames.find((item) => item.id === instance.id),
+          toSnapshot(instance),
+        ),
+      );
       previousNames = next;
 
       runSync(() => {
@@ -78,7 +77,12 @@ const usePrintPositionRelationSync = () => {
 
     const unsubNumber = useGarmentNumber.subscribe((state) => {
       const next = state.instances.map(toSnapshot);
-      const changed = state.instances.filter((instance) => didInstanceChange(previousNumbers.find((item) => item.id === instance.id), toSnapshot(instance)));
+      const changed = state.instances.filter((instance) =>
+        didInstanceChange(
+          previousNumbers.find((item) => item.id === instance.id),
+          toSnapshot(instance),
+        ),
+      );
       previousNumbers = next;
 
       runSync(() => {
@@ -97,7 +101,12 @@ const usePrintPositionRelationSync = () => {
 
     const unsubTesto = useGarmentTesto.subscribe((state) => {
       const next = state.instances.map(toSnapshot);
-      const changed = state.instances.filter((instance) => didInstanceChange(previousTestos.find((item) => item.id === instance.id), toSnapshot(instance)));
+      const changed = state.instances.filter((instance) =>
+        didInstanceChange(
+          previousTestos.find((item) => item.id === instance.id),
+          toSnapshot(instance),
+        ),
+      );
       previousTestos = next;
 
       runSync(() => {

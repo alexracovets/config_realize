@@ -15,7 +15,6 @@ import { useGarmentMaterialRegistry } from '@configurator/providers';
 import type { garmentConfigType } from '@types';
 import { applyGarmentGizmoHover, applyGarmentLogoGizmoButtonsReveal } from '@configurator/utils';
 
-const NAME_STEP = 4;
 const LOGO_STEP = 7;
 
 type useLogoUniformSyncOptions = {
@@ -42,7 +41,7 @@ const useLogoUniformSync = ({ product, activeStep, isGizmoVisible, selectedInsta
   }, [activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex]);
 
   useEffect(() => {
-    if (activeStep === NAME_STEP || activeStep === LOGO_STEP) return;
+    if (activeStep === LOGO_STEP) return;
     setGizmoButtonsRevealTarget(-1);
   }, [activeStep]);
 

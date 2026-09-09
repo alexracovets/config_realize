@@ -98,9 +98,9 @@ const useGarmentTextGizmoUniforms = () => {
     const gizmoRotation = resolveProductGizmoRotation(product);
 
     for (const part of product.parts) {
-      const nameFrame = buildGizmoFrameUniforms(nameInstancesForRender, part.id, nameGizmoEnabled, gizmoRotation);
-      const numberFrame = buildGizmoFrameUniforms(numberInstancesForRender, part.id, numberGizmoEnabled, gizmoRotation);
-      const testoFrame = buildGizmoFrameUniforms(testoInstancesForRender, part.id, testoGizmoEnabled, gizmoRotation);
+      const nameFrame = buildGizmoFrameUniforms(nameInstancesForRender, part.id, nameGizmoEnabled, gizmoRotation, false);
+      const numberFrame = buildGizmoFrameUniforms(numberInstancesForRender, part.id, numberGizmoEnabled, gizmoRotation, false);
+      const testoFrame = buildGizmoFrameUniforms(testoInstancesForRender, part.id, testoGizmoEnabled, gizmoRotation, false);
 
       for (const material of getMaterials(part.id)) {
         applyGarmentGizmoRotation(material, gizmoRotation);
@@ -120,7 +120,7 @@ const useGarmentTextGizmoUniforms = () => {
   }, [isGizmoVisible]);
 
   useEffect(() => {
-    if (activeStep === NAME_STEP || activeStep === NUMBER_STEP || activeStep === TESTO_STEP || activeStep === LOGO_STEP) return;
+    if (activeStep === LOGO_STEP) return;
     setGizmoButtonsRevealTarget(-1);
   }, [activeStep]);
 

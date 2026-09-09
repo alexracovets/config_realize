@@ -8,7 +8,13 @@ import type {
   textPrintPositionType,
 } from '@types';
 import { NAME_REFERENCE_FONT_SIZE } from '@configurator/constants';
-import { measureNameGizmoHalf, resolvePartPrintRotation, resolvePrintRelationUv, resolveTextContentRotationDeg, resolveTextGizmoMeasureOptions } from '@configurator/utils';
+import {
+  measureNameGizmoHalf,
+  resolvePartPrintRotation,
+  resolvePrintRelationUv,
+  resolveTextContentRotationDeg,
+  resolveTextGizmoMeasureOptions,
+} from '@configurator/utils';
 import { useConfiguratorProduct, useGarmentName, useGarmentNumber, useGarmentTesto } from '@store';
 
 type printRelationKindType = 'name' | 'number' | 'testo';
@@ -122,7 +128,10 @@ const snapFollowerToLeader = (
   writeFollower(follower.id, { uv, partId: leader.partId });
 };
 
-const runSyncPass = (buckets: printRelationBucketType[], options: { leaderKind?: printRelationKindType; leaderInstanceId?: string; followerInstanceId?: string }) => {
+const runSyncPass = (
+  buckets: printRelationBucketType[],
+  options: { leaderKind?: printRelationKindType; leaderInstanceId?: string; followerInstanceId?: string },
+) => {
   const product = useConfiguratorProduct.getState().product;
 
   for (const followerBucket of buckets) {

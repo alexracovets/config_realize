@@ -1,0 +1,1 @@
+export { useShareConfiguration } from './useShareConfiguration';

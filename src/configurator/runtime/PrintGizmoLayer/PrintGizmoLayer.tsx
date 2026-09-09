@@ -1,31 +1,14 @@
 'use client';
 
-import type { fontSizeLimitsType, PrintPlacementInstance } from '@configurator/types';
-import {
-  buildLogoGizmoElements,
-  buildNameGizmoElements,
-  buildNumberGizmoElements,
-  buildPrintablePartMeshes,
-  buildTestoGizmoElements,
-} from '@configurator/gizmo';
-import type { nameInstanceType, numberInstanceType, testoInstanceType } from '@types';
+import type { PrintPlacementInstance } from '@configurator/types';
+import { buildLogoGizmoElements, buildPrintablePartMeshes } from '@configurator/gizmo';
 import { useGizmoButtonHover, useGizmoButtonScaleSync, useGizmoSelection, usePrintPlacementMigration, usePrintPositionRelationSync } from '@configurator/hooks';
 import { registerPrintRelationE2eDebug } from '@configurator/hooks/registerPrintRelationE2eDebug';
-import { resolvePrintCmScale } from '@configurator/mappers';
 import { PrintGizmoInstance } from '@configurator/runtime/PrintGizmoLayer/PrintGizmoInstance';
 import { repairPrintInstancePlacement, resolvePrintAtlasSize } from '@configurator/utils';
-import {
-  resolveNamePositionLimits,
-  resolveNumberPositionLimits,
-  resolveTestoPositionLimits,
-  useConfigurationControl,
-  useConfiguratorProduct,
-  useGarmentLogo,
-  useGarmentName,
-  useGarmentNumber,
-  useGarmentTesto,
-} from '@store';
+import { useConfigurationControl, useConfiguratorProduct, useGarmentLogo, useGarmentName, useGarmentNumber, useGarmentTesto } from '@store';
 import { memo, useCallback, useEffect, useMemo } from 'react';
+
 const NAME_STEP = 4;
 const NUMBER_STEP = 5;
 const TESTO_STEP = 6;
@@ -38,26 +21,14 @@ const PrintGizmoLayer = memo(() => {
   useEffect(() => registerPrintRelationE2eDebug(), []);
   const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
 
-  const namePositions = useGarmentName((state) => state.positions);
   const nameInstances = useGarmentName((state) => state.instances);
-  const nameSelectedInstanceId = useGarmentName((state) => state.selectedInstanceId);
-  const setNameSelectedInstance = useGarmentName((state) => state.setSelectedInstance);
   const clearNameSelectedInstance = useGarmentName((state) => state.clearSelectedInstance);
-  const bringNameInstanceToFront = useGarmentName((state) => state.bringInstanceToFront);
 
-  const numberPositions = useGarmentNumber((state) => state.positions);
   const numberInstances = useGarmentNumber((state) => state.instances);
-  const numberSelectedInstanceId = useGarmentNumber((state) => state.selectedInstanceId);
-  const setNumberSelectedInstance = useGarmentNumber((state) => state.setSelectedInstance);
   const clearNumberSelectedInstance = useGarmentNumber((state) => state.clearSelectedInstance);
-  const bringNumberInstanceToFront = useGarmentNumber((state) => state.bringInstanceToFront);
 
-  const testoPositions = useGarmentTesto((state) => state.positions);
   const testoInstances = useGarmentTesto((state) => state.instances);
-  const testoSelectedInstanceId = useGarmentTesto((state) => state.selectedInstanceId);
-  const setTestoSelectedInstance = useGarmentTesto((state) => state.setSelectedInstance);
   const clearTestoSelectedInstance = useGarmentTesto((state) => state.clearSelectedInstance);
-  const bringTestoInstanceToFront = useGarmentTesto((state) => state.bringInstanceToFront);
 
   const logoInstances = useGarmentLogo((state) => state.instances);
   const logoSelectedInstanceId = useGarmentLogo((state) => state.selectedInstanceId);
@@ -114,162 +85,27 @@ const PrintGizmoLayer = memo(() => {
     migratePlacementRotation: false,
   });
 
-  const printReferenceCm = useConfiguratorProduct((state) => state.business.printReferenceCm);
-  const cmScale = useMemo(() => resolvePrintCmScale(product, printReferenceCm), [printReferenceCm, product]);
+  const gizmoStep = isGizmoVisible && activeStep === LOGO_STEP ? LOGO_STEP : null;
 
-  const namePositionsByKey = useMemo(() => new Map(namePositions.map((position) => [position.key, position])), [namePositions]);
-  const numberPositionsByKey = useMemo(() => new Map(numberPositions.map((position) => [position.key, position])), [numberPositions]);
-  const testoPositionsByKey = useMemo(() => new Map(testoPositions.map((position) => [position.key, position])), [testoPositions]);
-
-  const resolveNameFontSizeLimits = useCallback(
-    (instance: nameInstanceType): fontSizeLimitsType => {
-      const position = namePositionsByKey.get(instance.positionKey);
-      if (!position) return { min: 0, max: Infinity };
-      const limits = resolveNamePositionLimits(product, position, cmScale);
-      return { min: limits.heightMin, max: limits.heightMax };
-    },
-    [cmScale, namePositionsByKey, product],
-  );
-
-  const resolveNumberFontSizeLimits = useCallback(
-    (instance: numberInstanceType): fontSizeLimitsType => {
-      const position = numberPositionsByKey.get(instance.positionKey);
-      if (!position) return { min: 0, max: Infinity };
-      const limits = resolveNumberPositionLimits(product, position, cmScale);
-      return { min: limits.heightMin, max: limits.heightMax };
-    },
-    [cmScale, numberPositionsByKey, product],
-  );
-
-  const resolveTestoFontSizeLimits = useCallback(
-    (instance: testoInstanceType): fontSizeLimitsType => {
-      const position = testoPositionsByKey.get(instance.positionKey);
-      if (!position) return { min: 0, max: Infinity };
-      const limits = resolveTestoPositionLimits(product, position, cmScale);
-      return { min: limits.heightMin, max: limits.heightMax };
-    },
-    [cmScale, product, testoPositionsByKey],
-  );
-
-  const gizmoStep = !isGizmoVisible
-    ? null
-    : activeStep === NAME_STEP
-      ? NAME_STEP
-      : activeStep === NUMBER_STEP
-        ? NUMBER_STEP
-        : activeStep === TESTO_STEP
-          ? TESTO_STEP
-          : activeStep === LOGO_STEP
-            ? LOGO_STEP
-            : null;
-
-  const nameInstancesForGizmo = useMemo(
-    () => nameInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
-    [nameInstances, product.parts],
-  );
-  const numberInstancesForGizmo = useMemo(
-    () => numberInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
-    [numberInstances, product.parts],
-  );
-  const testoInstancesForGizmo = useMemo(
-    () => testoInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
-    [testoInstances, product.parts],
-  );
   const logoInstancesForGizmo = useMemo(
     () => logoInstances.map((instance) => repairPrintInstancePlacement(instance, product.parts)),
     [logoInstances, product.parts],
   );
 
   const elements = useMemo(() => {
-    if (!isGizmoVisible) return [];
+    if (!gizmoStep) return [];
+    return buildLogoGizmoElements({ product, instances: logoInstancesForGizmo });
+  }, [gizmoStep, logoInstancesForGizmo, product]);
 
-    if (activeStep === NAME_STEP) {
-      return buildNameGizmoElements({ product, instances: nameInstancesForGizmo, resolveFontSizeLimits: resolveNameFontSizeLimits });
-    }
-    if (activeStep === NUMBER_STEP) {
-      return buildNumberGizmoElements({ product, instances: numberInstancesForGizmo, resolveFontSizeLimits: resolveNumberFontSizeLimits });
-    }
-    if (activeStep === TESTO_STEP) {
-      return buildTestoGizmoElements({ product, instances: testoInstancesForGizmo, resolveFontSizeLimits: resolveTestoFontSizeLimits });
-    }
-    if (activeStep === LOGO_STEP) {
-      return buildLogoGizmoElements({ product, instances: logoInstancesForGizmo });
-    }
-    return [];
-  }, [
-    activeStep,
-    isGizmoVisible,
-    logoInstancesForGizmo,
-    nameInstancesForGizmo,
-    numberInstancesForGizmo,
-    product,
-    resolveNameFontSizeLimits,
-    resolveNumberFontSizeLimits,
-    resolveTestoFontSizeLimits,
-    testoInstancesForGizmo,
-  ]);
-
-  const selectedInstanceId =
-    activeStep === NAME_STEP
-      ? nameSelectedInstanceId
-      : activeStep === NUMBER_STEP
-        ? numberSelectedInstanceId
-        : activeStep === TESTO_STEP
-          ? testoSelectedInstanceId
-          : activeStep === LOGO_STEP
-            ? logoSelectedInstanceId
-            : null;
-
-  const selectionStore = useMemo(() => {
-    if (activeStep === NUMBER_STEP) {
-      return {
-        selectedInstanceId: numberSelectedInstanceId,
-        setSelectedInstance: setNumberSelectedInstance,
-        clearSelectedInstance: clearNumberSelectedInstance,
-        bringInstanceToFront: bringNumberInstanceToFront,
-      };
-    }
-    if (activeStep === TESTO_STEP) {
-      return {
-        selectedInstanceId: testoSelectedInstanceId,
-        setSelectedInstance: setTestoSelectedInstance,
-        clearSelectedInstance: clearTestoSelectedInstance,
-        bringInstanceToFront: bringTestoInstanceToFront,
-      };
-    }
-    if (activeStep === LOGO_STEP) {
-      return {
-        selectedInstanceId: logoSelectedInstanceId,
-        setSelectedInstance: setLogoSelectedInstance,
-        clearSelectedInstance: clearLogoSelectedInstance,
-        bringInstanceToFront: bringLogoInstanceToFront,
-      };
-    }
-    return {
-      selectedInstanceId: nameSelectedInstanceId,
-      setSelectedInstance: setNameSelectedInstance,
-      clearSelectedInstance: clearNameSelectedInstance,
-      bringInstanceToFront: bringNameInstanceToFront,
-    };
-  }, [
-    activeStep,
-    bringLogoInstanceToFront,
-    bringNameInstanceToFront,
-    bringNumberInstanceToFront,
-    bringTestoInstanceToFront,
-    clearLogoSelectedInstance,
-    clearNameSelectedInstance,
-    clearNumberSelectedInstance,
-    clearTestoSelectedInstance,
-    logoSelectedInstanceId,
-    nameSelectedInstanceId,
-    numberSelectedInstanceId,
-    setLogoSelectedInstance,
-    setNameSelectedInstance,
-    setNumberSelectedInstance,
-    setTestoSelectedInstance,
-    testoSelectedInstanceId,
-  ]);
+  const selectionStore = useMemo(
+    () => ({
+      selectedInstanceId: logoSelectedInstanceId,
+      setSelectedInstance: setLogoSelectedInstance,
+      clearSelectedInstance: clearLogoSelectedInstance,
+      bringInstanceToFront: bringLogoInstanceToFront,
+    }),
+    [bringLogoInstanceToFront, clearLogoSelectedInstance, logoSelectedInstanceId, setLogoSelectedInstance],
+  );
 
   const atlasSize = useMemo(() => resolvePrintAtlasSize(product), [product]);
   const printableParts = useMemo(() => buildPrintablePartMeshes(product.parts), [product.parts]);
@@ -291,7 +127,7 @@ const PrintGizmoLayer = memo(() => {
   }, [activeStep, clearLogoSelectedInstance]);
 
   useGizmoSelection({ elements, atlasSize, gizmoStep, isGizmoVisible, store: selectionStore });
-  useGizmoButtonHover({ elements, atlasSize, gizmoStep, selectedInstanceId });
+  useGizmoButtonHover({ elements, atlasSize, gizmoStep, selectedInstanceId: logoSelectedInstanceId });
   useGizmoButtonScaleSync({ product });
 
   if (elements.length === 0) return null;
@@ -305,7 +141,7 @@ const PrintGizmoLayer = memo(() => {
           elements={elements}
           printableParts={printableParts}
           gizmoStep={gizmoStep}
-          selectedInstanceId={selectedInstanceId}
+          selectedInstanceId={logoSelectedInstanceId}
         />
       ))}
     </group>

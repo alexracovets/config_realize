@@ -11,11 +11,11 @@ const ModalInfoTabContent = ({ tab, tabValue }: modalInfoTabContentPropsType) =>
           <h2>{tab.title}</h2>
         </Text>
       ) : null}
-      <Flex className="w-full flex-col gap-6">
+      <Flex variant="modal_info_tab_content">
         {tab.sections.map((section) => (
           <Flex key={section.id} variant="info_part">
             {section.heading ? (
-              <Text variant="h3" className={section.headingClassName} asChild>
+              <Text variant={section.headingClassName ? 'h3_italic_uppercase' : 'h3'} asChild>
                 <h3>{section.heading}</h3>
               </Text>
             ) : null}

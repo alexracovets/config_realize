@@ -1,6 +1,6 @@
 'use client';
 
-import type { configurationPositionPickerInstanceType, numberPartFormPropsType, numberPositionType } from '@types';
+import type { numberPartFormPropsType, numberPositionType } from '@types';
 import { AccordionAtom, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL } from '@constants';
 import { useConfigurationPositionPicker, usePrintCmScale, usePrintUnits } from '@hooks';
@@ -59,7 +59,7 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
   if (!instance) return null;
 
   return (
-    <Flex variant="configurator_part" className="gap-5 max-xl:gap-4 pt-2">
+    <Flex variant="configurator_part_spaced">
       <Flex variant="configurator_part">
         <Text variant="configurator_control_label">Numero</Text>
         <input
@@ -70,14 +70,13 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
           maxLength={limits.maxLength}
           onChange={(e) => setPreview(instanceId, { text: sanitizeNumberText(e.target.value) })}
           onBlur={commitFromPreview}
-          className="w-full h-10 max-xl:h-8 bg-white border border-input-border rounded-[8px] max-xl:rounded-[6.5px] px-3 max-xl:px-2.5 text-sm max-xl:text-[13px] font-inter text-default outline-none focus:border-active transition-colors"
+          className="w-full h-10 max-xl:h-8 bg-white border border-input-border rounded-lg max-xl:rounded-[6.5px] px-3 max-xl:px-2.5 text-sm max-xl:text-[13px] font-inter text-default outline-none focus:border-active transition-colors"
           placeholder={placeholder}
         />
       </Flex>
       <FontSelectRow font={instance.font} onChange={(font) => commit({ font })} />
 
       <ColorTabControl
-        tabVariant="text"
         textColor={previewTextColor ?? instance.textColor}
         strokeColor={previewStrokeColor ?? instance.strokeColor}
         onTextColor={(textColor) => commit({ textColor })}
@@ -122,7 +121,7 @@ const NumberPartForm = ({ instanceId, limits, placeholder, lineHeightShow }: num
       />
 
       <Button variant="delete" size="delete" onClick={() => removeInstance(instanceId)}>
-        <SvgIcon name="delete" className="w-[14px] h-[15.75px] max-xl:w-2.75 max-xl:h-[12.5px]" />
+        <SvgIcon name="delete" className="w-3.5 h-[15.75px] max-xl:w-2.75 max-xl:h-[12.5px]" />
         Eliminare
       </Button>
     </Flex>
@@ -151,19 +150,10 @@ const ConfigurationNumbers = () => {
     [addInstance, product],
   );
 
-  const resolveFocusFromPosition = useCallback((position: numberPositionType) => ({ partId: position.partId, uv: position.uv }), []);
-
-  const resolveFocusFromInstance = useCallback((instance: configurationPositionPickerInstanceType) => {
-    const item = useGarmentNumber.getState().instances.find((entry) => entry.id === instance.id);
-    return item ? { partId: item.partId, uv: item.uv } : null;
-  }, []);
-
   const { openItems, handleItemActivate, handleOpenItemsChange, handlePositionSelect } = useConfigurationPositionPicker({
     positions,
     instances,
     onAddInstance: handleAddInstance,
-    resolveFocusFromPosition,
-    resolveFocusFromInstance,
   });
 
   const pickerPositions = useMemo(() => {
@@ -194,7 +184,7 @@ const ConfigurationNumbers = () => {
   if (positions.length === 0 || !limitsByPositionKey || !numberDefaults) return null;
 
   return (
-    <Flex key={product.path} variant="step_design" className="gap-3 max-xl:gap-2.5">
+    <Flex key={product.path} variant="step_design_compact">
       <ConfigurationPositionSelect
         label={CONFIGURATOR_NUMBER_POSITION_SELECT_LABEL}
         title={numberDefaults.title}

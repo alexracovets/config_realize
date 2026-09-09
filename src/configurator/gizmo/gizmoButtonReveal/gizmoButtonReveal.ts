@@ -1,10 +1,11 @@
-import { NAME_SLOT_COUNT } from '@configurator/constants';
+import { LOGO_SHADER_SLOT_COUNT, NAME_SLOT_COUNT } from '@configurator/constants';
 
+const REVEAL_SLOT_COUNT = Math.max(NAME_SLOT_COUNT, LOGO_SHADER_SLOT_COUNT);
 const REVEAL_LERP = 0.35;
 const REVEAL_EPSILON = 0.001;
 
-const revealTarget = Array.from({ length: NAME_SLOT_COUNT }, () => 0);
-const revealCurrent = Array.from({ length: NAME_SLOT_COUNT }, () => 0);
+const revealTarget = Array.from({ length: REVEAL_SLOT_COUNT }, () => 0);
+const revealCurrent = Array.from({ length: REVEAL_SLOT_COUNT }, () => 0);
 let rafId: number | null = null;
 const listeners = new Set<() => void>();
 
@@ -15,7 +16,7 @@ const notify = () => {
 const stepRevealAnimation = () => {
   let animating = false;
 
-  for (let index = 0; index < NAME_SLOT_COUNT; index += 1) {
+  for (let index = 0; index < REVEAL_SLOT_COUNT; index += 1) {
     const target = revealTarget[index];
     const prev = revealCurrent[index];
     revealCurrent[index] += (target - revealCurrent[index]) * REVEAL_LERP;
@@ -48,7 +49,7 @@ const setGizmoButtonsRevealTarget = (slotIndex: number, snap = false) => {
   let changed = false;
   let needsAnimation = false;
 
-  for (let index = 0; index < NAME_SLOT_COUNT; index += 1) {
+  for (let index = 0; index < REVEAL_SLOT_COUNT; index += 1) {
     const next = index === slotIndex && slotIndex >= 0 ? 1 : 0;
     if (revealTarget[index] !== next) {
       revealTarget[index] = next;

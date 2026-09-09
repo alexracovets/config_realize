@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { AtomInputHex, AtomPopover, AtomPopoverContent, AtomPopoverTrigger } from '@atoms';
+import { AtomInputHex, AtomPopover, AtomPopoverContent, AtomPopoverTrigger, Box } from '@atoms';
 import type { colorPickerPropsType } from '@types';
 
 import { hexToHsva, hsvaToHex, ShadeSlider, Wheel } from '@uiw/react-color';
@@ -82,13 +82,7 @@ const ColorPicker = ({ color, onChange, onPreviewChange, trigger }: colorPickerP
   return (
     <AtomPopover>
       <AtomPopoverTrigger asChild>{trigger}</AtomPopoverTrigger>
-      <AtomPopoverContent
-        variant="color_picker"
-        align="center"
-        collisionPadding={16}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-      >
+      <AtomPopoverContent variant="color_picker" align="center" collisionPadding={16} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp}>
         <style>
           {`
             .w-color-wheel-fill { width: 25px!important; height: 25px!important; border: 2px solid #fff!important;}
@@ -101,9 +95,9 @@ const ColorPicker = ({ color, onChange, onPreviewChange, trigger }: colorPickerP
         </style>
         <Wheel color={liveHsva} onChange={handleWheelChange} width={wheelSize} height={wheelSize} />
         <ShadeSlider hsva={liveHsva} onChange={handleShadeChange} style={{ width: '100%', height: 12 }} />
-        <div className="hidden w-full max-sm:block">
+        <Box variant="palette_carousel_mobile">
           <AtomInputHex value={liveHex} onChange={handleHexChange} />
-        </div>
+        </Box>
       </AtomPopoverContent>
     </AtomPopover>
   );

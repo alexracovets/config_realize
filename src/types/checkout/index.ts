@@ -18,10 +18,12 @@ export type {
   orderCuttingExportDesignLayerSpecType,
   orderCuttingExportDownloadFileType,
   orderCuttingExportGradientSpecType,
+  orderCuttingExportLogoStampSpecType,
   orderCuttingExportPrintAtlasType,
   orderCuttingExportProductType,
   orderCuttingExportStepDetailParamType,
   orderCuttingExportStepDetailType,
+  orderCuttingExportStepKeyType,
   orderCuttingExportTextLayerSpecType,
   orderCuttingExportType,
 } from './orderCuttingExport';

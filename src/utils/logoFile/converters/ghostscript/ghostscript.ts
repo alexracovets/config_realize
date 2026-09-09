@@ -66,9 +66,7 @@ const warmupGhostscriptWorker = (): void => {
   try {
     const id = ++jobId;
     getWorker().postMessage({ type: 'warmup', id });
-  } catch {
-
-  }
+  } catch {}
 };
 
 const convertEpsPsToDisplayUrl = (bytes: Uint8Array, ext: 'eps' | 'ps'): Promise<string> =>

@@ -10,7 +10,6 @@ import { buildDownloadPreviewKey, OrderCuttingExportPdfDocument } from '@utils/b
 import type { orderCuttingExportPdfImagesType } from '@utils/buildOrderCuttingExportPdf/OrderCuttingExportPdfDocument';
 
 type buildOrderCuttingExportPdfBlobOptionsType = {
-
   downloadUrls?: cuttingExportDownloadUrlEntryType[];
 
   linkUrls?: cuttingExportDownloadUrlEntryType[];

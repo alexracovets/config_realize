@@ -8,6 +8,7 @@ import {
   AtomPopover,
   AtomPopoverContent,
   AtomPopoverTrigger,
+  Box,
   Button,
   Grid,
   Text,
@@ -140,13 +141,11 @@ const ProductCatalogPopover = ({
 
   return (
     <>
-      <div className="contents max-sm:hidden">
+      <Box variant="responsive_hidden_mobile">
         <AtomPopover open={popoverOpen} onOpenChange={handlePopoverOpenChange}>
           <AtomPopoverTrigger asChild>{children}</AtomPopoverTrigger>
           <AtomPopoverContent side={contentSide} align={contentAlign} className="flex flex-col gap-1 p-3" style={{ width: popoverWidthPx }}>
-            <Text className="text-[16px] font-semibold uppercase text-default">
-              {view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}
-            </Text>
+            <Text variant="catalog_popover_title">{view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}</Text>
             {catalogBackButton}
             <Grid
               style={{
@@ -160,24 +159,24 @@ const ProductCatalogPopover = ({
             </Grid>
           </AtomPopoverContent>
         </AtomPopover>
-      </div>
+      </Box>
 
-      <div className="hidden max-sm:contents">
+      <Box variant="responsive_mobile_only">
         <AtomDialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
           <AtomDialogTrigger asChild>{children}</AtomDialogTrigger>
           <AtomDialogContent
             aria-describedby={undefined}
-            className="h-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] min-w-0 max-w-140 gap-3 overflow-hidden p-4 pt-10"
+            className="h-auto max-h-[calc(var(--viewport-height)-var(--embed-header-offset)-32px)] w-[calc(100%-32px)] min-w-0 max-w-140 gap-3 overflow-hidden p-4 pt-10"
             closeButtonClassName="top-3 right-3 bg-transparent opacity-100"
           >
             <AtomDialogTitle className="text-[16px] font-semibold uppercase text-default">
               {view === 'collections' ? 'Seleziona collezione' : 'Seleziona prodotto'}
             </AtomDialogTitle>
             {catalogBackButton}
-            <Grid className="max-h-[calc(100dvh-140px)] grid-cols-3 gap-2 overflow-y-auto overscroll-contain pr-1">{catalogOptions}</Grid>
+            <Grid variant="catalog_dialog_grid">{catalogOptions}</Grid>
           </AtomDialogContent>
         </AtomDialog>
-      </div>
+      </Box>
     </>
   );
 };

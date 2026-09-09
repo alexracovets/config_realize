@@ -4,6 +4,7 @@ type embeddedContextType = {
   embedded: boolean;
   shop: string | null;
   host: string | null;
+  shopOrigin: string | null;
 };
 
 type embeddedProviderPropsType = {

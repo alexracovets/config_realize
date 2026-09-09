@@ -1,6 +1,6 @@
 import { NAME_GIZMO_BTN_HALF_ATLAS, NAME_GIZMO_BTN_OUTSET_ATLAS } from '@configurator/constants';
 
-import { getGizmoButtonScale } from '../gizmoButtonScale';
+import { getGizmoButtonScale } from '@configurator/gizmo/gizmoButtonScale';
 
 import type { gizmoButtonHitType, gizmoHandleKindType, printGizmoElementType } from '@configurator/types';
 

@@ -7,8 +7,20 @@ import { useEmbedded } from '@providers';
 import { buildAppPath, isInternalAppPath } from '@utils';
 import { EMBEDDED_URL_SYNC_SOURCE_SHOPIFY, isEmbeddedUrlSyncMessage, postEmbeddedUrlToParent } from '@utils/embeddedUrlSync';
 
+const isTrustedShopOrigin = (origin: string, shop: string | null, shopOrigin: string | null): boolean => {
+  if (shopOrigin && origin === shopOrigin) {
+    return true;
+  }
+
+  if (shop && (origin === `https://${shop}` || origin === `http://${shop}`)) {
+    return true;
+  }
+
+  return !shop && !shopOrigin;
+};
+
 const useEmbeddedUrlSync = (): void => {
-  const { embedded, shop } = useEmbedded();
+  const { embedded, shop, shopOrigin } = useEmbedded();
   const pathname = usePathname();
   const router = useRouter();
   const lastPostedRef = useRef<string | null>(null);
@@ -50,17 +62,15 @@ const useEmbeddedUrlSync = (): void => {
         return;
       }
 
-      if (shop) {
-        const expectedOrigin = `https://${shop}`;
-
-        if (event.origin !== expectedOrigin && event.origin !== `http://${shop}`) {
-          return;
-        }
+      if (!isTrustedShopOrigin(event.origin, shop, shopOrigin)) {
+        return;
       }
 
       const nextPath = event.data.pathname;
 
-      if (nextPath === pathname) {
+      const currentPath = typeof window === 'undefined' ? pathname : window.location.pathname;
+
+      if (nextPath === currentPath) {
         return;
       }
 
@@ -71,7 +81,7 @@ const useEmbeddedUrlSync = (): void => {
     window.addEventListener('message', onMessage);
 
     return () => window.removeEventListener('message', onMessage);
-  }, [embedded, pathname, router, shop]);
+  }, [embedded, pathname, router, shop, shopOrigin]);
 };
 
 export { useEmbeddedUrlSync };

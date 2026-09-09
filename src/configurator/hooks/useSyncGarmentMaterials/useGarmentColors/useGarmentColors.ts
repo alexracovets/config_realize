@@ -8,14 +8,16 @@ import { useGarmentMaterialRegistry } from '@configurator/providers';
 import { emptyMaskPair } from '@configurator/utils';
 import { useConfiguratorProduct, useGarmentColor, useGarmentDesign } from '@store';
 import { useCallback, useMemo } from 'react';
+import type { Object3D } from 'three';
 type syncGarmentMaterialsRefsReturnType = ReturnType<typeof useSyncGarmentMaterialsRefs>;
 
 type useGarmentColorsOptionsType = {
   refs: Pick<syncGarmentMaterialsRefsReturnType, 'logosTextureRef' | 'maskTexturesRef' | 'pendingFrameReapplyRef'>;
   invalidate: () => void;
+  scene?: Object3D;
 };
 
-const useGarmentColors = ({ refs: { logosTextureRef, maskTexturesRef, pendingFrameReapplyRef }, invalidate }: useGarmentColorsOptionsType) => {
+const useGarmentColors = ({ refs: { logosTextureRef, maskTexturesRef, pendingFrameReapplyRef }, invalidate, scene }: useGarmentColorsOptionsType) => {
   const product = useConfiguratorProduct((state) => state.product);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);
   const byPart = useGarmentColor((state) => state.byPart);
@@ -28,8 +30,8 @@ const useGarmentColors = ({ refs: { logosTextureRef, maskTexturesRef, pendingFra
   const { getMaterials, hasMaterialsForParts } = useGarmentMaterialRegistry();
 
   const applyContext = useMemo(
-    () => ({ product, byPart, gradientsByPart, getMaterials, invalidate }),
-    [byPart, getMaterials, gradientsByPart, invalidate, product],
+    () => ({ product, byPart, gradientsByPart, getMaterials, invalidate, scene }),
+    [byPart, getMaterials, gradientsByPart, invalidate, product, scene],
   );
 
   const buildPrintState = useCallback((): garmentPrintStateType => {

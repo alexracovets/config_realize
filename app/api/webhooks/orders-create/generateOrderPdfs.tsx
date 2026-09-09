@@ -11,15 +11,17 @@ import { buildCheckoutOrderExport } from '@utils/buildCheckoutOrderExport';
 import { CheckoutOrderExportPdfDocument } from '@utils/buildCheckoutOrderExportPdf/CheckoutOrderExportPdfDocument';
 import { buildOrderCuttingExport } from '@utils/buildOrderCuttingExport';
 import { buildDownloadPreviewKey, OrderCuttingExportPdfDocument } from '@utils/buildOrderCuttingExportPdf/OrderCuttingExportPdfDocument';
+import { COMPLEX_PREVIEW_LABEL, fillMissingComplexUvPreviews, pngBufferFromDataUrl } from '@utils/composeComplexUvAtlasFromPreviews';
+import { buildPublicAssetDownloadUrl } from '@utils/resolvePublicAppOrigin';
 import type { checkoutConfigExportType } from '@utils/buildCheckoutConfigExport';
 
 type orderPdfContextType = {
   configUrl: string;
-  appOrigin: string;
+  appOrigin: string | null;
   orderNumber: string;
   orderDate: string;
   recipient: { name: string; email: string; phone: string };
-  shippingAddress: { street: string; postalCode: string; city: string; country: string };
+  shippingAddress: { company: string; street: string; postalCode: string; city: string; province: string; country: string };
   billingNote: string;
   money: { subtotal: number; discountAmount: number; shippingCost: number; grandTotal: number };
 };
@@ -27,16 +29,11 @@ type orderPdfContextType = {
 type orderPdfUrlsType = {
   orderPdfUrl: string;
   cuttingPdfUrl: string;
+  orderPdfBuffer: Buffer;
+  cuttingPdfBuffer: Buffer;
 };
 
 const isHttpUrl = (value: string | null | undefined): value is string => !!value && /^https?:/i.test(value);
-
-const buildDownloadUrl = (origin: string, fileUrl: string, filename: string): string => {
-  const url = new URL('/api/download', origin);
-  url.searchParams.set('url', fileUrl);
-  url.searchParams.set('filename', filename);
-  return url.toString();
-};
 
 const isPdfEmbeddableMime = (mime: string) => /image\/(?:png|jpe?g)/i.test(mime);
 
@@ -147,8 +144,10 @@ const generateOrderPdfs = async (context: orderPdfContextType): Promise<orderPdf
     customer: {
       firstName: firstName ?? '',
       lastName: lastNameParts.join(' '),
+      company: context.shippingAddress.company,
       address: context.shippingAddress.street,
       city: context.shippingAddress.city,
+      province: context.shippingAddress.province,
       postalCode: context.shippingAddress.postalCode,
       email: context.recipient.email,
     },
@@ -156,17 +155,41 @@ const generateOrderPdfs = async (context: orderPdfContextType): Promise<orderPdf
 
   const downloadPreviewByKey = new Map<string, string | null>();
   const downloadLinkByKey = new Map<string, string>();
-  await Promise.all(
-    config.products.flatMap((product) =>
-      product.uvImages
-        .filter((uv) => isHttpUrl(uv.url))
-        .map(async (uv) => {
-          const key = buildDownloadPreviewKey(product.cartItemId, uv.label);
-          downloadPreviewByKey.set(key, await fetchImageAsDataUrl(uv.url));
-          downloadLinkByKey.set(key, buildDownloadUrl(context.appOrigin, uv.url, `${uv.label}.${resolveDownloadFilenameExtension(uv.url)}`));
-        }),
-    ),
-  );
+  const previewEntries = config.products.flatMap((product) => product.uvImages.filter((uv) => isHttpUrl(uv.url)).map((uv) => ({ product, uv })));
+  const previewLayers = (
+    await Promise.all(
+      previewEntries.map(async ({ product, uv }) => {
+        const dataUrl = await fetchImageAsDataUrl(uv.url);
+        if (!dataUrl) return null;
+
+        const key = buildDownloadPreviewKey(product.cartItemId, uv.label);
+        downloadPreviewByKey.set(key, dataUrl);
+        downloadLinkByKey.set(key, buildPublicAssetDownloadUrl(context.appOrigin, uv.url, `${uv.label}.${resolveDownloadFilenameExtension(uv.url)}`));
+        return { cartItemId: product.cartItemId, label: uv.label, dataUrl };
+      }),
+    )
+  ).filter((layer): layer is { cartItemId: string; label: string; dataUrl: string } => layer !== null);
+
+  await fillMissingComplexUvPreviews({
+    products: cuttingExport.products,
+    layers: previewLayers,
+    downloadPreviewByKey,
+  });
+
+  for (const product of cuttingExport.products) {
+    const complexKey = buildDownloadPreviewKey(product.cartItemId, COMPLEX_PREVIEW_LABEL);
+    if (downloadLinkByKey.has(complexKey)) continue;
+
+    const dataUrl = downloadPreviewByKey.get(complexKey);
+    if (!dataUrl) continue;
+
+    const fileUrl = await uploadShopifyFile(
+      new Blob([Uint8Array.from(pngBufferFromDataUrl(dataUrl))], { type: 'image/png' }),
+      'complex_uv_atlas.png',
+      'image/png',
+    );
+    downloadLinkByKey.set(complexKey, buildPublicAssetDownloadUrl(context.appOrigin, fileUrl, 'complex_uv_atlas.png'));
+  }
 
   const [orderPdfBuffer, cuttingPdfBuffer] = await Promise.all([
     renderToBuffer(<CheckoutOrderExportPdfDocument exportData={orderExport} images={{ logoSrc, previewBySrc }} />),
@@ -178,7 +201,7 @@ const generateOrderPdfs = async (context: orderPdfContextType): Promise<orderPdf
     uploadShopifyFile(new Blob([Uint8Array.from(cuttingPdfBuffer)], { type: 'application/pdf' }), CHECKOUT_CUTTING_EXPORT_FILENAME, 'application/pdf'),
   ]);
 
-  return { orderPdfUrl, cuttingPdfUrl };
+  return { orderPdfUrl, cuttingPdfUrl, orderPdfBuffer, cuttingPdfBuffer };
 };
 
 export { generateOrderPdfs };

@@ -38,7 +38,6 @@ const activateCartItem = async (get: () => ActivateCartItemGetState, itemId: str
   const needsPrepare = needsGarmentModelPrepare(activeItem.modelId, product);
 
   if (savePreviousId && savePreviousId !== itemId && items.some((item) => item.id === savePreviousId)) {
-
     persistCartItemConfiguration(get, savePreviousId);
   }
 
@@ -63,9 +62,7 @@ const activateCartItem = async (get: () => ActivateCartItemGetState, itemId: str
   if (needsPrepare) {
     const requestedGeneration = generation;
     void prepareGarmentModel(product, { configuration })
-      .catch(() => {
-
-      })
+      .catch(() => {})
       .finally(() => {
         if (requestedGeneration !== activationGeneration) return;
       });

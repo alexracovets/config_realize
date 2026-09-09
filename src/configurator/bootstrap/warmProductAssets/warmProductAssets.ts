@@ -2,7 +2,6 @@ import type { garmentConfigType } from '@types';
 import { resolveModelUrl, scheduleWhenIdle, warmDefaultDesignTextures, warmGltfModelCache, warmProductModelFile } from '@configurator/utils';
 
 type warmProductAssetsOptionsType = {
-
   deferHeavy?: boolean;
 };
 

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 
 import { motion } from 'motion/react';
 
+import { Box } from '@atoms';
 import { CanvasLoaderBackground, MainLoader } from '@molecules';
 import { useSceneTransitionTrigger } from '@hooks';
 import { useConfiguratorProduct, useConfiguratorSceneLoad, useGarmentDesign } from '@store';
@@ -40,9 +41,9 @@ const ConfiguratorCanvasLoader = () => {
       aria-hidden={!isVisible}
     >
       <CanvasLoaderBackground />
-      <div className="relative z-10">
+      <Box variant="loader_content_layer">
         <MainLoader />
-      </div>
+      </Box>
     </motion.div>
   );
 };

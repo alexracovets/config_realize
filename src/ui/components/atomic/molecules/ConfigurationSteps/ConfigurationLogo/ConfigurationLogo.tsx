@@ -2,16 +2,17 @@
 
 import type { filePickContextType } from '@types';
 import { Flex } from '@atoms';
-import { useGarmentLogoCameraFocus, useLogoFileHandler, useStepLogo } from '@hooks';
+import { LOGO_MAX_USER_FILES } from '@constants';
+import { focusGarmentCamera, useLogoFileHandler, useStepLogo } from '@hooks';
 import { HiddenLogoFileInput, LogoEditPanel, LogoUpload, LogoUploadedFilesSection } from '@molecules/ConfigurationTools';
+import { useGarmentLogo } from '@store';
 import { type ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
 const ConfigurationLogo = () => {
   const parts = useStepLogo((state) => state.parts);
-  const positions = useStepLogo((state) => state.positions);
   const canAddUserLogo = useStepLogo((state) => state.canAddUserLogo);
   const removePart = useStepLogo((state) => state.removePart);
+  const setSelectedInstance = useGarmentLogo((state) => state.setSelectedInstance);
   const { uploadLogo, loading, error } = useLogoFileHandler();
-  const focusLogoInstance = useGarmentLogoCameraFocus();
 
   const [editingPartId, setEditingPartId] = useState<string | null>(null);
 
@@ -21,16 +22,11 @@ const ConfigurationLogo = () => {
   const userLogos = useMemo(() => parts.filter((part) => !part.isDefault), [parts]);
   const editingPart = useMemo(() => (editingPartId ? parts.find((part) => part.id === editingPartId && !part.isDefault) : undefined), [editingPartId, parts]);
 
-  const freeInteractivePosition = useMemo(() => {
-    const interactive = positions.filter((position) => position.interactive);
-    const usedKeys = new Set(parts.filter((part) => !part.isDefault).map((part) => part.positionKey));
-    return interactive.find((position) => !usedKeys.has(position.key));
-  }, [parts, positions]);
-
-  const canUpload = canAddUserLogo();
+  const canUpload = canAddUserLogo && userLogos.length < LOGO_MAX_USER_FILES;
 
   const handleUploadFile = async (file: File) => {
-    await uploadLogo(file, freeInteractivePosition ? { position: freeInteractivePosition } : undefined);
+    if (!canUpload) return;
+    await uploadLogo(file);
   };
 
   const handleInputChange = async (file: File | undefined) => {
@@ -43,6 +39,7 @@ const ConfigurationLogo = () => {
       return;
     }
 
+    if (!canUpload) return;
     await handleUploadFile(file);
   };
 
@@ -69,23 +66,30 @@ const ConfigurationLogo = () => {
   const handleEdit = useCallback(
     (partId: string) => {
       setEditingPartId(partId);
-      focusLogoInstance(partId);
+      setSelectedInstance(partId);
+      const part = parts.find((item) => item.id === partId);
+      if (!part) return;
+      focusGarmentCamera({ partId: part.partId, uv: part.uv });
     },
-    [focusLogoInstance],
+    [parts, setSelectedInstance],
+  );
+
+  const fileInput = (
+    <HiddenLogoFileInput
+      ref={fileInputRef}
+      disabled={loading || (!canUpload && !editingPart)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        void handleInputChange(e.target.files?.[0]);
+        e.target.value = '';
+      }}
+    />
   );
 
   if (editingPart) {
     return (
       <>
-        <HiddenLogoFileInput
-          ref={fileInputRef}
-          disabled={loading}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            void handleInputChange(e.target.files?.[0]);
-            e.target.value = '';
-          }}
-        />
-        <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4 max-xl:gap-3">
+        {fileInput}
+        <Flex variant="step_design_logo_column">
           <LogoEditPanel
             partId={editingPart.id}
             onClose={() => setEditingPartId(null)}
@@ -99,16 +103,9 @@ const ConfigurationLogo = () => {
 
   return (
     <>
-      <HiddenLogoFileInput
-        ref={fileInputRef}
-        disabled={loading}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          void handleInputChange(e.target.files?.[0]);
-          e.target.value = '';
-        }}
-      />
+      {fileInput}
 
-      <Flex variant="step_design" className="w-full min-h-0 flex-col items-start justify-start gap-4 max-xl:gap-3">
+      <Flex variant="step_design_logo_column">
         <LogoUpload canUpload={canUpload} loading={loading} error={error} onOpenFilePicker={openFilePicker} onFileSelected={handleUploadFile} />
         <LogoUploadedFilesSection userLogos={userLogos} onEdit={handleEdit} onDelete={handleDelete} />
       </Flex>

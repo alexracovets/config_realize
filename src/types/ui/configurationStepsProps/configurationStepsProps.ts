@@ -1,4 +1,4 @@
-import type { nameLimitsType, numberLimitsType, printPositionConflictsConfigType, testoLimitsType } from '@types';
+import type { nameLimitsType, numberLimitsType, printPositionConflictsConfigType, testoLimitsType, uvPointType } from '@types';
 
 interface namePartFormPropsType {
   instanceId: string;
@@ -30,6 +30,8 @@ interface configurationPositionPickerPositionType {
   key: string;
   label: string;
   interactive: boolean;
+  partId: string;
+  uv: uvPointType;
   positionId?: string;
   conflicts?: printPositionConflictsConfigType;
 }
@@ -37,6 +39,8 @@ interface configurationPositionPickerPositionType {
 interface configurationPositionPickerInstanceType {
   id: string;
   positionKey: string;
+  partId: string;
+  uv: uvPointType;
 }
 
 type filePickContextUploadType = { mode: 'upload' };

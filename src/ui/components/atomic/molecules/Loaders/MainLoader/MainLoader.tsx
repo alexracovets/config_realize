@@ -4,13 +4,13 @@ import { AtomImage, Flex, LogoYOU, Text } from '@atoms';
 
 const MainLoader = () => {
   return (
-    <Flex className="flex-col items-center gap-5">
-      <Flex className="items-center justify-center gap-7">
-        <AtomImage src="/svg/logo.svg" alt="Logo" variant="logo" priority />
+    <Flex variant="loader_column_center_gap5" className="w-full max-sm:-translate-y-10 max-sm:gap-3">
+      <Flex variant="logo_pair_row" className="max-sm:gap-3 max-sm:px-4">
+        <AtomImage src="/svg/logo.svg" alt="Logo" variant="logo" priority className="max-sm:h-14" />
         <LogoYOU />
       </Flex>
-      <Text className="text-center text-[20px] font-medium italic text-[#2B2B2B]">
-        Made by <b className="animate-pulse motion-reduce:animate-none">YOU</b>. Worn your way.
+      <Text variant="loader_tagline" className="px-4 leading-[1.35] max-sm:text-[14px]">
+        Made by <b>YOU</b>. Worn your way.
       </Text>
     </Flex>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomImage } from '@atoms';
+import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomImage, Flex, Grid } from '@atoms';
 import type { configurationPositionPickerModalPropsType } from '@types';
 import { cn } from '@utils';
 
@@ -10,17 +10,17 @@ const ConfigurationPositionPickerModal = ({ open, onOpenChange, title, descripti
       <AtomDialogContent
         aria-describedby={undefined}
         aria-label={title}
-        className="h-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] min-w-0 max-w-155 gap-4 overflow-hidden p-4 pt-10 max-sm:gap-3"
+        className="h-auto max-h-[calc(var(--viewport-height)-var(--embed-header-offset)-32px)] w-[calc(100%-32px)] min-w-0 max-w-155 gap-4 overflow-hidden p-4 pt-10 max-sm:gap-3"
         closeButtonClassName="top-3 right-3 bg-transparent opacity-100"
       >
-        <div className="flex flex-col gap-2 text-left">
+        <Flex variant="modal_info_text_part_left">
           <AtomDialogTitle size="lg" className="text-left max-sm:text-[18px]">
             {title}
           </AtomDialogTitle>
           {description && <p className="text-left text-sm text-gray-30" dangerouslySetInnerHTML={{ __html: description }} />}
-        </div>
+        </Flex>
 
-        <div className="grid max-h-[calc(100dvh-160px)] grid-cols-3 gap-3 overflow-y-auto overscroll-contain pr-1 max-sm:gap-2 sm:gap-4">
+        <Grid variant="position_picker_grid">
           {positions.map((position) => (
             <button
               key={position.key}
@@ -36,7 +36,7 @@ const ConfigurationPositionPickerModal = ({ open, onOpenChange, title, descripti
               <span className="text-center text-sm text-default max-sm:text-[12px] max-sm:leading-4">{position.label}</span>
             </button>
           ))}
-        </div>
+        </Grid>
       </AtomDialogContent>
     </AtomDialog>
   );

@@ -25,7 +25,7 @@ const AccordionTrigger = ({ className, children, actions, ...props }: accordionT
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          'peer/accordion-trigger group/accordion-trigger flex min-w-0 flex-1 items-center cursor-pointer outline-none',
+          'group/accordion-trigger flex min-w-0 flex-1 items-center cursor-pointer outline-none',
           'rounded-lg border border-transparent',
           'aria-disabled:pointer-events-none aria-disabled:opacity-50',
           'outline-none transition-colors',
@@ -33,14 +33,14 @@ const AccordionTrigger = ({ className, children, actions, ...props }: accordionT
         )}
         {...props}
       >
-        {children}
+        <span className="flex min-w-0 flex-1 items-center">{children}</span>
+        <ChevronDownIcon
+          data-slot="accordion-trigger-icon"
+          aria-hidden
+          className="mr-2 size-4 shrink-0 text-base-black transition-transform duration-150 ease-out group-aria-expanded/accordion-trigger:rotate-180 max-xl:mr-1.5 max-xl:size-3.25 max-sm:mr-0 max-sm:size-3"
+        />
       </AccordionPrimitive.Trigger>
       {actions}
-      <ChevronDownIcon
-        data-slot="accordion-trigger-icon"
-        aria-hidden
-        className="mr-[8px] size-4 shrink-0 text-base-black transition-transform duration-150 ease-out peer-aria-expanded/accordion-trigger:rotate-180 max-xl:mr-1.5 max-xl:size-3.25 max-sm:mr-0 max-sm:size-3"
-      />
     </AccordionPrimitive.Header>
   );
 };
@@ -56,9 +56,9 @@ const AccordionContent = ({ className, children, onClick, ...props }: AccordionP
       )}
       {...props}
     >
-      <div className={cn('p-1', className)} onClick={onClick}>
+      <section className={cn('p-1', className)} onClick={onClick}>
         {children}
-      </div>
+      </section>
     </AccordionPrimitive.Panel>
   );
 };

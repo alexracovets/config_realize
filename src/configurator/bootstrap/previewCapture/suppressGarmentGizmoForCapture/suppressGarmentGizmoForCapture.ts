@@ -1,8 +1,26 @@
-import { type Mesh, MeshStandardMaterial, type Object3D, type Scene } from 'three';
-import { LOGO_SLOT_COUNT, NAME_SLOT_COUNT } from '@configurator/constants';
+import { type Mesh, MeshStandardMaterial, type Object3D, type Scene, type Vector4 } from 'three';
+import { NAME_SLOT_COUNT } from '@configurator/constants';
 
 type numberUniformType = { value: number };
 type numberArrayUniformType = { value: number[] };
+type vec4ArrayUniformType = { value: Vector4[] };
+
+const readLogoGChannel = (uniform: vec4ArrayUniformType | undefined, channel: 'x' | 'y' | 'z') =>
+  uniform ? uniform.value.map((vec) => vec[channel]) : undefined;
+
+const zeroLogoGChannel = (uniform: vec4ArrayUniformType | undefined, channel: 'x' | 'y' | 'z') => {
+  if (!uniform) return;
+  uniform.value.forEach((vec) => {
+    vec[channel] = 0;
+  });
+};
+
+const restoreLogoGChannel = (uniform: vec4ArrayUniformType | undefined, values: number[] | undefined, channel: 'x' | 'y' | 'z') => {
+  if (!uniform || !values) return;
+  values.forEach((value, index) => {
+    if (uniform.value[index]) uniform.value[index][channel] = value;
+  });
+};
 
 interface garmentGizmoUniformSnapshotType {
   material: MeshStandardMaterial;
@@ -82,15 +100,15 @@ const snapshotGarmentGizmoUniforms = (material: MeshStandardMaterial): garmentGi
   nameFrameActive: readArrayUniform(material.userData.uNameGizmoFrameActiveUniform as numberArrayUniformType | undefined),
   numberFrameActive: readArrayUniform(material.userData.uNumberGizmoFrameActiveUniform as numberArrayUniformType | undefined),
   testoFrameActive: readArrayUniform(material.userData.uTestoGizmoFrameActiveUniform as numberArrayUniformType | undefined),
-  logoFrameActive: readArrayUniform(material.userData.uLogoGizmoFrameActiveUniform as numberArrayUniformType | undefined),
+  logoFrameActive: readLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'x'),
   nameButtonsActive: readArrayUniform(material.userData.uNameGizmoButtonsActiveUniform as numberArrayUniformType | undefined),
   numberButtonsActive: readArrayUniform(material.userData.uNumberGizmoButtonsActiveUniform as numberArrayUniformType | undefined),
   testoButtonsActive: readArrayUniform(material.userData.uTestoGizmoButtonsActiveUniform as numberArrayUniformType | undefined),
-  logoButtonsActive: readArrayUniform(material.userData.uLogoGizmoButtonsActiveUniform as numberArrayUniformType | undefined),
+  logoButtonsActive: readLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'y'),
   nameButtonsReveal: readArrayUniform(material.userData.uNameGizmoButtonsRevealUniform as numberArrayUniformType | undefined),
   numberButtonsReveal: readArrayUniform(material.userData.uNumberGizmoButtonsRevealUniform as numberArrayUniformType | undefined),
   testoButtonsReveal: readArrayUniform(material.userData.uTestoGizmoButtonsRevealUniform as numberArrayUniformType | undefined),
-  logoButtonsReveal: readArrayUniform(material.userData.uLogoGizmoButtonsRevealUniform as numberArrayUniformType | undefined),
+  logoButtonsReveal: readLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'z'),
   hoverSlot: readNumberUniform(material.userData.uNameGizmoHoverSlotUniform as numberUniformType | undefined),
   hoverCorner: readNumberUniform(material.userData.uNameGizmoHoverCornerUniform as numberUniformType | undefined),
   hoverScale: readNumberUniform(material.userData.uNameGizmoHoverScaleUniform as numberUniformType | undefined),
@@ -105,17 +123,17 @@ const suppressGarmentGizmoUniforms = (material: MeshStandardMaterial) => {
   zeroArrayUniform(material.userData.uNameGizmoFrameActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uNumberGizmoFrameActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uTestoGizmoFrameActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
-  zeroArrayUniform(material.userData.uLogoGizmoFrameActiveUniform as numberArrayUniformType | undefined, LOGO_SLOT_COUNT);
+  zeroLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'x');
 
   zeroArrayUniform(material.userData.uNameGizmoButtonsActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uNumberGizmoButtonsActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uTestoGizmoButtonsActiveUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
-  zeroArrayUniform(material.userData.uLogoGizmoButtonsActiveUniform as numberArrayUniformType | undefined, LOGO_SLOT_COUNT);
+  zeroLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'y');
 
   zeroArrayUniform(material.userData.uNameGizmoButtonsRevealUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uNumberGizmoButtonsRevealUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
   zeroArrayUniform(material.userData.uTestoGizmoButtonsRevealUniform as numberArrayUniformType | undefined, NAME_SLOT_COUNT);
-  zeroArrayUniform(material.userData.uLogoGizmoButtonsRevealUniform as numberArrayUniformType | undefined, LOGO_SLOT_COUNT);
+  zeroLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, 'z');
 
   writeNumberUniform(material.userData.uNameGizmoHoverSlotUniform as numberUniformType | undefined, -1);
   writeNumberUniform(material.userData.uNameGizmoHoverCornerUniform as numberUniformType | undefined, -1);
@@ -133,17 +151,17 @@ const restoreGarmentGizmoUniforms = (snapshot: garmentGizmoUniformSnapshotType) 
   restoreArrayUniform(material.userData.uNameGizmoFrameActiveUniform as numberArrayUniformType | undefined, snapshot.nameFrameActive);
   restoreArrayUniform(material.userData.uNumberGizmoFrameActiveUniform as numberArrayUniformType | undefined, snapshot.numberFrameActive);
   restoreArrayUniform(material.userData.uTestoGizmoFrameActiveUniform as numberArrayUniformType | undefined, snapshot.testoFrameActive);
-  restoreArrayUniform(material.userData.uLogoGizmoFrameActiveUniform as numberArrayUniformType | undefined, snapshot.logoFrameActive);
+  restoreLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, snapshot.logoFrameActive, 'x');
 
   restoreArrayUniform(material.userData.uNameGizmoButtonsActiveUniform as numberArrayUniformType | undefined, snapshot.nameButtonsActive);
   restoreArrayUniform(material.userData.uNumberGizmoButtonsActiveUniform as numberArrayUniformType | undefined, snapshot.numberButtonsActive);
   restoreArrayUniform(material.userData.uTestoGizmoButtonsActiveUniform as numberArrayUniformType | undefined, snapshot.testoButtonsActive);
-  restoreArrayUniform(material.userData.uLogoGizmoButtonsActiveUniform as numberArrayUniformType | undefined, snapshot.logoButtonsActive);
+  restoreLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, snapshot.logoButtonsActive, 'y');
 
   restoreArrayUniform(material.userData.uNameGizmoButtonsRevealUniform as numberArrayUniformType | undefined, snapshot.nameButtonsReveal);
   restoreArrayUniform(material.userData.uNumberGizmoButtonsRevealUniform as numberArrayUniformType | undefined, snapshot.numberButtonsReveal);
   restoreArrayUniform(material.userData.uTestoGizmoButtonsRevealUniform as numberArrayUniformType | undefined, snapshot.testoButtonsReveal);
-  restoreArrayUniform(material.userData.uLogoGizmoButtonsRevealUniform as numberArrayUniformType | undefined, snapshot.logoButtonsReveal);
+  restoreLogoGChannel(material.userData.uLogoGUniform as vec4ArrayUniformType | undefined, snapshot.logoButtonsReveal, 'z');
 
   writeNumberUniform(material.userData.uNameGizmoHoverSlotUniform as numberUniformType | undefined, snapshot.hoverSlot ?? -1);
   writeNumberUniform(material.userData.uNameGizmoHoverCornerUniform as numberUniformType | undefined, snapshot.hoverCorner ?? -1);

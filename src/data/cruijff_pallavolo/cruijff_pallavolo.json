@@ -10,8 +10,8 @@
   "preserveGltfMeshes": ["model_inside"],
   "parts": [
     {
-      "name": "Davanti",
-      "label": "Davanti",
+      "name": "Gamba Sinistra",
+      "label": "Gamba Sinistra",
       "id": "cruijff_pallavolo_front",
       "meshNames": ["model_left"],
       "renderOrder": 1,
@@ -24,15 +24,15 @@
       "printRotation": 270,
       "gradient": {
         "reversed": false,
-        "rotation": 0,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
       }
     },
     {
-      "name": "Retro",
-      "label": "Retro",
+      "name": "Gamba Destra",
+      "label": "Gamba Destra",
       "id": "cruijff_pallavolo_back",
       "meshNames": ["model_right"],
       "renderOrder": 1,
@@ -44,8 +44,8 @@
       },
       "printRotation": 270,
       "gradient": {
-        "reversed": true,
-        "rotation": 0,
+        "reversed": false,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
@@ -241,7 +241,7 @@
       "id": "right-bottom",
       "src": "/png/text_areas/shorts/number/left_bottom.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -259,7 +259,7 @@
       "id": "right-top",
       "src": "/png/text_areas/shorts/number/left_top.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -280,7 +280,7 @@
         "testo": ["right"]
       },
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -298,7 +298,7 @@
       "id": "left-top",
       "src": "/png/text_areas/shorts/number/right.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     }

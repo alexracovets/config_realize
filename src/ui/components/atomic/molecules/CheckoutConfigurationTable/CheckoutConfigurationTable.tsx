@@ -4,7 +4,7 @@ import { createCheckoutConfigurationTableColumns } from '@molecules/CheckoutConf
 import { getCheckoutColumnStyle } from '@molecules/CheckoutConfigurationTable/getCheckoutColumnStyle';
 import { CheckoutRowEditModal } from '@molecules/CheckoutRowEditModal';
 import type { checkoutConfigurationTablePropsType } from '@types';
-import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Button, ScrollArea, SvgIcon } from '@atoms';
+import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Box, Button, ScrollArea, SvgIcon } from '@atoms';
 import { CHECKOUT_TABLE_ADD_ROW_LABEL } from '@constants';
 import { useCheckoutConfigurationTable } from '@hooks';
 import { cn } from '@utils';
@@ -29,8 +29,8 @@ const CheckoutConfigurationTable = ({ cartItemId, rows, printAvailability }: che
   const tableMinWidth = useMemo(() => columns.reduce((total, column) => total + column.minSize, 0), [columns]);
 
   return (
-    <div className="w-full min-w-0">
-      <div className="w-full overflow-hidden max-sm:rounded-t-lg max-sm:border-x max-sm:border-t max-sm:border-[#D4D4D4]">
+    <Box variant="checkout_table_root">
+      <Box variant="checkout_table_shell">
         <ScrollArea orientation="horizontal" className="w-full pb-0">
           <AtomTable variant="checkout" className="table-fixed w-full" style={{ minWidth: tableMinWidth }}>
             <AtomTableHeader>
@@ -63,7 +63,7 @@ const CheckoutConfigurationTable = ({ cartItemId, rows, printAvailability }: che
             </AtomTableBody>
           </AtomTable>
         </ScrollArea>
-      </div>
+      </Box>
 
       <Button
         type="button"
@@ -87,7 +87,7 @@ const CheckoutConfigurationTable = ({ cartItemId, rows, printAvailability }: che
         onPatchRow={handlePatchRow}
         onRemoveRow={handleRemoveRow}
       />
-    </div>
+    </Box>
   );
 };
 

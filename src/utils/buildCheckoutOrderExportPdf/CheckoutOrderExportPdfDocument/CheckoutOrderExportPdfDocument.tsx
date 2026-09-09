@@ -21,7 +21,6 @@ import { PDF_FONT_FAMILY, registerPdfFont } from '@utils/registerPdfFont';
 registerPdfFont();
 
 type checkoutOrderExportPdfImagesType = {
-
   logoSrc: string | null;
 
   previewBySrc: Map<string, string | null>;

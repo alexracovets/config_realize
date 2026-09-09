@@ -1,7 +1,7 @@
 'use client';
 
 import { ConfiguratorView } from '@organisms';
-import { ModalAddProductDesign, ModalInfo, ModalTutorial } from '@molecules';
+import { ModalAddProductDesign, ModalInfo, ModalShare, ModalTutorial, ScrollHintTutorial } from '@molecules';
 
 const ConfiguratorPage = () => {
   return (
@@ -9,7 +9,9 @@ const ConfiguratorPage = () => {
       <ConfiguratorView />
       <ModalAddProductDesign />
       <ModalInfo />
+      <ModalShare />
       <ModalTutorial />
+      <ScrollHintTutorial />
     </>
   );
 };

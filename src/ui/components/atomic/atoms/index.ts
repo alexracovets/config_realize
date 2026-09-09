@@ -26,4 +26,5 @@ export * from './AtomCard';
 export * from './AtomSeparator';
 export * from './AtomTable';
 export * from './AtomTabs';
+export * from './AtomTooltip';
 export * from './LogoYOU';

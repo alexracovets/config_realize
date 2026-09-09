@@ -7,22 +7,26 @@ import { resolveEmbeddedContext } from '@utils';
 
 import { ConfiguratorRouteResetBridge } from '@providers/embeddedProvider/ConfiguratorRouteResetBridge';
 import { EmbeddedFlagBridge } from '@providers/embeddedProvider/EmbeddedFlagBridge';
+import { EmbeddedHeaderHeightBridge } from '@providers/embeddedProvider/EmbeddedHeaderHeightBridge';
+import { EmbeddedStoreHeaderBridge } from '@providers/embeddedProvider/EmbeddedStoreHeaderBridge';
 import { EmbeddedUrlSyncBridge } from '@providers/embeddedProvider/EmbeddedUrlSyncBridge';
+import { EmbeddedViewportKickBridge } from '@providers/embeddedProvider/EmbeddedViewportKickBridge';
 
-const EmbeddedContext = createContext<embeddedContextType>({
-  embedded: false,
-  shop: null,
-  host: null,
-});
+const EMBEDDED_DEFAULT: embeddedContextType = { embedded: false, shop: null, host: null, shopOrigin: null };
 
-const EMBEDDED_DEFAULT: embeddedContextType = { embedded: false, shop: null, host: null };
+const EmbeddedContext = createContext<embeddedContextType>(EMBEDDED_DEFAULT);
 
 let cachedEmbeddedSnapshot: embeddedContextType = EMBEDDED_DEFAULT;
 
 const getEmbeddedContextSnapshot = (): embeddedContextType => {
   const next = resolveEmbeddedContext();
 
-  if (cachedEmbeddedSnapshot.embedded === next.embedded && cachedEmbeddedSnapshot.shop === next.shop && cachedEmbeddedSnapshot.host === next.host) {
+  if (
+    cachedEmbeddedSnapshot.embedded === next.embedded &&
+    cachedEmbeddedSnapshot.shop === next.shop &&
+    cachedEmbeddedSnapshot.host === next.host &&
+    cachedEmbeddedSnapshot.shopOrigin === next.shopOrigin
+  ) {
     return cachedEmbeddedSnapshot;
   }
 
@@ -47,6 +51,9 @@ const EmbeddedProvider = ({ children }: embeddedProviderPropsType) => {
     <EmbeddedContext.Provider value={value}>
       <EmbeddedUrlSyncBridge />
       <EmbeddedFlagBridge />
+      <EmbeddedHeaderHeightBridge />
+      <EmbeddedStoreHeaderBridge />
+      <EmbeddedViewportKickBridge />
       <ConfiguratorRouteResetBridge />
       {children}
     </EmbeddedContext.Provider>

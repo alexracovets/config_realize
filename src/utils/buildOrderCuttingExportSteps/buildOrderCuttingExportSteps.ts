@@ -1,7 +1,7 @@
 import type { configuratorStepValueType } from '@configurator/types';
 import { buildPatternColors } from '@configurator/hooks/useSyncGarmentMaterials/buildPatternColors';
 import { createPrintUnit, mapProductDesigns, resolveGradientColors, resolvePartUvBounds, resolvePrintCmScale } from '@configurator/mappers';
-import { PRINT_UPLOAD_ROTATION_DEG } from '@configurator/constants';
+import { LOGO_UPLOAD_ROTATION_DEG, PRINT_UPLOAD_ROTATION_DEG } from '@configurator/constants';
 import { CONFIGURATOR_STEP_META, ORDER_CUTTING_EXPORT_DATA_NOT_SPECIFIED } from '@constants';
 import type {
   cartItemConfigurationType,
@@ -9,8 +9,11 @@ import type {
   garmentTextRenderInstanceType,
   logoInstanceType,
   numberInstanceType,
+  orderCuttingExportColorPartSpecType,
   orderCuttingExportConfigurationStepType,
+  orderCuttingExportDesignLayerSpecType,
   orderCuttingExportDownloadFileType,
+  orderCuttingExportLogoStampSpecType,
   orderCuttingExportStepDetailParamType,
   orderCuttingExportStepDetailType,
   orderCuttingExportTextLayerSpecType,
@@ -108,13 +111,44 @@ const buildTextInstancesDetails = (
 const resolvePartColor = (configuration: cartItemConfigurationType, partId: string, partName: string): string =>
   configuration.color.byPart[partId] ?? configuration.color.byPart[partName] ?? '#FFFFFF';
 
+const resolveModelSrc = (model: garmentConfigType): string => `${model.path}${model.modelFile ?? 'model.glb'}`;
+
+const resolveAtlasSize = (model: garmentConfigType) => ({
+  atlasWidth: model.printAtlas?.width ?? 2048,
+  atlasHeight: model.printAtlas?.height ?? 2048,
+});
+
+const buildConfiguredColorParts = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportColorPartSpecType[] =>
+  model.parts.map((part) => {
+    const baseColor = resolvePartColor(configuration, part.id, part.name);
+    const gradient = part.colorOnly ? undefined : (configuration.color.gradientsByPart[part.id] ?? configuration.color.gradientsByPart[part.name]);
+
+    if (!gradient?.enabled) {
+      return { label: part.label || part.name, color: baseColor, meshNames: part.meshNames };
+    }
+
+    const { fabricColor, gradientColor2 } = resolveGradientColors(baseColor, gradient);
+
+    return {
+      label: part.label || part.name,
+      color: fabricColor,
+      meshNames: part.meshNames,
+      gradient: {
+        color2: gradientColor2,
+        rotation: gradient.rotation,
+        position: gradient.position,
+        softness: gradient.softness,
+        opacity: gradient.opacity,
+        uvBounds: resolvePartUvBounds(part),
+      },
+    };
+  });
+
 const buildColorDownloadFiles = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportDownloadFileType[] => {
   const parts = model.parts;
-  const atlasWidth = model.printAtlas?.width ?? 2048;
-  const atlasHeight = model.printAtlas?.height ?? 2048;
-  const modelSrc = `${model.path}${model.modelFile ?? 'model.glb'}`;
-
   if (parts.length === 0) return [];
+
+  const { atlasWidth, atlasHeight } = resolveAtlasSize(model);
 
   return [
     {
@@ -123,7 +157,7 @@ const buildColorDownloadFiles = (configuration: cartItemConfigurationType, model
       fileName: 'color_uv_atlas.png',
       downloadUrl: '',
       composeKind: 'color-atlas' as const,
-      modelSrc,
+      modelSrc: resolveModelSrc(model),
       atlasWidth,
       atlasHeight,
       colorParts: parts.map((part) => ({
@@ -138,6 +172,8 @@ const buildColorDownloadFiles = (configuration: cartItemConfigurationType, model
 const buildGradientDownloadFiles = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportDownloadFileType[] => {
   if (model.parts.length === 0) return [];
 
+  const { atlasWidth, atlasHeight } = resolveAtlasSize(model);
+
   return [
     {
       key: 'gradient-atlas',
@@ -145,33 +181,10 @@ const buildGradientDownloadFiles = (configuration: cartItemConfigurationType, mo
       fileName: 'gradient_uv_atlas.png',
       downloadUrl: '',
       composeKind: 'gradient-atlas' as const,
-      modelSrc: `${model.path}${model.modelFile ?? 'model.glb'}`,
-      atlasWidth: model.printAtlas?.width ?? 2048,
-      atlasHeight: model.printAtlas?.height ?? 2048,
-      colorParts: model.parts.map((part) => {
-        const baseColor = resolvePartColor(configuration, part.id, part.name);
-        const gradient = part.colorOnly ? undefined : (configuration.color.gradientsByPart[part.id] ?? configuration.color.gradientsByPart[part.name]);
-
-        if (!gradient?.enabled) {
-          return { label: part.label || part.name, color: baseColor, meshNames: part.meshNames };
-        }
-
-        const { fabricColor, gradientColor2 } = resolveGradientColors(baseColor, gradient);
-
-        return {
-          label: part.label || part.name,
-          color: fabricColor,
-          meshNames: part.meshNames,
-          gradient: {
-            color2: gradientColor2,
-            rotation: gradient.rotation,
-            position: gradient.position,
-            softness: gradient.softness,
-            opacity: gradient.opacity,
-            uvBounds: resolvePartUvBounds(part),
-          },
-        };
-      }),
+      modelSrc: resolveModelSrc(model),
+      atlasWidth,
+      atlasHeight,
+      colorParts: buildConfiguredColorParts(configuration, model),
     },
   ];
 };
@@ -183,12 +196,8 @@ const resolveTextTotalRotation = (instance: garmentTextRenderInstanceType, model
   return instanceRotation + PRINT_UPLOAD_ROTATION_DEG + (part ? resolvePartPrintRotation(part) : 0);
 };
 
-const buildTextDownloadFiles = (
-  stepKey: 'name' | 'number' | 'testo',
-  instances: garmentTextRenderInstanceType[],
-  model: garmentConfigType,
-): orderCuttingExportDownloadFileType[] => {
-  const textLayers: orderCuttingExportTextLayerSpecType[] = instances
+const buildTextLayerSpecs = (instances: garmentTextRenderInstanceType[], model: garmentConfigType): orderCuttingExportTextLayerSpecType[] =>
+  instances
     .filter((instance) => instance.text.trim())
     .map((instance) => ({
       text: instance.text.trim(),
@@ -203,7 +212,15 @@ const buildTextDownloadFiles = (
       letterSpacing: (instance as testoInstanceType).letterSpacing,
     }));
 
+const buildTextDownloadFiles = (
+  stepKey: 'name' | 'number' | 'testo',
+  instances: garmentTextRenderInstanceType[],
+  model: garmentConfigType,
+): orderCuttingExportDownloadFileType[] => {
+  const textLayers = buildTextLayerSpecs(instances, model);
   if (textLayers.length === 0) return [];
+
+  const { atlasWidth, atlasHeight } = resolveAtlasSize(model);
 
   return [
     {
@@ -212,8 +229,8 @@ const buildTextDownloadFiles = (
       fileName: `${stepKey}_uv_layer.png`,
       downloadUrl: '',
       composeKind: 'text-layer' as const,
-      atlasWidth: model.printAtlas?.width ?? 2048,
-      atlasHeight: model.printAtlas?.height ?? 2048,
+      atlasWidth,
+      atlasHeight,
       textLayers,
     },
   ];
@@ -225,47 +242,126 @@ const buildColoredDesignFileName = (pathName: string, color: string): string => 
   return `${baseName}_uv_${colorSlug}.png`;
 };
 
-const buildDesignDownloadFiles = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportDownloadFileType[] => {
+const resolveDesignComposeLayers = (
+  configuration: cartItemConfigurationType,
+  model: garmentConfigType,
+): { layers: orderCuttingExportDesignLayerSpecType[]; opacity: number; patternName: string } | null => {
   const patternIndex = resolvePatternIndex(configuration.design.activePatternKey);
   const pattern = model.patterns[patternIndex];
-  if (!pattern) return [];
+  if (!pattern || configuration.design.activePatternKey === null) return null;
 
   const designPattern = mapProductDesigns(model)[patternIndex];
   const layerColors = buildPatternColors(designPattern ?? null, configuration.design.patternColors, configuration.design.designLayerColors);
-  const opacity = configuration.design.designOpacity;
 
-  const files: orderCuttingExportDownloadFileType[] = pattern.parts.map((part, index) => {
-    const maskSrc = `${model.path}designs/${part.path_name}`;
-    const color = layerColors[index] ?? layerColors[0] ?? '#000000';
+  return {
+    opacity: configuration.design.designOpacity,
+    patternName: pattern.name,
+    layers: pattern.parts.map((part, index) => ({
+      maskSrc: `${model.path}designs/${part.path_name}`,
+      color: layerColors[index] ?? layerColors[0] ?? '#000000',
+    })),
+  };
+};
+
+const buildDesignDownloadFiles = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportDownloadFileType[] => {
+  const design = resolveDesignComposeLayers(configuration, model);
+  if (!design) return [];
+
+  const files: orderCuttingExportDownloadFileType[] = design.layers.map((layer, index) => {
+    const pathName = layer.maskSrc.split('/').pop() ?? `layer-${index}`;
 
     return {
       key: `design-layer-${index}`,
       label: `Texture ${index + 1}`,
-      fileName: buildColoredDesignFileName(part.path_name, color),
+      fileName: buildColoredDesignFileName(pathName, layer.color),
       downloadUrl: '',
       composeKind: 'design-layer' as const,
-      maskSrc,
-      color,
-      opacity,
+      maskSrc: layer.maskSrc,
+      color: layer.color,
+      opacity: design.opacity,
     };
   });
 
-  if (pattern.parts.length > 1) {
+  if (design.layers.length > 1) {
     files.push({
       key: 'design-mix',
       label: 'MIX',
-      fileName: `${pattern.name.replace(/\s+/g, '_').toLowerCase()}_uv_mix.png`,
+      fileName: `${design.patternName.replace(/\s+/g, '_').toLowerCase()}_uv_mix.png`,
       downloadUrl: '',
       composeKind: 'design-mix' as const,
-      opacity,
-      layers: pattern.parts.map((part, index) => ({
-        maskSrc: `${model.path}designs/${part.path_name}`,
-        color: layerColors[index] ?? layerColors[0] ?? '#000000',
-      })),
+      opacity: design.opacity,
+      layers: design.layers,
     });
   }
 
   return files;
+};
+
+const resolveLogoExportLabel = (instance: logoInstanceType) => instance.label || instance.fileName || 'Logo';
+
+const buildLogoStampSpecs = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportLogoStampSpecType[] =>
+  configuration.logo.instances
+    .filter((instance) => instance.src.trim())
+    .map((instance) => {
+      const part = model.parts.find((item) => item.id === instance.partId || item.name === instance.partId);
+
+      return {
+        src: instance.src,
+        label: resolveLogoExportLabel(instance),
+        fileName: instance.fileName || undefined,
+        uv: instance.uv,
+        rotation: instance.rotation + (instance.uploadRotation ?? LOGO_UPLOAD_ROTATION_DEG) + (part ? resolvePartPrintRotation(part) : 0),
+        opacity: instance.opacity ?? 1,
+        scale: instance.scale,
+        naturalWidth: instance.naturalWidth,
+        naturalHeight: instance.naturalHeight,
+      };
+    });
+
+const buildComplexDownloadFiles = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportDownloadFileType[] => {
+  const colorParts = buildConfiguredColorParts(configuration, model);
+  if (colorParts.length === 0) return [];
+
+  const { atlasWidth, atlasHeight } = resolveAtlasSize(model);
+  const design = resolveDesignComposeLayers(configuration, model);
+  const defaultPart = model.default_pattern?.[0]?.parts[0];
+
+  return [
+    {
+      key: 'complex-atlas',
+      label: 'UV Complex',
+      fileName: 'complex_uv_atlas.png',
+      downloadUrl: '',
+      composeKind: 'complex-atlas' as const,
+      modelSrc: resolveModelSrc(model),
+      atlasWidth,
+      atlasHeight,
+      colorParts,
+      opacity: design?.opacity,
+      layers: design?.layers,
+      textLayers: [
+        ...buildTextLayerSpecs(configuration.name.instances, model),
+        ...buildTextLayerSpecs(configuration.testo.instances, model),
+        ...buildTextLayerSpecs(configuration.number.instances, model),
+      ],
+      logoStamps: buildLogoStampSpecs(configuration, model),
+      defaultLogosSrc: defaultPart ? `${model.path}designs/${defaultPart.path_name}` : undefined,
+    },
+  ];
+};
+
+const buildComplexStep = (configuration: cartItemConfigurationType, model: garmentConfigType): orderCuttingExportConfigurationStepType => {
+  const downloadFiles = buildComplexDownloadFiles(configuration, model);
+
+  return {
+    step: 0,
+    key: 'complex',
+    title: 'Complex',
+    isConfigured: downloadFiles.length > 0,
+    emptyMessage: ORDER_CUTTING_EXPORT_DATA_NOT_SPECIFIED,
+    details: [],
+    downloadFiles,
+  };
 };
 
 const buildLogoDownloadFiles = (configuration: cartItemConfigurationType): orderCuttingExportDownloadFileType[] =>
@@ -273,7 +369,7 @@ const buildLogoDownloadFiles = (configuration: cartItemConfigurationType): order
     .filter((instance) => !instance.isDefault && instance.src.trim())
     .map((instance) => ({
       key: `logo-${instance.id}`,
-      label: instance.label || instance.fileName || 'Logo',
+      label: resolveLogoExportLabel(instance),
       fileName: instance.fileName || `logo-${instance.id}`,
       downloadUrl: instance.src,
       previewSrc: instance.src,
@@ -390,7 +486,12 @@ const buildStep = (
           { label: 'Scala', value: formatPercent(instance.scale) },
           { label: 'Rotazione', value: formatDegrees(instance.rotation + instance.uploadRotation) },
           { label: 'Opacità', value: formatPercent(instance.opacity) },
-          instance.naturalWidth > 0 ? { label: 'File originale', value: `${createPrintUnit(cmScale?.cmPerPxHorizontal).formatPx(instance.naturalWidth)} × ${createPrintUnit(cmScale?.cmPerPxVertical).formatPx(instance.naturalHeight)}` } : null,
+          instance.naturalWidth > 0
+            ? {
+                label: 'File originale',
+                value: `${createPrintUnit(cmScale?.cmPerPxHorizontal).formatPx(instance.naturalWidth)} × ${createPrintUnit(cmScale?.cmPerPxVertical).formatPx(instance.naturalHeight)}`,
+              }
+            : null,
         ].filter((param): param is orderCuttingExportStepDetailParamType => param !== null);
 
         return {
@@ -428,8 +529,11 @@ const buildOrderCuttingExportSteps = (
   printReferenceCm?: printReferenceCmType | null,
 ): orderCuttingExportConfigurationStepType[] => {
   const cmScale = resolvePrintCmScale(model, printReferenceCm);
+  const configurationSteps = CONFIGURATOR_STEP_META.filter((meta) => !model.hiddenSteps?.includes(meta.value)).map((meta) =>
+    buildStep(meta.value, configuration, model, cmScale),
+  );
 
-  return CONFIGURATOR_STEP_META.filter((meta) => !model.hiddenSteps?.includes(meta.value)).map((meta) => buildStep(meta.value, configuration, model, cmScale));
+  return [buildComplexStep(configuration, model), ...configurationSteps];
 };
 
 export { buildOrderCuttingExportSteps };

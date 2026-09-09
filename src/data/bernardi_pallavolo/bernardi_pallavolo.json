@@ -23,7 +23,7 @@
       "printRotation": 270,
       "gradient": {
         "reversed": false,
-        "rotation": 0,
+        "rotation": 90,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
@@ -44,7 +44,7 @@
       "printRotation": 270,
       "gradient": {
         "reversed": true,
-        "rotation": 0,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1

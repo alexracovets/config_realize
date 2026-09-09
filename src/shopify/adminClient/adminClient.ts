@@ -1,4 +1,4 @@
-import { getShopifyApiVersion, getShopifyStoreDomain } from '@shopify/config';
+import { getShopifyAdminStoreDomain, getShopifyApiVersion } from '@shopify/config';
 import { fetchShopifyWithTimeout } from '@shopify/fetchShopifyWithTimeout';
 import { resolveShopifyAdminAccessToken } from '@shopify/resolveShopifyAdminAccessToken';
 type shopifyGraphqlResponseType<TData> = {
@@ -21,11 +21,11 @@ const requestShopifyAdminGraphql = async (endpoint: string, query: string, varia
 };
 
 const shopifyAdminGraphql = async <TData>(query: string, variables?: Record<string, unknown>): Promise<TData> => {
-  const storeDomain = getShopifyStoreDomain();
+  const storeDomain = getShopifyAdminStoreDomain();
   const apiVersion = getShopifyApiVersion();
 
   if (!storeDomain) {
-    throw new Error('[shopify] Missing SHOPIFY_STORE_DOMAIN for Admin API.');
+    throw new Error('[shopify] Missing SHOPIFY_ADMIN_STORE_DOMAIN (or SHOPIFY_STORE_DOMAIN) for Admin API.');
   }
 
   const endpoint = `https://${storeDomain}/admin/api/${apiVersion}/graphql.json`;

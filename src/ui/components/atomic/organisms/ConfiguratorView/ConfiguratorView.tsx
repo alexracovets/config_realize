@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 
 import { cameraBridge } from '@configurator/canvas';
-import { CanvasButtons } from '@molecules';
+import { CanvasBrandLogo, CanvasButtons } from '@molecules';
 import { Configurator } from '@organisms/Configurator';
 import { ConfiguratorCanvasLoader } from '@organisms/ConfiguratorCanvasLoader';
 import { useConfiguratorSceneLoad } from '@store';
-import { Flex } from '@atoms';
+import { Box, Flex } from '@atoms';
 
 const INITIAL_SCENE_WATCHDOG_MS = 8_000;
 const SCENE_TRANSITION_WATCHDOG_MS = 8_000;
@@ -73,7 +73,7 @@ const ConfiguratorView = () => {
   }, [isInitialSceneLoading, isRouteHydrated, isSceneTransitionLoading, transitionSession]);
 
   if (!isRouteHydrated) {
-    return <div className="relative h-full min-h-0 min-w-0 w-full" />;
+    return <Box variant="configurator_view_placeholder" />;
   }
 
   return (
@@ -81,6 +81,7 @@ const ConfiguratorView = () => {
       <Flex variant="configurator_view_canvas">
         {canMountCanvas ? <Configurator /> : null}
         <ConfiguratorCanvasLoader />
+        <CanvasBrandLogo />
       </Flex>
       <CanvasButtons camera={cameraBridge} />
     </Flex>

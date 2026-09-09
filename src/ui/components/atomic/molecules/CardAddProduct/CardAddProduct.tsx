@@ -3,7 +3,7 @@
 import { ProductCatalogPopover } from '@molecules/ProductCatalogPopover';
 import { ProductSessionAddButton } from '@molecules/ProductSessionAddButton';
 import { ProductSessionRow } from '@molecules/ProductSessionRow';
-import { Flex, ScrollArea } from '@atoms';
+import { Box, Flex, ScrollArea } from '@atoms';
 import { useGarmentCatalogPreloadEffect, useRequestAddProduct } from '@hooks';
 import { useConfigurationCart } from '@store';
 import { getModel, resolveCartItemDisplayPreview } from '@utils';
@@ -24,7 +24,7 @@ const CardAddProduct = ({ className }: { className?: string }) => {
   return (
     <Flex variant="card_add_product" className={className}>
       <ScrollArea className="min-h-0 w-full flex-1 pr-0">
-        <Flex className="flex-col gap-0">
+        <Flex variant="card_list_column">
           {items.map((item) => {
             const product = getModel(item.modelId);
             if (!product) return null;
@@ -44,11 +44,11 @@ const CardAddProduct = ({ className }: { className?: string }) => {
           })}
         </Flex>
       </ScrollArea>
-      <div className="shrink-0">
+      <Box variant="shrink_0">
         <ProductCatalogPopover activeCollectionHandle={activeItem.collectionHandle} onSelect={requestAddProduct}>
           <ProductSessionAddButton />
         </ProductCatalogPopover>
-      </div>
+      </Box>
     </Flex>
   );
 };

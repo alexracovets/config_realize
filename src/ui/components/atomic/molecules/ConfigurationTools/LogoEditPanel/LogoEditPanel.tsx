@@ -16,9 +16,9 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
   const opacityPercent = Math.round(opacity * 100);
 
   return (
-    <Flex className="w-full flex-col items-start justify-start gap-5 max-xl:gap-4">
-      <Grid className="grid-cols-[1fr_auto] items-center w-full gap-2 max-xl:gap-1.5">
-        <Text className="text-[14px] leading-[15px] max-xl:text-[11px] max-xl:leading-3 text-gray">File caricati</Text>
+    <Flex variant="logo_edit_panel_column">
+      <Grid variant="logo_edit_header">
+        <Text variant="logo_uploaded_label">File caricati</Text>
         <Button
           type="button"
           variant="outline"
@@ -38,10 +38,10 @@ const LogoEditPanel = ({ partId, onClose, onReplaceImage, replacing = false }: l
         aria-label="Sostituisci immagine"
         className="grid h-auto w-full min-w-0 grid-cols-[auto_1fr] items-center justify-start gap-2 max-xl:gap-1.5 bg-transparent"
       >
-        <AtomImage src={part.src} alt={part.fileName} width={24} height={24} className="object-contain shrink-0 max-xl:w-5 max-xl:h-5" />
-        <Text className="text-[16px] leading-[20px] max-xl:text-[13px] max-xl:leading-4 font-semibold text-black-10 tracking-wide line-clamp-2 text-left">
-          {part.fileName}
-        </Text>
+        <Grid className="relative size-6 shrink-0 max-xl:size-5">
+          <AtomImage src={part.src} alt={part.fileName} />
+        </Grid>
+        <Text variant="logo_uploaded_file_name">{part.fileName}</Text>
       </Button>
       <RangeControl
         label="Altezza"

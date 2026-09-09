@@ -11,7 +11,6 @@ import { PDF_FONT_FAMILY, registerPdfFont } from '@utils/registerPdfFont';
 registerPdfFont();
 
 type orderCuttingExportPdfImagesType = {
-
   downloadPreviewByKey: Map<string, string | null>;
 
   downloadLinkByKey: Map<string, string>;
@@ -48,7 +47,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
+    fontFamily: PDF_FONT_FAMILY,
+    fontWeight: 700,
     fontSize: 8,
   },
   customerTd: { width: '28%', borderWidth: 0.75, borderColor: COLOR_BORDER, padding: 5, fontSize: 8 },
@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
+    fontFamily: PDF_FONT_FAMILY,
+    fontWeight: 700,
     fontSize: 9,
     textAlign: 'center',
   },
@@ -67,7 +68,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: COLOR_BORDER,
     padding: 5,
-    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
+    fontFamily: PDF_FONT_FAMILY,
+    fontWeight: 700,
     fontSize: 8,
     textAlign: 'center',
   },
@@ -94,7 +96,8 @@ const styles = StyleSheet.create({
     borderColor: COLOR_BORDER,
     padding: 4,
     fontSize: 7.5,
-    fontFamily: PDF_FONT_FAMILY, fontWeight: 700,
+    fontFamily: PDF_FONT_FAMILY,
+    fontWeight: 700,
   },
   paramTd: { width: '65%', borderWidth: 0.75, borderColor: COLOR_BORDER, padding: 4, fontSize: 7.5 },
   downloads: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
@@ -105,6 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     padding: 6,
     alignItems: 'center',
+    overflow: 'hidden',
     textDecoration: 'none',
     color: COLOR_TEXT,
   },
@@ -119,8 +123,14 @@ const styles = StyleSheet.create({
   },
   downloadPreview: { width: 43, height: 43, objectFit: 'contain' },
   downloadPlaceholder: { fontSize: 7, color: COLOR_MUTED, textAlign: 'center' },
-  downloadLabel: { fontSize: 8, fontFamily: PDF_FONT_FAMILY, fontWeight: 700, textAlign: 'center' },
-  downloadFile: { fontSize: 7, color: COLOR_MUTED, textAlign: 'center', marginTop: 2 },
+  downloadLabel: {
+    width: '100%',
+    fontSize: 8,
+    fontFamily: PDF_FONT_FAMILY,
+    fontWeight: 700,
+    textAlign: 'center',
+    overflow: 'hidden',
+  },
   pageNumber: { position: 'absolute', right: 27, bottom: 14, fontSize: 7.5, color: COLOR_MUTED, textAlign: 'right' },
 });
 
@@ -146,8 +156,9 @@ const DownloadCard = ({
       <View style={styles.downloadPreviewFrame}>
         {previewSrc ? <Image src={previewSrc} style={styles.downloadPreview} /> : <Text style={styles.downloadPlaceholder}>{file.label}</Text>}
       </View>
-      <Text style={styles.downloadLabel}>{file.label}</Text>
-      <Text style={styles.downloadFile}>{file.fileName}</Text>
+      <Text style={styles.downloadLabel} wrap={false}>
+        {file.label}
+      </Text>
     </>
   );
 
@@ -219,7 +230,7 @@ const ProductSection = ({ product, images }: { product: orderCuttingExportProduc
     {product.steps.map((step) => (
       <View key={`${product.cartItemId}-${step.key}`} style={styles.step} wrap={false}>
         <View style={styles.stepHeader}>
-          <Text style={styles.stepIndex}>{step.step}.</Text>
+          <Text style={styles.stepIndex}>{`${step.step}.`}</Text>
           <Text style={styles.stepTitle}>{step.title}</Text>
         </View>
 

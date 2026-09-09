@@ -2,6 +2,7 @@
 
 import { buildLoaderWavePath, WAVE_SPEED } from '@molecules/Loaders/MainLoader/buildLoaderWavePath';
 import { useLayoutEffect, useRef } from 'react';
+import { Box } from '@atoms';
 const supportsOffscreenCanvas = () => typeof OffscreenCanvas !== 'undefined';
 
 const startSvgWaveAnimation = (path: SVGPathElement) => {
@@ -110,17 +111,17 @@ const MainLoaderBackground = () => {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#ececec]" aria-hidden>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_36%,#fafafa_0%,transparent_68%)]" />
+    <Box variant="main_loader_background_root" aria-hidden>
+      <Box variant="main_loader_background_glow" />
 
-      <div ref={hostRef} className="absolute inset-[-12%]">
+      <Box ref={hostRef} variant="main_loader_host">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
           <path ref={pathRef} d={buildLoaderWavePath(0)} fill="#d2d2d2" />
         </svg>
-      </div>
+      </Box>
 
-      <div className="absolute inset-x-0 top-0 h-[38%] bg-[linear-gradient(to_bottom,#ffffff_0%,#ffffff_12%,rgba(255,255,255,0.92)_22%,transparent_100%)]" />
-    </div>
+      <Box variant="main_loader_background_top_fade" />
+    </Box>
   );
 };
 

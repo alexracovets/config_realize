@@ -204,6 +204,8 @@ const applyGarmentNumberStyle = (material: MeshStandardMaterial, style: nameStyl
 const applyGarmentPrintAtlasSize = (material: MeshStandardMaterial, width: number, height: number) => {
   const atlasUniform = material.userData.uPrintAtlasSizeUniform as { value: Vector2 } | undefined;
   if (atlasUniform) atlasUniform.value.set(width, height);
+  material.userData.garmentPrintAtlasWidth = width;
+  material.userData.garmentPrintAtlasHeight = height;
 };
 
 const applyGizmoFrameToUniforms = (material: MeshStandardMaterial, state: gizmoFrameStateType) => {

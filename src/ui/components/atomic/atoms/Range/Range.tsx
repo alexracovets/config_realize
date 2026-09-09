@@ -37,9 +37,9 @@ const Range = ({ className, wrapperClassName, variant = 'default', value, onChan
   const thumbSize = thumbSizeMap[variant ?? 'default'];
   const halfThumb = thumbSize / 2;
   return (
-    <div className={cn('w-full flex items-center', wrapperClassName)} style={{ height: thumbSize, paddingInline: halfThumb }}>
+    <section className={cn('w-full flex items-center', wrapperClassName)} style={{ height: thumbSize, paddingInline: halfThumb }}>
       <Slider className={cn('w-full', rangeVariants({ variant }), className)} value={value} onChange={onChange} min={min} max={max} {...props} />
-    </div>
+    </section>
   );
 };
 

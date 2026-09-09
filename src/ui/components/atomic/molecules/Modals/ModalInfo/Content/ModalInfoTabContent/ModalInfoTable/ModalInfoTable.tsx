@@ -2,7 +2,7 @@
 
 import { MdDoubleArrow } from 'react-icons/md';
 
-import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow } from '@atoms';
+import { AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow, Box } from '@atoms';
 import type { modalInfoTableColumnType, modalInfoTablePropsType } from '@types';
 import { cn } from '@utils';
 
@@ -42,7 +42,7 @@ const ModalInfoTable = ({ part }: modalInfoTablePropsType) => {
   const hasSubHeaders = isSizeChart && sizeColumns.some((column) => column.subHeader);
 
   return (
-    <div className="w-full min-w-0 self-stretch overflow-x-auto">
+    <Box variant="modal_info_table_shell">
       <AtomTable variant={variant}>
         <AtomTableHeader>
           {hasSubHeaders ? (
@@ -104,7 +104,7 @@ const ModalInfoTable = ({ part }: modalInfoTablePropsType) => {
           ))}
         </AtomTableBody>
       </AtomTable>
-    </div>
+    </Box>
   );
 };
 

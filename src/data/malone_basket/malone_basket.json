@@ -10,8 +10,8 @@
   "preserveGltfMeshes": ["model_inside"],
   "parts": [
     {
-      "name": "Davanti",
-      "label": "Davanti",
+      "name": "Gamba Sinistra",
+      "label": "Gamba Sinistra",
       "id": "malone_basket_front",
       "meshNames": ["model_left"],
       "renderOrder": 1,
@@ -24,15 +24,15 @@
       "printRotation": 270,
       "gradient": {
         "reversed": false,
-        "rotation": 0,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
       }
     },
     {
-      "name": "Retro",
-      "label": "Retro",
+      "name": "Gamba Destra",
+      "label": "Gamba Destra",
       "id": "malone_basket_back",
       "meshNames": ["model_right"],
       "renderOrder": 1,
@@ -44,8 +44,8 @@
       },
       "printRotation": 270,
       "gradient": {
-        "reversed": true,
-        "rotation": 0,
+        "reversed": false,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
@@ -123,10 +123,10 @@
       "name": "Design 6",
       "parts": [
         {
-          "path_name": "design_6_color_1.webp"
+          "path_name": "design_6_color_2.webp"
         },
         {
-          "path_name": "design_6_color_2.webp"
+          "path_name": "design_6_color_1.webp"
         }
       ],
       "designId": "design_06"
@@ -171,10 +171,12 @@
       "name": "Design 10",
       "parts": [
         {
-          "path_name": "design_10_color_1.webp"
+          "path_name": "design_10_color_1.webp",
+          "colorIndex": 2
         },
         {
-          "path_name": "design_10_color_2.webp"
+          "path_name": "design_10_color_2.webp",
+          "colorIndex": 1
         }
       ],
       "designId": "design_10"
@@ -234,7 +236,7 @@
       "label": "Destra inferiore",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.7,
+        "x": 0.73,
         "y": 0.768
       },
       "rotation": 0,
@@ -244,7 +246,7 @@
       "id": "right-bottom",
       "src": "/png/text_areas/shorts/number/left_bottom.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -252,7 +254,7 @@
       "label": "Destra superiore",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.7,
+        "x": 0.73,
         "y": 0.6
       },
       "rotation": 0,
@@ -262,7 +264,7 @@
       "id": "right-top",
       "src": "/png/text_areas/shorts/number/left_top.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -270,7 +272,7 @@
       "label": "Laterale",
       "partId": "malone_basket_back",
       "uv": {
-        "x": 0.571,
+        "x": 0.601,
         "y": 0.675
       },
       "rotation": 0,
@@ -283,7 +285,7 @@
         "testo": ["right"]
       },
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -291,7 +293,7 @@
       "label": "Davanti",
       "partId": "malone_basket_front",
       "uv": {
-        "x": 0.377,
+        "x": 0.347,
         "y": 0.6
       },
       "rotation": 0,
@@ -301,7 +303,7 @@
       "id": "left-top",
       "src": "/png/text_areas/shorts/number/right.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     }

@@ -1,7 +1,8 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-import type { CSSProperties, ImgHTMLAttributes } from 'react';
+import Image from 'next/image';
+import type { CSSProperties } from 'react';
 
 import { cn } from '@utils';
 import type { atomImagePropsType } from '@types';
@@ -38,29 +39,34 @@ const AtomImage = ({
   const hasDimensions = width != null && height != null;
   const useFill = !hasDimensions;
   const resolvedLoading = loading ?? (priority ? 'eager' : 'lazy');
+  const resolvedSrc = src || EMPTY_IMAGE_SRC;
+  const isLocalStaticSrc = resolvedSrc.startsWith('/');
+  const isSvgSrc = /\.svg(?:$|\?)/i.test(resolvedSrc);
+  const shouldDisableOptimization = !isLocalStaticSrc || isSvgSrc;
 
-  const imageStyle: CSSProperties = useFill ? { ...style, position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit } : (style ?? {});
+  const imageStyle: CSSProperties = useFill ? { ...style, objectFit: fit } : { width: 'auto', height: 'auto', ...style };
 
   const imageElement = (
-
-    <img
-      src={src || EMPTY_IMAGE_SRC}
+    <Image
+      src={resolvedSrc}
       alt={alt || 'image'}
+      fill={useFill}
       width={hasDimensions ? width : undefined}
       height={hasDimensions ? height : undefined}
       loading={resolvedLoading}
-      fetchPriority={priority ? 'high' : undefined}
+      priority={priority}
+      unoptimized={shouldDisableOptimization}
       className={cn(useFill && (fit === 'cover' ? 'object-cover' : 'object-contain'), !useFill && className)}
       style={imageStyle}
-      {...(props as ImgHTMLAttributes<HTMLImageElement>)}
+      {...props}
     />
   );
 
   if (useFill) {
     return (
-      <div data-active={dataActive} className={cn('relative', variantAtomImage({ variant }), className)}>
+      <section data-active={dataActive} className={cn('relative', variantAtomImage({ variant }), className)}>
         {imageElement}
-      </div>
+      </section>
     );
   }
 

@@ -7,7 +7,9 @@ import { IoIosClose, IoIosSearch } from 'react-icons/io';
 
 import { Flex, SearchInput } from '@atoms';
 
-const Search = () => {
+// When onOpen is provided (configurator embedded in the storefront), tapping the
+// search icon delegates to the host store instead of expanding the inline input.
+const Search = ({ onOpen }: { onOpen?: () => void } = {}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +49,7 @@ const Search = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              onClick={() => setIsOpen(true)}
+              onClick={() => (onOpen ? onOpen() : setIsOpen(true))}
               aria-label="Open search"
               aria-expanded={false}
               aria-controls="search-input"

@@ -1,0 +1,1 @@
+export { CanvasBrandLogo } from './CanvasBrandLogo';

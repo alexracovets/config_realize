@@ -4,7 +4,6 @@ type checkoutLineAttributeType = {
 };
 
 type checkoutLinePayloadType = {
-
   handle: string;
   quantity: number;
   attributes: checkoutLineAttributeType[];

@@ -1,12 +1,10 @@
 'use client';
 
-import { Flex } from '@atoms';
-
 const LogoYOU = () => {
   return (
-    <Flex className="h-[109px] w-[236px] shrink-0 animate-pulse items-center justify-center rounded-[8px] bg-linear-to-r from-[#ECD187] via-[#DC2C6F] to-[#030102] text-[72px] leading-none font-bold italic tracking-[-1px] text-white motion-reduce:animate-none">
+    <span className="inline-block max-w-full animate-pulse rounded-lg bg-linear-to-r from-[#ECD187] via-[#DC2C6F] to-[#030102] py-4 pl-5.5 pr-8 text-[72px] leading-none font-bold italic tracking-[-1px] whitespace-nowrap text-white motion-reduce:animate-none max-sm:py-2.75 max-sm:pl-3.75 max-sm:pr-5.5 max-sm:text-[40px]">
       YOU
-    </Flex>
+    </span>
   );
 };
 

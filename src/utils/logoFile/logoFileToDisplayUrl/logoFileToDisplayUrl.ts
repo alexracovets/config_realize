@@ -46,9 +46,7 @@ const logoFileToDisplayUrl = async (file: File): Promise<string> => {
     if (pdfOffset >= 0) {
       try {
         return await convertPdfToDisplayUrl(buffer.slice(pdfOffset));
-      } catch {
-
-      }
+      } catch {}
     }
     return convertWithMagick(bytes);
   }

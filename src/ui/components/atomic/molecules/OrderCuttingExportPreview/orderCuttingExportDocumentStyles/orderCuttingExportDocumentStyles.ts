@@ -305,21 +305,27 @@ const ORDER_CUTTING_EXPORT_DOCUMENT_STYLES = `
 .cutting-export__download-label {
   display: block;
   width: 60px;
+  overflow: hidden;
   color: #000;
   font-size: 10px;
   font-weight: 700;
   line-height: 1.3;
   text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cutting-export__download-file {
-  display: block;
+  display: -webkit-box;
   width: 60px;
   margin-top: 2px;
+  overflow: hidden;
   font-size: 9px;
   line-height: 1.3;
   color: #979797;
   word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .cutting-export__uv-section {

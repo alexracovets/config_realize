@@ -2,14 +2,15 @@ import type { resolveLogoInstancesForRender } from '@store';
 
 const buildLogoStampSignature = (instances: ReturnType<typeof resolveLogoInstancesForRender>) =>
   JSON.stringify(
-    instances.map((instance) => ({
-      id: instance.id,
-      src: instance.src,
-      opacity: instance.opacity,
-      naturalWidth: instance.naturalWidth,
-      naturalHeight: instance.naturalHeight,
-      scale: instance.scale,
-    })),
+    [...instances]
+      .map((instance) => ({
+        id: instance.id,
+        src: instance.src,
+        opacity: instance.opacity,
+        naturalWidth: instance.naturalWidth,
+        naturalHeight: instance.naturalHeight,
+      }))
+      .sort((left, right) => (left.id < right.id ? -1 : left.id > right.id ? 1 : 0)),
   );
 
 const buildLogoStyleSignature = (instances: ReturnType<typeof resolveLogoInstancesForRender>) =>

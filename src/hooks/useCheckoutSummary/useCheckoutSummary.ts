@@ -23,6 +23,8 @@ const useCheckoutSummary = () => {
       discountPercent: store.getDiscountPercent(),
       discountAmount: store.getDiscountAmount(),
       grandTotal: store.getGrandTotal(),
+      minimumQuantity: store.getRequiredMinimumQuantity(),
+      canProceed: store.canMeetMinimumQuantity(),
     };
   }, [products]);
 

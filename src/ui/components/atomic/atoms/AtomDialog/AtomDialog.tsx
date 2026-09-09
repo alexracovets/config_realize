@@ -40,14 +40,14 @@ const dialogOverlayVariants = cva('fixed inset-0 z-50', {
 });
 
 const dialogContentVariants = cva(
-  'fixed top-[50%] left-[50%] z-50 flex flex-col overflow-hidden w-auto min-w-[320px] translate-x-[-50%] translate-y-[-50%] h-full max-h-[80dvh]',
+  'fixed top-[50%] left-[50%] z-50 flex flex-col overflow-hidden w-auto min-w-[320px] translate-x-[-50%] translate-y-[calc(-50%+var(--embed-header-offset)/2)] h-full max-h-[calc((var(--viewport-height)-var(--embed-header-offset))*0.8)]',
   {
     variants: {
       variant: {
         default: 'rounded-[8px]',
       },
       size: {
-        default: 'p-4 sm:p-10 w-[calc(100%-32px)] max-w-[1044px] max-h-[calc(100dvh-32px)]',
+        default: 'p-4 sm:p-10 w-[calc(100%-32px)] max-w-[1044px] max-h-[calc(var(--viewport-height)-var(--embed-header-offset)-32px)]',
       },
       background: {
         default: 'bg-white',

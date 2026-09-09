@@ -71,10 +71,14 @@ interface scrollAreaPropsType {
   fadeEdges?: boolean;
   edgeShadows?: boolean;
   orientation?: 'vertical' | 'horizontal';
+  onRootElementChange?: (element: HTMLElement | null) => void;
 }
 
 interface logoPropsType {
   href?: string;
+  // When provided (configurator embedded in the storefront), a click delegates to
+  // the host store instead of navigating within the configurator app.
+  onNavigate?: () => void;
 }
 
 export type {

@@ -1,7 +1,9 @@
 'use client';
 
+import { Box } from '@atoms';
+
 const CanvasLoaderBackground = () => {
-  return <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#E8E8E8] to-white" aria-hidden />;
+  return <Box variant="canvas_loader_background" aria-hidden />;
 };
 
 export { CanvasLoaderBackground };

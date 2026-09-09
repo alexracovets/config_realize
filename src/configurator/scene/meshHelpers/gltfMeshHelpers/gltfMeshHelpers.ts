@@ -29,8 +29,8 @@ const biasInsideShellDepth = (object: Object3D) => {
     for (const material of materials) {
       if (!material) continue;
       material.polygonOffset = true;
-      material.polygonOffsetFactor = 1;
-      material.polygonOffsetUnits = 1;
+      material.polygonOffsetFactor = 4;
+      material.polygonOffsetUnits = 4;
       material.needsUpdate = true;
     }
   });

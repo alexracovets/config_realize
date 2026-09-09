@@ -59,8 +59,16 @@ const Carousel = ({ orientation = 'horizontal', opts, setApi, plugins, className
     [api],
   );
 
-  const canScrollPrev = useSyncExternalStore(subscribe, () => api?.canScrollPrev() ?? false, () => false);
-  const canScrollNext = useSyncExternalStore(subscribe, () => api?.canScrollNext() ?? false, () => false);
+  const canScrollPrev = useSyncExternalStore(
+    subscribe,
+    () => api?.canScrollPrev() ?? false,
+    () => false,
+  );
+  const canScrollNext = useSyncExternalStore(
+    subscribe,
+    () => api?.canScrollNext() ?? false,
+    () => false,
+  );
 
   const scrollPrev = useCallback(() => {
     api?.scrollPrev();
@@ -71,7 +79,7 @@ const Carousel = ({ orientation = 'horizontal', opts, setApi, plugins, className
   }, [api]);
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (event: React.KeyboardEvent<HTMLElement>) => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
         scrollPrev();
@@ -101,7 +109,7 @@ const Carousel = ({ orientation = 'horizontal', opts, setApi, plugins, className
         canScrollNext,
       }}
     >
-      <div
+      <section
         onKeyDownCapture={handleKeyDown}
         className={cn('relative min-w-0', className)}
         role="region"
@@ -110,7 +118,7 @@ const Carousel = ({ orientation = 'horizontal', opts, setApi, plugins, className
         {...props}
       >
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   );
 };
@@ -119,14 +127,14 @@ const CarouselContent = ({ className, ...props }: React.ComponentProps<'div'>) =
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div
+    <section
       ref={carouselRef}
       className="overflow-hidden"
       data-slot="carousel-content"
       style={{ touchAction: orientation === 'horizontal' ? 'pan-y' : 'pan-x' }}
     >
-      <div className={cn('flex', orientation === 'horizontal' ? '-ml-2' : '-mt-2 flex-col', className)} {...props} />
-    </div>
+      <section className={cn('flex', orientation === 'horizontal' ? '-ml-2' : '-mt-2 flex-col', className)} {...props} />
+    </section>
   );
 };
 
@@ -134,7 +142,7 @@ const CarouselItem = ({ className, ...props }: React.ComponentProps<'div'>) => {
   const { orientation } = useCarousel();
 
   return (
-    <div
+    <section
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"

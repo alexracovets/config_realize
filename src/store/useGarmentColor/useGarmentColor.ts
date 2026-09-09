@@ -65,7 +65,7 @@ const useGarmentColor = createSingletonStore<GarmentColorState>('useGarmentColor
       return {
         gradientsByPart: {
           ...state.gradientsByPart,
-          [partId]: { ...current, enabled },
+          [partId]: enabled ? { ...current, enabled: true, rotation: 0, reversed: false } : { ...current, enabled: false },
         },
       };
     });

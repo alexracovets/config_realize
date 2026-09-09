@@ -38,8 +38,75 @@ const normalizeLiveHost = (host: string | null | undefined): string | null => {
     return null;
   }
 
-  const trimmed = host.trim().toLowerCase();
+  const trimmed = host
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, '')
+    .replace(/\/.*$/, '');
   return HOSTNAME_PATTERN.test(trimmed) ? trimmed : null;
+};
+
+const addLiveHostOrigin = (origins: Set<string>, host: string | null | undefined): void => {
+  const liveHost = normalizeLiveHost(host);
+  if (liveHost) {
+    origins.add(`https://${liveHost}`);
+  }
+};
+
+const addHostsFromCsv = (origins: Set<string>, raw: string | undefined): void => {
+  if (!raw) {
+    return;
+  }
+
+  for (const entry of raw.split(',')) {
+    addLiveHostOrigin(origins, entry);
+  }
+};
+
+const addConfiguredStoreHosts = (origins: Set<string>): void => {
+  const storeDomain = readEnv('SHOPIFY_STORE_DOMAIN');
+  const shopDomain = normalizeShopDomain(storeDomain);
+  if (shopDomain) {
+    origins.add(`https://${shopDomain}`);
+  } else {
+    addLiveHostOrigin(origins, storeDomain);
+  }
+
+  addHostsFromCsv(origins, readEnv('SHOPIFY_HOSTS'));
+
+  const shops = readEnv('SHOPIFY_SHOPS');
+  if (shops) {
+    for (const shop of shops.split(',')) {
+      const key = shop
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '_')
+        .replace(/^_|_$/g, '');
+      if (!key) {
+        continue;
+      }
+
+      addHostsFromCsv(origins, readEnv(`SHOPIFY_SHOP_${key}_HOSTS`));
+
+      const shopStoreDomain = readEnv(`SHOPIFY_SHOP_${key}_STORE_DOMAIN`);
+      const shopMyshopify = normalizeShopDomain(shopStoreDomain);
+      if (shopMyshopify) {
+        origins.add(`https://${shopMyshopify}`);
+      } else {
+        addLiveHostOrigin(origins, shopStoreDomain);
+      }
+    }
+  }
+
+  const rawFrameAncestors = readEnv('SHOPIFY_FRAME_ANCESTORS');
+  if (rawFrameAncestors) {
+    for (const entry of rawFrameAncestors.split(',')) {
+      const normalized = normalizeFrameAncestor(entry);
+      if (normalized) {
+        origins.add(normalized);
+      }
+    }
+  }
 };
 
 const buildShopifyFrameAncestors = (shop?: string | null, host?: string | null): string[] => {
@@ -50,25 +117,8 @@ const buildShopifyFrameAncestors = (shop?: string | null, host?: string | null):
     origins.add(`https://${shopFromRequest}`);
   }
 
-  const liveHost = normalizeLiveHost(host);
-  if (liveHost) {
-    origins.add(`https://${liveHost}`);
-  }
-
-  const storeDomain = normalizeShopDomain(readEnv('SHOPIFY_STORE_DOMAIN'));
-  if (storeDomain) {
-    origins.add(`https://${storeDomain}`);
-  }
-
-  const raw = readEnv('SHOPIFY_FRAME_ANCESTORS');
-  if (raw) {
-    for (const entry of raw.split(',')) {
-      const normalized = normalizeFrameAncestor(entry);
-      if (normalized) {
-        origins.add(normalized);
-      }
-    }
-  }
+  addLiveHostOrigin(origins, host);
+  addConfiguredStoreHosts(origins);
 
   return [...origins];
 };

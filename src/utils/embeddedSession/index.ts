@@ -1,1 +1,1 @@
-export { buildAppPath, isEmbeddedSession, persistEmbeddedSession, readEmbeddedSession, resolveEmbeddedContext } from './embeddedSession';
+export { buildAppPath, isEmbeddedSession, normalizeShopOrigin, persistEmbeddedSession, readEmbeddedSession, resolveEmbeddedContext } from './embeddedSession';

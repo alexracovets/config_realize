@@ -8,7 +8,7 @@ const ProductGalleryBlock = ({ title, items, className }: productGalleryBlockPro
   return (
     <section className={cn('w-full', className)}>
       <Text variant="h2">{title}</Text>
-      <Grid className="grid-cols-4 gap-6">
+      <Grid variant="gallery_four_cols">
         {items.map(({ collection, slug, alt, previewSrc, activePreviewSrc }) => (
           <ProductFlipCard
             key={`${collection}-${slug}`}

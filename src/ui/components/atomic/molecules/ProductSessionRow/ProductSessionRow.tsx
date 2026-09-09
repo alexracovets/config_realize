@@ -30,10 +30,7 @@ const ProductSessionRow = ({ name, previewSrc, active = false, onSelect, onRemov
     <>
       <Box
         asChild
-        className={cn(
-          'relative shrink-0 overflow-hidden w-15 h-12 max-sm:w-12 max-sm:h-11',
-          isAnchorHidden && 'invisible',
-        )}
+        className={cn('relative shrink-0 overflow-hidden w-15 h-12 max-sm:w-12 max-sm:h-11', isAnchorHidden && 'invisible')}
         style={{
           scrollMarginTop: PRODUCT_SESSION_ROW_SCROLL_EDGE_PADDING_PX,
           scrollMarginBottom: PRODUCT_SESSION_ROW_SCROLL_EDGE_PADDING_PX,

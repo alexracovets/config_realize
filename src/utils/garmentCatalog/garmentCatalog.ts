@@ -19,7 +19,6 @@ import picciPallavoloData from '@data/picci_pallavolo/picci_pallavolo.json';
 import syllaPallavoloData from '@data/sylla_pallavolo/sylla_pallavolo.json';
 
 const MODELS: Record<modelIdType, garmentConfigType> = {
-
   baggio_calcio: baggioData as unknown as garmentConfigType,
   canotta_magik_basket: canottaMagikBasketData as unknown as garmentConfigType,
   bernardi_calcio: bernardiCalcioData as unknown as garmentConfigType,

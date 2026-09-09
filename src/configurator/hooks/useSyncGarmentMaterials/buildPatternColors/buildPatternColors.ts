@@ -9,12 +9,17 @@ const buildPatternColors = (
   patternColors: Record<string, string>,
   designLayerColors: Record<number, string>,
 ): patternColorPairType => {
-  const colors: [string, string] = [designLayerColors[0] ?? DEFAULT_PATTERN_COLOR, designLayerColors[1] ?? DEFAULT_PATTERN_COLOR];
+  const colors: patternColorPairType = [
+    designLayerColors[0] ?? DEFAULT_PATTERN_COLOR,
+    designLayerColors[1] ?? DEFAULT_PATTERN_COLOR,
+    designLayerColors[2] ?? DEFAULT_PATTERN_COLOR,
+  ];
 
   if (!pattern) return colors;
 
   for (let index = 0; index < Math.min(pattern.parts.length, PATTERN_LAYER_COUNT); index += 1) {
-    colors[index] = patternColors[pattern.parts[index].key] ?? designLayerColors[index] ?? DEFAULT_PATTERN_COLOR;
+    const part = pattern.parts[index];
+    colors[index] = patternColors[part.key] ?? designLayerColors[part.colorIndex] ?? DEFAULT_PATTERN_COLOR;
   }
 
   return colors;

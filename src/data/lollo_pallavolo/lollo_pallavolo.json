@@ -10,8 +10,8 @@
   "preserveGltfMeshes": ["mans_shorts_inside"],
   "parts": [
     {
-      "name": "Davanti",
-      "label": "Davanti",
+      "name": "Gamba Sinistra",
+      "label": "Gamba Sinistra",
       "id": "lollo_pallavolo_front",
       "meshNames": ["mans_shorts_left"],
       "renderOrder": 1,
@@ -24,15 +24,15 @@
       "printRotation": 270,
       "gradient": {
         "reversed": false,
-        "rotation": 0,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
       }
     },
     {
-      "name": "Retro",
-      "label": "Retro",
+      "name": "Gamba Destra",
+      "label": "Gamba Destra",
       "id": "lollo_pallavolo_back",
       "meshNames": ["mans_shorts_right"],
       "renderOrder": 1,
@@ -44,8 +44,8 @@
       },
       "printRotation": 270,
       "gradient": {
-        "reversed": true,
-        "rotation": 0,
+        "reversed": false,
+        "rotation": 270,
         "position": 0.5,
         "softness": 0.5,
         "opacity": 1
@@ -231,7 +231,7 @@
       "label": "Destra inferiore",
       "partId": "lollo_pallavolo_back",
       "uv": {
-        "x":  0.687,
+        "x": 0.687,
         "y": 0.733
       },
       "rotation": 0,
@@ -241,7 +241,7 @@
       "id": "right-bottom",
       "src": "/png/text_areas/shorts_wooman/number/left_bottom.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -259,7 +259,7 @@
       "id": "right-top",
       "src": "/png/text_areas/shorts_wooman/number/left_top.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -280,7 +280,7 @@
         "testo": ["right"]
       },
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     },
@@ -298,7 +298,7 @@
       "id": "left-top",
       "src": "/png/text_areas/shorts_wooman/number/right.png",
       "heightMinCm": 1,
-      "heightMaxCm": 27,
+      "heightMaxCm": 10,
       "widthMinCm": 1,
       "widthMaxCm": 200
     }

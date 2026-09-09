@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 
+import { Box } from '@atoms';
 import { MainLoader, MainLoaderBackground } from '@molecules';
 import { useConfiguratorSceneLoad } from '@store';
 
@@ -19,9 +20,9 @@ const ConfiguratorInitialLoader = () => {
       aria-hidden={!isInitialSceneLoading}
     >
       <MainLoaderBackground />
-      <div className="relative z-10">
+      <Box variant="loader_content_layer">
         <MainLoader />
-      </div>
+      </Box>
     </motion.div>
   );
 };

@@ -1,6 +1,21 @@
-import type { garmentConfigType, logoInstanceType, logoPositionConfigType, logoPositionType, uvPointType } from '@types';
-import { LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
+import type { garmentConfigType, logoInstanceType, logoPositionConfigType, logoPositionType, uvBoundsType, uvPointType } from '@types';
+import { FULL_UV_BOUNDS, LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
 import { resolvePartUvBounds } from '@configurator/mappers';
+
+const LOGO_STACK_INSET = 0.04;
+
+const clampUvToPartBounds = (uv: uvPointType, bounds: uvBoundsType): uvPointType => {
+  const minX = bounds.minX + LOGO_STACK_INSET;
+  const maxX = bounds.maxX - LOGO_STACK_INSET;
+  const minY = bounds.minY + LOGO_STACK_INSET;
+  const maxY = bounds.maxY - LOGO_STACK_INSET;
+
+  return {
+    x: Math.min(Math.max(uv.x, minX), Math.max(minX, maxX)),
+    y: Math.min(Math.max(uv.y, minY), Math.max(minY, maxY)),
+  };
+};
+
 const resolvePartIdForAtlasUv = (product: garmentConfigType, uv: uvPointType): string => {
   const match = product.parts.find((part) => {
     const bounds = resolvePartUvBounds(part);
@@ -82,13 +97,13 @@ const createDefaultLogoInstances = (positions: logoPositionType[]): logoInstance
 
 const isShortsProduct = (product: garmentConfigType) => product.parts.some((part) => part.label === 'Lacci');
 
-const SHORTS_LOGO_PART_FRACTION = { x: 0.685, y: 0.67 };
+const SHORTS_LOGO_PART_FRACTION = { x: 0.75, y: 0.67 };
 
 const resolveLogoDefaults = (product: garmentConfigType) => {
   const shorts = isShortsProduct(product);
   const targetPart = shorts
-    ? (product.parts.find((part) => part.label === 'Retro') ?? product.parts[0])
-    : (product.parts.find((part) => part.label === 'Front') ?? product.parts[0]);
+    ? (product.parts.find((part) => part.id.endsWith('_back')) ?? product.parts[0])
+    : (product.parts.find((part) => part.id.endsWith('_front')) ?? product.parts[0]);
 
   if (!targetPart) {
     throw new Error(`Product "${product.path}" has no parts for logo defaults.`);
@@ -110,13 +125,16 @@ const resolveLogoDefaults = (product: garmentConfigType) => {
 
 const createDynamicUserLogoPosition = (product: garmentConfigType, index: number): logoPositionType => {
   const defaults = resolveLogoDefaults(product);
-  const offset = index * 0.03;
+  const part = product.parts.find((item) => item.id === defaults.partId) ?? product.parts[0];
+  const partId = part?.id ?? defaults.partId;
+  const bounds = part ? resolvePartUvBounds(part) : FULL_UV_BOUNDS;
+  const uv = clampUvToPartBounds(defaults.uv, bounds);
 
   return {
     key: `logo-user-${index}`,
     label: `Logo ${index + 1}`,
-    partId: defaults.partId,
-    uv: { x: defaults.uv.x + offset, y: defaults.uv.y - offset },
+    partId,
+    uv,
     rotation: defaults.rotation,
     scale: defaults.scale,
     showFrame: true,

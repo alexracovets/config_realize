@@ -1,0 +1,1 @@
+export { useScrollHintTutorialTrigger } from './useScrollHintTutorialTrigger';

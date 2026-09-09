@@ -1,7 +1,8 @@
 'use client';
 
+import type { logoInstanceType } from '@types';
 import type { Texture } from 'three';
-import { LOGO_SLOT_COUNT } from '@configurator/constants';
+import { registerGarmentLogoE2eDebug, setGarmentLogoE2eStampCanvas } from '@configurator/hooks/registerGarmentLogoE2eDebug';
 import { buildLogoStampSignature, buildLogoStyleSignature } from '@configurator/hooks/useGarmentLogoTextures/logoTextureSignatures';
 import { useLogoUniformSync } from '@configurator/hooks/useGarmentLogoTextures/useLogoUniformSync';
 import { useGizmoIconAtlas } from '@configurator/hooks/useGizmoIconAtlas';
@@ -15,11 +16,15 @@ import {
   applyGarmentPrintAtlasSize,
   buildLogoGizmoFrameUniforms,
   buildLogoStyleUniforms,
-  canvasToMaskTexture,
+  canvasToLogoLayerTexture,
+  compileGarmentShader,
   composeLogoStampAtlas,
   getEmptyPrintTexture,
   loadCachedImage,
   repairPrintInstancePlacement,
+  resolveGarmentPrintFeatureFlags,
+  resolveLogoShaderSlotCount,
+  resolveLogoStampAtlasGrid,
   resolvePrintAtlasSize,
   resolveProductGizmoRotation,
 } from '@configurator/utils';
@@ -27,6 +32,7 @@ import { useThree } from '@react-three/fiber';
 import { resolveLogoInstancesForRender, useConfigurationControl, useConfiguratorProduct, useConfiguratorSceneLoad, useGarmentLogo } from '@store';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 const LOGO_STEP = 7;
+const DEFAULT_STAMP_GRID = resolveLogoStampAtlasGrid();
 
 const useGarmentLogoTextures = () => {
   const product = useConfiguratorProduct((state) => state.product);
@@ -49,14 +55,13 @@ const useGarmentLogoTextures = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const textureRef = useRef<Texture | null>(null);
   const stampCellSizeRef = useRef({ width: 1, height: 1 });
+  const stampGridRef = useRef(DEFAULT_STAMP_GRID);
+  const canvasSizeRef = useRef({ width: 0, height: 0 });
   const generationRef = useRef(0);
   const prevStampSignatureRef = useRef('');
 
   const instancesForRender = useMemo(
-    () =>
-      resolveLogoInstancesForRender(logoInstances, logoPreview)
-        .slice(0, LOGO_SLOT_COUNT)
-        .map((instance) => repairPrintInstancePlacement(instance, product.parts)),
+    () => resolveLogoInstancesForRender(logoInstances, logoPreview).map((instance) => repairPrintInstancePlacement(instance, product.parts)),
     [logoInstances, logoPreview, product.parts],
   );
   const stampSignature = useMemo(() => buildLogoStampSignature(instancesForRender), [instancesForRender]);
@@ -72,7 +77,10 @@ const useGarmentLogoTextures = () => {
     textureRef.current = null;
     canvasRef.current = null;
     stampCellSizeRef.current = { width: 1, height: 1 };
+    stampGridRef.current = DEFAULT_STAMP_GRID;
+    canvasSizeRef.current = { width: 0, height: 0 };
     prevStampSignatureRef.current = '';
+    setGarmentLogoE2eStampCanvas(null);
   }, []);
 
   const ensureNaturalSizes = useCallback(async () => {
@@ -97,31 +105,53 @@ const useGarmentLogoTextures = () => {
     });
   }, [instancesForRender]);
 
-  const applyLogoStyleAndFrame = useCallback(() => {
-    const cellSize = stampCellSizeRef.current;
-    const gizmoRotation = resolveProductGizmoRotation(product);
+  const ensureLogoSlotCapacity = useCallback(
+    (instanceCount: number) => {
+      const features = resolveGarmentPrintFeatureFlags(product, instanceCount);
+      const capacity = features.useLogo ? resolveLogoShaderSlotCount(instanceCount) : 0;
 
-    for (const part of product.parts) {
-      const style = buildLogoStyleUniforms(instancesForRender, product.parts, part.id, cellSize, atlasSize.width);
-      const frame = buildLogoGizmoFrameUniforms(instancesForRender, part.id, activeStep === LOGO_STEP && isGizmoVisible, gizmoRotation);
-
-      for (const material of getMaterials(part.id)) {
-        applyGarmentGizmoRotation(material, gizmoRotation);
-        applyGarmentPrintAtlasSize(material, atlasSize.width, atlasSize.height);
-        applyGarmentLogoStyle(material, style);
-        applyGarmentLogoGizmoFrame(material, frame);
-        if (gizmoIcons) applyGarmentGizmoIcons(material, gizmoIcons);
-      }
-    }
-
-    invalidate();
-  }, [activeStep, atlasSize.height, atlasSize.width, getMaterials, gizmoIcons, instancesForRender, invalidate, isGizmoVisible, product]);
-
-  const applyStampToMaterials = useCallback(
-    (texture: Texture, cellSize: { width: number; height: number }) => {
       for (const part of product.parts) {
         for (const material of getMaterials(part.id)) {
-          applyGarmentLogoStamp(material, { stamp: texture, cellSize });
+          if (material.userData.garmentLogoSlotCapacity === capacity) continue;
+
+          material.userData.garmentLogoSlotCapacity = capacity;
+          compileGarmentShader(material, features);
+        }
+      }
+    },
+    [getMaterials, product],
+  );
+
+  const applyLogoStyleAndFrame = useCallback(
+    (instances: logoInstanceType[] = instancesForRender) => {
+      ensureLogoSlotCapacity(instances.length);
+
+      const cellSize = stampCellSizeRef.current;
+      const gizmoRotation = resolveProductGizmoRotation(product);
+
+      for (const part of product.parts) {
+        const style = buildLogoStyleUniforms(instances, product.parts, part.id, cellSize, atlasSize.width, stampGridRef.current);
+        const frame = buildLogoGizmoFrameUniforms(instances, part.id, activeStep === LOGO_STEP && isGizmoVisible, gizmoRotation);
+
+        for (const material of getMaterials(part.id)) {
+          applyGarmentGizmoRotation(material, gizmoRotation);
+          applyGarmentPrintAtlasSize(material, atlasSize.width, atlasSize.height);
+          applyGarmentLogoStyle(material, style);
+          applyGarmentLogoGizmoFrame(material, frame);
+          if (gizmoIcons) applyGarmentGizmoIcons(material, gizmoIcons);
+        }
+      }
+
+      invalidate();
+    },
+    [activeStep, atlasSize.height, atlasSize.width, ensureLogoSlotCapacity, getMaterials, gizmoIcons, instancesForRender, invalidate, isGizmoVisible, product],
+  );
+
+  const applyStampToMaterials = useCallback(
+    (texture: Texture, cellSize: { width: number; height: number }, grid: number) => {
+      for (const part of product.parts) {
+        for (const material of getMaterials(part.id)) {
+          applyGarmentLogoStamp(material, { stamp: texture, cellSize, grid });
         }
       }
 
@@ -129,6 +159,22 @@ const useGarmentLogoTextures = () => {
     },
     [getMaterials, invalidate, product.parts],
   );
+
+  const syncStampTexture = (canvas: HTMLCanvasElement) => {
+    const sizeChanged = !textureRef.current || canvasSizeRef.current.width !== canvas.width || canvasSizeRef.current.height !== canvas.height;
+
+    if (sizeChanged) {
+      textureRef.current?.dispose();
+      textureRef.current = canvasToLogoLayerTexture(canvas);
+      canvasSizeRef.current = { width: canvas.width, height: canvas.height };
+      return;
+    }
+
+    const texture = textureRef.current;
+    if (!texture) return;
+    texture.needsUpdate = true;
+    texture.source.needsUpdate = true;
+  };
 
   const updateLogoStamp = useCallback(async () => {
     if (!isLogoSynced) return;
@@ -139,8 +185,10 @@ const useGarmentLogoTextures = () => {
 
     if (instancesForRender.length === 0) {
       stampCellSizeRef.current = { width: 1, height: 1 };
-      applyStampToMaterials(empty, { width: 1, height: 1 });
-      applyLogoStyleAndFrame();
+      stampGridRef.current = DEFAULT_STAMP_GRID;
+      setGarmentLogoE2eStampCanvas(null);
+      applyStampToMaterials(empty, { width: 1, height: 1 }, DEFAULT_STAMP_GRID);
+      applyLogoStyleAndFrame([]);
       return;
     }
 
@@ -149,34 +197,30 @@ const useGarmentLogoTextures = () => {
 
     if (!canvasRef.current) {
       canvasRef.current = document.createElement('canvas');
-      textureRef.current = canvasToMaskTexture(canvasRef.current);
     }
 
-    const latestInstances = resolveLogoInstancesForRender(useGarmentLogo.getState().instances, useGarmentLogo.getState().preview).slice(0, LOGO_SLOT_COUNT);
+    const latestInstances = resolveLogoInstancesForRender(useGarmentLogo.getState().instances, useGarmentLogo.getState().preview);
 
-    const { cellSize } = await composeLogoStampAtlas({
+    const { cellSize, referenceCellSize, grid } = await composeLogoStampAtlas({
       instances: latestInstances,
       canvas: canvasRef.current,
-      atlasWidth: atlasSize.width,
-      atlasHeight: atlasSize.height,
     });
 
     if (generation !== generationRef.current || useGarmentLogo.getState().productPath !== targetPath) return;
 
-    stampCellSizeRef.current = cellSize;
-    textureRef.current!.needsUpdate = true;
-    applyStampToMaterials(textureRef.current!, cellSize);
-    applyLogoStyleAndFrame();
-  }, [
-    applyLogoStyleAndFrame,
-    applyStampToMaterials,
-    atlasSize.height,
-    atlasSize.width,
-    ensureNaturalSizes,
-    instancesForRender.length,
-    isLogoSynced,
-    product.path,
-  ]);
+    stampCellSizeRef.current = referenceCellSize;
+    stampGridRef.current = grid;
+    syncStampTexture(canvasRef.current);
+    setGarmentLogoE2eStampCanvas(canvasRef.current, {
+      grid,
+      canvasWidth: canvasRef.current.width,
+      canvasHeight: canvasRef.current.height,
+      cellWidth: cellSize.width,
+      cellHeight: cellSize.height,
+    });
+    applyStampToMaterials(textureRef.current!, referenceCellSize, grid);
+    applyLogoStyleAndFrame(latestInstances);
+  }, [applyLogoStyleAndFrame, applyStampToMaterials, ensureNaturalSizes, instancesForRender.length, isLogoSynced, product.path]);
 
   useEffect(() => {
     if (!isLogoSynced) {
@@ -198,12 +242,13 @@ const useGarmentLogoTextures = () => {
     applyLogoStyleAndFrame();
 
     if (textureRef.current) {
-      applyStampToMaterials(textureRef.current, stampCellSizeRef.current);
+      applyStampToMaterials(textureRef.current, stampCellSizeRef.current, stampGridRef.current);
     }
   }, [applyLogoStyleAndFrame, applyStampToMaterials, isSceneReady, materialRevision, partIds, styleSignature]);
 
   useLogoUniformSync({ product, activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex });
 
+  useEffect(() => registerGarmentLogoE2eDebug(), []);
   useEffect(() => () => clearRuntime(), [clearRuntime]);
 };
 

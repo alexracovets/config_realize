@@ -6,7 +6,7 @@ import { CheckoutQuantityStepper } from '@molecules/CheckoutQuantityStepper';
 import { CheckoutSizePopover } from '@molecules/CheckoutSizePopover';
 import { CheckoutTableEditableCell } from '@molecules/CheckoutTableEditableCell';
 import type { checkoutConfigurationTableColumnHandlersType, checkoutConfigurationTableColumnType } from '@types';
-import { Button, SvgIcon } from '@atoms';
+import { Box, Button, SvgIcon } from '@atoms';
 import { CHECKOUT_CONFIGURATION_TABLE_COLUMNS } from '@constants';
 import { NUMBER_MAX_LENGTH, sanitizeNumberText } from '@store';
 
@@ -33,9 +33,9 @@ const createNameColumn = (onPatchRow: checkoutConfigurationTableColumnHandlersTy
   cell: ({ row }) => (
     <>
       <span className="hidden max-sm:block text-[14px] text-default truncate">{row.name || '-'}</span>
-      <div className="max-sm:hidden">
+      <Box variant="desktop_only_block">
         <CheckoutTableEditableCell value={row.name} placeholder="Nome" canEdit onChange={(name) => onPatchRow(row.id, { name })} />
-      </div>
+      </Box>
     </>
   ),
 });
@@ -47,7 +47,7 @@ const createNumberColumn = (onPatchRow: checkoutConfigurationTableColumnHandlers
   cell: ({ row }) => (
     <>
       <span className="hidden max-sm:block text-[14px] text-default">{row.number || '-'}</span>
-      <div className="max-sm:hidden">
+      <Box variant="desktop_only_block">
         <CheckoutTableEditableCell
           value={row.number}
           placeholder="00"
@@ -57,7 +57,7 @@ const createNumberColumn = (onPatchRow: checkoutConfigurationTableColumnHandlers
           canEdit
           onChange={(number) => onPatchRow(row.id, { number })}
         />
-      </div>
+      </Box>
     </>
   ),
 });
@@ -86,9 +86,9 @@ const createCheckoutConfigurationTableColumns = ({
       cell: ({ row }) => (
         <>
           <span className="hidden max-sm:block text-[14px] text-default">{row.size}</span>
-          <div className="max-sm:hidden">
+          <Box variant="desktop_only_block">
             <CheckoutSizePopover value={row.size} onChange={(size) => onPatchRow(row.id, { size })} />
-          </div>
+          </Box>
         </>
       ),
     },
@@ -101,13 +101,13 @@ const createCheckoutConfigurationTableColumns = ({
       cell: ({ row }) => (
         <>
           <span className="hidden max-sm:block text-[14px] text-default">{row.quantity}</span>
-          <div className="max-sm:hidden">
+          <Box variant="desktop_only_block">
             <CheckoutQuantityStepper
               quantity={row.quantity}
               onDecrease={() => onPatchRow(row.id, { quantity: row.quantity - 1 })}
               onIncrease={() => onPatchRow(row.id, { quantity: row.quantity + 1 })}
             />
-          </div>
+          </Box>
         </>
       ),
     },

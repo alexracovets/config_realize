@@ -1,6 +1,12 @@
 import type { nameInstanceType, testoInstanceType } from '@types';
 import { NAME_REFERENCE_FONT_SIZE } from '@configurator/constants';
-import { measureNameGizmoHalf, resolvePartPrintRotation, resolvePrintRelationUv, resolveTextContentRotationDeg, resolveTextGizmoMeasureOptions } from '@configurator/utils';
+import {
+  measureNameGizmoHalf,
+  resolvePartPrintRotation,
+  resolvePrintRelationUv,
+  resolveTextContentRotationDeg,
+  resolveTextGizmoMeasureOptions,
+} from '@configurator/utils';
 import { useConfiguratorProduct, useGarmentName, useGarmentTesto } from '@store';
 
 type printRelationE2eInstanceType = {
@@ -34,10 +40,7 @@ declare global {
 const measureCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
 const measureCtx = measureCanvas?.getContext('2d') ?? null;
 
-const mapInstance = (
-  instance: nameInstanceType | testoInstanceType,
-  positions: { key: string; positionId?: string }[],
-): printRelationE2eInstanceType => ({
+const mapInstance = (instance: nameInstanceType | testoInstanceType, positions: { key: string; positionId?: string }[]): printRelationE2eInstanceType => ({
   id: instance.id,
   positionId: positions.find((position) => position.key === instance.positionKey)?.positionId ?? null,
   uv: { ...instance.uv },

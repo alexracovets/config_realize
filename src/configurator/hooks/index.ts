@@ -11,10 +11,8 @@ export type { GizmoSelectionStore } from './useGizmoSelection';
 export { usePrintGizmoDrag } from './usePrintGizmoDrag';
 export { usePrintPlacementMigration } from './usePrintPlacementMigration';
 export { usePrintPositionRelationSync } from './usePrintPositionRelationSync';
+export { registerGarmentLogoE2eDebug, setGarmentLogoE2eStampCanvas } from './registerGarmentLogoE2eDebug';
+export type { garmentLogoE2eStampMetaType } from './registerGarmentLogoE2eDebug';
 export { registerPrintRelationE2eDebug } from './registerPrintRelationE2eDebug';
-export {
-  syncPrintPositionRelations,
-  syncPrintPositionRelationsForFollower,
-  syncPrintPositionRelationsForLeader,
-} from './syncPrintPositionRelations';
+export { syncPrintPositionRelations, syncPrintPositionRelationsForFollower, syncPrintPositionRelationsForLeader } from './syncPrintPositionRelations';
 export type { PrintPlacementInstance } from '@configurator/types';

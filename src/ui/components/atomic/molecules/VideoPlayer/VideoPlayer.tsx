@@ -4,6 +4,7 @@ import { type KeyboardEvent, lazy, type ReactElement, Suspense, type SyntheticEv
 
 import { cva } from 'class-variance-authority';
 
+import { Box } from '@atoms';
 import { VIDEO_PLAYER_DEFAULT_VOLUME, VIDEO_PLAYER_YOUTUBE_CONFIG } from '@constants';
 import type { videoPlayerPropsType } from '@types';
 import { cn } from '@utils';
@@ -116,10 +117,10 @@ const VideoPlayer = ({
   }, [config]);
 
   return (
-    <div className={cn(variantVideoPlayer({ variant }), className)}>
-      <div className="relative z-0 aspect-video w-full overflow-hidden bg-black [&_.react-player__preview]:relative [&_.react-player__preview]:z-0 [&_.react-player__preview]:h-full">
+    <Box className={cn(variantVideoPlayer({ variant }), className)}>
+      <Box variant="video_player_frame">
         {hasStarted ? (
-          <div className={playerSurfaceClassName}>
+          <Box className={playerSurfaceClassName}>
             <Suspense fallback={null}>
               <ReactPlayerLazy
                 {...props}
@@ -141,12 +142,12 @@ const VideoPlayer = ({
                 playIcon={customPoster && !hasStarted ? <></> : undefined}
               />
             </Suspense>
-          </div>
+          </Box>
         ) : null}
 
         {showPosterOverlay ? (
-          <div
-            className="absolute inset-0 z-10 cursor-pointer"
+          <Box
+            variant="video_player_overlay"
             role="button"
             tabIndex={0}
             aria-label="Ð’Ñ–Ð´Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð²Ñ–Ð´ÐµÐ¾"
@@ -154,10 +155,10 @@ const VideoPlayer = ({
             onKeyDown={handlePreviewKeyDown}
           >
             {customPoster}
-          </div>
+          </Box>
         ) : null}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

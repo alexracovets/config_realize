@@ -2,7 +2,7 @@
 
 import type { orderCuttingExportDownloadFileType } from '@types';
 import { openOrderCuttingExportDownloadTarget, resolveOrderCuttingExportDownloadHref } from '@utils/resolveOrderCuttingExportDownloadHref';
-import { AtomImage } from '@atoms';
+import { AtomImage, Box } from '@atoms';
 
 const DOWNLOAD_PREVIEW_SIZE_PX = 60;
 
@@ -29,7 +29,7 @@ const OrderCuttingExportDownloadCardStatic = ({ cartItemId, file }: orderCutting
         openOrderCuttingExportDownloadTarget(href);
       }}
     >
-      <div className="cutting-export__download-preview-frame">
+      <Box variant="cutting_export_download_preview_frame">
         {previewSrc ? (
           <AtomImage
             src={previewSrc}
@@ -42,7 +42,7 @@ const OrderCuttingExportDownloadCardStatic = ({ cartItemId, file }: orderCutting
         ) : (
           <span className="cutting-export__download-placeholder">{file.label}</span>
         )}
-      </div>
+      </Box>
       <span className="cutting-export__download-label">{file.label}</span>
       <span className="cutting-export__download-file">{file.fileName}</span>
     </a>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 import type { configuratorProductHydrationType } from '@configurator/types';
+import { useRestoreSharedConfiguration } from '@hooks';
 import { applyConfiguratorRouteProduct } from '@utils';
 
 type configuratorRouteShellPropsType = {
@@ -22,6 +23,8 @@ const ConfiguratorRouteShell = ({ collectionHandle, slug, product, children }: c
     appliedRouteKeyRef.current = routeKey;
     applyConfiguratorRouteProduct(collectionHandle, slug, product);
   }, [collectionHandle, slug, product]);
+
+  useRestoreSharedConfiguration();
 
   return children ?? null;
 };

@@ -3,6 +3,8 @@ import { ConfiguratorLayoutTemplate } from '@templates';
 import { ConfiguratorCatalogShell } from '@providers/configuratorCatalogProvider/ConfiguratorCatalogShell';
 import { resolveConfiguratorProduct } from '@shopify';
 
+export const dynamic = 'force-dynamic';
+
 type configuratorLayoutPropsType = childrenType & {
   params: Promise<{ collectionHandle: string; slug: string }>;
 };

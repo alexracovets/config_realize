@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { AtomInputHex, Button, ColorPicker, Flex, Grid, SvgIcon, Text } from '@atoms';
+import { AtomInputHex, Box, Button, ColorPicker, Flex, Grid, SvgIcon, Text } from '@atoms';
 import { ColorPaletteCarousel } from '@molecules/ConfigurationTools/ColorPaletteCarousel';
 import { PALETTE_COLORS } from '@constants';
 import type { colorControlPropsType } from '@types';
@@ -13,9 +13,9 @@ const ColorControl = memo(({ color, label, onSelect, onPreviewSelect, restricted
   return (
     <Flex variant="configurator_part">
       {!restrictedColors && (
-        <Flex className="flex-col gap-3 max-xl:gap-2.5 w-full max-sm:flex-row max-sm:items-center max-sm:justify-between max-sm:gap-2">
+        <Flex variant="color_control_panel">
           {label && <Text variant="configurator_control_label">{label}</Text>}
-          <Grid className="grid-cols-[auto_auto] items-center justify-between gap-2 max-xl:gap-1.5 w-full max-sm:w-auto max-sm:grid-cols-1">
+          <Grid variant="color_control_actions">
             <ColorPicker
               color={color}
               onChange={(value) => onSelect?.(value)}
@@ -27,13 +27,13 @@ const ColorControl = memo(({ color, label, onSelect, onPreviewSelect, restricted
                 </Button>
               }
             />
-            <div className="max-sm:hidden">
+            <Box variant="hidden_mobile">
               <AtomInputHex value={color} onChange={(value) => onSelect?.(value)} />
-            </div>
+            </Box>
           </Grid>
         </Flex>
       )}
-      <Grid variant="select_parts" className="max-sm:hidden">
+      <Grid variant="select_parts_mobile_hidden">
         {colors.map((paletteColor) => (
           <Button
             key={paletteColor}
@@ -44,9 +44,9 @@ const ColorControl = memo(({ color, label, onSelect, onPreviewSelect, restricted
           />
         ))}
       </Grid>
-      <div className="hidden w-full min-w-0 max-sm:block">
+      <Box variant="palette_carousel_mobile">
         <ColorPaletteCarousel color={color} onSelect={onSelect} colors={colors} />
-      </div>
+      </Box>
     </Flex>
   );
 });

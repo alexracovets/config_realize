@@ -32,6 +32,7 @@ const useSyncGarmentMaterials = () => {
     useGarmentColors({
       refs,
       invalidate,
+      scene,
     });
 
   const { completeSceneLoadersIfReady, completeInitialLoadAfterPaint } = useGarmentLoadReady({

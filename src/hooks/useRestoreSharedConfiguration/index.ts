@@ -1,0 +1,1 @@
+export { useRestoreSharedConfiguration } from './useRestoreSharedConfiguration';

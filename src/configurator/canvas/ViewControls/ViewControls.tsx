@@ -8,17 +8,18 @@ import {
   applyOrbitZoomAroundPoint,
   clampOrbitCameraOutsideGarment,
   clampOrbitTargetToGarment,
+  ORBIT_MAX_DISTANCE,
+  ORBIT_MIN_DISTANCE,
   recenterOrbitTargetByZoom,
   resolveCursorFocusPoint,
   resolveGarmentCenter,
+  snapOrbitToLevelFrontOrBack,
 } from '@configurator/utils';
 import { OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useConfiguratorProduct, useConfiguratorSceneLoad } from '@store';
 import { useCallback, useEffect, useRef } from 'react';
 import { Raycaster, TOUCH, Vector3 } from 'three';
-const ORBIT_MIN_DISTANCE = 0.05;
-const ORBIT_MAX_DISTANCE = 0.9;
 
 const PRODUCT_SWITCH_ZOOM_DISTANCE = ORBIT_MAX_DISTANCE;
 const ORBIT_MAX_POLAR_ANGLE = Math.PI / 1.5;
@@ -296,6 +297,9 @@ const ViewControls = () => {
       offset.applyAxisAngle(Y_AXIS, angle);
       camera.position.copy(controls.target).add(offset);
       controls.update();
+      if (holdRotateDirectionRef.current === 0 && Math.abs(pendingRotateRef.current) < BUTTON_ROTATE_SETTLE_EPSILON) {
+        snapOrbitToLevelFrontOrBack({ camera, controls, scene });
+      }
       clampOrbitCameraOutsideGarment({ camera, controls, scene });
       invalidate();
     },
@@ -340,9 +344,14 @@ const ViewControls = () => {
       },
       stopRotate: () => {
         holdRotateDirectionRef.current = 0;
+        if (controls) {
+          snapOrbitToLevelFrontOrBack({ camera, controls, scene });
+          clampOrbitCameraOutsideGarment({ camera, controls, scene });
+        }
+        invalidate();
       },
     });
-  }, [controls, invalidate, rotateByAngle]);
+  }, [camera, controls, invalidate, rotateByAngle, scene]);
 
   return (
     <OrbitControls

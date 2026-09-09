@@ -6,9 +6,7 @@ const preloadLogoDisplayUrl = async (src: string): Promise<void> => {
     const blob = await fetch(src).then((r) => r.blob());
     const bitmap = await createImageBitmap(blob);
     bitmap.close();
-  } catch {
-
-  }
+  } catch {}
 };
 
 const yieldToMain = (): Promise<void> =>

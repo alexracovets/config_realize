@@ -1,9 +1,9 @@
-const COLOR_LAYER_GROUP_MATCHERS: Array<(id: string) => boolean> = [
-  (id) => id === 'color1' || id.startsWith('color1_'),
-  (id) => id === 'color2' || id.startsWith('color2_'),
-];
-
 const SHAPE_SELECTOR = 'path, rect, polygon, circle, ellipse, polyline';
+
+const matchesColorLayer = (id: string, layerIndex: number) => {
+  const layerName = `color${layerIndex + 1}`;
+  return id === layerName || id.startsWith(`${layerName}_`);
+};
 
 const applyFillToShapes = (container: Element, color: string) => {
   container.querySelectorAll(SHAPE_SELECTOR).forEach((shape) => {
@@ -27,14 +27,12 @@ const applyDesignSvgLayerColors = (svgText: string, layerColors: string[]): stri
   const groups = [...doc.querySelectorAll('g')];
 
   layerColors.forEach((color, layerIndex) => {
-    const matchesLayer = COLOR_LAYER_GROUP_MATCHERS[layerIndex];
-    if (!matchesLayer || !color) return;
+    if (!color) return;
 
-    groups.filter((group) => matchesLayer(group.id)).forEach((group) => applyFillToShapes(group, color));
+    groups.filter((group) => matchesColorLayer(group.id, layerIndex)).forEach((group) => applyFillToShapes(group, color));
   });
 
-  const root = doc.documentElement;
-  return new XMLSerializer().serializeToString(root);
+  return new XMLSerializer().serializeToString(doc.documentElement);
 };
 
 const designSvgTextToDataUrl = (svgText: string): string => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;

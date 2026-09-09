@@ -7,7 +7,6 @@ import type { productSessionRowPropsType } from '@types';
 import { cn } from '@utils';
 
 type productSessionRowCardPropsType = Pick<productSessionRowPropsType, 'name' | 'previewSrc' | 'active' | 'onSelect' | 'onRemove'> & {
-
   variant: 'anchor' | 'portal';
   isExpanded: boolean;
   isPreviewLoaded: boolean;
@@ -20,7 +19,7 @@ const ProductSessionRowPreview = ({
   isPreviewLoaded,
   onPreviewLoad,
 }: Pick<productSessionRowCardPropsType, 'name' | 'previewSrc' | 'isPreviewLoaded' | 'onPreviewLoad'>) => (
-  <Flex className="relative shrink-0 w-11 h-11 max-sm:w-7 max-sm:h-7">
+  <Flex variant="product_session_preview_frame">
     {!isPreviewLoaded && <ProductSessionPreviewSkeleton />}
     <AtomImage src={previewSrc} alt={name} className={cn('h-full w-full object-contain', !isPreviewLoaded && 'opacity-0')} onLoad={onPreviewLoad} />
   </Flex>
@@ -66,7 +65,7 @@ const ProductSessionRowCard = ({
         )}
       >
         <Button type="button" variant="ghost" onClick={onSelect} className={cn('h-full w-full p-0 bg-transparent', active && 'cursor-default')}>
-          <Flex className="size-full items-center justify-center">
+          <Flex variant="product_session_preview_center">
             <ProductSessionRowPreview name={name} previewSrc={previewSrc} isPreviewLoaded={isPreviewLoaded} onPreviewLoad={onPreviewLoad} />
           </Flex>
         </Button>
@@ -85,7 +84,7 @@ const ProductSessionRowCard = ({
                 detailsVisible ? 'w-auto opacity-100' : 'pointer-events-none w-0 opacity-0',
               )}
             >
-              <Text className="truncate whitespace-nowrap text-[14px] font-medium max-sm:text-[12px] max-sm:leading-4 max-sm:font-semibold">{name}</Text>
+              <Text variant="product_session_name">{name}</Text>
             </Button>
             <Button
               type="button"

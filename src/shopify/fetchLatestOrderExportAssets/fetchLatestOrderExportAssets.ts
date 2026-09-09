@@ -19,7 +19,7 @@ const LAST_ORDER_EXPORT_ASSETS_QUERY = `
               currencyCode
             }
           }
-          metafields(first: 100) {
+          metafields(first: 100, namespace: "${ORDER_METAFIELD_NAMESPACE}") {
             edges {
               node {
                 id
@@ -121,9 +121,7 @@ const fetchLatestOrderExportAssets = async (): Promise<latestOrderExportAssetsTy
   const order = data.orders.edges[0]?.node;
   if (!order) return null;
 
-  const configuratorMetafields = order.metafields.edges
-    .map(({ node }) => node)
-    .filter((metafield) => metafield.namespace === ORDER_METAFIELD_NAMESPACE);
+  const configuratorMetafields = order.metafields.edges.map(({ node }) => node).filter((metafield) => metafield.namespace === ORDER_METAFIELD_NAMESPACE);
   const metafieldByKey = new Map(configuratorMetafields.map((metafield) => [metafield.key, metafield.value]));
 
   return {

@@ -1,10 +1,18 @@
-import type { MeshStandardMaterial } from 'three';
+import type { MeshStandardMaterial, Object3D } from 'three';
 
 import type { garmentPrintStateType, patternColorPairType } from '@configurator/types';
 import type { garmentConfigType, partGradientType } from '@types';
 import { DISABLED_PART_GRADIENT, resolveGradientColors, resolvePartUvBounds } from '@configurator/mappers';
 import { DEFAULT_COLOR } from '@store';
-import { applyGarmentGradient, applyGarmentPartUvBounds, applyGarmentPatternTints, applyGarmentPrint, isColorOnlyGarmentPart } from '@configurator/utils';
+import {
+  applyGarmentGradient,
+  applyGarmentPartUvBounds,
+  applyGarmentPatternTints,
+  applyGarmentPrint,
+  isColorOnlyGarmentPart,
+  resolveGarmentGradientWorldFrame,
+  resolveGarmentPartGradientFrame,
+} from '@configurator/utils';
 
 type syncGarmentMaterialContextType = {
   product: garmentConfigType;
@@ -12,20 +20,24 @@ type syncGarmentMaterialContextType = {
   gradientsByPart: Record<string, partGradientType>;
   getMaterials: (partId: string) => readonly MeshStandardMaterial[];
   invalidate: () => void;
+  scene?: Object3D;
 };
 
-const applyPartColors = ({ product, byPart, gradientsByPart, getMaterials, invalidate }: syncGarmentMaterialContextType) => {
+const applyPartColors = ({ product, byPart, gradientsByPart, getMaterials, invalidate, scene }: syncGarmentMaterialContextType) => {
+  const garmentFrame = scene ? resolveGarmentGradientWorldFrame(scene) : undefined;
+
   for (const part of product.parts) {
     const color = byPart[part.id] ?? DEFAULT_COLOR;
     const gradient = isColorOnlyGarmentPart(part) ? DISABLED_PART_GRADIENT : (gradientsByPart[part.id] ?? DISABLED_PART_GRADIENT);
     const { fabricColor, gradientColor2 } = resolveGradientColors(color, gradient);
     const uvBounds = resolvePartUvBounds(part);
+    const worldFrame = scene && garmentFrame ? resolveGarmentPartGradientFrame(scene, part, garmentFrame) : garmentFrame;
 
     for (const material of getMaterials(part.id)) {
       material.color.set(fabricColor);
       material.map = null;
       applyGarmentPartUvBounds(material, uvBounds);
-      applyGarmentGradient(material, { ...gradient, color2: gradientColor2 });
+      applyGarmentGradient(material, { ...gradient, color2: gradientColor2 }, worldFrame);
     }
   }
 

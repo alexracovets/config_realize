@@ -11,11 +11,11 @@ import type { scrollAreaPropsType } from '@types';
 const FADE_SIZE = 3;
 const EDGE_SHADOW_SIZE = 24;
 
-const ScrollArea = ({ children, className, fadeEdges = false, edgeShadows = false, orientation = 'vertical' }: scrollAreaPropsType) => {
+const ScrollArea = ({ children, className, fadeEdges = false, edgeShadows = false, orientation = 'vertical', onRootElementChange }: scrollAreaPropsType) => {
   const isHorizontal = orientation === 'horizontal';
-  const targetRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLElement>(null);
   const instanceRef = useRef<OverlayScrollbars | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const frameIdRef = useRef<number | null>(null);
@@ -79,6 +79,13 @@ const ScrollArea = ({ children, className, fadeEdges = false, edgeShadows = fals
   }, [fadeEdges, isHorizontal, showTopFade, showBottomFade]);
 
   useLayoutEffect(() => {
+    if (!onRootElementChange) return;
+
+    onRootElementChange(targetRef.current);
+    return () => onRootElementChange(null);
+  }, [onRootElementChange]);
+
+  useLayoutEffect(() => {
     updateFade();
   }, [updateFade, children]);
 
@@ -124,53 +131,43 @@ const ScrollArea = ({ children, className, fadeEdges = false, edgeShadows = fals
   }, [refresh, updateFade]);
 
   return (
-    <div
-      ref={targetRef}
-      className={cn('relative w-full', isHorizontal ? 'pb-2' : 'h-full pr-2', className)}
-    >
-      <div
+    <section ref={targetRef} className={cn('relative w-full', isHorizontal ? 'pb-2' : 'h-full pr-2', className)}>
+      <section
         ref={viewportRef}
-        className={cn(
-          'w-full scrollbar-none',
-          isHorizontal ? 'overflow-x-scroll overflow-y-hidden' : 'h-full overflow-y-scroll overflow-x-hidden',
-        )}
+        className={cn('w-full scrollbar-none', isHorizontal ? 'overflow-x-scroll overflow-y-hidden' : 'h-full overflow-y-scroll overflow-x-hidden')}
         style={{
           WebkitMaskImage: maskImage,
           maskImage,
         }}
       >
-        <div ref={contentRef} className={cn(isHorizontal && 'w-fit')}>
+        <section ref={contentRef} className={cn(isHorizontal && 'w-fit')}>
           {children}
-        </div>
-      </div>
+        </section>
+      </section>
 
       {edgeShadows && (
         <>
-          <div
+          <section
             aria-hidden
             className={cn(
               'pointer-events-none absolute z-10 transition-opacity duration-150',
-              isHorizontal
-                ? 'inset-y-0 left-0 bg-linear-to-r from-white to-transparent'
-                : 'inset-x-0 top-0 bg-linear-to-b from-white to-transparent',
+              isHorizontal ? 'inset-y-0 left-0 bg-linear-to-r from-white to-transparent' : 'inset-x-0 top-0 bg-linear-to-b from-white to-transparent',
               showTopFade ? 'opacity-100' : 'opacity-0',
             )}
             style={isHorizontal ? { width: EDGE_SHADOW_SIZE } : { height: EDGE_SHADOW_SIZE }}
           />
-          <div
+          <section
             aria-hidden
             className={cn(
               'pointer-events-none absolute z-10 transition-opacity duration-150',
-              isHorizontal
-                ? 'inset-y-0 right-0 bg-linear-to-l from-white to-transparent'
-                : 'inset-x-0 bottom-0 bg-linear-to-t from-white to-transparent',
+              isHorizontal ? 'inset-y-0 right-0 bg-linear-to-l from-white to-transparent' : 'inset-x-0 bottom-0 bg-linear-to-t from-white to-transparent',
               showBottomFade ? 'opacity-100' : 'opacity-0',
             )}
             style={isHorizontal ? { width: EDGE_SHADOW_SIZE } : { height: EDGE_SHADOW_SIZE }}
           />
         </>
       )}
-    </div>
+    </section>
   );
 };
 

@@ -10,7 +10,7 @@ import {
   Header,
   HeaderConfiguration,
 } from '@organisms';
-import { Flex } from '@atoms';
+import { Box, Flex } from '@atoms';
 
 type configuratorLayoutTemplatePropsType = childrenType & {
   collectionHandle: string;
@@ -21,12 +21,12 @@ type configuratorLayoutTemplatePropsType = childrenType & {
 const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
   return (
     <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
-      <div className="configurator-shell flex flex-col overflow-hidden w-full">
+      <Box variant="configurator_shell">
         <Header />
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-t from-[#E8E8E8] to-white">
+        <Box variant="configurator_shell_background">
           <ConfiguratorInitialLoader />
           <CartConfigurationSync />
-          <div className="relative grid min-h-0 flex-1 grid-cols-1 grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden">
+          <Box variant="configurator_shell_grid">
             <HeaderConfiguration />
             <Flex variant="configurator_layout_template" asChild>
               <main>
@@ -36,9 +36,9 @@ const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product 
               </main>
             </Flex>
             <FooterConfiguration />
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </ConfiguratorRouteShell>
   );
 };

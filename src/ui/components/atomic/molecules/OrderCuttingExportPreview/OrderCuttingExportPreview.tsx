@@ -7,6 +7,7 @@ import { buildOrderCuttingExportPreview } from '@utils/buildOrderCuttingExportPr
 import { useCheckout } from '@store/useCheckout/useCheckout';
 import { useConfigurationCart } from '@store/useConfigurationCart/useConfigurationCart';
 import { OrderCuttingExportDocument } from '@molecules/OrderCuttingExportPreview/OrderCuttingExportDocument';
+import { Box } from '@atoms';
 
 const OrderCuttingExportPreview = () => {
   const checkoutProducts = useCheckout((state) => state.products);
@@ -33,11 +34,11 @@ const OrderCuttingExportPreview = () => {
   }, [cartConfigurations, checkoutProducts]);
 
   return (
-    <div className="bg-[#ececec] py-10">
-      <div className="mx-auto w-fit max-w-full shadow-lg">
+    <Box variant="order_cutting_preview_shell">
+      <Box variant="order_cutting_preview_card">
         <OrderCuttingExportDocument exportData={exportData} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

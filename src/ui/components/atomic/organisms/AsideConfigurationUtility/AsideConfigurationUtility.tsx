@@ -4,22 +4,27 @@ import { useCallback } from 'react';
 import { AiOutlineBorderOuter } from 'react-icons/ai';
 import { IoMdRedo, IoMdUndo } from 'react-icons/io';
 
-import { Button, Flex, Grid, SvgIcon, Text } from '@atoms';
+import { Box, Button, Flex, Grid, SvgIcon, Text } from '@atoms';
 
-import { useProductStepsConfiguration } from '@hooks';
-import { useConfigurationControl, useTutorialDialog } from '@store';
-import { cn } from '@utils';
+import { redoConfiguration, undoConfiguration, useConfigurationCart, useConfigurationControl, useConfigurationHistory, useTutorialDialog } from '@store';
+
+const NAME_STEP = 4;
+const NUMBER_STEP = 5;
+const TESTO_STEP = 6;
+const LOGO_STEP = 7;
+
+const isGizmoToggleStep = (step: number) => step === NAME_STEP || step === NUMBER_STEP || step === TESTO_STEP || step === LOGO_STEP;
 
 const AsideConfigurationUtility = () => {
-  const activeStep = useConfigurationControl((state) => state.activeStep);
-  const goToPreviousStep = useConfigurationControl((state) => state.goToPreviousStep);
-  const goToNextStep = useConfigurationControl((state) => state.goToNextStep);
   const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
   const toggleGizmoVisible = useConfigurationControl((state) => state.toggleGizmoVisible);
+  const activeStep = useConfigurationControl((state) => state.activeStep);
+  const showGizmoToggle = isGizmoToggleStep(activeStep);
   const setTutorialOpen = useTutorialDialog((state) => state.setIsOpen);
-  const availableSteps = useProductStepsConfiguration();
-  const firstStep = availableSteps[0]?.step ?? 1;
-  const lastStep = availableSteps[availableSteps.length - 1]?.step ?? 1;
+  const activeItemId = useConfigurationCart((state) => state.activeItemId);
+  const historyStack = useConfigurationHistory((state) => state.stacks[activeItemId]);
+  const canUndo = Boolean(historyStack?.past.length);
+  const canRedo = Boolean(historyStack?.future.length);
 
   const handleTutorial = useCallback(() => {
     setTutorialOpen(true);
@@ -30,47 +35,47 @@ const AsideConfigurationUtility = () => {
   }, [toggleGizmoVisible]);
 
   return (
-    <aside
-      className={cn(
-        'p-4 pr-12 h-full',
-        'max-xl:absolute max-xl:right-2 max-xl:top-7 max-xl:z-30 max-xl:h-auto max-xl:w-fit max-xl:px-1 max-xl:pb-2 max-xl:pt-0',
-        'max-sm:right-2 max-sm:top-7',
-      )}
-    >
-      <Flex className="flex-col justify-start h-full w-[253px] gap-6 max-xl:h-auto max-xl:w-fit max-xl:gap-2">
-        <Grid className="grid-cols-2 gap-2 max-xl:grid-cols-1">
-          <Button size="sm" onClick={goToPreviousStep} disabled={activeStep === firstStep} className="max-xl:size-8 max-xl:p-0 max-sm:size-9">
-            <IoMdUndo className="size-4 max-sm:size-4" />
-            <span className="max-xl:hidden">Annulla</span>
-          </Button>
-          <Button size="sm" onClick={goToNextStep} disabled={activeStep === lastStep} className="max-xl:size-8 max-xl:p-0 max-sm:size-9">
-            <span className="max-xl:hidden">Ripristina</span>
-            <IoMdRedo className="size-4 max-sm:size-4" />
-          </Button>
-        </Grid>
-        <Flex className="flex-col gap-3 p-4 rounded-md border-2 border-input-border max-xl:w-8 max-xl:p-0 max-xl:border-0 max-xl:gap-0 max-sm:w-9">
-          <Text className="text-[16px] text-base-black font-medium max-xl:hidden">Hai bisogno di aiuto?</Text>
-          <Button
-            size="sm"
-            variant="center"
-            className="w-full max-xl:h-auto max-xl:flex-col max-xl:gap-1 max-xl:p-1.5 max-sm:h-20"
-            onClick={handleTutorial}
-          >
-            <SvgIcon name="question" />
-            <span className="max-xl:[writing-mode:vertical-rl] max-xl:text-[14px] max-sm:text-[11px]">Tutorial</span>
-          </Button>
+    <Box variant="aside_utility" asChild>
+      <aside>
+        <Flex variant="aside_utility_column">
+          <Grid variant="aside_utility_actions">
+            <Button size="sm" onClick={undoConfiguration} disabled={!canUndo} title="Annulla (Ctrl+Z)" className="max-xl:size-8 max-xl:p-0 max-sm:size-9">
+              <IoMdUndo className="size-4 max-sm:size-4" />
+              <span className="max-xl:hidden">Annulla</span>
+            </Button>
+            <Button
+              size="sm"
+              onClick={redoConfiguration}
+              disabled={!canRedo}
+              title="Ripristina (Ctrl+Shift+Z)"
+              className="max-xl:size-8 max-xl:p-0 max-sm:size-9"
+            >
+              <span className="max-xl:hidden">Ripristina</span>
+              <IoMdRedo className="size-4 max-sm:size-4" />
+            </Button>
+          </Grid>
+          <Flex variant="aside_utility_help_panel">
+            <Text variant="aside_help_title">Hai bisogno di aiuto?</Text>
+            <Button size="sm" variant="center" className="w-full max-xl:h-auto max-xl:flex-col max-xl:gap-1 max-xl:p-1.5 max-sm:h-20" onClick={handleTutorial}>
+              <SvgIcon name="question" />
+              <span className="max-xl:[writing-mode:vertical-rl] max-xl:text-[14px] max-sm:text-[11px]">Tutorial</span>
+            </Button>
+          </Flex>
+          {showGizmoToggle ? (
+            <Button
+              size="sm"
+              onClick={handleToggleGizmo}
+              aria-pressed={isGizmoVisible}
+              aria-label={isGizmoVisible ? 'Nascondi gizmo' : 'Mostra gizmo'}
+              data-active={isGizmoVisible}
+              className="hidden max-xl:flex max-xl:size-8 max-xl:p-0 max-sm:size-9 data-[active=false]:opacity-50"
+            >
+              <AiOutlineBorderOuter className="size-4 max-sm:size-4 shrink-0" aria-hidden />
+            </Button>
+          ) : null}
         </Flex>
-        <Button
-          size="sm"
-          onClick={handleToggleGizmo}
-          aria-pressed={isGizmoVisible}
-          aria-label={isGizmoVisible ? 'Nascondi gizmo' : 'Mostra gizmo'}
-          className={cn('hidden max-xl:flex max-xl:size-8 max-xl:p-0 max-sm:size-9', !isGizmoVisible && 'opacity-50')}
-        >
-          <AiOutlineBorderOuter className="size-4 max-sm:size-4 shrink-0" aria-hidden />
-        </Button>
-      </Flex>
-    </aside>
+      </aside>
+    </Box>
   );
 };
 

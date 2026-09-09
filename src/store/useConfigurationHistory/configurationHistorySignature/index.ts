@@ -1,0 +1,1 @@
+export { buildConfigurationSignature } from './configurationHistorySignature';

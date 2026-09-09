@@ -14,11 +14,11 @@ const SHORTS_TYPE = 'shorts';
 
 const resolveReferenceColorPartId = (product: garmentConfigType): string | null => {
   if (product.type === SHIRT_TYPE) {
-    return product.parts.find((part) => part.label === 'Front')?.id ?? product.parts[0]?.id ?? null;
+    return product.parts.find((part) => part.id.endsWith('_front'))?.id ?? product.parts[0]?.id ?? null;
   }
 
   if (product.type === SHORTS_TYPE) {
-    return product.parts.find((part) => part.label === 'Right')?.id ?? product.parts[0]?.id ?? null;
+    return product.parts.find((part) => part.id.endsWith('_back'))?.id ?? product.parts[0]?.id ?? null;
   }
 
   return product.parts[0]?.id ?? null;

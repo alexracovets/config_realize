@@ -13,4 +13,10 @@ services:
       NODE_ENV: production
       PORT: 3000
       HOSTNAME: 0.0.0.0
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null "http://127.0.0.1:${PORT:-3000}/api/health" || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     restart: unless-stopped

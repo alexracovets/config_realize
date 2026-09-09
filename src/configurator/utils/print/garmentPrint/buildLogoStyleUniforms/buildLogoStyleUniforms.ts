@@ -1,8 +1,15 @@
 import type { logoSlotBounds4Type, logoSlotFloat4Type, logoSlotVec2Type, logoStyleUniformsType } from '@configurator/types';
 import type { garmentPartConfigType, logoInstanceType } from '@types';
-import { FULL_UV_BOUNDS, LOGO_SLOT_COUNT, LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
+import { FULL_UV_BOUNDS, LOGO_UPLOAD_ROTATION_DEG } from '@configurator/constants';
 import { resolvePartUvBounds } from '@configurator/mappers';
-import { resolveLogoDisplayScale, resolvePartPrintRotation } from '@configurator/utils';
+import {
+  resolveLogoDisplayScale,
+  resolveLogoShaderSlotCount,
+  resolveLogoStampAtlasGrid,
+  resolveLogoStampSlots,
+  resolvePartPrintRotation,
+} from '@configurator/utils';
+
 const DEFAULT_PART_BOUNDS = FULL_UV_BOUNDS;
 
 const buildLogoStyleUniforms = (
@@ -11,23 +18,27 @@ const buildLogoStyleUniforms = (
   meshPartId: string,
   stampCellSize: { width: number; height: number },
   atlasWidth: number,
+  stampGrid = resolveLogoStampAtlasGrid(),
 ): logoStyleUniformsType => {
   const partsById = Object.fromEntries(parts.map((part) => [part.id, part]));
-  const anchorUv: logoSlotVec2Type = [
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-  ];
-  const rotation: logoSlotFloat4Type = [0, 0, 0, 0];
-  const uploadRotation: logoSlotFloat4Type = [0, 0, 0, 0];
-  const partRotation: logoSlotFloat4Type = [0, 0, 0, 0];
-  const scale: logoSlotFloat4Type = [1, 1, 1, 1];
-  const slotActive: logoSlotFloat4Type = [0, 0, 0, 0];
-  const partBounds: logoSlotBounds4Type = [{ ...DEFAULT_PART_BOUNDS }, { ...DEFAULT_PART_BOUNDS }, { ...DEFAULT_PART_BOUNDS }, { ...DEFAULT_PART_BOUNDS }];
+  const slotCount = resolveLogoShaderSlotCount(instances.length);
+  const stampSlots = resolveLogoStampSlots(instances);
+  const atlasCellCount = stampGrid > 0 ? stampGrid * stampGrid : Number.POSITIVE_INFINITY;
+  const anchorUv: logoSlotVec2Type = Array.from({ length: slotCount }, () => ({ x: 0, y: 0 }));
+  const rotation: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 0);
+  const uploadRotation: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 0);
+  const partRotation: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 0);
+  const scale: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 1);
+  const stampSlot: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 0);
+  const slotActive: logoSlotFloat4Type = Array.from({ length: slotCount }, () => 0);
+  const partBounds: logoSlotBounds4Type = Array.from({ length: slotCount }, () => ({ ...DEFAULT_PART_BOUNDS }));
 
-  instances.slice(0, LOGO_SLOT_COUNT).forEach((instance, index) => {
+  instances.slice(0, slotCount).forEach((instance, index) => {
+    const cell = stampSlots[index] ?? index;
+    stampSlot[index] = cell;
+
     if (instance.partId !== meshPartId) return;
+    if (cell >= atlasCellCount) return;
 
     const part = partsById[instance.partId];
     const bounds = part ? resolvePartUvBounds(part) : DEFAULT_PART_BOUNDS;
@@ -53,6 +64,7 @@ const buildLogoStyleUniforms = (
     uploadRotation,
     partRotation,
     scale,
+    stampSlot,
     slotActive,
     partBounds,
   };

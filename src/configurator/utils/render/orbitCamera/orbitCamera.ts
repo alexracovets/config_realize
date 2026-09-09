@@ -3,6 +3,8 @@ import { Box3, Vector2, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 const ORBIT_SURFACE_CLEARANCE = 0.12;
+const ORBIT_MIN_DISTANCE = 0.05;
+const ORBIT_MAX_DISTANCE = 0.9;
 
 const isGarmentMesh = (object: Object3D) => (object as { isMesh?: boolean }).isMesh === true && object.visible && object.userData?.configuratorGarment === true;
 
@@ -42,6 +44,97 @@ const resolveShortestAngleDelta = (from: number, to: number) => {
   while (delta > Math.PI) delta -= 2 * Math.PI;
   while (delta < -Math.PI) delta += 2 * Math.PI;
   return delta;
+};
+
+const LEVEL_POLAR_ANGLE = Math.PI / 2;
+const FRONT_BACK_AZIMUTH_SNAP = 0.18;
+
+type garmentPartHorizonFacingType = 'front' | 'back';
+
+type garmentHorizonViewModeType = 'part' | 'surface';
+
+type garmentHorizonProductType = {
+  type?: string;
+};
+
+const isShortsHorizonLabel = (label: string) => {
+  const normalized = label.trim().toLowerCase();
+  return normalized === 'lacci' || normalized === 'gamba sinistra' || normalized === 'gamba destra';
+};
+
+const isShortsHorizonPart = (part: { label: string }, product?: garmentHorizonProductType) => isShortsHorizonLabel(part.label) || product?.type === 'shorts';
+
+// Shorts part ids (`*_front` / `*_back`) name the leg, not the side it faces: both legs sit on the
+// front. Framing a whole leg must therefore stay on the front camera, but a print placed at a given
+// UV lands on a side surface, so it is framed from its own normal instead.
+const resolveGarmentPartHorizonFacing = (
+  part: { id: string; label: string },
+  product?: garmentHorizonProductType,
+  viewMode: garmentHorizonViewModeType = 'part',
+): garmentPartHorizonFacingType | null => {
+  if (isShortsHorizonPart(part, product)) return viewMode === 'part' ? 'front' : null;
+
+  const id = part.id.toLowerCase();
+  const label = part.label.trim().toLowerCase();
+
+  if (id === 'back' || id.endsWith('_back') || label === 'retro') return 'back';
+  if (id === 'front' || id.endsWith('_front') || label === 'davanti') return 'front';
+  return null;
+};
+
+const applyCardinalHorizonDirection = (direction: Vector3) => {
+  direction.y = 0;
+  if (direction.lengthSq() < 1e-8) {
+    direction.set(0, 0, 1);
+    return direction;
+  }
+
+  if (Math.abs(direction.z) >= Math.abs(direction.x)) {
+    direction.set(0, 0, direction.z >= 0 ? 1 : -1);
+    return direction;
+  }
+
+  direction.set(direction.x >= 0 ? 1 : -1, 0, 0);
+  return direction;
+};
+
+const VERTICAL_FACING_MIN_RATIO = 0.72;
+
+const applyPartHorizonDirection = (direction: Vector3) => {
+  if (direction.lengthSq() < 1e-8) {
+    direction.set(0, 0, 1);
+    return direction;
+  }
+
+  direction.normalize();
+
+  if (Math.abs(direction.y) >= VERTICAL_FACING_MIN_RATIO) {
+    direction.set(0, direction.y >= 0 ? 1 : -1, 0);
+    return direction;
+  }
+
+  return applyCardinalHorizonDirection(direction);
+};
+
+const applyFrontOrBackHorizonDirection = (direction: Vector3, facing?: garmentPartHorizonFacingType) => {
+  if (facing === 'front') {
+    direction.set(0, 0, 1);
+    return direction;
+  }
+
+  if (facing === 'back') {
+    direction.set(0, 0, -1);
+    return direction;
+  }
+
+  direction.y = 0;
+  if (direction.lengthSq() < 1e-8) {
+    direction.set(0, 0, 1);
+    return direction;
+  }
+
+  direction.set(0, 0, direction.z >= 0 ? 1 : -1);
+  return direction;
 };
 
 interface ResolveCursorFocusPointInput {
@@ -178,6 +271,7 @@ interface ResolveOrbitFocusPoseInput {
   maxDistance: number;
   clearance?: number;
   viewMode?: 'part' | 'surface';
+  partFacing?: garmentPartHorizonFacingType;
 }
 
 const resolveOrbitFocusPose = (
@@ -191,6 +285,7 @@ const resolveOrbitFocusPose = (
     maxDistance,
     clearance = ORBIT_SURFACE_CLEARANCE,
     viewMode = 'surface',
+    partFacing,
   }: ResolveOrbitFocusPoseInput,
   target: Vector3,
   cameraPosition: Vector3,
@@ -200,14 +295,19 @@ const resolveOrbitFocusPose = (
   target.copy(focusPoint);
 
   if (viewMode === 'part') {
+    target.copy(garmentCenter);
     viewDirection.copy(focusPoint).sub(garmentCenter);
+    if (viewDirection.lengthSq() < 1e-8) {
+      viewDirection.copy(surfaceNormal);
+    }
     if (viewDirection.lengthSq() < 1e-8) {
       viewDirection.copy(currentCamera).sub(currentTarget);
     }
-    if (viewDirection.lengthSq() < 1e-8) {
-      viewDirection.set(0, 0, 1);
+    if (partFacing) {
+      applyFrontOrBackHorizonDirection(viewDirection, partFacing);
+    } else {
+      applyPartHorizonDirection(viewDirection);
     }
-    viewDirection.normalize();
   } else {
     viewDirection.copy(surfaceNormal);
     if (viewDirection.lengthSq() < 1e-8) {
@@ -235,14 +335,52 @@ const resolveOrbitFocusPose = (
   return true;
 };
 
+interface SnapOrbitToLevelFrontOrBackInput {
+  camera: Camera;
+  controls: OrbitControlsImpl;
+  scene: Object3D;
+}
+
+const snapOrbitToLevelFrontOrBack = ({ camera, controls, scene }: SnapOrbitToLevelFrontOrBackInput): boolean => {
+  if (!resolveGarmentCenter(scene, garmentCenter)) return false;
+
+  controls.update();
+  const theta = controls.getAzimuthalAngle();
+  const deltaFront = resolveShortestAngleDelta(theta, 0);
+  const deltaBack = resolveShortestAngleDelta(theta, Math.PI);
+  const snapToBack = Math.abs(deltaBack) < Math.abs(deltaFront);
+  const delta = snapToBack ? deltaBack : deltaFront;
+  if (Math.abs(delta) > FRONT_BACK_AZIMUTH_SNAP) return false;
+
+  const radius = camera.position.distanceTo(controls.target);
+  const thetaTarget = snapToBack ? Math.PI : 0;
+  controls.target.copy(garmentCenter);
+  targetOffset.set(
+    radius * Math.sin(LEVEL_POLAR_ANGLE) * Math.sin(thetaTarget),
+    radius * Math.cos(LEVEL_POLAR_ANGLE),
+    radius * Math.sin(LEVEL_POLAR_ANGLE) * Math.cos(thetaTarget),
+  );
+  camera.position.copy(controls.target).add(targetOffset);
+  controls.update();
+  return true;
+};
+
+export type { garmentPartHorizonFacingType };
 export {
   ORBIT_SURFACE_CLEARANCE,
+  ORBIT_MIN_DISTANCE,
+  ORBIT_MAX_DISTANCE,
+  applyCardinalHorizonDirection,
+  applyFrontOrBackHorizonDirection,
   applyOrbitZoomAroundPoint,
   clampOrbitCameraOutsideGarment,
   clampOrbitTargetToGarment,
   recenterOrbitTargetByZoom,
   resolveCursorFocusPoint,
   resolveGarmentCenter,
+  applyPartHorizonDirection,
+  resolveGarmentPartHorizonFacing,
   resolveOrbitFocusPose,
   resolveShortestAngleDelta,
+  snapOrbitToLevelFrontOrBack,
 };

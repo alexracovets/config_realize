@@ -29,9 +29,7 @@ const preloadGarmentLogoSources = async (configuration?: cartItemConfigurationTy
 
     try {
       await loadCachedImage(instance.src);
-    } catch {
-
-    }
+    } catch {}
 
     await yieldToMain();
   }

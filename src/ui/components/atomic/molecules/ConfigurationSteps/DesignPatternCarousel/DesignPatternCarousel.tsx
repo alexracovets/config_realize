@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import type { designPatternItemType } from '@types';
 import { SvgIcon } from '@atoms';
-import { Carousel, CarouselContent, CarouselItem, type carouselApiType } from '@shared';
+import { Carousel, type carouselApiType, CarouselContent, CarouselItem } from '@shared';
 import { cn } from '@utils';
 
 type designPatternCarouselPropsType = {

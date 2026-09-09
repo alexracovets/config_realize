@@ -2,16 +2,11 @@
 
 import { Plus } from 'lucide-react';
 
-import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomInput, Button, Flex, SvgIcon, Text } from '@atoms';
+import { AtomDialog, AtomDialogContent, AtomDialogTitle, AtomInput, Box, Button, Flex, SvgIcon, Text } from '@atoms';
 import { CheckoutQuantityStepper } from '@molecules/CheckoutQuantityStepper';
 import { CheckoutSizePopover } from '@molecules/CheckoutSizePopover';
 import type { checkoutRowEditModalPropsType } from '@types';
 import { NUMBER_MAX_LENGTH, sanitizeNumberText } from '@store';
-import { cn } from '@utils';
-
-const fieldLabelClassName = 'text-[14px] font-medium text-gray';
-const fieldShellClassName = 'flex h-[35px] w-full items-center overflow-hidden rounded-[7.5px] border border-input-border bg-white';
-
 const ClearableField = ({
   value,
   placeholder,
@@ -29,7 +24,7 @@ const ClearableField = ({
   onClear: () => void;
   ariaLabel: string;
 }) => (
-  <div className={fieldShellClassName}>
+  <Box variant="checkout_row_field_shell">
     <AtomInput
       variant="ghost"
       className="h-full min-w-0 flex-1 rounded-none border-0 px-3 text-left text-sm text-default placeholder:text-left"
@@ -44,7 +39,7 @@ const ClearableField = ({
     <Button type="button" variant="ghost" size="icon" className="mx-1.5 size-8 shrink-0 bg-transparent" onClick={onClear} aria-label={`Cancella ${ariaLabel}`}>
       <SvgIcon name="delete" className="h-4 w-3.5 [&_path]:fill-[url(#checkout-row-edit-delete-gradient)]" />
     </Button>
-  </div>
+  </Box>
 );
 
 const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPatchRow, onRemoveRow }: checkoutRowEditModalPropsType) => {
@@ -52,7 +47,6 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
 
   const showName = printAvailability?.hasName ?? false;
   const showNumber = printAvailability?.hasNumber ?? false;
-  const showTesto = printAvailability?.hasTesto ?? false;
 
   const handleRemove = () => {
     onRemoveRow(row.id);
@@ -78,17 +72,20 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
           </defs>
         </svg>
 
-        <Flex className="w-full flex-col items-stretch gap-4">
-          <Flex className="w-full flex-col items-start gap-1.5">
-            <Text className={fieldLabelClassName}>Taglia</Text>
-            <div className={cn(fieldShellClassName, '[&_button]:relative [&_button]:h-[35px] [&_button]:min-h-[35px] [&_button]:justify-center [&_button]:px-3 [&_button]:py-0 [&_svg]:absolute [&_svg]:right-3')}>
+        <Flex variant="checkout_modal_content_column">
+          <Flex variant="checkout_modal_field_group">
+            <Text variant="checkout_modal_field_label">Taglia</Text>
+            <Box
+              variant="checkout_row_field_shell"
+              className="[&_button]:relative [&_button]:h-[35px] [&_button]:min-h-[35px] [&_button]:justify-center [&_button]:px-3 [&_button]:py-0 [&_svg]:absolute [&_svg]:right-3"
+            >
               <CheckoutSizePopover value={row.size} onChange={(size) => onPatchRow(row.id, { size })} />
-            </div>
+            </Box>
           </Flex>
 
           {showName && (
-            <Flex className="w-full flex-col items-start gap-1.5">
-              <Text className={fieldLabelClassName}>Nome</Text>
+            <Flex variant="checkout_modal_field_group">
+              <Text variant="checkout_modal_field_label">Nome</Text>
               <ClearableField
                 value={row.name}
                 placeholder="Nome"
@@ -100,8 +97,8 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
           )}
 
           {showNumber && (
-            <Flex className="w-full flex-col items-start gap-1.5">
-              <Text className={fieldLabelClassName}>Numero</Text>
+            <Flex variant="checkout_modal_field_group">
+              <Text variant="checkout_modal_field_label">Numero</Text>
               <ClearableField
                 value={row.number}
                 placeholder="00"
@@ -114,22 +111,9 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
             </Flex>
           )}
 
-          {showTesto && (
-            <Flex className="w-full flex-col items-start gap-1.5">
-              <Text className={fieldLabelClassName}>Testo</Text>
-              <ClearableField
-                value={row.testoTexts[0] ?? ''}
-                placeholder="Testo"
-                ariaLabel="Testo"
-                onChange={(testoText) => onPatchRow(row.id, { testoTextIndex: 0, testoText })}
-                onClear={() => onPatchRow(row.id, { testoTextIndex: 0, testoText: '' })}
-              />
-            </Flex>
-          )}
-
-          <Flex className="w-full flex-col items-start gap-1.5">
-            <Text className={fieldLabelClassName}>Quantità</Text>
-            <div className={cn(fieldShellClassName, 'justify-center')}>
+          <Flex variant="checkout_modal_field_group">
+            <Text variant="checkout_modal_field_label">Quantità</Text>
+            <Box variant="checkout_row_field_shell_center">
               <CheckoutQuantityStepper
                 quantity={row.quantity}
                 onDecrease={() => onPatchRow(row.id, { quantity: row.quantity - 1 })}
@@ -137,11 +121,11 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
                 decreaseIconClassName="text-[#CDCDCD]"
                 increaseIconClassName="text-primary-10"
               />
-            </div>
+            </Box>
           </Flex>
         </Flex>
 
-        <Flex className="w-full flex-col gap-2">
+        <Flex variant="checkout_modal_actions_column">
           <Button
             type="button"
             variant="default"
@@ -151,12 +135,7 @@ const CheckoutRowEditModal = ({ open, onOpenChange, row, printAvailability, onPa
             <Plus className="size-4 shrink-0" aria-hidden />
             Salva le modifiche
           </Button>
-          <Button
-            type="button"
-            variant="delete"
-            className="h-9 w-full justify-center gap-2 rounded-lg px-4 text-[14px] font-semibold"
-            onClick={handleRemove}
-          >
+          <Button type="button" variant="delete" className="h-9 w-full justify-center gap-2 rounded-lg px-4 text-[14px] font-semibold" onClick={handleRemove}>
             <SvgIcon name="delete" className="h-4 w-3.5 shrink-0 text-white" />
             Elimina prodotto
           </Button>

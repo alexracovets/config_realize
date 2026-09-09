@@ -42,17 +42,15 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
         }
       }}
     >
-      <Flex className="flex-wrap items-start justify-start w-full gap-5 max-sm:gap-3">
+      <Flex variant="checkout_product_layout">
         <AtomImage src={previewSrc} alt={productName} className="h-25.25 w-31.5 max-sm:h-16 max-sm:w-20" />
-        <Flex className="min-w-50 flex-1 flex-col items-start justify-start gap-3 max-sm:w-full max-sm:gap-2">
-          <Text variant="product_name" className="mb-0">
-            {productName}
-          </Text>
-          <Text variant="product_price" className="hidden max-sm:block">
+        <Flex variant="checkout_product_details">
+          <Text variant="product_name_no_margin">{productName}</Text>
+          <Text variant="product_price_mobile_only">
             {priceFormat(subtotal)}
             <span className="text-[12px] font-normal text-gray"> prezzo totale</span>
           </Text>
-          <div className="flex flex-wrap items-center gap-2" onClick={stopToggle}>
+          <Flex variant="checkout_product_actions" onClick={stopToggle}>
             <Button variant="primary" size="xs" className="max-sm:text-[11px] max-sm:px-2 max-sm:py-1">
               Elenco giocatori
             </Button>
@@ -64,40 +62,33 @@ const CheckoutProductCard = ({ product }: checkoutProductCardPropsType) => {
             >
               Modifica Bozza
             </Button>
-          </div>
-          <Flex className="gap-3 max-sm:w-full max-sm:justify-between">
-            <Flex className="gap-3">
-              <Text variant="small_secondary" className="max-sm:text-[14px]">
-                Quantità
-              </Text>
-              <Box className="px-4 py-1.5 rounded-lg border border-primary-10 max-sm:px-3 max-sm:py-1 max-sm:border-[#4B5563]">
-                <Text variant="small_secondary" className="text-default max-sm:text-[14px]">
-                  {quantity} pz
-                </Text>
+          </Flex>
+          <Flex variant="checkout_product_quantity_row">
+            <Flex variant="checkout_product_quantity_inner">
+              <Text variant="checkout_small_secondary_mobile">Quantità</Text>
+              <Box variant="checkout_quantity_badge">
+                <Text variant="checkout_small_secondary_mobile_default">{quantity} pz</Text>
               </Box>
             </Flex>
-            <ChevronDown
-              className={cn('hidden max-sm:block size-4.5 shrink-0 text-[#4B5563] transition-transform', isOpen && 'rotate-180')}
-              aria-hidden
-            />
+            <ChevronDown className={cn('hidden max-sm:block size-4.5 shrink-0 text-[#4B5563] transition-transform', isOpen && 'rotate-180')} aria-hidden />
           </Flex>
         </Flex>
-        <Flex className="flex-col items-end gap-3 max-sm:hidden">
-          <Flex className="gap-3">
+        <Flex variant="checkout_product_side_column">
+          <Flex variant="checkout_product_quantity_inner">
             <Text variant="product_price">{priceFormat(subtotal)}</Text>
             <Text variant="small">prezzo totale</Text>
             <SvgIcon name="three_dots" className="size-7 text-gray" />
           </Flex>
-          <Flex className=" gap-2 items-start flex-wrap max-w-[250px]">
+          <Flex variant="checkout_product_meta_row">
             <Text variant="small">{CHECKOUT_DISCOUNT_INFO_LABEL}</Text>
             <Text variant="small">{CHECKOUT_SHIPPING_DAYS_LABEL}</Text>
           </Flex>
         </Flex>
       </Flex>
 
-      <div className={cn('pt-6 max-sm:pt-4', isOpen ? 'max-sm:block' : 'max-sm:hidden')} onClick={stopToggle}>
+      <Box variant={isOpen ? 'checkout_product_details_open' : 'checkout_product_details_closed'} onClick={stopToggle}>
         <CheckoutConfigurationTable cartItemId={product.cartItemId} rows={product.rows} printAvailability={printAvailability} />
-      </div>
+      </Box>
     </article>
   );
 };

@@ -1,1 +1,1 @@
-export { composeTextUvLayer } from './composeTextUvLayer';
+export { composeTextUvLayer, drawTextUvLayersOnCanvas } from './composeTextUvLayer';

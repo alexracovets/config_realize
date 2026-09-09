@@ -51,16 +51,26 @@ const drawTextLayer = (ctx: CanvasRenderingContext2D, layer: orderCuttingExportT
   ctx.restore();
 };
 
-const composeTextUvLayer = async (atlasWidth: number, atlasHeight: number, layers: orderCuttingExportTextLayerSpecType[]): Promise<string> => {
-  await loadLayerFonts(layers);
+const drawTextUvLayersOnCanvas = async (
+  ctx: CanvasRenderingContext2D,
+  atlasWidth: number,
+  atlasHeight: number,
+  layers: orderCuttingExportTextLayerSpecType[],
+) => {
+  if (layers.length === 0) return;
 
+  await loadLayerFonts(layers);
+  layers.forEach((layer) => drawTextLayer(ctx, layer, atlasWidth, atlasHeight));
+};
+
+const composeTextUvLayer = async (atlasWidth: number, atlasHeight: number, layers: orderCuttingExportTextLayerSpecType[]): Promise<string> => {
   const canvas = document.createElement('canvas');
   canvas.width = atlasWidth;
   canvas.height = atlasHeight;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D context is not available.');
 
-  layers.forEach((layer) => drawTextLayer(ctx, layer, atlasWidth, atlasHeight));
+  await drawTextUvLayersOnCanvas(ctx, atlasWidth, atlasHeight, layers);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(
@@ -77,4 +87,4 @@ const composeTextUvLayer = async (atlasWidth: number, atlasHeight: number, layer
   });
 };
 
-export { composeTextUvLayer };
+export { composeTextUvLayer, drawTextUvLayersOnCanvas };

@@ -1,6 +1,7 @@
 'use client';
 
 import type { orderCuttingExportType } from '@types';
+import { Box } from '@atoms';
 import { ORDER_CUTTING_EXPORT_DOCUMENT_STYLES } from '@molecules/OrderCuttingExportPreview/orderCuttingExportDocumentStyles';
 import { OrderCuttingExportDownloadCard } from '@molecules/OrderCuttingExportPreview/OrderCuttingExportDownloadCard';
 import { OrderCuttingExportDownloadCardStatic } from '@molecules/OrderCuttingExportPreview/OrderCuttingExportDownloadCardStatic';
@@ -20,7 +21,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
   return (
     <>
       <style>{ORDER_CUTTING_EXPORT_DOCUMENT_STYLES}</style>
-      <div className="cutting-export" data-testid="order-cutting-export-document">
+      <Box className="cutting-export" data-testid="order-cutting-export-document">
         <h1 className="cutting-export__title">Modulo ordine cliente</h1>
         <p className="cutting-export__subtitle">Dati generali del cliente privato o società sportiva</p>
 
@@ -109,7 +110,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
               </p>
             </header>
 
-            <div className="cutting-export__steps">
+            <Box className="cutting-export__steps">
               {product.steps.map((step) => (
                 <article key={`${product.cartItemId}-${step.key}`} className="cutting-export__step">
                   <header className="cutting-export__step-header">
@@ -117,7 +118,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
                     <span className="cutting-export__step-title">{step.title}</span>
                   </header>
 
-                  <div className="cutting-export__step-body">
+                  <Box className="cutting-export__step-body">
                     {step.isConfigured ? (
                       <>
                         {step.details.length > 0 ? (
@@ -135,7 +136,7 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
                           ) : (
                             <dl className="cutting-export__step-details">
                               {step.details.map((detail) => (
-                                <div key={`${step.key}-${detail.label}`} className="cutting-export__step-detail">
+                                <Box key={`${step.key}-${detail.label}`} className="cutting-export__step-detail">
                                   <dt>{detail.label}</dt>
                                   {detail.params?.length ? null : <dd>{detail.value}</dd>}
                                   {detail.params?.length ? (
@@ -150,30 +151,30 @@ const OrderCuttingExportDocument = ({ exportData, variant = 'interactive' }: ord
                                       </tbody>
                                     </table>
                                   ) : null}
-                                </div>
+                                </Box>
                               ))}
                             </dl>
                           )
                         ) : null}
 
                         {step.downloadFiles.length > 0 ? (
-                          <div className="cutting-export__downloads">
+                          <Box className="cutting-export__downloads">
                             {step.downloadFiles.map((file) => (
                               <DownloadCard key={file.key} cartItemId={product.cartItemId} file={file} />
                             ))}
-                          </div>
+                          </Box>
                         ) : null}
                       </>
                     ) : (
                       <p className="cutting-export__step-empty">{step.emptyMessage}</p>
                     )}
-                  </div>
+                  </Box>
                 </article>
               ))}
-            </div>
+            </Box>
           </section>
         ))}
-      </div>
+      </Box>
     </>
   );
 };

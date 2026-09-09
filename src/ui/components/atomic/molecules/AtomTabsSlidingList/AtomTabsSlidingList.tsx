@@ -4,7 +4,7 @@ import { Children, cloneElement, isValidElement, type ReactElement, type RefAttr
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { AtomTabsList, SlidingIndicator, SlidingIndicatorTrack, slidingIndicatorTrackVariants, slidingIndicatorVariants } from '@atoms';
+import { AtomTabsList, Box, SlidingIndicator, SlidingIndicatorTrack, slidingIndicatorTrackVariants, slidingIndicatorVariants } from '@atoms';
 import { useSlidingIndicator } from '@hooks';
 import type { atomTabsSlidingListPropsType } from '@types';
 import { cn } from '@utils';
@@ -64,7 +64,7 @@ const AtomTabsSlidingList = ({
   const { wrapperRef, getItemRef, indicatorRef } = useSlidingIndicator(activeIndex);
 
   return (
-    <div ref={wrapperRef} className={cn(atomTabsSlidingListVariants({ preset }), className)}>
+    <Box ref={wrapperRef} className={cn(atomTabsSlidingListVariants({ preset }), className)}>
       <AtomTabsList className={listClassName}>
         {triggers.map((child, index) =>
           cloneElement(child, {
@@ -76,7 +76,7 @@ const AtomTabsSlidingList = ({
 
       <SlidingIndicatorTrack variant={trackVariant} />
       <SlidingIndicator ref={indicatorRef} variant={indicatorVariant} />
-    </div>
+    </Box>
   );
 };
 

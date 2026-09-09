@@ -7,6 +7,7 @@ import {
   garmentPrintLightsFragment,
   garmentPrintMapFragment,
 } from '@configurator/shaders';
+import { resolveLogoShaderSlotCount } from '@configurator/utils';
 import {
   applyGarmentPrintBase,
   bindGarmentPrintShaderUniforms,
@@ -15,7 +16,7 @@ import {
   getEmptyPrintTexture,
 } from '@configurator/utils';
 import { MeshStandardMaterial, Vector4 } from 'three';
-const GARMENT_SHADER_VERSION = 'garment-print-v93-gated-looped-slots';
+const GARMENT_SHADER_VERSION = 'garment-print-v100-print-over-coverage';
 
 const garmentPrintFragmentPars = garmentFragmentUvPars.replace('#include <uv_pars_fragment>\n', '');
 
@@ -26,12 +27,13 @@ const buildGarmentFeatureDefines = (features: garmentPrintFeatureFlagsType): str
     features.useLogo && '#define USE_GARMENT_LOGO',
     features.useTesto && '#define USE_GARMENT_TESTO',
     (features.useName || features.useNumber || features.useLogo || features.useTesto) && '#define USE_GARMENT_TEXT',
+    `#define LOGO_SLOT_COUNT ${features.useLogo ? resolveLogoShaderSlotCount(features.logoSlotCount ?? 0) : 1}`,
   ]
     .filter(Boolean)
     .join('\n');
 
 const buildGarmentFeatureCacheKey = (features: garmentPrintFeatureFlagsType): string =>
-  [features.useName, features.useNumber, features.useLogo, features.useTesto].map((flag) => (flag ? '1' : '0')).join('');
+  `${[features.useName, features.useNumber, features.useLogo, features.useTesto].map((flag) => (flag ? '1' : '0')).join('')}:${features.useLogo ? resolveLogoShaderSlotCount(features.logoSlotCount ?? 0) : 0}`;
 
 const buildGarmentProgramCacheKey = (material: MeshStandardMaterial) => {
   const channelKey = [
@@ -49,8 +51,9 @@ const buildGarmentProgramCacheKey = (material: MeshStandardMaterial) => {
 
 const appendGarmentPrintShaderChunks = (shader: { vertexShader: string; fragmentShader: string }, features: garmentPrintFeatureFlagsType) => {
   shader.vertexShader = shader.vertexShader
-    .replace('#include <uv_pars_vertex>', `#include <uv_pars_vertex>\nvarying vec2 vPrintUv;`)
-    .replace('#include <uv_vertex>', `#include <uv_vertex>\nvPrintUv = uv;`);
+    .replace('#include <uv_pars_vertex>', `#include <uv_pars_vertex>\nvarying vec2 vPrintUv;\nvarying vec3 vGarmentWorldPos;`)
+    .replace('#include <uv_vertex>', `#include <uv_vertex>\nvPrintUv = uv;`)
+    .replace('#include <project_vertex>', `#include <project_vertex>\nvGarmentWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`);
 
   const featureDefines = buildGarmentFeatureDefines(features);
 
@@ -74,7 +77,7 @@ const configureGarmentShader = (material: MeshStandardMaterial, features: garmen
     const printState = material.userData.garmentPrintState as garmentPrintStateType | undefined;
     const gradient = material.userData.garmentGradient as GarmentGradientState | undefined;
 
-    bindGarmentPrintShaderUniforms(material, shader, { printState, gradient, emptyPrint });
+    bindGarmentPrintShaderUniforms(material, shader, { printState, gradient, emptyPrint, logoSlotCount: features.logoSlotCount });
     appendGarmentPrintShaderChunks(shader, features);
   };
 

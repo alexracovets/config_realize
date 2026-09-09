@@ -1,7 +1,7 @@
 import type { stampPixelSizeType } from '@configurator/types';
 import type { Texture } from 'three';
-type patternColorPairType = [string, string];
-type patternMaskPairType = [Texture, Texture];
+type patternColorPairType = [string, string, string];
+type patternMaskPairType = [Texture, Texture, Texture];
 
 interface garmentPrintStateType {
   defaultLogos: Texture;
@@ -17,6 +17,7 @@ interface garmentNameMaskStateType {
 interface garmentLogoStampStateType {
   stamp: Texture;
   cellSize: stampPixelSizeType;
+  grid: number;
 }
 
 interface gizmoFrameStateType {
@@ -51,14 +52,9 @@ interface nameStyleUniformsType {
   strokeColors: nameSlotColor4Type;
 }
 
-type logoSlotFloat4Type = [number, number, number, number];
-type logoSlotVec2Type = [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }, { x: number; y: number }];
-type logoSlotBounds4Type = [
-  { minX: number; minY: number; maxX: number; maxY: number },
-  { minX: number; minY: number; maxX: number; maxY: number },
-  { minX: number; minY: number; maxX: number; maxY: number },
-  { minX: number; minY: number; maxX: number; maxY: number },
-];
+type logoSlotFloat4Type = number[];
+type logoSlotVec2Type = { x: number; y: number }[];
+type logoSlotBounds4Type = { minX: number; minY: number; maxX: number; maxY: number }[];
 
 interface logoStyleUniformsType {
   stampCellSize: { width: number; height: number };
@@ -67,6 +63,7 @@ interface logoStyleUniformsType {
   uploadRotation: logoSlotFloat4Type;
   partRotation: logoSlotFloat4Type;
   scale: logoSlotFloat4Type;
+  stampSlot: logoSlotFloat4Type;
   slotActive: logoSlotFloat4Type;
   partBounds: logoSlotBounds4Type;
 }

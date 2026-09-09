@@ -1,6 +1,6 @@
 'use client';
 
-import { AtomImage, Flex, LogoYOU, Text } from '@atoms';
+import { AtomImage, Box, Flex, LogoYOU, Text } from '@atoms';
 import { MainLoaderBackground } from '@molecules/Loaders/MainLoader/MainLoaderBackground';
 import { FaPlay } from 'react-icons/fa';
 const VideoPlayerPlayIcon = () => (
@@ -10,17 +10,17 @@ const VideoPlayerPlayIcon = () => (
 );
 
 const VideoPlayerPreview = () => (
-  <div className="relative h-full w-full overflow-hidden">
+  <Box variant="video_preview_root">
     <MainLoaderBackground />
-    <Flex className="absolute flex-col inset-0 z-10 items-center justify-center w-full gap-2">
-      <Flex className="items-center justify-center gap-7">
+    <Flex variant="overlay_center_column">
+      <Flex variant="logo_pair_row">
         <AtomImage src="/svg/logo.svg" alt="Logo" variant="logo" priority />
         <LogoYOU />
       </Flex>
-      <Text className="text-center text-[20px] font-medium italic text-[#2B2B2B]">Tutorial</Text>
+      <Text variant="loader_tagline">Tutorial</Text>
     </Flex>
     <VideoPlayerPlayIcon />
-  </div>
+  </Box>
 );
 
 export { VideoPlayerPreview };

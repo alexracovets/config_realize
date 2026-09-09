@@ -5,7 +5,14 @@ export {
   resolveLogoReferenceDrawSize,
   resolveRotatedGizmoHalf,
 } from './composeLogoAtlas/composeLogoPrintAtlas';
-export { composeLogoStampAtlas } from './composeLogoAtlas/composeLogoStampAtlas';
+export { composeLogoStampAtlas, fitCellSizeToAtlasLimit } from './composeLogoAtlas/composeLogoStampAtlas';
+export {
+  resolveLogoShaderSlotCount,
+  resolveLogoSlotCapacity,
+  resolveLogoStampAtlasGrid,
+  resolveLogoStampGrid,
+} from './composeLogoAtlas/resolveLogoSlotCapacity';
+export { resolveLogoStampPackOrder, resolveLogoStampSlots } from './composeLogoAtlas/resolveLogoStampSlots';
 export { composeNameMaskAtlas, resolveNameStampSize } from './composeNameAtlas/composeNameMaskAtlas';
 export { mergeMaskChannel } from './composeNameAtlas/mergeMaskChannel';
 export { applyTextCanvasDrawOptions } from './drawNameOnAtlas/applyTextCanvasDrawOptions';
@@ -62,6 +69,7 @@ export {
 export { applyGarmentPatternTints, applyGarmentPrint, emptyMaskPair } from './garmentPrint/applyGarmentPrint';
 export { getEmptyPrintTexture } from './garmentPrint/emptyPrintTexture';
 export { packStackedTextMaskCanvas, packStackedTextMaskTexture } from './garmentPrint/packStackedTextMask';
+export { canvasToLogoLayerTexture } from './garmentPrint/canvasToLogoLayerTexture';
 export { canvasToMaskTexture } from './garmentPrint/canvasToMaskTexture';
 export { configureImageTextureSampling, configureMaskTextureSampling, imageToMaskTexture, imageToTexture } from './garmentPrint/imageToTexture';
 export { resolveRasterDesignSrc } from './garmentPrint/resolveRasterDesignSrc';

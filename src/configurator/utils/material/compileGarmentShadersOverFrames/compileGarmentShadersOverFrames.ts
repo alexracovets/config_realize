@@ -16,6 +16,34 @@ type CompileGarmentShadersOverFramesOptions = {
 
 let variantWarmupTarget: WebGLRenderTarget | null = null;
 
+const COMPILE_ASYNC_TIMEOUT_MS = 3000;
+
+const compileWithFallback = (gl: WebGLRenderer, scene: Object3D, camera: Camera): Promise<void> => {
+  let settled = false;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const asyncCompile = gl
+    .compileAsync(scene, camera)
+    .then(() => undefined)
+    .catch(() => {
+      if (!settled) gl.compile(scene, camera);
+    })
+    .finally(() => {
+      settled = true;
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    });
+
+  const timeoutFallback = new Promise<void>((resolve) => {
+    timeoutId = setTimeout(() => {
+      settled = true;
+      gl.compile(scene, camera);
+      resolve();
+    }, COMPILE_ASYNC_TIMEOUT_MS);
+  });
+
+  return Promise.race([asyncCompile, timeoutFallback]);
+};
+
 const compileRenderTargetVariants = (gl: WebGLRenderer, scene: Object3D, camera: Camera): Promise<unknown> => {
   if (!variantWarmupTarget) {
     variantWarmupTarget = new WebGLRenderTarget(4, 4, { format: RGBAFormat, depthBuffer: true, stencilBuffer: false });
@@ -25,7 +53,7 @@ const compileRenderTargetVariants = (gl: WebGLRenderer, scene: Object3D, camera:
   const previousTarget = gl.getRenderTarget();
   gl.setRenderTarget(variantWarmupTarget);
 
-  const warmup = gl.compileAsync(scene, camera);
+  const warmup = compileWithFallback(gl, scene, camera);
   gl.setRenderTarget(previousTarget);
 
   return warmup;
@@ -49,16 +77,20 @@ const compileGarmentShadersOverFrames = ({
   }
 
   let cancelled = false;
-  const features = resolveGarmentPrintFeatureFlags(product);
 
-  materialQueue.forEach((material) => compileGarmentShader(material, features));
+  materialQueue.forEach((material) => {
+    const capacity = material.userData.garmentLogoSlotCapacity as number | undefined;
+    const features = capacity ? resolveGarmentPrintFeatureFlags(product, capacity) : resolveGarmentPrintFeatureFlags(product);
+    compileGarmentShader(material, features);
+    material.userData.garmentLogoSlotCapacity = features.logoSlotCount;
+  });
 
-  void gl
-    .compileAsync(scene, camera)
+  void compileWithFallback(gl, scene, camera)
     .then(() => {
       if (cancelled) return;
       return compileRenderTargetVariants(gl, scene, camera);
     })
+    .catch(() => {})
     .then(() => {
       if (cancelled) return;
       invalidate();

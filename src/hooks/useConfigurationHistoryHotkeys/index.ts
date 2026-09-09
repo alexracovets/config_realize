@@ -1,0 +1,1 @@
+export { useConfigurationHistoryHotkeys } from './useConfigurationHistoryHotkeys';

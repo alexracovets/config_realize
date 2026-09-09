@@ -46,7 +46,6 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   productPath,
   instances,
   preview,
-  selectedInstanceId,
   resolveInstances,
   applyMasks,
   applyStyle,
@@ -57,7 +56,6 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   const isSceneTransitionLoading = useConfiguratorSceneLoad((state) => state.isSceneTransitionLoading);
   const partIds = useMemo(() => product.parts.map((part) => part.id), [product.parts]);
   const activeStep = useConfigurationControl((state) => state.activeStep);
-  const isGizmoVisible = useConfigurationControl((state) => state.isGizmoVisible);
   const { getMaterials, hasMaterialsForParts } = useGarmentMaterialRegistry();
   const materialRevision = useMaterialRegistryRevision();
   const invalidate = useThree((state) => state.invalidate);
@@ -69,9 +67,6 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
   const stampSizeRef = useRef(DEFAULT_STAMP_SIZE);
   const maskGenerationRef = useRef(0);
   const prevFillSignatureRef = useRef('');
-  const prevSelectedSlotRef = useRef(-1);
-  const prevSelectedIdRef = useRef<string | null>(null);
-  const wasGizmoHiddenRef = useRef(false);
 
   const maskRefs = useMemo<MaskResourceRefs>(
     () => ({
@@ -88,11 +83,6 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
     () => resolveInstances(instances, preview).map((instance) => repairPrintInstancePlacement(instance, product.parts)),
     [instances, preview, product.parts, resolveInstances],
   );
-
-  const selectedSlotIndex = useMemo(() => {
-    if (activeStep !== step || !selectedInstanceId) return -1;
-    return instancesForRender.findIndex((instance) => instance.id === selectedInstanceId);
-  }, [activeStep, instancesForRender, selectedInstanceId, step]);
 
   const fillSignature = useMemo(() => buildFillSignature(instancesForRender), [instancesForRender]);
   const strokeSignature = useMemo(() => buildStrokeSignature(instancesForRender), [instancesForRender]);
@@ -136,28 +126,8 @@ const useTextPrintMaskPipeline = <TInstance extends garmentTextRenderInstanceTyp
 
   useEffect(() => {
     if (activeStep !== step) return;
-
-    if (!isGizmoVisible) {
-      wasGizmoHiddenRef.current = true;
-      setGizmoButtonsRevealTarget(-1);
-      return;
-    }
-
-    const snapFromHidden = wasGizmoHiddenRef.current;
-    wasGizmoHiddenRef.current = false;
-
-    const snap =
-      snapFromHidden ||
-      (prevSelectedIdRef.current === selectedInstanceId &&
-        prevSelectedSlotRef.current !== selectedSlotIndex &&
-        prevSelectedSlotRef.current >= 0 &&
-        selectedSlotIndex >= 0);
-
-    prevSelectedIdRef.current = selectedInstanceId;
-    prevSelectedSlotRef.current = selectedSlotIndex;
-
-    setGizmoButtonsRevealTarget(selectedSlotIndex, snap);
-  }, [activeStep, isGizmoVisible, selectedInstanceId, selectedSlotIndex, step]);
+    setGizmoButtonsRevealTarget(-1);
+  }, [activeStep, step]);
 
   const updateMasks = useCallback(
     async (redrawFill: boolean, redrawStroke: boolean) => {

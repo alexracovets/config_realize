@@ -97,7 +97,7 @@ const CheckoutPreviewCaptureHost = () => {
   }, []);
 
   return (
-    <div aria-hidden className="pointer-events-none fixed top-0 left-[-9999px] h-[700px] w-[800px] overflow-hidden opacity-0">
+    <div aria-hidden className="pointer-events-none fixed top-0 left-[-9999px] h-175 w-200 overflow-hidden opacity-0">
       <Canvas
         camera={{ position: [0, 0, 3], fov: 45 }}
         style={{ width: '100%', height: '100%' }}
@@ -105,7 +105,7 @@ const CheckoutPreviewCaptureHost = () => {
         gl={{
           alpha: true,
           antialias: true,
-          logarithmicDepthBuffer: true,
+          logarithmicDepthBuffer: false,
           powerPreference: 'high-performance',
           preserveDrawingBuffer: true,
           stencil: true,

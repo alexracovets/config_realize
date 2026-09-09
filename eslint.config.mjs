@@ -169,6 +169,12 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    files: ['src/utils/**/*PdfDocument/**/*.{ts,tsx}'],
+    rules: {
+      'jsx-a11y/alt-text': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

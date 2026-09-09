@@ -8,10 +8,6 @@ interface colorControlPropsType {
   restrictedColors?: string[];
 }
 
-type colorTabType = 'colori' | 'contorno';
-
-type colorTabVariantType = 'design' | 'text';
-
 interface colorTabControlPropsType {
   textColor: string;
   strokeColor: string;
@@ -20,7 +16,6 @@ interface colorTabControlPropsType {
   onPreviewTextColor?: (color: string) => void;
   onPreviewStrokeColor?: (color: string) => void;
   label?: string;
-  tabVariant?: colorTabVariantType;
 }
 
 interface fontSelectRowPropsType {
@@ -122,8 +117,6 @@ interface configurationPositionPickerModalPropsType {
 
 export type {
   colorControlPropsType,
-  colorTabType,
-  colorTabVariantType,
   colorTabControlPropsType,
   configurationPositionOptionType,
   configurationPositionPickerModalPropsType,

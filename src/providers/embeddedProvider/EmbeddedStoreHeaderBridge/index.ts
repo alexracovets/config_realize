@@ -1,0 +1,1 @@
+export { EmbeddedStoreHeaderBridge } from './EmbeddedStoreHeaderBridge';

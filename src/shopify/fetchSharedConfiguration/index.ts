@@ -1,0 +1,1 @@
+export { fetchSharedConfiguration } from './fetchSharedConfiguration';
