@@ -2,60 +2,47 @@
 
 import { useEffect } from 'react';
 
-// On an iOS in-app-browser cold load WebKit hands the page a viewport shorter than
-// the screen and never sends the resize that would correct it. This bridge writes
-// --configurator-vh so the shell is sized against the real height rather than that
-// short layout viewport; globals.css falls back to 100% until the first
-// measurement lands. The host page (configurator-embed.js) additionally un-clamps
-// the viewport outright once the DOM exists; this keeps the layout correct in the
-// window before it does.
-//
-// iOS = iPhone/iPod, and iPadOS which reports as Mac but has touch. The
-// screen.availHeight fallback is iOS-only; on desktop the inner/screen gap is just
-// browser UI and must be left alone.
+// iOS = iPhone/iPod, and iPadOS which reports as Mac but has touch.
 const IS_IOS =
   typeof navigator !== 'undefined' &&
   (/iP(hone|od|ad)/.test(navigator.platform || '') ||
     /iP(hone|od|ad)/.test(navigator.userAgent || '') ||
     (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1));
 
-const readViewportHeight = (): number => {
+const clampedViewportHeight = (): number | null => {
+  if (!IS_IOS) return null;
+
   const vv = window.visualViewport;
   const vpH = vv ? Math.round(vv.height) : window.innerHeight;
   const screenH = window.screen?.availHeight ?? 0;
   const clientH = document.documentElement.clientHeight;
 
-  let height = vpH;
+  const isClamped = Math.abs(window.innerHeight - clientH) > 40 && screenH - vpH > 60;
+  if (!isClamped) return null;
 
-  // The clamped iOS cold load: innerHeight and documentElement.clientHeight
-  // disagree (seen 896 vs 720). A normal load has them equal (e.g. 699/699) and
-  // must be left alone — using the screen height there makes the shell taller than
-  // the viewport and it scrolls under the chrome.
-  const isClamped = IS_IOS && Math.abs(window.innerHeight - clientH) > 40 && screenH - vpH > 60;
-  if (isClamped) {
-    height = screenH;
-  }
-
-  if (!(height > 120 && height < 4000)) {
-    height = window.innerHeight;
-  }
-
-  return height;
+  return screenH > 120 && screenH < 4000 ? screenH : null;
 };
 
 const EmbeddedViewportKickBridge = () => {
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !IS_IOS) return;
 
+    const root = document.documentElement;
     let lastVh = 0;
+
     const apply = () => {
-      const height = readViewportHeight();
-      // Grow freely; shrink only on a deliberate, sustained change (a real
-      // rotation to a shorter viewport) — not a transient dip from the keyboard
-      // or chrome.
-      if (height > 120 && (height > lastVh || height < lastVh - 60)) {
+      const height = clampedViewportHeight();
+      if (height == null) {
+        // Not (or no longer) clamped — hand layout back to the CSS fallback.
+        if (lastVh !== 0) {
+          lastVh = 0;
+          root.style.removeProperty('--configurator-vh');
+        }
+        return;
+      }
+      if (height > lastVh || height < lastVh - 60) {
         lastVh = height;
-        document.documentElement.style.setProperty('--configurator-vh', `${Math.round(height)}px`);
+        root.style.setProperty('--configurator-vh', `${Math.round(height)}px`);
       }
     };
 
@@ -88,6 +75,7 @@ const EmbeddedViewportKickBridge = () => {
       }
       window.removeEventListener('orientationchange', onOrientation);
       window.removeEventListener('pageshow', apply);
+      root.style.removeProperty('--configurator-vh');
     };
   }, []);
 

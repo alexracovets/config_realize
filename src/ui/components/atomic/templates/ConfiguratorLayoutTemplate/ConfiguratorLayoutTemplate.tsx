@@ -16,13 +16,14 @@ type configuratorLayoutTemplatePropsType = childrenType & {
   collectionHandle: string;
   slug: string;
   product: configuratorProductHydrationType | null;
+  embedded: boolean;
 };
 
-const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
+const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product, embedded }: configuratorLayoutTemplatePropsType) => {
   return (
     <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
       <Box variant="configurator_shell">
-        <Header />
+        {!embedded && <Header />}
         <Box variant="configurator_shell_background">
           <ConfiguratorInitialLoader />
           <CartConfigurationSync />

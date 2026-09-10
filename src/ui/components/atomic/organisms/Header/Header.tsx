@@ -7,8 +7,7 @@ import { LocalizationDropdown } from '@organisms/Header/LocalizationDropdown';
 import { AtomImage } from '@atoms';
 import { useAppNavigate, useMagnet } from '@hooks';
 import { useEmbedded } from '@providers';
-import { useConfigurationCart, useEmbeddedStoreHeader } from '@store';
-import { postEmbeddedHeaderAction } from '@utils/embeddedUrlSync';
+import { useConfigurationCart } from '@store';
 import { buildConfiguratorPath, isConfiguratorPath } from '@utils';
 
 const STORE_ORIGIN = 'https://realizesport.com';
@@ -46,9 +45,8 @@ const Header = () => {
   const { toAppPath } = useAppNavigate();
   const pathname = usePathname();
   const activeItem = useConfigurationCart((state) => state.items.find((item) => item.id === state.activeItemId) ?? state.items[0]);
-  const storeHeader = useEmbeddedStoreHeader((state) => state.data);
 
-  const language = storeHeader?.language ?? 'Italiano';
+  const language = 'Italiano';
 
   const isOnConfigurator = isConfiguratorPath(pathname);
   const logoHref = toAppPath(isOnConfigurator || !activeItem?.collectionHandle ? '/' : buildConfiguratorPath(activeItem.collectionHandle, activeItem.slug));
@@ -58,13 +56,17 @@ const Header = () => {
   };
 
   const action = {
-    home: () => (embedded ? postEmbeddedHeaderAction('home') : go(logoHref)),
-    search: () => (embedded ? postEmbeddedHeaderAction('search') : go(`${STORE_ORIGIN}/search`)),
-    menu: () => (embedded ? postEmbeddedHeaderAction('menu') : undefined),
-    account: () => (embedded ? postEmbeddedHeaderAction('account') : go(`${STORE_ORIGIN}/account`)),
-    cart: () => (embedded ? postEmbeddedHeaderAction('cart') : go(`${STORE_ORIGIN}/cart`)),
-    language: (locale: string) => (embedded ? postEmbeddedHeaderAction('language', locale) : go(localizedStoreUrl(locale))),
+    home: () => go(logoHref),
+    search: () => go(`${STORE_ORIGIN}/search`),
+    menu: () => undefined,
+    account: () => go(`${STORE_ORIGIN}/account`),
+    cart: () => go(`${STORE_ORIGIN}/cart`),
+    language: (locale: string) => go(localizedStoreUrl(locale)),
   };
+
+  // Embedded in the storefront iframe the real Shopify header is shown; this header
+  // is rendered for the standalone / localhost app only.
+  if (embedded) return null;
 
   return (
     <header className="w-full bg-white py-3.5">
