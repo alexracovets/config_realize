@@ -21,16 +21,15 @@ type configuratorLayoutTemplatePropsType = childrenType & {
 const ConfiguratorLayoutTemplate = ({ children, collectionHandle, slug, product }: configuratorLayoutTemplatePropsType) => {
   return (
     <ConfiguratorRouteShell collectionHandle={collectionHandle} slug={slug} product={product}>
-      {/* data-dbg on Box wrappers: consumed only by EmbeddedViewportKickBridge's debug HUD. Remove with it. */}
       <Box variant="configurator_shell">
         <Header />
-        <Box variant="configurator_shell_background" data-dbg="bg">
+        <Box variant="configurator_shell_background">
           <ConfiguratorInitialLoader />
           <CartConfigurationSync />
-          <Box variant="configurator_shell_grid" data-dbg="grid">
+          <Box variant="configurator_shell_grid">
             <HeaderConfiguration />
             <Flex variant="configurator_layout_template" asChild>
-              <main data-dbg="main">
+              <main>
                 <AsideConfiguration />
                 {children}
                 <AsideConfigurationUtility />
